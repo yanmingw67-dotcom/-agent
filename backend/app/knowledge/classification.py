@@ -23,10 +23,14 @@ def classification(db, snapshot_id):
 
 
 def approve_fixture(db, snapshot):
-    allowed = json.loads(Path(__file__).with_name("public_fixture_manifest.json").read_text())
+    manifests = [
+        json.loads(Path(__file__).with_name(name).read_text())
+        for name in ["public_fixture_manifest.json", "autonomous_fixture_manifest.json"]
+    ]
     files = db.scalars(select(SourceFile).where(SourceFile.snapshot_id == snapshot.id)).all()
     actual = {f.path: f.sha256 for f in files}
-    if actual != allowed["files"]:
+    allowed = next((manifest for manifest in manifests if manifest["files"] == actual), None)
+    if allowed is None:
         raise AppError(
             403, "PUBLIC_FIXTURE_MISMATCH", "仅允许服务端固定人工公开样例，不接受任意降级"
         )

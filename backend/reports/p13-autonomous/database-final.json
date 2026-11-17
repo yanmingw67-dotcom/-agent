@@ -1,0 +1,99 @@
+{
+  "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "status": "partial",
+  "investigation_id": "eddd25db-a494-4bcf-a9bb-06cf4f4a3925",
+  "investigation_status": "partial",
+  "error_code": null,
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "effective_classification": "synthetic_public",
+  "source_sha256": "57b872898a7e3b06b6911786595b78b8e48c339080c51f05162a7db35644e67c",
+  "documents": [
+    {
+      "sha256": "762b29653bef9b8ed027144dd5cebe588db868ea949eb1bcc211355bd03637bd",
+      "classification": "synthetic_public"
+    }
+  ],
+  "approval_audit": [
+    {
+      "id": "96d38a09-7e7d-4946-acfc-91e3896bdeb1",
+      "principal": "admin",
+      "details": {
+        "classification": "synthetic_public",
+        "previous_classification": "enterprise",
+        "source_sha256": "57b872898a7e3b06b6911786595b78b8e48c339080c51f05162a7db35644e67c",
+        "policy": "exact_bundled_fixture_v1"
+      }
+    }
+  ],
+  "claims": [
+    {
+      "id": "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "name": "展开commit提交路径",
+      "status": "evidence_found"
+    },
+    {
+      "id": "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "name": "事件批处理校验去重",
+      "status": "evidence_found"
+    },
+    {
+      "id": "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+      "name": "预览按id顺序去重",
+      "status": "evidence_found"
+    }
+  ],
+  "link_count": 3,
+  "relation_count": 0,
+  "equivalence_assessment": {
+    "status": "investigated",
+    "source_key": "auto_874db914733092313598361f",
+    "target_key": "auto_f6097ab877e2da6e11874abc",
+    "verdict": "not_equivalent",
+    "input_contract": "源输入：events列表、store、含tenant_required与deduplicate的settings；目标输入：含可哈希'id'的事件字典列表，无settings/store。",
+    "output_contract": "源输出：占位成功的accepted事件列表，可抛ValueError；目标输出：按id保序去重的新列表，可抛KeyError。",
+    "conditions_and_errors": "源：tenant_required为真且缺tenant抛ValueError；deduplicate为真时经reserve_once按(tenant,id)在store持久占位，占位失败则跳过，具存储副作用。目标：无校验无副作用，仅本地集合判重，缺'id'键抛KeyError；不同租户同id亦被判重。",
+    "rationale": "去重键不同：源按(tenant,id)经store占位，目标仅按id本地判重；状态机制不同：源有持久占位副作用，目标为纯函数；异常不同：ValueError与KeyError；适用范围不同：提交批处理入口与预览本地便利。机制与适用范围均不同，明确不等效。",
+    "gaps": [
+      "reserve_once实现不在片段内，占位原子性与失败语义未核验",
+      "两函数调用关系与store共享语义需全源码确认"
+    ],
+    "evidence_ids": [
+      "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "source_locations": [
+      {
+        "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+        "path": "core/h_engine.py",
+        "sha256": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+        "start_line": 118,
+        "end_line": 128,
+        "snippet": "def process_batch(events, store, settings):\n    accepted = []\n    for event in events:\n        tenant = event.get(\"tenant\")\n        if settings[\"tenant_required\"] and not tenant:\n            raise ValueError(\"tenant required\")\n        if settings[\"deduplicate\"]:\n            if not reserve_once(store, tenant, event[\"id\"]):\n                continue\n        accepted.append(event)\n    return accepted",
+        "locator": {},
+        "match_terms": [],
+        "unresolved": false
+      },
+      {
+        "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+        "path": "core/i_preview.py",
+        "sha256": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+        "start_line": 1,
+        "end_line": 8,
+        "snippet": "def preview_unique(events):\n    seen = set()\n    result = []\n    for event in events:\n        if event[\"id\"] not in seen:\n            seen.add(event[\"id\"])\n            result.append(event)\n    return result",
+        "locator": {},
+        "match_terms": [],
+        "unresolved": false
+      }
+    ],
+    "semantic_verification": "unverified"
+  },
+  "coverage": {
+    "known_fragments": 5,
+    "analyzed_fragments": 3,
+    "pending_fragments": 2,
+    "analyzed_files": 3,
+    "unexplained_entrypoints": 1,
+    "semantic_coverage": "unknown",
+    "coverage_incomplete": true
+  }
+}

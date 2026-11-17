@@ -1,0 +1,144 @@
+{
+  "containers": [
+    {
+      "service": "api",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": true,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "readonly": true
+        },
+        {
+          "destination": "/data/documents",
+          "readonly": false
+        },
+        {
+          "destination": "/data/control",
+          "readonly": false
+        },
+        {
+          "destination": "/data/archives",
+          "readonly": false
+        }
+      ]
+    },
+    {
+      "service": "builder",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 1073741824,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": true,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "readonly": true
+        },
+        {
+          "destination": "/data/sources",
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "service": "indexer",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1342177280,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": true,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "readonly": true
+        },
+        {
+          "destination": "/data/sources",
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "service": "postgres",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": false,
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "readonly": false
+        }
+      ]
+    },
+    {
+      "service": "redis",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": false,
+      "mounts": [
+        {
+          "destination": "/data",
+          "readonly": false
+        }
+      ]
+    },
+    {
+      "service": "retrieval",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": true,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "readonly": true
+        }
+      ]
+    },
+    {
+      "service": "worker",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 805306368,
+      "health": "healthy",
+      "oom_killed": false,
+      "readonly_rootfs": true,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "readonly": true
+        },
+        {
+          "destination": "/data/ingestion",
+          "readonly": false
+        },
+        {
+          "destination": "/data/sources",
+          "readonly": true
+        },
+        {
+          "destination": "/data/documents",
+          "readonly": true
+        },
+        {
+          "destination": "/data/control",
+          "readonly": false
+        }
+      ]
+    }
+  ],
+  "cpu_total": 4.0,
+  "memory_total_bytes": 6442450944,
+  "actual_host_cpu": 8,
+  "dedicated_4c8g_vm_tested": false,
+  "model_concurrency": 1,
+  "worker_global_lock": "knowledge-builder-single-worker"
+}

@@ -1,0 +1,15 @@
+{
+  "baseline": "90e5a21f60f6273d404f95117bc2aec9dea5415d",
+  "protected_file_count": 223,
+  "changed_protected_files": [],
+  "current_code_sha256": {
+    "backend/app/agents/autonomous.py": "7eae0bb6c19fd8eb5a7561c9a4aac346927ea961cd076583a2683feb395d137a",
+    "backend/app/agents/bounded_builder.py": "5f788a22dfdbdd3bde5ddc6a9efd0f24892eff9198380683ab164f2253c4cebf",
+    "backend/app/agents/equivalence.py": "092dc4b9134796ac1bb4c2b71fa0a6b5afb940dd2986556ff9c5f0035ed1eb49",
+    "backend/app/agents/runtime.py": "2efecf46999ecba040222b6e8d5ba06c0cab7aeea03162aa19e91d35e456fd48",
+    "backend/app/knowledge/classification.py": "cfdf2529bad1f4e1e776b6d26f1c7c8ef3172b82c52ac36b2173641dc8fa0e6f",
+    "backend/app/knowledge/schemas.py": "53d27549cfcdcfd9e366f64e9a2e7bd9338e6769b9604f61927f221b32acec9d",
+    "backend/app/api/investigations.py": "ebc47bc206b4a0f7971ffb6d51a666ac201e4ca5389c56bd7f659ec1f2b5ca6b"
+  },
+  "criteria_sha256": "725a0fd17af110856457ea10946b66761217d4065ea4397379db253678c60e67"
+}

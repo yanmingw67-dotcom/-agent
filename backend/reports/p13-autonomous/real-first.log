@@ -1,0 +1,103 @@
+{
+  "artifact": "reports/p13-autonomous/real-first.json",
+  "passed": true,
+  "job_id": "f564c2ec-d2d8-4f51-a33b-76730cf7ad3a",
+  "status": "partial",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "autonomous",
+    "capability_limit": 1,
+    "include_equivalence": true,
+    "exploration_max_fragments": 3,
+    "exploration_started_at": "2026-11-17T13:06:56.447301+00:00",
+    "model_requests": 6,
+    "model_responses": 6,
+    "unmeasured_requests": 0,
+    "tool_calls": 22,
+    "tokens": 20586,
+    "input_tokens": 8710,
+    "output_tokens": 11876,
+    "sampled_peak_cpu_percent": 82.8,
+    "sampled_peak_rss_bytes": 127557632,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 0,
+    "unresolved_count": 2,
+    "uncovered_modules": 1,
+    "claimed_capabilities": 2,
+    "duration_ms": 166494,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model": "glm-5.3-flash",
+    "knowledge_build_complete": false,
+    "coverage_incomplete": true
+  },
+  "candidates": [
+    {
+      "key": "auto_efbf8dc0c0d8735a1296f90c",
+      "name": "handle_events 按模式分发事件处理",
+      "category": "源码机制候选",
+      "action": "根据mode参数将事件处理分发到预览或提交路径，未知模式抛出ValueError",
+      "target": "api/endpoint.py:handle_events(mode, events, store, settings)",
+      "business_goal": "区分预览与提交两条处理路径：预览为本地便捷不入存储，提交按注入存储与配置执行",
+      "implementation_mechanism": "mode==\"preview\"时仅以events调用preview_unique（不传store与settings）；mode==\"commit\"时以events、store、settings调用process_batch；其余取值抛ValueError(\"unknown mode\")",
+      "supported_scope": [
+        "mode取值preview或commit时的事件处理分发",
+        "preview路径不触及store与settings",
+        "commit路径依赖注入的store与settings配置"
+      ],
+      "conditions": [
+        "mode必须为\"preview\"或\"commit\"，否则抛ValueError(\"unknown mode\")",
+        "提交处理行为取决于注入的store实现与settings配置"
+      ],
+      "limitations": [
+        "preview_unique与process_batch内部逻辑不在片段内，去重/租户行为无法核验",
+        "预览结果不得自动视为提交处理的替代（与manual.md一致）",
+        "片段未展示跨租户重复事件或重复请求对结果的影响"
+      ],
+      "evidence_ids": [
+        "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "auto_874db914733092313598361f",
+      "name": "process_batch 批量事件校验与去重筛选",
+      "category": "源码机制候选",
+      "action": "逐个遍历事件：按 settings['tenant_required'] 校验 tenant 必填，按 settings['deduplicate'] 调用 reserve_once 做去重预留，未通过者跳过，返回被接受事件列表",
+      "target": "core/h_engine.py process_batch",
+      "business_goal": "防止重复事件被重复处理，并强制租户字段完整性校验",
+      "implementation_mechanism": "对每个事件取 tenant；若 settings['tenant_required'] 开启且 tenant 为空则抛 ValueError；若 settings['deduplicate'] 开启则调用 reserve_once(store, tenant, event['id'])，返回 False（已预留）则 continue 跳过；否则加入 accepted，最终返回 accepted 列表",
+      "supported_scope": [
+        "单次传入 events 列表内的事件级筛选",
+        "去重键为 (tenant, 事件 id) 组合，实际作用域由 reserve_once 决定"
+      ],
+      "conditions": [
+        "settings['tenant_required'] 为真且事件无 tenant 时抛出 ValueError('tenant required')",
+        "settings['deduplicate'] 为真时走 reserve_once 预留判定，已预留的事件被跳过",
+        "settings['deduplicate'] 为假时不做去重，全部事件进入 accepted",
+        "去重启用时事件必须含 'id' 键，缺失则抛 KeyError"
+      ],
+      "limitations": [
+        "去重语义依赖注入 store 的 reserve_once 实现，本片段内无法核验",
+        "批次无原子性：抛出异常前已预留的事件不回滚，store 中残留预留副作用",
+        "tenant_required 关闭时 tenant 可能为 None 传入 reserve_once，跨租户去重范围取决于该实现",
+        "该函数挂接的 preview/commit 分发路径及 settings 配置来源未在片段中展示"
+      ],
+      "evidence_ids": [
+        "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

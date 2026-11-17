@@ -16,7 +16,6 @@ from app.db.models import KnowledgeJob
 from app.db.session import session_factory
 from app.knowledge.evidence_registry import canonical
 from app.knowledge.schemas import (
-    CandidateRelation,
     CapabilityClaimDraft,
     EvidenceRequest,
     ModuleInvestigationOutput,
@@ -35,9 +34,15 @@ class CompactCandidate(Strict):
     start_line: int = Field(ge=1)
     end_line: int = Field(ge=1)
     limitations: list[Annotated[str, Field(max_length=200)]] = Field(min_length=1, max_length=4)
+    conditions: list[Annotated[str, Field(max_length=200)]] = Field(
+        default_factory=list, max_length=4
+    )
+    supported_scope: list[Annotated[str, Field(max_length=200)]] = Field(
+        default_factory=list, max_length=4
+    )
 
 
-def checkpoint(deps, module_id, claim):
+def checkpoint(deps, module_id, claim, *, exploration=None):
     with session_factory().begin() as db:
         row = fence(db, deps.run_id, deps.token)
         previous = row.output_json.get("output")
@@ -52,22 +57,33 @@ def checkpoint(deps, module_id, claim):
                 ],
             )
         )
-        claim.unresolved_questions.append(
-            "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
-        )
-        merged.capabilities.append(claim)
+        if claim is not None:
+            claim.unresolved_questions.append(
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+            )
+            merged.capabilities.append(claim)
+        if exploration is not None:
+            row.metrics_json = {**row.metrics_json, "exploration": exploration}
         saved = save_output(db, deps.context, deps.run_id, deps.token, merged, finalize=False)
         saved["coverage_incomplete"] = True
         row.output_json = dict(saved)
     deps.update(
-        "candidate_checkpoint", {"local_key": claim.key, "evidence_ids": claim.evidence_ids}
+        "candidate_checkpoint" if claim else "fragment_checkpoint",
+        {
+            "local_key": claim.key if claim else None,
+            "evidence_ids": claim.evidence_ids if claim else [],
+        },
     )
 
 
-def candidate_output(source, file, slot, module_id):
+def candidate_output(source, file, slot, module_id, *, key=None, exploration=None):
     async def register_evidence_and_candidate(ctx: RunContext, draft: CompactCandidate) -> str:
         """选择已完整回读源码中的精确行范围，登记证据并保存一条未验证候选。"""
-        if draft.end_line < draft.start_line or draft.end_line > source.end_line:
+        if (
+            draft.start_line < source.start_line
+            or draft.end_line < draft.start_line
+            or draft.end_line > source.end_line
+        ):
             raise ModelRetry("行范围必须位于给定片段内")
         try:
             # 精确范围再次调用共享只读工具；登记仍要求本次准确回读。
@@ -90,7 +106,7 @@ def candidate_output(source, file, slot, module_id):
                 )
             )
             claim = CapabilityClaimDraft(
-                key=f"bounded_{slot + 1}",
+                key=key or f"bounded_{slot + 1}",
                 name=draft.name,
                 category="源码机制候选",
                 action=draft.action,
@@ -98,9 +114,11 @@ def candidate_output(source, file, slot, module_id):
                 business_goal=draft.business_goal,
                 implementation_mechanism=draft.mechanism,
                 limitations=draft.limitations,
+                conditions=draft.conditions,
+                supported_scope=draft.supported_scope,
                 evidence_ids=[receipt.evidence_id],
             )
-            checkpoint(ctx.deps, module_id, claim)
+            checkpoint(ctx.deps, module_id, claim, exploration=exploration)
             return claim.key
         except AppError as exc:
             retryable_tool_error(exc)
@@ -202,63 +220,7 @@ async def investigate_bounded(deps, module_id, model):
         return saved
 
 
-class RelationDraft(Strict):
-    source_key: str
-    target_key: str
-    rationale: Annotated[str, Field(min_length=1, max_length=500)]
-    unverified_gaps: list[Annotated[str, Field(max_length=200)]] = Field(min_length=1, max_length=4)
-
-
 async def investigate_relation(deps, module_id, model, settings):
-    from app.agents.runtime import AuditedModel
+    from app.agents.equivalence import investigate_equivalence
 
-    with session_factory()() as db:
-        output = ModuleInvestigationOutput.model_validate(
-            db.get(Investigation, deps.run_id).output_json["output"]
-        )
-    if len(output.capabilities) < 2 or output.candidate_relations:
-        return
-
-    async def record_hypothesis(ctx: RunContext, draft: RelationDraft) -> str:
-        keys = {c.key for c in output.capabilities}
-        if (
-            draft.source_key not in keys
-            or draft.target_key not in keys
-            or draft.source_key == draft.target_key
-        ):
-            raise ModelRetry("只能引用两条不同的已保存候选key")
-        output.candidate_relations = [
-            CandidateRelation(
-                source_key=draft.source_key,
-                target_key=draft.target_key,
-                relation_type="possible_equivalent",
-                rationale=draft.rationale,
-                unverified_gaps=draft.unverified_gaps,
-            )
-        ]
-        with session_factory().begin() as db:
-            row = fence(db, deps.run_id, deps.token)
-            saved = save_output(db, deps.context, deps.run_id, deps.token, output, finalize=False)
-            saved["coverage_incomplete"] = True
-            row.output_json = dict(saved)
-        ctx.deps.update(
-            "hypothesis_checkpoint",
-            {"source_key": draft.source_key, "target_key": draft.target_key},
-        )
-        return "hypothesis_only"
-
-    agent = Agent(
-        deps_type=type(deps),
-        output_type=ToolOutput(record_hypothesis, name="record_hypothesis"),
-        instructions=(
-            "只探索已保存候选的潜在技术等效用途，给出需要补足的条件与缺口，不作产品支持结论。"
-            "固定平台Webhook绝不等于任意地址/自定义认证Webhook。只输出一条保守假设，直接调用工具。"
-        ),
-        retries=1,
-    )
-    await agent.run(
-        canonical({"candidates": [c.model_dump() for c in output.capabilities]}),
-        deps=deps,
-        model=AuditedModel(model, deps),
-        model_settings=settings,
-    )
+    await investigate_equivalence(deps, model)

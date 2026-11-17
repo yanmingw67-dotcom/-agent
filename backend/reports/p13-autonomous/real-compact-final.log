@@ -1,0 +1,124 @@
+{
+  "artifact": "reports/p13-autonomous/real-compact-final.json",
+  "passed": true,
+  "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "status": "partial",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "autonomous",
+    "capability_limit": 1,
+    "include_equivalence": true,
+    "exploration_max_fragments": 3,
+    "exploration_started_at": "2026-11-17T13:20:57.633087+00:00",
+    "model_requests": 5,
+    "model_responses": 5,
+    "unmeasured_requests": 0,
+    "tool_calls": 23,
+    "tokens": 17668,
+    "input_tokens": 8095,
+    "output_tokens": 9573,
+    "sampled_peak_cpu_percent": 89.9,
+    "sampled_peak_rss_bytes": 127950848,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 0,
+    "unresolved_count": 2,
+    "uncovered_modules": 1,
+    "claimed_capabilities": 3,
+    "duration_ms": 130137,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model": "glm-5.3-flash",
+    "knowledge_build_complete": false,
+    "coverage_incomplete": true
+  },
+  "candidates": [
+    {
+      "key": "auto_874db914733092313598361f",
+      "name": "事件批处理校验去重",
+      "category": "源码机制候选",
+      "action": "逐条校验事件租户必填，按配置以(tenant,id)去重，返回通过校验的事件列表",
+      "target": "process_batch",
+      "business_goal": "防止缺失租户或重复的事件进入接受结果",
+      "implementation_mechanism": "遍历events：settings[\"tenant_required\"]为真且缺tenant时抛ValueError；settings[\"deduplicate\"]为真时调用reserve_once(store,tenant,id)占位失败则continue跳过；accepted收集并返回通过事件",
+      "supported_scope": [
+        "core/h_engine.py process_batch 批量事件入口"
+      ],
+      "conditions": [
+        "settings须含tenant_required与deduplicate键",
+        "去重仅在deduplicate为真时按(tenant,id)判重"
+      ],
+      "limitations": [
+        "reserve_once实现不在片段内，占位原子性未核验",
+        "无预览/提交模式语义及片段外保证"
+      ],
+      "evidence_ids": [
+        "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "auto_efbf8dc0c0d8735a1296f90c",
+      "name": "展开commit提交路径",
+      "category": "源码机制候选",
+      "action": "检索process_batch与preview_unique实现，核验提交处理、去重与存储注入行为。",
+      "target": "process_batch（commit分支提交处理）",
+      "business_goal": "确认重复事件、跨租户与重复请求对提交结果的影响。",
+      "implementation_mechanism": "commit分支把events、注入store与settings传入process_batch；文档称配置控制提交、存储取决于注入实现，去重与租户隔离行为待核验。",
+      "supported_scope": [
+        "commit模式结果幂等与租户隔离"
+      ],
+      "conditions": [
+        "mode == \"commit\"",
+        "store、settings由调用方注入"
+      ],
+      "limitations": [
+        "process_batch/preview_unique未展示未核验",
+        "入口接线仅名称启发"
+      ],
+      "evidence_ids": [
+        "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "auto_f6097ab877e2da6e11874abc",
+      "name": "预览按id顺序去重",
+      "category": "源码机制候选",
+      "action": "遍历事件列表，以事件id为键去重，保留首个出现的事件并按原顺序返回新列表",
+      "target": "preview_unique函数处理的输入事件列表",
+      "business_goal": "为预览模式提供本地去重便利，使运维预览到去重后的事件结果",
+      "implementation_mechanism": "用seen集合记录已见event['id']，id首次出现则追加进result，后续同id事件跳过；返回保持原顺序的新列表，不做校验、不区分租户、不涉及存储",
+      "supported_scope": [
+        "core/i_preview.py preview_unique预览事件列表",
+        "同id事件仅保留首次出现项"
+      ],
+      "conditions": [
+        "输入须为含可哈希'id'键的事件字典列表",
+        "仅用于预览本地便利，不属提交或存储路径"
+      ],
+      "limitations": [
+        "去重键仅id不含租户，不同租户同id会被误判为重复",
+        "事件缺'id'键会抛KeyError，且无类型或空值校验"
+      ],
+      "evidence_ids": [
+        "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

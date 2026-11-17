@@ -1,0 +1,149 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p13_autonomous_acceptance.py", line 269, in <module>
+    main()
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p13_autonomous_acceptance.py", line 265, in main
+    assert report["passed"], "真实模型本轮未达事前验收门槛；请检查已保存JSON，不自动重跑"
+           ~~~~~~^^^^^^^^^^
+AssertionError: 真实模型本轮未达事前验收门槛；请检查已保存JSON，不自动重跑
+{
+  "artifact": "reports/p13-autonomous/real-final.json",
+  "passed": false,
+  "job_id": "e863d5d4-cf9b-4306-b6b6-6aa5d4eaf636",
+  "status": "partial",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "autonomous",
+    "capability_limit": 1,
+    "include_equivalence": true,
+    "exploration_max_fragments": 3,
+    "exploration_started_at": "2026-11-17T13:12:56.300446+00:00",
+    "model_requests": 6,
+    "model_responses": 5,
+    "unmeasured_requests": 0,
+    "tool_calls": 24,
+    "tokens": 16689,
+    "input_tokens": 7302,
+    "output_tokens": 9387,
+    "sampled_peak_cpu_percent": 99.0,
+    "sampled_peak_rss_bytes": 128290816,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 0,
+    "unresolved_count": 2,
+    "uncovered_modules": 1,
+    "claimed_capabilities": 3,
+    "duration_ms": 180097,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": true,
+    "model": "glm-5.3-flash",
+    "knowledge_build_complete": false,
+    "coverage_incomplete": true
+  },
+  "candidates": [
+    {
+      "key": "auto_efbf8dc0c0d8735a1296f90c",
+      "name": "按 mode 分发事件处理",
+      "category": "源码机制候选",
+      "action": "根据 mode 参数将事件分派到 preview_unique 或 process_batch，未知模式抛 ValueError",
+      "target": "api/endpoint.py handle_events",
+      "business_goal": "区分预览与提交两条处理路径，并对未知模式快速失败",
+      "implementation_mechanism": "对入参 mode 做字符串精确比较：等于 'preview' 时返回 preview_unique(events)；不等于 'commit' 的其他值抛出 ValueError('unknown mode')；等于 'commit' 时返回 process_batch(events, store, settings)。函数本身不做去重或存储，仅按模式路由调用。",
+      "supported_scope": [
+        "mode='preview'：events 的本地预览路径",
+        "mode='commit'：events+store+settings 的提交批处理路径",
+        "其他 mode：不处理事件，直接失败"
+      ],
+      "conditions": [
+        "mode 与 'preview'/'commit' 为精确字符串比较（区分大小写）",
+        "preview 分支不使用 store/settings，仅处理 events",
+        "commit 分支的存储行为取决于调用方注入的 store 实现与 settings 配置",
+        "preview_unique 与 process_batch 须在调用环境中可用"
+      ],
+      "limitations": [
+        "未知 mode 仅抛 ValueError('unknown mode')，片段内无重试或回退",
+        "preview 不等于已提交处理（文档明确），不能替代 commit 结果",
+        "重复事件、跨租户、重复请求是否影响结果在本片段不可判定，取决于 preview_unique 与 process_batch",
+        "片段仅含 5-10 行，可能为截取，非完整文件"
+      ],
+      "evidence_ids": [
+        "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "auto_874db914733092313598361f",
+      "name": "提交批次接受：租户必填校验与 store 侧去重预留",
+      "category": "源码机制候选",
+      "action": "遍历事件批次，按 settings 校验 tenant 必填，deduplicate 开启时调用 reserve_once(store, tenant, id) 向注入 store 预留，未预留成功的事件被跳过，返回按原顺序的接受列表",
+      "target": "core/h_engine.py 的 process_batch 函数",
+      "business_goal": "在提交路径上按配置接受事件批次，防止重复事件被重复接受并强制租户标识",
+      "implementation_mechanism": "逐事件取 tenant；settings[\"tenant_required\"] 为真且 tenant 缺失时抛 ValueError；settings[\"deduplicate\"] 为真时调用 reserve_once(store, tenant, event[\"id\"])，返回假值则 continue 跳过该事件，否则追加到 accepted，最后返回 accepted 列表",
+      "supported_scope": [
+        "commit/提交模式的批量事件处理路径（区别于已记录的预览本地去重）",
+        "事件为含可选 tenant 与必含 id 字段的映射对象",
+        "settings 为含 tenant_required、deduplicate 键的配置字典",
+        "store 为外部注入实现，本片段不保证其具体行为"
+      ],
+      "conditions": [
+        "settings[\"tenant_required\"] 为真且事件缺 tenant 时抛 ValueError(\"tenant required\")",
+        "settings[\"deduplicate\"] 为真才启用 store 侧预留去重，否则事件直接接受",
+        "去重实际效果取决于注入的 store 及 reserve_once 实现行为",
+        "event 必须含 \"id\" 键，缺失会在访问 event[\"id\"] 时抛 KeyError"
+      ],
+      "limitations": [
+        "reserve_once 未在片段内展示，其原子性、持久性与去重键构成未知",
+        "被跳过的事件无任何标记返回，调用方无法区分被去重的事件",
+        "settings 缺少 tenant_required/deduplicate 键会直接 KeyError",
+        "片段未展示预留后的写回、事务或失败回滚语义"
+      ],
+      "evidence_ids": [
+        "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "auto_f6097ab877e2da6e11874abc",
+      "name": "按事件 id 本地去重（预览）",
+      "category": "源码机制候选",
+      "action": "遍历事件列表，用集合记录已出现的 id，仅保留首次出现的事件并按原顺序返回新列表",
+      "target": "含 \"id\" 键的事件字典列表（分发逻辑 preview 分支的输入）",
+      "business_goal": "在预览中消除同一调用内的重复事件，避免重复展示或重复本地处理",
+      "implementation_mechanism": "seen 集合缓存已见 id；event[\"id\"] 不在 seen 时加入 seen 并 append 到 result，重复 id 被跳过；返回 result",
+      "supported_scope": [
+        "单次 preview 调用内的事件去重",
+        "不适用于 commit/存储层的去重结论"
+      ],
+      "conditions": [
+        "events 为可迭代的字典序列，每项须含 \"id\" 键",
+        "id 值可哈希",
+        "去重范围仅限本次调用传入的 events，不跨租户、不跨请求"
+      ],
+      "limitations": [
+        "事件缺少 \"id\" 键抛 KeyError，id 不可哈希抛 TypeError",
+        "仅内存内按调用去重，无持久化与跨调用去重，预览结果不等价于提交处理",
+        "相同 id 但内容不同的事件只保留首个，后续内容被丢弃",
+        "返回新列表，不修改输入 events"
+      ],
+      "evidence_ids": [
+        "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+        "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

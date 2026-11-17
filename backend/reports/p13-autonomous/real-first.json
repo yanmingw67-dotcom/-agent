@@ -1,0 +1,1821 @@
+{
+  "mode": "REAL_APPROVED_MODEL_NO_PRESET_OUTPUT",
+  "criteria": "docs/P1.3_AUTONOMOUS_PLAN.md",
+  "label": "real-first",
+  "module": "api",
+  "exploration_max_fragments": 3,
+  "equivalence_requested": true,
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "approval": {
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "data_classification": "synthetic_public"
+  },
+  "job_id": "f564c2ec-d2d8-4f51-a33b-76730cf7ad3a",
+  "enqueue_ms": 13.001,
+  "retrieval_latency_ms": {
+    "idle": [
+      14.861,
+      10.807,
+      11.332,
+      14.52,
+      11.245,
+      15.364,
+      11.909,
+      11.44,
+      14.937,
+      11.357,
+      12.102,
+      10.484,
+      13.936,
+      10.675,
+      11.466,
+      10.652,
+      10.382,
+      10.122,
+      12.89,
+      13.836
+    ],
+    "running": [
+      12.123,
+      21.768,
+      18.585,
+      12.853,
+      16.09,
+      16.229,
+      16.413,
+      10.979,
+      48.612,
+      10.382,
+      19.031,
+      12.891,
+      11.092,
+      16.874,
+      14.674,
+      17.306,
+      13.17,
+      12.431,
+      15.109,
+      24.655,
+      12.262,
+      12.189,
+      11.819,
+      11.825,
+      15.678,
+      15.336,
+      12.961,
+      15.618,
+      10.504,
+      16.079,
+      12.485,
+      18.455,
+      14.402,
+      15.351,
+      10.25,
+      21.733,
+      18.795,
+      16.475,
+      11.287,
+      14.917,
+      18.303,
+      13.438,
+      12.714,
+      12.239,
+      12.137,
+      10.484,
+      12.341,
+      11.025,
+      14.038,
+      14.934,
+      12.126,
+      11.533,
+      13.218,
+      16.969,
+      13.176,
+      13.933,
+      12.497,
+      11.301,
+      12.42,
+      11.565,
+      11.98,
+      12.504,
+      15.589,
+      18.818,
+      16.666,
+      14.645,
+      10.401,
+      14.143,
+      12.465,
+      16.803,
+      16.159,
+      14.527,
+      19.739,
+      11.444,
+      15.745,
+      12.379,
+      15.695,
+      10.824,
+      14.398,
+      19.002,
+      11.548,
+      10.444,
+      11.634,
+      10.684,
+      14.201,
+      10.719,
+      14.84,
+      18.408,
+      13.893,
+      15.111,
+      15.286,
+      17.477,
+      10.056,
+      15.249,
+      14.912,
+      14.549,
+      22.822,
+      15.835,
+      15.782,
+      12.403,
+      25.529,
+      13.463,
+      11.931,
+      12.888,
+      12.019,
+      11.347,
+      11.84,
+      11.884,
+      11.478,
+      13.659,
+      13.018,
+      19.816,
+      13.642,
+      19.553,
+      11.681,
+      18.193,
+      14.622,
+      14.138,
+      12.422,
+      13.201,
+      11.634,
+      11.572,
+      14.655,
+      11.733,
+      14.273,
+      12.725,
+      10.348,
+      16.387,
+      16.104,
+      13.011,
+      11.955,
+      13.947,
+      14.564,
+      19.957,
+      23.217,
+      18.965,
+      12.395,
+      12.998,
+      17.447,
+      11.861,
+      15.521,
+      20.743,
+      16.565,
+      14.456,
+      15.189,
+      11.082,
+      18.693,
+      10.952,
+      12.557,
+      20.638,
+      14.33,
+      17.75,
+      14.215,
+      12.289,
+      14.304,
+      12.389,
+      17.8,
+      12.935,
+      10.82,
+      12.495,
+      15.064
+    ],
+    "errors": []
+  },
+  "idle_latency_summary": {
+    "samples": 20,
+    "p50_ms": 11.466,
+    "p95_ms": 15.364
+  },
+  "running_latency_summary": {
+    "samples": 161,
+    "p50_ms": 13.947,
+    "p95_ms": 20.638
+  },
+  "elapsed_seconds": 169.493,
+  "job": {
+    "id": "f564c2ec-d2d8-4f51-a33b-76730cf7ad3a",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "job_type": "knowledge_build",
+    "stage": "partial",
+    "status": "partial",
+    "error_code": "MODULE_INVESTIGATION_FAILED",
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "requested_classification": "synthetic_public",
+      "model_mode": "REAL",
+      "investigation_mode": "autonomous",
+      "capability_limit": 1,
+      "include_equivalence": true,
+      "exploration_max_fragments": 3,
+      "exploration_started_at": "2026-11-17T13:06:56.447301+00:00",
+      "model_requests": 6,
+      "model_responses": 6,
+      "unmeasured_requests": 0,
+      "tool_calls": 22,
+      "tokens": 20586,
+      "input_tokens": 8710,
+      "output_tokens": 11876,
+      "sampled_peak_cpu_percent": 82.8,
+      "sampled_peak_rss_bytes": 127557632,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 0,
+      "unresolved_count": 2,
+      "uncovered_modules": 1,
+      "claimed_capabilities": 2,
+      "duration_ms": 166494,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": "glm-5.3-flash",
+      "knowledge_build_complete": false,
+      "coverage_incomplete": true
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T13:06:53.642962Z",
+    "started_at": "2026-11-17T13:06:56.447295Z",
+    "finished_at": "2026-11-17T13:09:42.919468Z"
+  },
+  "investigations": [
+    {
+      "id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+      "status": "partial",
+      "attempt": 1,
+      "error_code": "MODEL_OR_OUTPUT_ERROR",
+      "metrics": {
+        "tool_calls": 22,
+        "trace_sequence": 81,
+        "exploration": {
+          "version": 1,
+          "tasks": [
+            {
+              "id": "efbf8dc0c0d8735a1296f90c",
+              "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+              "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+              "path": "api/endpoint.py",
+              "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+              "symbol_id": "a8d89a0a-0a1c-4730-a330-1d10e45c6d40",
+              "symbol": "handle_events",
+              "start_line": 5,
+              "end_line": 10,
+              "priority": 120,
+              "reasons": [
+                "indexed_symbol",
+                "search_symbols:handle_events"
+              ],
+              "status": "done",
+              "expanded": true,
+              "observation": "片段直接支持的机制是handle_events按mode分发：preview分支仅调用preview_unique(events)，不涉及存储与配置；commit分支调用process_batch(events, store, settings)；其余mode抛ValueError(\"unknown mode\")。与manual.md第2节一致（preview/commit两模式、配置控制提交处理、预览仅为本地便捷、存储依赖注入实现）。preview_unique与process_batch实现及store注入实现不在片段内；manual提出\"跨租户重复事件或重复请求是否影响结果\"为未解释业务，需扩展调查。",
+              "feedback": {
+                "follow_symbols": [
+                  "preview_unique",
+                  "process_batch"
+                ],
+                "search_queries": [
+                  "process_batch settings 提交处理 配置逻辑",
+                  "store 注入实现 存储行为 跨租户重复事件"
+                ]
+              }
+            },
+            {
+              "id": "5fe019c648bbaa171f1b24fd",
+              "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+              "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+              "path": "api/endpoint.py",
+              "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+              "symbol_id": null,
+              "symbol": null,
+              "start_line": 1,
+              "end_line": 4,
+              "priority": 119,
+              "reasons": [
+                "unexplained_lines"
+              ],
+              "status": "done",
+              "expanded": true,
+              "observation": "片段仅为第1-2行两条导入语句加空行，无函数定义或可执行逻辑，不直接支持任何独立能力。导入仅表明该模块依赖 core.h_engine 的 process_batch 与 core.i_preview 的 preview_unique，与文档所述 preview/commit 双模式相呼应，但名称相同不证明行为一致；先前候选 handle_events 按模式分发的代码不在本片段行号范围内，故不重复提名，candidate=null。",
+              "feedback": {
+                "follow_symbols": [
+                  "core.h_engine.process_batch",
+                  "core.i_preview.preview_unique",
+                  "api/endpoint.py:handle_events"
+                ],
+                "search_queries": [
+                  "commit 处理 配置控制 存储注入实现",
+                  "重复事件 跨租户 请求重复 去重行为"
+                ]
+              }
+            },
+            {
+              "id": "f6097ab877e2da6e11874abc",
+              "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+              "sha256": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+              "path": "core/i_preview.py",
+              "module_id": "a9de3014-2ee6-45f1-bc1b-116343eb5d68",
+              "symbol_id": "8142ccab-855e-4562-a64d-713eb7a916d3",
+              "symbol": "preview_unique",
+              "start_line": 1,
+              "end_line": 8,
+              "priority": 100,
+              "reasons": [
+                "search_symbols:preview_unique"
+              ],
+              "status": "pending",
+              "expanded": false
+            },
+            {
+              "id": "874db914733092313598361f",
+              "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+              "sha256": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+              "path": "core/h_engine.py",
+              "module_id": "a9de3014-2ee6-45f1-bc1b-116343eb5d68",
+              "symbol_id": "439bbbfa-8b84-49d7-a171-f327d6b71e06",
+              "symbol": "process_batch",
+              "start_line": 118,
+              "end_line": 128,
+              "priority": 100,
+              "reasons": [
+                "search_symbols:process_batch"
+              ],
+              "status": "done",
+              "expanded": true,
+              "observation": "process_batch（core/h_engine.py 第118-128行）实现批量事件筛选：tenant_required 开启时校验租户必填否则抛 ValueError；deduplicate 开启时经 reserve_once 预留去重，返回被接受事件列表。与此前 handle_events 按模式分发机制不同，属独立能力，不构成重复。但 reserve_once 的实现与去重语义、settings 配置来源、以及该函数在 preview/commit 分发中的位置均未在片段中展示；manual.md 声称存储行为取决于注入实现（文档不可信，仅作线索），需代码级核实后再判断跨租户重复请求的实际影响。",
+              "feedback": {
+                "follow_symbols": [
+                  "reserve_once",
+                  "handle_events"
+                ],
+                "search_queries": [
+                  "reserve_once 定义与 store 去重实现",
+                  "settings tenant_required deduplicate 配置来源"
+                ]
+              }
+            },
+            {
+              "id": "d2dc9c0ea858f807060e5bf3",
+              "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+              "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+              "path": "storage/durable.py",
+              "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+              "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+              "symbol": "reserve_once",
+              "start_line": 1,
+              "end_line": 3,
+              "priority": 100,
+              "reasons": [
+                "search_symbols:reserve_once"
+              ],
+              "status": "pending",
+              "expanded": false
+            }
+          ],
+          "deferred": [
+            {
+              "tool": "search_code_batch",
+              "query": "process_batch settings 提交处理 配置逻辑",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_code_batch",
+              "query": "store 注入实现 存储行为 跨租户重复事件",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_symbols",
+              "query": "ValueError",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_symbols",
+              "query": "api/endpoint.py:handle_events",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_code_batch",
+              "query": "commit 处理 配置控制 存储注入实现",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_code_batch",
+              "query": "重复事件 跨租户 请求重复 去重行为",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_code_batch",
+              "query": "reserve_once 定义与 store 去重实现",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_code_batch",
+              "query": "settings tenant_required deduplicate 配置来源",
+              "reason": "expansion_round_limit"
+            },
+            {
+              "tool": "search_symbols",
+              "query": "ValueError",
+              "reason": "expansion_round_limit"
+            }
+          ],
+          "searches": [
+            "search_code_batch:commit mode configuration storage implementation injection",
+            "search_code_batch:tenant repeated events idempotency preview commit",
+            "search_symbols:preview_unique",
+            "search_symbols:process_batch",
+            "search_symbols:core.h_engine.process_batch",
+            "search_symbols:core.i_preview.preview_unique",
+            "search_symbols:reserve_once",
+            "search_symbols:handle_events"
+          ],
+          "inventory_truncated": false,
+          "planned": true,
+          "stop_reason": "MODEL_OR_OUTPUT_ERROR",
+          "coverage_incomplete": true,
+          "equivalence": {
+            "status": "investigated",
+            "source_key": "auto_efbf8dc0c0d8735a1296f90c",
+            "target_key": "auto_874db914733092313598361f",
+            "verdict": "not_equivalent",
+            "input_contract": "源handle_events：入参(mode, events, store, settings)，mode必须为\"preview\"或\"commit\"。目标process_batch：入参(events, store, settings)，无mode参数；deduplicate开启时事件须含\"id\"键。",
+            "output_contract": "源：preview返回preview_unique(events)结果（实现未知，不触store/settings）；commit返回process_batch结果。目标：返回accepted事件列表，即通过租户校验并成功去重预留的事件。",
+            "conditions_and_errors": "源在mode非preview/commit时抛ValueError(\"unknown mode\")；preview路径不校验租户、不去重、不触store/settings。目标：tenant_required开启且tenant缺失抛ValueError(\"tenant required\")；deduplicate开启时已预留事件被跳过、event缺\"id\"抛KeyError；无mode分发逻辑。",
+            "rationale": "两者是调用/组合关系而非等效：handle_events仅在commit分支委托process_batch，另含preview分支（调用preview_unique且不传store/settings）与未知mode报错；process_batch是纯批量租户校验与去重筛选，无mode分发。参数契约、适用范围与异常面均不同，不可互换。",
+            "gaps": [
+              "preview_unique的实现与输出契约不在片段内，preview路径行为无法核验",
+              "reserve_once语义（去重键、作用域、失败不回滚等副作用）依赖注入store实现，未核验",
+              "settings的配置来源与合法键集合未展示，片段外代码是否改变分发行为未知"
+            ],
+            "evidence_ids": [
+              "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "source_locations": [
+              {
+                "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+                "path": "api/endpoint.py",
+                "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+                "start_line": 5,
+                "end_line": 10,
+                "snippet": "def handle_events(mode, events, store, settings):\n    if mode == \"preview\":\n        return preview_unique(events)\n    if mode != \"commit\":\n        raise ValueError(\"unknown mode\")\n    return process_batch(events, store, settings)",
+                "locator": {},
+                "match_terms": [],
+                "unresolved": false
+              },
+              {
+                "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+                "path": "core/h_engine.py",
+                "sha256": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+                "start_line": 118,
+                "end_line": 128,
+                "snippet": "def process_batch(events, store, settings):\n    accepted = []\n    for event in events:\n        tenant = event.get(\"tenant\")\n        if settings[\"tenant_required\"] and not tenant:\n            raise ValueError(\"tenant required\")\n        if settings[\"deduplicate\"]:\n            if not reserve_once(store, tenant, event[\"id\"]):\n                continue\n        accepted.append(event)\n    return accepted",
+                "locator": {},
+                "match_terms": [],
+                "unresolved": false
+              }
+            ],
+            "semantic_verification": "unverified"
+          },
+          "document_clues": [
+            {
+              "id": "9022c6a5-2062-486d-bec2-ef42cef4cd9c",
+              "document_id": "94ea4f32-0d11-45a9-91f6-ae64212d13e6",
+              "path": "manual.md",
+              "status": "parsed",
+              "sha256": "00efe81d4f35889ebfb15c4d4c738371c35cb1bc5b40ef7131d8590c2cee8975",
+              "snippet": "The API has preview and commit modes. Operators need to know whether repeated events in different tenants or repeated requests affect the result. Configuration controls commit processing. Preview is a local convenience and must not automatically be treated as a substitute for committed processing. Storage behavior depends on the injected implementation.",
+              "locator": {
+                "line": 2,
+                "section": "Event processing",
+                "encoding": "utf-8-sig"
+              },
+              "match_terms": [],
+              "unresolved": false
+            },
+            {
+              "id": "95778df5-1e86-4089-b186-0970d4389e07",
+              "document_id": "94ea4f32-0d11-45a9-91f6-ae64212d13e6",
+              "path": "manual.md",
+              "status": "parsed",
+              "sha256": "76e18d8de5b21b0c9a17e8afcf60bf9d92a4b914b7aac9ffafd5935479e9eefc",
+              "snippet": "# Event processing",
+              "locator": {
+                "line": 1,
+                "section": "Event processing",
+                "encoding": "utf-8-sig"
+              },
+              "match_terms": [],
+              "unresolved": false
+            }
+          ],
+          "module_file_count": 1,
+          "entrypoints": [
+            {
+              "id": "8f8145f5-9e00-412e-90eb-53afa892ec83",
+              "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+              "source_ref": {
+                "path": "api/endpoint.py",
+                "start_line": 5,
+                "basis": "name heuristic; wiring unverified"
+              },
+              "status": "unexplained"
+            }
+          ],
+          "unreadable_files": [],
+          "module_name": "api",
+          "documents_truncated": false,
+          "planning_reason": "manual 指明预览/提交双模式、配置控制提交处理、存储依赖注入实现，需回答跨租户/重复请求是否影响结果。入口 api/endpoint.py 未解释且接线未核验，故先查高优先级符号 handle_events 的实际逻辑，再核未解释的 1-4 行导入与配置接线，验证注入的存储实现与文档断言一致性，并以检索词发现未展示的实现。",
+          "planning_searches": [
+            "commit mode configuration storage implementation injection",
+            "tenant repeated events idempotency preview commit"
+          ]
+        },
+        "context_chars": 11819,
+        "model_requests": 6,
+        "input_tokens": 8710,
+        "output_tokens": 11876,
+        "tokens": 20586,
+        "model_responses": 6,
+        "unmeasured_requests": 0
+      },
+      "result": {
+        "output": {
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "module_summary": "有限证据候选调查；未完成全模块覆盖",
+          "capabilities": [
+            {
+              "key": "auto_efbf8dc0c0d8735a1296f90c",
+              "name": "handle_events 按模式分发事件处理",
+              "category": "源码机制候选",
+              "action": "根据mode参数将事件处理分发到预览或提交路径，未知模式抛出ValueError",
+              "target": "api/endpoint.py:handle_events(mode, events, store, settings)",
+              "business_goal": "区分预览与提交两条处理路径：预览为本地便捷不入存储，提交按注入存储与配置执行",
+              "implementation_mechanism": "mode==\"preview\"时仅以events调用preview_unique（不传store与settings）；mode==\"commit\"时以events、store、settings调用process_batch；其余取值抛ValueError(\"unknown mode\")",
+              "supported_scope": [
+                "mode取值preview或commit时的事件处理分发",
+                "preview路径不触及store与settings",
+                "commit路径依赖注入的store与settings配置"
+              ],
+              "conditions": [
+                "mode必须为\"preview\"或\"commit\"，否则抛ValueError(\"unknown mode\")",
+                "提交处理行为取决于注入的store实现与settings配置"
+              ],
+              "limitations": [
+                "preview_unique与process_batch内部逻辑不在片段内，去重/租户行为无法核验",
+                "预览结果不得自动视为提交处理的替代（与manual.md一致）",
+                "片段未展示跨租户重复事件或重复请求对结果的影响"
+              ],
+              "evidence_ids": [
+                "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+              ],
+              "status": "evidence_found"
+            },
+            {
+              "key": "auto_874db914733092313598361f",
+              "name": "process_batch 批量事件校验与去重筛选",
+              "category": "源码机制候选",
+              "action": "逐个遍历事件：按 settings['tenant_required'] 校验 tenant 必填，按 settings['deduplicate'] 调用 reserve_once 做去重预留，未通过者跳过，返回被接受事件列表",
+              "target": "core/h_engine.py process_batch",
+              "business_goal": "防止重复事件被重复处理，并强制租户字段完整性校验",
+              "implementation_mechanism": "对每个事件取 tenant；若 settings['tenant_required'] 开启且 tenant 为空则抛 ValueError；若 settings['deduplicate'] 开启则调用 reserve_once(store, tenant, event['id'])，返回 False（已预留）则 continue 跳过；否则加入 accepted，最终返回 accepted 列表",
+              "supported_scope": [
+                "单次传入 events 列表内的事件级筛选",
+                "去重键为 (tenant, 事件 id) 组合，实际作用域由 reserve_once 决定"
+              ],
+              "conditions": [
+                "settings['tenant_required'] 为真且事件无 tenant 时抛出 ValueError('tenant required')",
+                "settings['deduplicate'] 为真时走 reserve_once 预留判定，已预留的事件被跳过",
+                "settings['deduplicate'] 为假时不做去重，全部事件进入 accepted",
+                "去重启用时事件必须含 'id' 键，缺失则抛 KeyError"
+              ],
+              "limitations": [
+                "去重语义依赖注入 store 的 reserve_once 实现，本片段内无法核验",
+                "批次无原子性：抛出异常前已预留的事件不回滚，store 中残留预留副作用",
+                "tenant_required 关闭时 tenant 可能为 None 传入 reserve_once，跨租户去重范围取决于该实现",
+                "该函数挂接的 preview/commit 分发路径及 settings 配置来源未在片段中展示"
+              ],
+              "evidence_ids": [
+                "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+              ],
+              "status": "evidence_found"
+            }
+          ],
+          "candidate_relations": [],
+          "unexplained_entrypoint_ids": [
+            "8f8145f5-9e00-412e-90eb-53afa892ec83"
+          ],
+          "open_questions": [
+            "coverage_incomplete：有限片段调查，不证明不存在其他能力或运行时可达性"
+          ]
+        },
+        "claim_ids": {
+          "auto_efbf8dc0c0d8735a1296f90c": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+          "auto_874db914733092313598361f": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d"
+        },
+        "semantic_verification": "unverified",
+        "formal_compliance_decision": null,
+        "coverage_incomplete": true,
+        "knowledge_build_complete": false,
+        "stop_reason": "MODEL_OR_OUTPUT_ERROR"
+      }
+    }
+  ],
+  "trace": [
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 1,
+      "kind": "tool_call",
+      "details": {
+        "tool": "plan_module_inventory",
+        "args_hash": "a3d6ac0aebceefe7ef6ddfe02269f41204a6e02287e6a74719f53b361b11a225"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 2,
+      "kind": "module_inventory",
+      "details": {
+        "pending": 2,
+        "completed": 0,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 3,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_documents",
+        "args_hash": "fcae2faf6723b13732c253d3d8d3522afb4346f256da4ab1e287e072f54372d6"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 4,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_documents",
+        "result_hash": "b268270efa883e1859fae28d93d7b9a8650c9c236a6f2d4b33ab28b1c50bf8ff",
+        "result_count": 2,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 5,
+      "kind": "module_inventory",
+      "details": {
+        "pending": 2,
+        "completed": 0,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 6,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 7,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1160,
+        "output_tokens": 2004,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "plan_investigation",
+            "tool_call_id_hash": "c4e1d32ca3782d989e3b38de22fb8be3bb103770b0149ff56af79df414bab4dc"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 8,
+      "kind": "planner_decision",
+      "details": {
+        "pending": 2,
+        "completed": 0,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 9,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_code_batch",
+        "args_hash": "7b1ed61d45580f9eddca07c5ef57aa1b42416ef96ecd346658440d8330d2e3c4"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 10,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_code_batch",
+        "result_hash": "b2f9f975d978efa8ff02f570dd9e700c2eb20e8bf1a7f561313577bb2bab3707",
+        "result_count": 0,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 11,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_code_batch",
+        "query": "commit mode configuration storage implementation injection",
+        "matches": [],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 12,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 0,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 13,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_code_batch",
+        "args_hash": "45adf2264e1b2ab75e04b6b404aea10348300a249f8b41e5ccc36ef8433fe76b"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 14,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_code_batch",
+        "result_hash": "e3402fc8a5e9463ca434543eea50c85ef47f7b02f9aa94fc23dc77dbb8217400",
+        "result_count": 0,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 15,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_code_batch",
+        "query": "tenant repeated events idempotency preview commit",
+        "matches": [],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 16,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 0,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 17,
+      "kind": "fragment_selected",
+      "details": {
+        "task_id": "efbf8dc0c0d8735a1296f90c",
+        "path": "api/endpoint.py",
+        "start_line": 5,
+        "end_line": 10,
+        "priority": 120,
+        "reasons": [
+          "indexed_symbol"
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 18,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "54e750b5daef8f1ae26e25abba9a7abb46cc54ee534bcb86fc367d882869ef83"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 19,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "608f42a287e425f4bbd7b62e2fd1072465d0bd547fa22e6b496c520cabd97a36",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 20,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 21,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1229,
+        "output_tokens": 2435,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "finish_fragment",
+            "tool_call_id_hash": "ecc01f7b1e1142d700f4bd8005267bdecda25b5d4545799731cf336ddc637737"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 22,
+      "kind": "model_request",
+      "details": {
+        "message_count": 3,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 23,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1942,
+        "output_tokens": 479,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "finish_fragment",
+            "tool_call_id_hash": "e1174676d62c6aa30db91e950d78b58ea5fc081ace2ee3169b9eda681c5d7253"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 24,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "54e750b5daef8f1ae26e25abba9a7abb46cc54ee534bcb86fc367d882869ef83"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 25,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "22e2b66b2f87b9f7cf5b0062d62767f53cc92278b199c9002b0a133c706641e9",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 26,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "00de5d72371ec42e8bacbdc6189a8ec601b828d12f39a5fa57f5c0c7842ae551"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 27,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+        "quote_hash": "fe80cfbe5ad6338023c44f0b509679106feadf1e85a67d3a6559ca03ee7624bb"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 28,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "auto_efbf8dc0c0d8735a1296f90c",
+        "evidence_ids": [
+          "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 29,
+      "kind": "tool_call",
+      "details": {
+        "tool": "inspect_reference_metadata",
+        "args_hash": "ff2bc2575a2d2157e6baf3946418ec9f4e657760c7b39a60b927fe0d01893cbe"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 30,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "b7bc7d5a37b3585f93383cf7137199ea3df4f77b86ebb952e8e224cd083a908e"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 31,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "ef245d4c2aeb702833d592261c40760d6ce68f9b258b621c64d102450dbf4177",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 32,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "preview_unique",
+        "matches": [
+          {
+            "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+            "path": "core/i_preview.py",
+            "start_line": 1,
+            "end_line": 8
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 33,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 1,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 34,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "24f44b6b48dfb61277ec5390258194a5222ec0a1a5e196b9895dbdca5f36d036"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 35,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "859e1550261637a52912e2f3bcff18c8cc6326bf5e9583373479ca6974a95625",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 36,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "process_batch",
+        "matches": [
+          {
+            "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+            "path": "core/h_engine.py",
+            "start_line": 118,
+            "end_line": 128
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 37,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 3,
+        "completed": 1,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 38,
+      "kind": "frontier_expanded",
+      "details": {
+        "pending": 3,
+        "completed": 1,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 39,
+      "kind": "fragment_selected",
+      "details": {
+        "task_id": "5fe019c648bbaa171f1b24fd",
+        "path": "api/endpoint.py",
+        "start_line": 1,
+        "end_line": 4,
+        "priority": 119,
+        "reasons": [
+          "unexplained_lines"
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 40,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "c236cb174b55a3239307fbc2e954f721bc061c98208037aade04f243a2b9e6d2"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 41,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "57754fe34918864c925b543dd64cf0fbe07ac8af22add2b82eb333c857451d4e",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 42,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 43,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1227,
+        "output_tokens": 1315,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "finish_fragment",
+            "tool_call_id_hash": "7bea97c667064c56328c01bc6f360ee859fd74e7fc358706c87f8228ec43dd9f"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 44,
+      "kind": "fragment_checkpoint",
+      "details": {
+        "local_key": null,
+        "evidence_ids": []
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 45,
+      "kind": "tool_call",
+      "details": {
+        "tool": "inspect_reference_metadata",
+        "args_hash": "90cd9db8d20d09881f2f6a84a2bd507fd3d62507f3df8dd7beed8361de55bc7e"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 46,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "eefc72d66d94295e68b7789a198ce8ac8d9b70c6c4e07f3f1e88b789ada21adf"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 47,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "683eb25ee18d5c29992fbc661ff00b8a51d402f420084798213394e66fc6bcd2",
+        "result_count": 0,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 48,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "core.h_engine.process_batch",
+        "matches": [],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 49,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 2,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 50,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "76b79bfe29bdba3e1086505224353d6f8de29d538bc2f1cef7e8dfbba6d531e7"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 51,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "7340e9ffb1a64b1964aa55586b0a7be74ff4abfdd81f9fe1d748ead72a155e4f",
+        "result_count": 0,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 52,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "core.i_preview.preview_unique",
+        "matches": [],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 53,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 2,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 54,
+      "kind": "frontier_expanded",
+      "details": {
+        "pending": 2,
+        "completed": 2,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 55,
+      "kind": "fragment_selected",
+      "details": {
+        "task_id": "874db914733092313598361f",
+        "path": "core/h_engine.py",
+        "start_line": 118,
+        "end_line": 128,
+        "priority": 100,
+        "reasons": [
+          "search_symbols:process_batch"
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 56,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "d14b518dae3d249b20ca3de9736fe7b98f9698cf19dffd4f832eabb63472b05a"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 57,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "648e872bdfcad74252cc1711f9da22d6fb4b2c46a3d31c01e24ae8a55379d672",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 58,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 59,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1304,
+        "output_tokens": 3337,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "finish_fragment",
+            "tool_call_id_hash": "665804a9e06b856f248abc90f14d4d08a0596ffc950143d85730cf7d06cb8591"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 60,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "d14b518dae3d249b20ca3de9736fe7b98f9698cf19dffd4f832eabb63472b05a"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 61,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "fe519f349027bb66565d934ba0b2988253413c8e61046ec37f1f205a458719c6",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 62,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "804acf80b0af76e77db4845c5c95b4672223ec0d1c183cad79066564330786e5"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 63,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+        "quote_hash": "2cba7478cb834a5355f1f3255c3326b95e508e89cee0f585a35617f39499d629"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 64,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "auto_874db914733092313598361f",
+        "evidence_ids": [
+          "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 65,
+      "kind": "tool_call",
+      "details": {
+        "tool": "inspect_reference_metadata",
+        "args_hash": "352cbcd61fd88904ee366d73beab8e385b07c73fb020ef6fffe1693b7869a916"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 66,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "7a00e795bee1c146882e0d41416634feae3b1940772fcc5499ef1f18984ca54f"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 67,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "651722f5d5e743d33d572dee7a4980b5b4043df9838e8b95cb509e898dd96a2a",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 68,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "reserve_once",
+        "matches": [
+          {
+            "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+            "path": "storage/durable.py",
+            "start_line": 1,
+            "end_line": 3
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 69,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 3,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 70,
+      "kind": "tool_call",
+      "details": {
+        "tool": "search_symbols",
+        "args_hash": "7b0355b57a470cdc04fa40397e34be70d4d550366c9b7dc72376f3c42defd50c"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 71,
+      "kind": "tool_result",
+      "details": {
+        "tool": "search_symbols",
+        "result_hash": "31851dab065e51401954e3fdcad5884cc560010ed84748beca82f25418255a3f",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 72,
+      "kind": "exploration_search",
+      "details": {
+        "tool": "search_symbols",
+        "query": "handle_events",
+        "matches": [
+          {
+            "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+            "path": "api/endpoint.py",
+            "start_line": 5,
+            "end_line": 10
+          }
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 73,
+      "kind": "frontier_checkpoint",
+      "details": {
+        "pending": 2,
+        "completed": 3,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 74,
+      "kind": "frontier_expanded",
+      "details": {
+        "pending": 2,
+        "completed": 3,
+        "coverage_incomplete": true
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 75,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "54e750b5daef8f1ae26e25abba9a7abb46cc54ee534bcb86fc367d882869ef83"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 76,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "24a22167c7621d0ac0f304a70290e883bc8364bae994ff51abe08c561236ccca",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 77,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "d14b518dae3d249b20ca3de9736fe7b98f9698cf19dffd4f832eabb63472b05a"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 78,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "df0e4f3abb581d0fb9336415cd1ee2d7c072fe728886ca43099b65e2ada1494b",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 79,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 80,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 1848,
+        "output_tokens": 2306,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "assess_equivalence",
+            "tool_call_id_hash": "22e209ce7eb2aa998b5ff70b70da9f3f9670a3945e42591a34529ddd4904a3f1"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f955e7e1-0649-4f52-bca3-effa4a67e9fc",
+      "attempt": 1,
+      "sequence": 81,
+      "kind": "module_error",
+      "details": {
+        "error_code": "MODEL_OR_OUTPUT_ERROR",
+        "exception_type": "DataError"
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+      "status": "evidence_found",
+      "draft": {
+        "key": "auto_efbf8dc0c0d8735a1296f90c",
+        "name": "handle_events 按模式分发事件处理",
+        "category": "源码机制候选",
+        "action": "根据mode参数将事件处理分发到预览或提交路径，未知模式抛出ValueError",
+        "target": "api/endpoint.py:handle_events(mode, events, store, settings)",
+        "business_goal": "区分预览与提交两条处理路径：预览为本地便捷不入存储，提交按注入存储与配置执行",
+        "implementation_mechanism": "mode==\"preview\"时仅以events调用preview_unique（不传store与settings）；mode==\"commit\"时以events、store、settings调用process_batch；其余取值抛ValueError(\"unknown mode\")",
+        "supported_scope": [
+          "mode取值preview或commit时的事件处理分发",
+          "preview路径不触及store与settings",
+          "commit路径依赖注入的store与settings配置"
+        ],
+        "conditions": [
+          "mode必须为\"preview\"或\"commit\"，否则抛ValueError(\"unknown mode\")",
+          "提交处理行为取决于注入的store实现与settings配置"
+        ],
+        "limitations": [
+          "preview_unique与process_batch内部逻辑不在片段内，去重/租户行为无法核验",
+          "预览结果不得自动视为提交处理的替代（与manual.md一致）",
+          "片段未展示跨租户重复事件或重复请求对结果的影响"
+        ],
+        "evidence_ids": [
+          "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+          "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+        ],
+        "status": "evidence_found"
+      }
+    },
+    {
+      "id": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d",
+      "status": "evidence_found",
+      "draft": {
+        "key": "auto_874db914733092313598361f",
+        "name": "process_batch 批量事件校验与去重筛选",
+        "category": "源码机制候选",
+        "action": "逐个遍历事件：按 settings['tenant_required'] 校验 tenant 必填，按 settings['deduplicate'] 调用 reserve_once 做去重预留，未通过者跳过，返回被接受事件列表",
+        "target": "core/h_engine.py process_batch",
+        "business_goal": "防止重复事件被重复处理，并强制租户字段完整性校验",
+        "implementation_mechanism": "对每个事件取 tenant；若 settings['tenant_required'] 开启且 tenant 为空则抛 ValueError；若 settings['deduplicate'] 开启则调用 reserve_once(store, tenant, event['id'])，返回 False（已预留）则 continue 跳过；否则加入 accepted，最终返回 accepted 列表",
+        "supported_scope": [
+          "单次传入 events 列表内的事件级筛选",
+          "去重键为 (tenant, 事件 id) 组合，实际作用域由 reserve_once 决定"
+        ],
+        "conditions": [
+          "settings['tenant_required'] 为真且事件无 tenant 时抛出 ValueError('tenant required')",
+          "settings['deduplicate'] 为真时走 reserve_once 预留判定，已预留的事件被跳过",
+          "settings['deduplicate'] 为假时不做去重，全部事件进入 accepted",
+          "去重启用时事件必须含 'id' 键，缺失则抛 KeyError"
+        ],
+        "limitations": [
+          "去重语义依赖注入 store 的 reserve_once 实现，本片段内无法核验",
+          "批次无原子性：抛出异常前已预留的事件不回滚，store 中残留预留副作用",
+          "tenant_required 关闭时 tenant 可能为 None 传入 reserve_once，跨租户去重范围取决于该实现",
+          "该函数挂接的 preview/commit 分发路径及 settings 配置来源未在片段中展示"
+        ],
+        "evidence_ids": [
+          "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+          "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+        ],
+        "status": "evidence_found"
+      }
+    }
+  ],
+  "relations": [],
+  "evidence": [
+    {
+      "id": "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+        "path": "core/h_engine.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 118,
+        "end_line": 128
+      },
+      "source_hash": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+      "quote_hash": "2cba7478cb834a5355f1f3255c3326b95e508e89cee0f585a35617f39499d629",
+      "quote": "def process_batch(events, store, settings):\n    accepted = []\n    for event in events:\n        tenant = event.get(\"tenant\")\n        if settings[\"tenant_required\"] and not tenant:\n            raise ValueError(\"tenant required\")\n        if settings[\"deduplicate\"]:\n            if not reserve_once(store, tenant, event[\"id\"]):\n                continue\n        accepted.append(event)\n    return accepted",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    },
+    {
+      "id": "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+      "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+        "path": "api/endpoint.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 5,
+        "end_line": 10
+      },
+      "source_hash": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+      "quote_hash": "fe80cfbe5ad6338023c44f0b509679106feadf1e85a67d3a6559ca03ee7624bb",
+      "quote": "def handle_events(mode, events, store, settings):\n    if mode == \"preview\":\n        return preview_unique(events)\n    if mode != \"commit\":\n        raise ValueError(\"unknown mode\")\n    return process_batch(events, store, settings)",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "database_records": [
+    {
+      "claim_id": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+      "status": "evidence_found",
+      "evidence_id": "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+      "support_type": "candidate_support",
+      "source_hash": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+      "quote_hash": "fe80cfbe5ad6338023c44f0b509679106feadf1e85a67d3a6559ca03ee7624bb",
+      "source_ref": {
+        "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+        "path": "api/endpoint.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 5,
+        "end_line": 10
+      },
+      "trusted_classification": "synthetic_public"
+    },
+    {
+      "claim_id": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d",
+      "status": "evidence_found",
+      "evidence_id": "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "support_type": "candidate_support",
+      "source_hash": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+      "quote_hash": "2cba7478cb834a5355f1f3255c3326b95e508e89cee0f585a35617f39499d629",
+      "source_ref": {
+        "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+        "path": "core/h_engine.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 118,
+        "end_line": 128
+      },
+      "trusted_classification": "synthetic_public"
+    }
+  ],
+  "passed": true
+}

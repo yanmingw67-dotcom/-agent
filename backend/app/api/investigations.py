@@ -60,6 +60,7 @@ def investigate(
                 "investigation_mode": body.investigation_mode,
                 "capability_limit": body.capability_limit,
                 "include_equivalence": body.include_equivalence,
+                "exploration_max_fragments": body.exploration_max_fragments,
             },
         )
         db.add(job)

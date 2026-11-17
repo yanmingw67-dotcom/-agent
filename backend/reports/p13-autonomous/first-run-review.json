@@ -1,0 +1,33 @@
+{
+  "artifact": "real-first.json",
+  "accepted_as_full_task_pass": false,
+  "raw_script_passed_field": true,
+  "raw_material_not_rewritten": true,
+  "reason": "首轮脚本只检查候选与等效观察存在，未排除调查收尾异常，也未要求比较实际陷阱两侧；人工复核拒绝整体验收通过。",
+  "runtime_error": {
+    "code": "MODEL_OR_OUTPUT_ERROR",
+    "exception_type": "DataError",
+    "cause": "审计事件equivalence_rejected_or_unresolved超过PostgreSQL kind字段32字符限制；比较结果先保存，随后轨迹插入失败，收尾未保存coverage。"
+  },
+  "observations": [
+    "真实检索preview_unique/process_batch，找到第8文件core/h_engine.py第118-128行",
+    "入口与隐藏函数候选、Evidence、Link均真实保存并API再次回读通过",
+    "模型花一次调用阅读纯导入片段，candidate=null且片段已检查点",
+    "core/i_preview.py和storage/durable.py仍在pending；未实际分析预览实现",
+    "等效步骤比较了handle_events与process_batch，并拒绝把调用关系当等效；这不是预期preview/commit陷阱的完整复核"
+  ],
+  "fixes_before_final_run": [
+    "缩短审计事件名，新增PostgreSQL事件字段长度回归",
+    "模型反馈的直接依赖优先于低信息量静态片段，按深度与模型顺序保守衰减，避免深追踪饿死同层分支",
+    "验收脚本排除所有module_error，要求实际回读预览与提交两侧并拒绝等效；gold仍只在运行后用于检查",
+    "最终版本还包含重叠区间差集、bounded等效入口双侧源码核查及任务时间约束"
+  ],
+  "requests": 6,
+  "responses": 6,
+  "input_tokens": 8710,
+  "output_tokens": 11876,
+  "tokens": 20586,
+  "task_duration_seconds": 166.494,
+  "cost_usd": null,
+  "cost_basis": "unknown_not_zero"
+}

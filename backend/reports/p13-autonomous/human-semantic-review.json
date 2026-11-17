@@ -1,0 +1,195 @@
+{
+  "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "key_acceptance_passed": true,
+  "not_semantic_approval": true,
+  "hidden_discovery": {
+    "filename_order": 8,
+    "path": "core/h_engine.py",
+    "locator": {
+      "start_line": 118,
+      "end_line": 128
+    },
+    "not_specified_in_investigation_request": true,
+    "chain": [
+      "规划+入口源码回读",
+      "模型反馈process_batch和preview_unique",
+      "search_symbols真实定位",
+      "bounded精确回读/登记",
+      "Claim/Link事务落库",
+      "API再次回读及直接PG关联查询"
+    ]
+  },
+  "mechanisms": [
+    {
+      "name": "入口mode分发",
+      "review": "源码确有preview/commit分支及未知mode异常；最终候选name/action却是调查计划，不能作为产品能力条目接受。"
+    },
+    {
+      "name": "深行提交校验与条件去重",
+      "review": "代码直接证明租户必填配置、deduplicate分支和reserve_once调用及过滤；参数为store/tenant/id。去重键与跨请求持久性仍依赖尚未分析的被调函数和底层store。"
+    },
+    {
+      "name": "预览本地id去重",
+      "review": "单次调用内用set按id保序保留首项；不同tenant同id也会被合并，没有外部store参数。该机制与提交路径不具一般可互换性。"
+    }
+  ],
+  "equivalence": {
+    "verdict": "not_equivalent",
+    "source_evidence_ids": [
+      "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "two_actual_functions_read": true,
+    "human_accepts_general_non_equivalence": true,
+    "human_accepts_all_model_rationale": false,
+    "note": "拒绝一般等效的结论可接受，但模型声称store持久占位尚未获其实际回读证明，不能据此建立持久/原子/跨请求保证。"
+  },
+  "semantic_issues": [
+    {
+      "kind": "investigation_plan_misclassified_as_capability",
+      "text": "展开commit提交路径 / 检索process_batch与preview_unique实现",
+      "assessment": "这是任务动作而非软件能力；须人工退回，不计独立业务能力。"
+    },
+    {
+      "kind": "unsupported_scope",
+      "text": "commit模式结果幂等与租户隔离",
+      "assessment": "入口片段只证明委托调用，不能确认幂等或隔离保证。"
+    },
+    {
+      "kind": "callee_inference_without_read",
+      "text": "以(tenant,id)去重",
+      "assessment": "当前深行片段只直接证明把这两个参数传给reserve_once；组合键和底层作用域需被调函数证据，不能单凭参数名定论。"
+    },
+    {
+      "kind": "unsupported_durability_in_equivalence",
+      "text": "store持久占位 / 源有持久占位副作用",
+      "assessment": "storage/durable.py仅被检索定位尚未分析，实际store实现也未提供；不接受持久性结论。"
+    },
+    {
+      "kind": "over_generalized_conditions",
+      "text": "占位成功的accepted列表 / 输出异常只有ValueError",
+      "assessment": "deduplicate关闭时无需占位；源也可能KeyError或传播store异常。比较器未完整枚举异常与条件。"
+    },
+    {
+      "kind": "missing_failure_side_effect_review",
+      "text": "最终紧凑候选未明确批次中途失败不回滚",
+      "assessment": "源码无回滚机制，先前轮次曾指出；最终输出遗漏该限制，应人工补核而非篡改原始模型结果。"
+    }
+  ],
+  "coverage": {
+    "known_fragments": 5,
+    "analyzed_fragments": 3,
+    "pending_fragments": 2,
+    "analyzed_files": 3,
+    "unexplained_entrypoints": 1,
+    "semantic_coverage": "unknown",
+    "coverage_incomplete": true
+  },
+  "pending_tasks": [
+    {
+      "id": "5fe019c648bbaa171f1b24fd",
+      "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+      "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+      "path": "api/endpoint.py",
+      "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+      "symbol_id": null,
+      "symbol": null,
+      "start_line": 1,
+      "end_line": 4,
+      "priority": 119,
+      "reasons": [
+        "unexplained_lines"
+      ],
+      "status": "pending",
+      "expanded": false,
+      "depth": 0
+    },
+    {
+      "id": "d2dc9c0ea858f807060e5bf3",
+      "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+      "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+      "path": "storage/durable.py",
+      "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+      "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+      "symbol": "reserve_once",
+      "start_line": 1,
+      "end_line": 3,
+      "priority": 120,
+      "reasons": [
+        "search_symbols:reserve_once"
+      ],
+      "status": "pending",
+      "expanded": false,
+      "depth": 2
+    }
+  ],
+  "deferred": [
+    {
+      "tool": "search_code_batch",
+      "query": "process_batch 定义 实现",
+      "reason": "expansion_round_limit"
+    },
+    {
+      "tool": "search_code_batch",
+      "query": "settings commit 配置项",
+      "reason": "expansion_round_limit"
+    },
+    {
+      "tool": "search_symbols",
+      "query": "ValueError",
+      "reason": "expansion_round_limit"
+    },
+    {
+      "tool": "search_symbols",
+      "query": "ValueError",
+      "reason": "expansion_round_limit"
+    }
+  ],
+  "unexplained_entrypoints": [
+    {
+      "id": "8f8145f5-9e00-412e-90eb-53afa892ec83",
+      "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+      "source_ref": {
+        "path": "api/endpoint.py",
+        "start_line": 5,
+        "basis": "name heuristic; wiring unverified"
+      },
+      "status": "unexplained"
+    }
+  ],
+  "source_files_total": 12,
+  "analyzed_files": 3,
+  "not_analyzed_source_files": [
+    "config/settings.py",
+    "core/a_codec.py",
+    "core/b_labels.py",
+    "core/c_clock.py",
+    "core/d_limits.py",
+    "core/e_format.py",
+    "core/j_metrics.py",
+    "storage/durable.py",
+    "tests/test_preview.py"
+  ],
+  "omissions": [
+    "storage/durable.py待调查，不能证明store原子或持久语义",
+    "config/settings.py默认值未分析，若模型使用配置默认推断则不接受",
+    "其余辅助/测试源码未全面调查，不给出全仓召回率",
+    "入口仅名称启发事件入口，无真实HTTP接线或运行时可达性证明",
+    "未复现真实数据库或业务事件处理运行时行为；这里验证的是调查系统PG落库"
+  ],
+  "retrieval_latency": {
+    "idle": {
+      "samples": 20,
+      "p50_ms": 11.256,
+      "p95_ms": 14.338
+    },
+    "during_investigation": {
+      "samples": 127,
+      "p50_ms": 12.054,
+      "p95_ms": 19.114
+    },
+    "errors": [],
+    "scope": "小人工仓库顺序低频search_symbols，不是企业规模或Agent B端到端测试"
+  },
+  "approval": "unverified，不发布、不合并、不进入P1.4"
+}

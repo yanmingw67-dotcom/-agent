@@ -1,0 +1,31 @@
+{
+  "artifact": "real-final.json",
+  "accepted_as_full_task_pass": false,
+  "raw_script_passed_field": false,
+  "raw_material_not_rewritten": true,
+  "job_id": "e863d5d4-cf9b-4306-b6b6-6aa5d4eaf636",
+  "stop_reason": "BUILDER_TIMEOUT",
+  "observations": [
+    "优先级修复后，3片段实际为入口、预览实现及第8文件118-128行隐藏实现，没有再次分析纯导入片段",
+    "3条候选与源码证据均已保存；未知store原子性/持久性仍未证明",
+    "第三片段有一次受控结构输出重试，最后的等效模型请求在180秒任务上限被取消",
+    "6请求但只收到5响应，用量不完整，未知请求费用不计为0",
+    "等效比较尚未完成，本轮不算整体通过"
+  ],
+  "diagnosis_and_change": [
+    "不增加180秒/8请求/30000Token预算，不切换供应商",
+    "首次规划同时携带一个已准确回读的高优先级入口片段，规划输出可通过同一bounded执行器保存首片段，减少一次独立模型往返",
+    "要求reason/observation和机制/列表简洁，降低冗余说明与校验重试风险",
+    "异常停止也写入结构化coverage摘要，既有任务原始结果不改写",
+    "为合并规划+首片段添加真实数据库证据/候选检查点回归，使用4请求受控预算"
+  ],
+  "requests": 6,
+  "responses": 5,
+  "input_tokens_returned": 7302,
+  "output_tokens_returned": 9387,
+  "tokens_returned": 16689,
+  "task_duration_seconds": 180.097,
+  "usage_incomplete": true,
+  "cost_usd": null,
+  "cost_basis": "unknown_not_zero"
+}

@@ -1,0 +1,22 @@
+{
+  "all_match": true,
+  "deployed_builder_sha256": {
+    "app/agents/autonomous.py": "68cc283cb2b85becbbda7c90297a70b77c54ba88f3f0ec08b1c13bba0aec9baf",
+    "app/agents/equivalence.py": "76845d6678d4ff7aea2ca235d082cac7305810b6d0e08f43fb5e73abfce91f20",
+    "app/agents/bounded_builder.py": "5f788a22dfdbdd3bde5ddc6a9efd0f24892eff9198380683ab164f2253c4cebf",
+    "app/agents/runtime.py": "bcdcb00c03774a7ec5ef0370983a733c184143c9c8a8511beedb53d689d21153",
+    "app/knowledge/classification.py": "cfdf2529bad1f4e1e776b6d26f1c7c8ef3172b82c52ac36b2173641dc8fa0e6f",
+    "app/knowledge/schemas.py": "53d27549cfcdcfd9e366f64e9a2e7bd9338e6769b9604f61927f221b32acec9d",
+    "app/api/investigations.py": "ebc47bc206b4a0f7971ffb6d51a666ac201e4ca5389c56bd7f659ec1f2b5ca6b"
+  },
+  "working_tree_sha256": {
+    "app/agents/autonomous.py": "68cc283cb2b85becbbda7c90297a70b77c54ba88f3f0ec08b1c13bba0aec9baf",
+    "app/agents/equivalence.py": "76845d6678d4ff7aea2ca235d082cac7305810b6d0e08f43fb5e73abfce91f20",
+    "app/agents/bounded_builder.py": "5f788a22dfdbdd3bde5ddc6a9efd0f24892eff9198380683ab164f2253c4cebf",
+    "app/agents/runtime.py": "bcdcb00c03774a7ec5ef0370983a733c184143c9c8a8511beedb53d689d21153",
+    "app/knowledge/classification.py": "cfdf2529bad1f4e1e776b6d26f1c7c8ef3172b82c52ac36b2173641dc8fa0e6f",
+    "app/knowledge/schemas.py": "53d27549cfcdcfd9e366f64e9a2e7bd9338e6769b9604f61927f221b32acec9d",
+    "app/api/investigations.py": "ebc47bc206b4a0f7971ffb6d51a666ac201e4ca5389c56bd7f659ec1f2b5ca6b"
+  },
+  "after_real_run_change": "规划前复用同任务其他调查的已完成片段；单模块真实验收不经过该分支，新增零模型回归通过，部署后不重复收费验收。"
+}

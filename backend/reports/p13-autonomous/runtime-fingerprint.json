@@ -1,0 +1,16 @@
+{
+  "container_builder_sha256": {
+    "app/agents/autonomous.py": "e6334c2e7c1c28855fbcfef2d05aa8fecc95fd427e3eaf137d25163f0062513b",
+    "app/agents/equivalence.py": "76845d6678d4ff7aea2ca235d082cac7305810b6d0e08f43fb5e73abfce91f20",
+    "app/agents/bounded_builder.py": "5f788a22dfdbdd3bde5ddc6a9efd0f24892eff9198380683ab164f2253c4cebf",
+    "app/agents/runtime.py": "bcdcb00c03774a7ec5ef0370983a733c184143c9c8a8511beedb53d689d21153"
+  },
+  "working_tree_sha256": {
+    "app/agents/autonomous.py": "68cc283cb2b85becbbda7c90297a70b77c54ba88f3f0ec08b1c13bba0aec9baf",
+    "app/agents/equivalence.py": "76845d6678d4ff7aea2ca235d082cac7305810b6d0e08f43fb5e73abfce91f20",
+    "app/agents/bounded_builder.py": "5f788a22dfdbdd3bde5ddc6a9efd0f24892eff9198380683ab164f2253c4cebf",
+    "app/agents/runtime.py": "bcdcb00c03774a7ec5ef0370983a733c184143c9c8a8511beedb53d689d21153"
+  },
+  "all_match": false,
+  "model_label": "real-compact-final"
+}

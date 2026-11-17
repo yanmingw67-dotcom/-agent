@@ -1,0 +1,55 @@
+{
+  "services": [
+    {
+      "service": "api",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.5,
+      "memory_bytes": 536870912
+    },
+    {
+      "service": "builder",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.5,
+      "memory_bytes": 1073741824
+    },
+    {
+      "service": "indexer",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.75,
+      "memory_bytes": 1342177280
+    },
+    {
+      "service": "postgres",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.75,
+      "memory_bytes": 1610612736
+    },
+    {
+      "service": "redis",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.25,
+      "memory_bytes": 268435456
+    },
+    {
+      "service": "retrieval",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 1.0,
+      "memory_bytes": 805306368
+    },
+    {
+      "service": "worker",
+      "health": "healthy",
+      "oom_killed": false,
+      "cpu": 0.25,
+      "memory_bytes": 805306368
+    }
+  ],
+  "dedicated_4c8g_tested": false,
+  "model_concurrency": 1
+}

@@ -1,0 +1,18 @@
+{
+  "not_sent_to_agent": true,
+  "source_file_count": 12,
+  "hidden": {
+    "lexicographic_file_number": 8,
+    "path": "core/h_engine.py",
+    "start_line": 118,
+    "function": "process_batch",
+    "expected": "按tenant与event id隔离的条件性跨请求去重，持久和原子性依赖store实现；不证明exactly-once。"
+  },
+  "negative_equivalence": "preview_unique只在本次调用按id去重，不含tenant隔离、持久预留，不能替代commit。",
+  "cross_module": "api -> core -> storage",
+  "omissions_to_review": [
+    "异常中途中止及已有预留不回滚",
+    "配置关闭时不去重",
+    "底层store原子和持久实现未提供"
+  ]
+}

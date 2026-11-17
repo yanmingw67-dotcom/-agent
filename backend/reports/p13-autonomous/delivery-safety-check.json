@@ -1,0 +1,18 @@
+{
+  "baseline": "90e5a21f60f6273d404f95117bc2aec9dea5415d",
+  "protected_historical_file_count": 223,
+  "changed_protected_files": [],
+  "original_148_test_files_unchanged": true,
+  "migration_0001_to_0006_unchanged": true,
+  "all_historical_reports_unchanged": true,
+  "scanned_files": 385,
+  "matched_files": [],
+  "scan_method": "全部Git已跟踪与非忽略未跟踪文件，对本地.env长度至少8字节的Key/Token/Secret/Password及URL内密码做精确字节扫描；无秘密值或密钥指纹输出",
+  "env_git_ignored": true,
+  "env_docker_ignored": true,
+  "env_mode": "0o600",
+  "fixture_source_count": 12,
+  "fixture_zip_source_manifest_consistent": true,
+  "criteria_sha256": "725a0fd17af110856457ea10946b66761217d4065ea4397379db253678c60e67",
+  "fixture_storage_source_explicitly_tracked": true
+}

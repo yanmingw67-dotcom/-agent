@@ -3,6 +3,7 @@
 import asyncio
 import time
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 from pydantic_ai.models.wrapper import WrapperModel
@@ -86,6 +87,23 @@ class BuilderDeps:
                 raise AppError(
                     429, "BUILDER_BUDGET_EXCEEDED", "模块累计预算耗尽；须创建新任务并审查预算"
                 )
+            job = db.get(KnowledgeJob, row.job_id)
+            if job.metrics_json.get("investigation_mode") == "autonomous":
+                if increments.get("model_requests") or increments.get("tool_calls"):
+                    started = datetime.fromisoformat(job.metrics_json["exploration_started_at"])
+                    if started.tzinfo is None:
+                        started = started.replace(tzinfo=timezone.utc)
+                    if (
+                        datetime.now(timezone.utc) - started
+                    ).total_seconds() >= get_settings().builder_module_timeout_seconds:
+                        raise AppError(429, "BUILDER_TASK_TIME_EXCEEDED", "自主任务时间预算耗尽")
+                rows = db.scalars(select(Investigation).where(Investigation.job_id == job.id)).all()
+                for key, limit in limits.items():
+                    total = metrics.get(key, 0) + sum(
+                        r.metrics_json.get(key, 0) for r in rows if r.id != row.id
+                    )
+                    if total > limit:
+                        raise AppError(429, "BUILDER_TASK_BUDGET_EXCEEDED", "自主任务累计预算耗尽")
             seq = metrics.get("trace_sequence", 0) + 1
             metrics["trace_sequence"] = seq
             row.metrics_json = metrics
@@ -252,6 +270,9 @@ class AuditedModel(WrapperModel):
                             "final_result",
                             "register_evidence_and_candidate",
                             "record_hypothesis",
+                            "plan_investigation",
+                            "finish_fragment",
+                            "assess_equivalence",
                         }
                         else None,
                         "tool_call_id_hash": digest(str(getattr(p, "tool_call_id", "")).encode()),
@@ -286,6 +307,10 @@ async def investigate_module(run_id, token, model):
         from app.agents.bounded_builder import investigate_bounded
 
         return await investigate_bounded(deps, module_id, model)
+    if mode == "autonomous":
+        from app.agents.autonomous import investigate_autonomous
+
+        return await investigate_autonomous(deps, module_id, model)
     # 预调查也计入工具/上下文预算，不将整库塞入提示。
     seed = [
         deps.query(ToolRequest(tool="get_module_context", module_id=module_id, limit=20)),
@@ -352,6 +377,12 @@ def run_builder(job_id, token, model=None):
         job.status = "running"
         job.stage = "investigating"
         job.started_at = now()
+        if job.metrics_json.get("investigation_mode") == "autonomous":
+            job.metrics_json = {
+                **job.metrics_json,
+                "exploration_started_at": job.metrics_json.get("exploration_started_at")
+                or now().isoformat(),
+            }
         ids = list(
             db.scalars(
                 select(Investigation.id)
@@ -382,7 +413,7 @@ def run_builder(job_id, token, model=None):
                         if type(exc).__name__ == "UsageLimitExceeded"
                         else "BUILDER_TIMEOUT"
                         if isinstance(exc, TimeoutError)
-                        or type(exc).__name__ == "ModelTimeoutError"
+                        or type(exc).__name__ in {"ModelTimeoutError", "RunTimedOut"}
                         else "BUILDER_OUTPUT_LIMIT"
                         if type(exc).__name__ == "OutputTokenLimitExceeded"
                         else "MODEL_OR_OUTPUT_ERROR"
@@ -392,6 +423,21 @@ def run_builder(job_id, token, model=None):
                     row = fence(db, rid, token)
                     row.status = "failed"
                     row.error_code = code
+                    if row.metrics_json.get("exploration"):
+                        state = dict(row.metrics_json["exploration"])
+                        state["stop_reason"] = code
+                        state["coverage_incomplete"] = True
+                        from app.agents.autonomous import coverage
+
+                        state["coverage"] = coverage(state)
+                        row.metrics_json = {**row.metrics_json, "exploration": state}
+                        row.output_json = {
+                            **row.output_json,
+                            "knowledge_build_complete": False,
+                            "coverage_incomplete": True,
+                            "stop_reason": code,
+                        }
+                        row.status = "partial"
                     metrics = dict(row.metrics_json)
                     seq = metrics.get("trace_sequence", 0) + 1
                     metrics["trace_sequence"] = seq
@@ -464,10 +510,20 @@ def run_builder(job_id, token, model=None):
             if model is not None
             else ("NOT_STARTED" if not totals["model_requests"] else "REAL"),
             "model": s.builder_model if model is None else "injected_test_model",
+            **(
+                {"knowledge_build_complete": False, "coverage_incomplete": True}
+                if job.metrics_json.get("investigation_mode") == "autonomous"
+                else {}
+            ),
         }
         job.status = (
             "failed"
-            if fatal or (not complete and not job.metrics_json["claimed_capabilities"])
+            if fatal
+            or (
+                not complete
+                and not job.metrics_json["claimed_capabilities"]
+                and not any(r.status == "partial" for r in runs)
+            )
             else ("succeeded" if complete == len(runs) else "partial")
         )
         job.stage = "review_ready" if job.status == "succeeded" else job.status

@@ -1,0 +1,100 @@
+{
+  "model": "glm-5.3-flash",
+  "reasoning_effort": "low",
+  "enterprise_egress": false,
+  "runs": [
+    {
+      "label": "real-first",
+      "job_id": "f564c2ec-d2d8-4f51-a33b-76730cf7ad3a",
+      "raw_automatic_check_passed": true,
+      "accepted_full_task_pass": false,
+      "job_status": "partial",
+      "requests": 6,
+      "responses": 6,
+      "input_tokens_returned": 8710,
+      "output_tokens_returned": 11876,
+      "tokens_returned": 20586,
+      "task_duration_ms": 166494,
+      "candidate_drafts": 2,
+      "usage_incomplete": false,
+      "model_cost_usd": null,
+      "idle_latency": {
+        "samples": 20,
+        "p50_ms": 11.466,
+        "p95_ms": 15.364
+      },
+      "running_latency": {
+        "samples": 161,
+        "p50_ms": 13.947,
+        "p95_ms": 20.638
+      }
+    },
+    {
+      "label": "real-final",
+      "job_id": "e863d5d4-cf9b-4306-b6b6-6aa5d4eaf636",
+      "raw_automatic_check_passed": false,
+      "accepted_full_task_pass": false,
+      "job_status": "partial",
+      "requests": 6,
+      "responses": 5,
+      "input_tokens_returned": 7302,
+      "output_tokens_returned": 9387,
+      "tokens_returned": 16689,
+      "task_duration_ms": 180097,
+      "candidate_drafts": 3,
+      "usage_incomplete": true,
+      "model_cost_usd": null,
+      "idle_latency": {
+        "samples": 20,
+        "p50_ms": 11.306,
+        "p95_ms": 18.422
+      },
+      "running_latency": {
+        "samples": 174,
+        "p50_ms": 15.319,
+        "p95_ms": 22.292
+      }
+    },
+    {
+      "label": "real-compact-final",
+      "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+      "raw_automatic_check_passed": true,
+      "accepted_full_task_pass": true,
+      "job_status": "partial",
+      "requests": 5,
+      "responses": 5,
+      "input_tokens_returned": 8095,
+      "output_tokens_returned": 9573,
+      "tokens_returned": 17668,
+      "task_duration_ms": 130137,
+      "candidate_drafts": 3,
+      "usage_incomplete": false,
+      "model_cost_usd": null,
+      "idle_latency": {
+        "samples": 20,
+        "p50_ms": 11.256,
+        "p95_ms": 14.338
+      },
+      "running_latency": {
+        "samples": 127,
+        "p50_ms": 12.054,
+        "p95_ms": 19.114
+      }
+    }
+  ],
+  "totals": {
+    "requests": 17,
+    "responses": 16,
+    "input_tokens_returned": 24107,
+    "output_tokens_returned": 30836,
+    "tokens_returned": 54943,
+    "candidate_drafts": 8
+  },
+  "model_cost_usd": null,
+  "cost_basis": "unknown_not_zero",
+  "usage_complete_for_all_runs": false,
+  "unreturned_request_count": 1,
+  "production_success_rate": null,
+  "semantic_accuracy": null,
+  "note": "首次机械检查true被人工否决；第二轮时间预算耗尽；第三轮关键流程通过但保持partial且语义未验证。8条草稿包括跨轮重复，不是8项独立能力。"
+}
