@@ -1,0 +1,206 @@
+ Image product-knowledge:p1.1 Building 
+ Image product-knowledge:p1.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.09kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 616B 0.0s done
+#2 DONE 0.0s
+
+#3 [worker internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 6.0s
+
+#4 [worker internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [api internal] load build context
+#5 transferring context: 240.28kB 0.0s done
+#5 DONE 0.0s
+
+#6 [worker 1/8] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#6 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a done
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 0B / 16.81MB 0.2s
+#6 sha256:c5c283f4d33b45838deb75fee00b95a58262528edbef7bd6bdcb21196f51da2e 0B / 249B 0.2s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 0B / 13.58MB 0.2s
+#6 sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 0B / 3.33MB 0.2s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 1.05MB / 16.81MB 2.0s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 2.10MB / 16.81MB 2.1s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 3.15MB / 16.81MB 2.3s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 4.19MB / 16.81MB 2.4s
+#6 sha256:c5c283f4d33b45838deb75fee00b95a58262528edbef7bd6bdcb21196f51da2e 249B / 249B 2.4s done
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 5.24MB / 16.81MB 2.7s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 0B / 28.07MB 0.2s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 6.29MB / 16.81MB 2.9s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 8.39MB / 16.81MB 3.6s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 10.49MB / 16.81MB 3.9s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 11.53MB / 16.81MB 4.1s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 12.58MB / 16.81MB 4.2s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 13.63MB / 16.81MB 4.5s
+#6 sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 1.05MB / 3.33MB 4.4s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 14.68MB / 16.81MB 4.7s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 1.05MB / 13.58MB 4.5s
+#6 sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 2.10MB / 3.33MB 4.8s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 15.73MB / 16.81MB 5.1s
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 16.81MB / 16.81MB 5.6s
+#6 sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 3.33MB / 3.33MB 5.5s done
+#6 sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 16.81MB / 16.81MB 5.6s done
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 3.15MB / 13.58MB 5.7s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 5.24MB / 13.58MB 6.0s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 6.29MB / 13.58MB 6.2s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 2.10MB / 28.07MB 3.6s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 7.34MB / 13.58MB 6.5s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 4.19MB / 28.07MB 4.2s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 8.39MB / 13.58MB 7.4s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 10.49MB / 13.58MB 7.5s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 11.53MB / 13.58MB 7.7s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 6.29MB / 28.07MB 5.3s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 12.58MB / 13.58MB 8.0s
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 13.58MB / 13.58MB 8.1s done
+#6 sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 13.58MB / 13.58MB 8.1s done
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 8.39MB / 28.07MB 5.7s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 10.49MB / 28.07MB 6.2s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 12.58MB / 28.07MB 6.6s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 14.68MB / 28.07MB 7.1s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 16.78MB / 28.07MB 7.5s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 18.87MB / 28.07MB 8.0s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 20.97MB / 28.07MB 8.4s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 23.07MB / 28.07MB 8.9s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 25.17MB / 28.07MB 9.3s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 28.07MB / 28.07MB 9.6s
+#6 sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 28.07MB / 28.07MB 9.6s done
+#6 extracting sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818
+#6 extracting sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 0.5s done
+#6 extracting sha256:b16f1b16678093d11ecfece1004207a40f9bc1b7d9d1d16a070c1db552038818 0.5s done
+#6 extracting sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 0.1s done
+#6 extracting sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f
+#6 extracting sha256:7840cd825272881c40e91120a55b4d26f7e5829aa530409b56fbc4831b2f944c 0.1s done
+#6 extracting sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 0.2s done
+#6 extracting sha256:4adca8a8044ada4a05eb002fb8c03e4844ea6fd339076d97a50369f217535a6f 0.2s done
+#6 extracting sha256:c5c283f4d33b45838deb75fee00b95a58262528edbef7bd6bdcb21196f51da2e done
+#6 extracting sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e
+#6 extracting sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 0.2s done
+#6 extracting sha256:5a0dda7b7f7a41215ef6e647a47699eb6e79e7a9007959304fe85504aa13153e 0.2s done
+#6 DONE 13.1s
+
+#7 [worker 2/8] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#7 DONE 0.4s
+
+#8 [api 3/8] WORKDIR /app
+#8 DONE 0.0s
+
+#9 [api 4/8] COPY pyproject.toml uv.lock ./
+#9 DONE 0.0s
+
+#10 [api 5/8] RUN uv sync --frozen --no-dev
+#10 0.245 Using CPython 3.12.11 interpreter at: /usr/local/bin/python3
+#10 0.245 Creating virtual environment at: .venv
+#10 1.741 Downloading pydantic-core (1.8MiB)
+#10 1.743 Downloading psycopg-binary (4.4MiB)
+#10 1.744 Downloading sqlalchemy (3.1MiB)
+#10 3.627  Downloading pydantic-core
+#10 3.941  Downloading sqlalchemy
+#10 4.056  Downloading psycopg-binary
+#10 4.056 Prepared 25 packages in 3.80s
+#10 4.074 Installed 25 packages in 17ms
+#10 4.612 Bytecode compiled 932 files in 537ms
+#10 4.612  + alembic==1.15.2
+#10 4.612  + annotated-doc==0.0.6
+#10 4.612  + annotated-types==0.8.0
+#10 4.612  + anyio==4.16.0
+#10 4.612  + click==8.5.1
+#10 4.612  + fastapi==0.121.3
+#10 4.612  + greenlet==3.5.6
+#10 4.612  + h11==0.16.0
+#10 4.612  + idna==3.20
+#10 4.612  + mako==1.4.3
+#10 4.612  + markupsafe==3.0.4
+#10 4.612  + psycopg==3.2.9
+#10 4.612  + psycopg-binary==3.2.9
+#10 4.612  + pydantic==2.11.4
+#10 4.612  + pydantic-core==2.33.2
+#10 4.612  + pydantic-settings==2.9.1
+#10 4.612  + python-dotenv==1.2.4
+#10 4.612  + python-multipart==0.0.20
+#10 4.612  + redis==5.2.1
+#10 4.612  + rq==2.3.3
+#10 4.612  + sqlalchemy==2.0.41
+#10 4.612  + starlette==0.50.0
+#10 4.612  + typing-extensions==4.16.0
+#10 4.612  + typing-inspection==0.4.5
+#10 4.612  + uvicorn==0.34.2
+#10 DONE 4.7s
+
+#11 [api 6/8] COPY --chown=app:app app ./app
+#11 DONE 0.0s
+
+#12 [worker 7/8] COPY --chown=app:app alembic.ini ./
+#12 DONE 0.0s
+
+#13 [worker 8/8] RUN mkdir -p /data/archives /data/ingestion /data/sources && chown -R app:app /data
+#13 DONE 0.1s
+
+#14 [api] exporting to image
+#14 exporting layers
+#14 exporting layers 1.7s done
+#14 exporting manifest sha256:4c12fee8f12e9dd1304569bbeb13396d47368efc60efd1da7d678929b0484128 done
+#14 exporting config sha256:a174eef028a3e209c040b7e262d938ec3ef57eae0ecfdc0f0ce1be9704287ed5 done
+#14 exporting attestation manifest sha256:99c3cece06ab52fe42bec2249f0ee385d8684c4e4f47f0e9184b4f654cd1077a 0.0s done
+#14 exporting manifest list sha256:4db222654acc7320aafb2bc797c21b72346896b57f5fdfd9153ddb2a31abcb47 done
+#14 naming to docker.io/library/product-knowledge:p1.1 done
+#14 unpacking to docker.io/library/product-knowledge:p1.1
+#14 unpacking to docker.io/library/product-knowledge:p1.1 0.5s done
+#14 DONE 2.2s
+
+#15 [worker] exporting to image
+#15 exporting layers 1.7s done
+#15 exporting manifest sha256:a1a4d932d774e25b11a01f2a1ba7a6b45148df019658e3ab9c6e79f509c7d9dc done
+#15 exporting config sha256:0d56bc0e8683f85dfc44b0396b08a87b73cb2cf26bec87a34659301b74b6b762 done
+#15 exporting attestation manifest sha256:b06650d649efa33608e3d5651d575cc240d9db88ccfd464daf996b972d52cb89 0.0s done
+#15 exporting manifest list sha256:cc4b33ceda6c936898180ccb23b43d9ed875a858d5456075f90ba506568ef97d done
+#15 naming to docker.io/library/product-knowledge:p1.1 done
+#15 unpacking to docker.io/library/product-knowledge:p1.1 0.5s done
+#15 DONE 2.3s
+
+#16 [api] resolving provenance for metadata file
+#16 DONE 0.0s
+
+#17 [worker] resolving provenance for metadata file
+#17 DONE 0.0s
+ Image product-knowledge:p1.1 Built 
+ Image product-knowledge:p1.1 Built 
+ Volume product-knowledge-p11_archives Creating 
+ Volume product-knowledge-p11_archives Created 
+ Volume product-knowledge-p11_sources Creating 
+ Volume product-knowledge-p11_sources Created 
+ Container product-knowledge-p11-postgres-1 Recreate 
+ Container product-knowledge-p11-redis-1 Recreate 
+ Container product-knowledge-p11-postgres-1 Recreated 
+ Container product-knowledge-p11-redis-1 Recreated 
+ Container product-knowledge-p11-api-1 Creating 
+ Container product-knowledge-p11-api-1 Created 
+ Container product-knowledge-p11-worker-1 Creating 
+ Container product-knowledge-p11-worker-1 Created 
+ Container product-knowledge-p11-redis-1 Starting 
+ Container product-knowledge-p11-postgres-1 Starting 
+ Container product-knowledge-p11-postgres-1 Started 
+ Container product-knowledge-p11-redis-1 Started 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Starting 
+ Container product-knowledge-p11-api-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 

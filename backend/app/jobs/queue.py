@@ -15,11 +15,10 @@ def connection():
     return Redis.from_url(get_settings().redis_url, socket_connect_timeout=2, socket_timeout=5)
 
 
-def dispatch_pending():
+def claim_pending():
     settings = get_settings()
     threshold = now() - timedelta(seconds=settings.job_timeout_seconds + 60)
-    count = 0
-    # 数据库任务表同时作为 outbox。先提交上传，再可靠投递；Redis 停机不会丢上传任务。
+    claims = []
     with session_factory().begin() as db:
         stale = db.scalars(
             select(KnowledgeJob)
@@ -41,20 +40,57 @@ def dispatch_pending():
             .limit(50)
             .with_for_update(skip_locked=True)
         ).all()
-        queue = Queue(settings.queue_name, connection=connection())
         for job in pending:
-            token = str(uuid4())
+            # 同一业务尝试的令牌/消息 ID 稳定；显式 retry 才会更换令牌。
+            job.dispatch_token = job.dispatch_token or str(uuid4())
+            job.dispatched_at = now()
+            job.dispatch_enqueued_at = None
+            claims.append((job.id, job.dispatch_token, job.dispatched_at))
+    # 只有事务提交成功后，调用者才可能向 Redis 发布。
+    return claims
+
+
+def record_delivery(job_id, token, claimed_at, delivered):
+    with session_factory().begin() as db:
+        job = db.scalar(
+            select(KnowledgeJob)
+            .where(
+                KnowledgeJob.id == job_id,
+                KnowledgeJob.dispatch_token == token,
+                KnowledgeJob.dispatched_at == claimed_at,
+            )
+            .with_for_update()
+        )
+        if not job:
+            return
+        if delivered:
+            job.dispatch_enqueued_at = now()
+        elif job.status == "queued":
+            # 投递结果未知也安全重发：保持消息 ID，依赖处理器数据库领取去重。
+            job.dispatched_at = None
+            job.dispatch_enqueued_at = None
+
+
+def dispatch_pending():
+    settings = get_settings()
+    claims = claim_pending()
+    if not claims:
+        return 0
+    queue = Queue(settings.queue_name, connection=connection())
+    for job_id, token, claimed_at in claims:
+        try:
             queue.enqueue(
                 import_source,
-                job.id,
+                job_id,
                 token,
-                job_id=f"{job.id}-{token}",
+                job_id=f"{job_id}-{token}",
                 job_timeout=settings.job_timeout_seconds,
                 result_ttl=3600,
                 failure_ttl=86400,
                 on_failure=rq_failure,
             )
-            job.dispatch_token = token
-            job.dispatched_at = now()
-            count += 1
-    return count
+        except Exception:
+            record_delivery(job_id, token, claimed_at, delivered=False)
+            raise
+        record_delivery(job_id, token, claimed_at, delivered=True)
+    return len(claims)

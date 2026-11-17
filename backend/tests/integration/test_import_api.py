@@ -179,7 +179,9 @@ def test_queue_outage_preserves_durable_task(client, monkeypatch):
     with session_factory()() as db:
         job = db.get(KnowledgeJob, jid)
         assert job.status == "queued"
-        assert job.dispatch_token is None
+        assert job.dispatch_token is not None
+        assert job.dispatched_at is None
+        assert job.dispatch_enqueued_at is None
 
 
 def test_outbox_dispatch_and_worker_lost_recovery(client, monkeypatch, environment):

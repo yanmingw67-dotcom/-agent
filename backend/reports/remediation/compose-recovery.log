@@ -1,0 +1,109 @@
+docker compose stop worker -> exit=0
+
+ Container product-knowledge-p11-worker-1 Stopping 
+ Container product-knowledge-p11-worker-1 Stopped 
+
+docker compose exec -T api python -c from app.jobs.queue import dispatch_pending; print(dispatch_pending()) -> exit=0
+1
+
+
+docker compose restart postgres redis -> exit=0
+
+ Container product-knowledge-p11-redis-1 Restarting 
+ Container product-knowledge-p11-postgres-1 Restarting 
+ Container product-knowledge-p11-postgres-1 Started 
+ Container product-knowledge-p11-redis-1 Started 
+
+docker compose up -d --wait --wait-timeout 120 -> exit=0
+
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-api-1 Running 
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 
+
+docker compose restart -> exit=0
+
+ Container product-knowledge-p11-worker-1 Restarting 
+ Container product-knowledge-p11-api-1 Restarting 
+ Container product-knowledge-p11-postgres-1 Restarting 
+ Container product-knowledge-p11-redis-1 Restarting 
+ Container product-knowledge-p11-postgres-1 Started 
+ Container product-knowledge-p11-redis-1 Started 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-api-1 Started 
+
+docker compose up -d --wait --wait-timeout 120 -> exit=0
+
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-api-1 Running 
+ Container product-knowledge-p11-worker-1 Running 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 
+
+docker compose exec -T worker python -c from pathlib import Path; from app.core.config import get_settings; p=get_settings().source_root/'4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d'/'manifest.json'; assert p.is_file(); print('manifest_persisted') -> exit=0
+manifest_persisted
+
+
+{
+  "mode": "REAL_FOUR_SERVICE_RESTART",
+  "checks": {
+    "queued_upload_while_worker_stopped": true,
+    "redis_postgres_restart_then_worker_consumes": true,
+    "completed_job_and_manifest_persist_after_full_restart": true
+  },
+  "snapshot_id": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+  "job_id": "01c56b68-83ab-4995-8aaf-058586da3a2a",
+  "result": {
+    "id": "01c56b68-83ab-4995-8aaf-058586da3a2a",
+    "snapshot_id": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+    "job_type": "source_import",
+    "stage": "extracted",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "duration_ms": 29,
+      "model_requests": 0,
+      "tool_calls": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "index_status": "NOT_IMPLEMENTED",
+      "file_count": 4,
+      "excluded_count": 2,
+      "total_bytes": 882,
+      "sensitive_files": 0
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T06:02:41.827953Z",
+    "started_at": "2026-11-17T06:02:48.231706Z",
+    "finished_at": "2026-11-17T06:02:48.245717Z"
+  }
+}

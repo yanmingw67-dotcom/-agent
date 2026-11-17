@@ -1,0 +1,290 @@
+postgres-1  | 
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  | 
+postgres-1  | 2026-11-17 06:01:47.429 UTC [1] LOG:  starting PostgreSQL 16.9 (Debian 16.9-1.pgdg120+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2026-11-17 06:01:47.429 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-11-17 06:01:47.429 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-11-17 06:01:47.435 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-11-17 06:01:47.439 UTC [30] LOG:  database system was shut down at 2026-11-17 06:01:46 UTC
+postgres-1  | 2026-11-17 06:01:47.444 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-11-17 06:02:41.216 UTC [207] ERROR:  active snapshot must be published and category-scoped
+postgres-1  | 2026-11-17 06:02:41.216 UTC [207] CONTEXT:  PL/pgSQL function guard_active_snapshot() line 6 at RAISE
+postgres-1  | 2026-11-17 06:02:41.216 UTC [207] STATEMENT:  UPDATE product_categories SET active_snapshot_id=$1::VARCHAR WHERE product_categories.id = $2::VARCHAR
+postgres-1  | 2026-11-17 06:02:42.884 UTC [1] LOG:  received fast shutdown request
+postgres-1  | 2026-11-17 06:02:42.885 UTC [1] LOG:  aborting any active transactions
+postgres-1  | 2026-11-17 06:02:42.885 UTC [51] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-11-17 06:02:42.887 UTC [1] LOG:  background worker "logical replication launcher" (PID 33) exited with exit code 1
+postgres-1  | 2026-11-17 06:02:42.887 UTC [28] LOG:  shutting down
+postgres-1  | 2026-11-17 06:02:42.888 UTC [28] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-11-17 06:02:42.895 UTC [28] LOG:  checkpoint complete: wrote 21 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.003 s, total=0.009 s; sync files=20, longest=0.002 s, average=0.001 s; distance=76 kB, estimate=76 kB; lsn=0/19C7AF0, redo lsn=0/19C7AF0
+postgres-1  | 2026-11-17 06:02:42.897 UTC [1] LOG:  database system is shut down
+postgres-1  | 
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  | 
+postgres-1  | 2026-11-17 06:02:43.165 UTC [1] LOG:  starting PostgreSQL 16.9 (Debian 16.9-1.pgdg120+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2026-11-17 06:02:43.166 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-11-17 06:02:43.166 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-11-17 06:02:43.168 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-11-17 06:02:43.172 UTC [29] LOG:  database system was shut down at 2026-11-17 06:02:42 UTC
+postgres-1  | 2026-11-17 06:02:43.176 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-11-17 06:02:53.221 UTC [1] LOG:  received fast shutdown request
+postgres-1  | 2026-11-17 06:02:53.226 UTC [1] LOG:  aborting any active transactions
+postgres-1  | 2026-11-17 06:02:53.226 UTC [33] FATAL:  terminating connection due to administrator command
+postgres-1  | 2026-11-17 06:02:53.228 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+postgres-1  | 2026-11-17 06:02:53.229 UTC [27] LOG:  shutting down
+postgres-1  | 2026-11-17 06:02:53.230 UTC [27] LOG:  checkpoint starting: shutdown immediate
+postgres-1  | 2026-11-17 06:02:53.235 UTC [27] LOG:  checkpoint complete: wrote 8 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.002 s, total=0.007 s; sync files=7, longest=0.001 s, average=0.001 s; distance=20 kB, estimate=20 kB; lsn=0/19CCC30, redo lsn=0/19CCC30
+postgres-1  | 2026-11-17 06:02:53.238 UTC [1] LOG:  database system is shut down
+postgres-1  | 
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+redis-1     | 1:C 17 Nov 2026 06:01:47.366 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1     | 1:C 17 Nov 2026 06:01:47.366 * Redis version=7.4.4, bits=64, commit=00000000, modified=0, pid=1, just started
+postgres-1  | 
+postgres-1  | 2026-11-17 06:02:53.591 UTC [1] LOG:  starting PostgreSQL 16.9 (Debian 16.9-1.pgdg120+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2026-11-17 06:02:53.591 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-11-17 06:02:53.591 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-11-17 06:02:53.598 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-11-17 06:02:53.607 UTC [29] LOG:  database system was shut down at 2026-11-17 06:02:53 UTC
+postgres-1  | 2026-11-17 06:02:53.613 UTC [1] LOG:  database system is ready to accept connections
+worker-1    | Traceback (most recent call last):
+worker-1    |   File "<frozen runpy>", line 198, in _run_module_as_main
+worker-1    |   File "<frozen runpy>", line 88, in _run_code
+redis-1     | 1:C 17 Nov 2026 06:01:47.366 * Configuration loaded
+redis-1     | 1:M 17 Nov 2026 06:01:47.367 * monotonic clock: POSIX clock_gettime
+redis-1     | 1:M 17 Nov 2026 06:01:47.367 * Running mode=standalone, port=6379.
+redis-1     | 1:M 17 Nov 2026 06:01:47.369 * Server initialized
+redis-1     | 1:M 17 Nov 2026 06:01:47.370 * Reading RDB base file on AOF loading...
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * Loading RDB produced by version 7.4.4
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * RDB age 1148 seconds
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * RDB memory usage when created 0.93 Mb
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * RDB is base AOF
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * Done loading RDB, keys loaded: 0, keys expired: 0.
+redis-1     | 1:M 17 Nov 2026 06:01:47.371 * DB loaded from base file appendonly.aof.1.base.rdb: 0.002 seconds
+redis-1     | 1:M 17 Nov 2026 06:01:47.376 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.006 seconds
+redis-1     | 1:M 17 Nov 2026 06:01:47.376 * DB loaded from append only file: 0.007 seconds
+redis-1     | 1:M 17 Nov 2026 06:01:47.391 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1     | 1:M 17 Nov 2026 06:01:47.391 * Ready to accept connections tcp
+redis-1     | 1:signal-handler (1794895362) Received SIGTERM scheduling shutdown...
+redis-1     | 1:M 17 Nov 2026 06:02:42.928 * User requested shutdown...
+redis-1     | 1:M 17 Nov 2026 06:02:42.928 * Calling fsync() on the AOF file.
+redis-1     | 1:M 17 Nov 2026 06:02:42.928 * Saving the final RDB snapshot before exiting.
+redis-1     | 1:M 17 Nov 2026 06:02:42.931 * DB saved on disk
+redis-1     | 1:M 17 Nov 2026 06:02:42.931 # Redis is now ready to exit, bye bye...
+redis-1     | 1:C 17 Nov 2026 06:02:43.144 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1     | 1:C 17 Nov 2026 06:02:43.144 * Redis version=7.4.4, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1     | 1:C 17 Nov 2026 06:02:43.144 * Configuration loaded
+redis-1     | 1:M 17 Nov 2026 06:02:43.144 * monotonic clock: POSIX clock_gettime
+redis-1     | 1:M 17 Nov 2026 06:02:43.145 * Running mode=standalone, port=6379.
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * Server initialized
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * Reading RDB base file on AOF loading...
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * Loading RDB produced by version 7.4.4
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * RDB age 1204 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * RDB memory usage when created 0.93 Mb
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * RDB is base AOF
+worker-1    |   File "/app/app/jobs/worker.py", line 31, in <module>
+worker-1    |     main()
+worker-1    |   File "/app/app/jobs/worker.py", line 27, in main
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * Done loading RDB, keys loaded: 0, keys expired: 0.
+redis-1     | 1:M 17 Nov 2026 06:02:43.146 * DB loaded from base file appendonly.aof.1.base.rdb: 0.000 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:43.149 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.004 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:43.149 * DB loaded from append only file: 0.004 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:43.149 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1     | 1:M 17 Nov 2026 06:02:43.149 * Ready to accept connections tcp
+redis-1     | 1:signal-handler (1794895373) Received SIGTERM scheduling shutdown...
+redis-1     | 1:M 17 Nov 2026 06:02:53.275 * User requested shutdown...
+redis-1     | 1:M 17 Nov 2026 06:02:53.275 * Calling fsync() on the AOF file.
+redis-1     | 1:M 17 Nov 2026 06:02:53.275 * Saving the final RDB snapshot before exiting.
+redis-1     | 1:M 17 Nov 2026 06:02:53.277 * DB saved on disk
+redis-1     | 1:M 17 Nov 2026 06:02:53.277 # Redis is now ready to exit, bye bye...
+redis-1     | 1:C 17 Nov 2026 06:02:53.557 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1     | 1:C 17 Nov 2026 06:02:53.557 * Redis version=7.4.4, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1     | 1:C 17 Nov 2026 06:02:53.557 * Configuration loaded
+redis-1     | 1:M 17 Nov 2026 06:02:53.557 * monotonic clock: POSIX clock_gettime
+redis-1     | 1:M 17 Nov 2026 06:02:53.558 * Running mode=standalone, port=6379.
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * Server initialized
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * Reading RDB base file on AOF loading...
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * Loading RDB produced by version 7.4.4
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * RDB age 1214 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * RDB memory usage when created 0.93 Mb
+worker-1    |     time.sleep(2)
+worker-1    |   File "/app/.venv/lib/python3.12/site-packages/rq/worker.py", line 531, in request_stop
+worker-1    |     self._shutdown()
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * RDB is base AOF
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * Done loading RDB, keys loaded: 0, keys expired: 0.
+redis-1     | 1:M 17 Nov 2026 06:02:53.559 * DB loaded from base file appendonly.aof.1.base.rdb: 0.000 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:53.583 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.024 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:53.583 * DB loaded from append only file: 0.024 seconds
+redis-1     | 1:M 17 Nov 2026 06:02:53.583 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1     | 1:M 17 Nov 2026 06:02:53.583 * Ready to accept connections tcp
+worker-1    |   File "/app/.venv/lib/python3.12/site-packages/rq/worker.py", line 547, in _shutdown
+worker-1    |     raise StopRequested()
+worker-1    | rq.worker.StopRequested
+worker-1    | Traceback (most recent call last):
+worker-1    |   File "<frozen runpy>", line 198, in _run_module_as_main
+worker-1    |   File "<frozen runpy>", line 88, in _run_code
+worker-1    |   File "/app/app/jobs/worker.py", line 31, in <module>
+worker-1    |     main()
+worker-1    |   File "/app/app/jobs/worker.py", line 27, in main
+worker-1    |     time.sleep(2)
+worker-1    |   File "/app/.venv/lib/python3.12/site-packages/rq/worker.py", line 531, in request_stop
+worker-1    |     self._shutdown()
+worker-1    |   File "/app/.venv/lib/python3.12/site-packages/rq/worker.py", line 547, in _shutdown
+worker-1    |     raise StopRequested()
+worker-1    | rq.worker.StopRequested
+api-1       | INFO:     Started server process [1]
+api-1       | INFO:     Waiting for application startup.
+api-1       | INFO:     Application startup complete.
+api-1       | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "25a0f2a8-aef8-4973-932e-218661ab58f8", "method": "GET", "status": 200, "duration_ms": 58}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c28a781e-2fc0-4a44-87e4-36795db0c91a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "aef65d42-1e90-4c6c-92b7-00e2ff007ef5", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8d14cfed-f9b4-4364-95f4-d6931d4d5cfa", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1c36a3e2-7535-482e-a38f-0aae9242d8fd", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "22cc331b-40b1-4a55-acf5-b2d2d555a8f4", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "405e8ea1-d1f8-41f5-9cb6-7b7f47607836", "method": "GET", "status": 401, "duration_ms": 1}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3a12537a-48f4-481e-acce-2a3fe05c4de5", "method": "POST", "status": 201, "duration_ms": 23}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6972c819-36e0-4f82-a2ef-2197abb26896", "method": "POST", "status": 403, "duration_ms": 0}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f0661e44-44bd-40b6-a900-edf8ae6e0004", "method": "POST", "status": 202, "duration_ms": 17}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "155317b0-54e1-4d36-ad3d-2218bd2c878d", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8eee4cf7-932e-4873-85e3-02f30f185ae0", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "89925edf-c6a5-4d85-97ba-40103ead90a2", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1e4aaba8-6493-407d-bdf9-7fc7df1859c3", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ab1d784-f0d8-4c16-8494-c756af306a28", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0a309fd9-480d-42d8-9c50-63f64facb5b8", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0ce720c6-a5a0-4c91-abae-a4791e3c2633", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "07b356d5-e521-41dc-99cf-b694392c7be3", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "667aa885-6e42-420b-ab46-aaddfe791438", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1104b109-edc9-46da-aaed-74ea4b161fd6", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "63b7a2d5-3275-4d63-a656-87e6e6e0bb67", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0ee37b41-1187-4549-8ba5-87350bbb8eed", "method": "POST", "status": 201, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dc5e5d76-9a9e-4154-96bc-4691eac5d44a", "method": "POST", "status": 403, "duration_ms": 0}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "910afb42-92ac-4997-b227-211a6d2c3e19", "method": "POST", "status": 202, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fe537bc5-912f-474c-86c5-1dc9ce3c8da4", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3ee8b338-b49e-4159-a7c6-cf6c4e91d435", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6d55d5ea-77e8-46fc-913f-e74c2c62a9f6", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d31ee976-9190-47e4-9c6c-5d7e50434471", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f540031a-b9c4-47d9-8c06-637c66b12fab", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a71ffa10-08fb-4eea-ae57-2dfe34192a98", "method": "GET", "status": 200, "duration_ms": 8}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c137b7ea-ccdb-47dd-aa05-7a8650c002e4", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9abfee2b-6b79-4016-9cfd-f957ed0c8d6d", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c4d57f40-1bfe-4421-b8a2-9d3be8b48f58", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "de2f4425-4694-4892-bae0-5261ca556eb2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8934f2eb-fb2b-4073-8143-8b51efdfdafa", "method": "POST", "status": 202, "duration_ms": 9}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "17fcf58a-30ae-4294-b310-c45b5a07d595", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2e38a7f1-c87c-43f7-8d06-fbace5dcdc79", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6ef150f-ef96-4288-b455-347587062071", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bfe5b674-ae18-45e4-85ea-ca2e64281993", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1335c8ec-c8f3-4f84-8b99-a0c94b738d20", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4e14f589-9050-429d-ac11-6dbdc26b23fa", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6384db60-3a71-4cd9-803b-582dc3fa4e40", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c50e9ad8-29d8-407e-aaa3-babdd94d14f9", "method": "GET", "status": 200, "duration_ms": 10}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1d78f143-999b-4cda-8d66-637300fc87bd", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c013cc37-d0c9-47f7-9e4a-46d92bdfb62f", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cc40fd6d-bf58-4ea3-8cf6-8686962aea86", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3ac15097-19cf-44f3-9bd8-4d5059a19cd9", "method": "POST", "status": 201, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f108dcbe-fd8a-450a-9a25-e3f929323e00", "method": "POST", "status": 403, "duration_ms": 0}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "72cdec86-43c9-4c70-bdfd-7b6613475103", "method": "POST", "status": 202, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f56a714b-8262-46ac-977b-e2a05ce25f12", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2071c35e-f636-4139-910a-04ab9c6f9a06", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cb3d3c90-903c-4499-b31d-fbc87fd22a62", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "91a8636e-caa8-4547-b506-cf08e2da5653", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "895a41e9-8343-41a5-a68f-c56cd52cc29c", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a1bea527-fab9-4c32-b096-c506c7910f12", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0525a567-ae5e-41e2-a68f-b5d4ce1fed32", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8f71ded9-9945-47f3-a036-68c899598764", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a9e9bcff-478f-466f-8ce5-0abb9a1a7e15", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c1c8c3fe-d9eb-4968-9b7e-21a92440061c", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "09384642-f255-49d2-a712-ad02108112da", "method": "POST", "status": 202, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "271d8d8d-3d1f-4355-b35f-d3993a1aebdd", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "273eed2b-80fd-46e4-becc-29e9d90a5321", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "48cc313d-fca0-4138-94ae-05ac05440da7", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5814da57-6de5-4564-bbde-c3663582bbe7", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3c4c8e9e-7e36-4812-acfe-6aec7816dee7", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "49bf8a8f-b39b-4533-9138-7000aea3da8f", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "62782108-62f6-46ff-8125-ed93a416dea6", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e3a1c697-f029-4159-b2f4-16b4bff03991", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f30511f4-e728-44c7-8e2d-6b9cc3acc03a", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d1ca7860-8c77-42e4-9d77-9fcfccf4e41a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "139abf95-c820-4ef3-8510-e8f7e4c1fedd", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eadff351-f920-44f0-9ad3-d0a4786d5e1e", "method": "POST", "status": 201, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4117f8e0-0e88-4052-b3fa-c116b9744510", "method": "POST", "status": 403, "duration_ms": 0}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7d307ca3-66bc-4f26-9224-ce1e2ffa58f7", "method": "POST", "status": 202, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6dd45e30-8661-44e6-936e-38eecf4d0371", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "96a3a255-254a-404d-97b7-237ce6bf1f97", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bf788c87-934c-44d8-ba70-b2d47990c4b4", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1ad9ba27-829d-4c18-993d-1925c6b4a1e5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "89a95b7c-52d1-4d9b-8dac-d9f42178327d", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fd9bee76-3692-466d-99eb-2528beaa5eeb", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "779be2de-effe-4bc6-99fe-caacda792038", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c1016d75-e7af-48c3-b7c8-275b5d75088f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a390b2a2-08fe-414c-b19b-cdaa7cdacc0b", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a5edcdfc-5cd0-4067-8f9e-653072186567", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0847bb3a-3b8e-40d4-bc16-78214b9f493c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2981fda0-9a03-4e4b-a620-c48ac44f97da", "method": "POST", "status": 202, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a601f7af-8933-4b21-90b3-8e41a3362afc", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f519b0cc-88d6-47a1-964a-42979af3150e", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c29258b1-a97e-4a49-bec4-0b216394a624", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "555c3811-5116-4e6f-b4de-af052f1865d5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "41371af0-7841-4f32-950b-f04fa757321a", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "67a5b4aa-9ca1-40d3-b0a8-aed24d51f630", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "245f5c74-f6f2-4107-8a8c-ca46d411d535", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b520867e-4967-4c32-8854-e1ec81b5c546", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6f37ab52-a62c-4867-bb0f-d93fc624ff2f", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e16bff8a-3ae9-42b9-8817-6f933da8e074", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "127d5637-b58f-4390-a365-37c1c105d318", "method": "POST", "status": 201, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8c4c79b9-0eeb-4826-8c47-3ae013293707", "method": "POST", "status": 403, "duration_ms": 0}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6a31dac8-d844-4f07-9e26-e9c56e97107a", "method": "POST", "status": 202, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c84bfcf0-068d-443b-8bd3-7e542eb5de0c", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "36560dd2-d825-4d74-83cf-eee411ed4450", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1c4338ce-0b9d-49e6-b49f-c80bdad459f2", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "230b3b6e-10b2-453d-bc09-8fb9c83eec8e", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "05761cf1-02cc-4fe8-a19d-929a2efa8f31", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f55d9e0f-0990-41e7-8c20-dccf7ea1aecf", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7f590751-0964-42a9-85df-52727e9adc19", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ef87ce42-7e41-4e0f-8fea-ff0cfe4ff41e", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fc6b86fe-5900-48d7-a9be-d14d034bf49a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "03803cfe-123a-406c-8077-59e1fb3b6f86", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5fdaa080-b80e-4c93-a7e9-bebed6cdb001", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0470bc06-c8aa-4d79-bed1-bae2d4b52c8f", "method": "POST", "status": 202, "duration_ms": 14}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2c7abd43-5a4b-4ca1-ae52-189e374f44dc", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a9be4be7-e94c-49f6-a7ff-9d17194f0016", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c3b1218d-f92c-4090-85de-e809134dc236", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e2cad7cb-d6d9-493d-87f7-82fe0fac4a3c", "method": "GET", "status": 200, "duration_ms": 7}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ff223f3f-0754-4e51-a517-43f942a24491", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3b84a5f3-f133-4d2e-8571-1bd715278158", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9cd527b1-50c7-47a0-ae38-855d94dc41bd", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3f76796d-66c0-4e2a-9f6e-8d63741bc5b8", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "32e21d46-7499-404e-8169-241498446008", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1114a24a-0a74-461a-b767-13b1a498fa27", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "11955782-25c0-4073-a91e-4baf8ba3e418", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "37867532-bf9e-4408-acd2-18b2e70b6d26", "method": "POST", "status": 201, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a9718aa3-a53e-49a1-b91c-e00a40a69328", "method": "POST", "status": 202, "duration_ms": 9}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3f8102a4-585b-488a-87e4-5a59aaa521e5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c2f71164-bee5-458c-afae-a0dfb1de3502", "method": "GET", "status": 200, "duration_ms": 14}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "357e39b3-36f0-4483-aaad-4b9c67039c4a", "method": "GET", "status": 200, "duration_ms": 5}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "31080b7f-10aa-4597-8fde-0504b50a7420", "method": "GET", "status": 200, "duration_ms": 9}
+api-1       | INFO:     Shutting down
+api-1       | INFO:     Waiting for application shutdown.
+api-1       | INFO:     Application shutdown complete.
+api-1       | INFO:     Finished server process [1]
+api-1       | INFO:     Started server process [1]
+api-1       | INFO:     Waiting for application startup.
+api-1       | INFO:     Application startup complete.
+api-1       | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d602d609-a932-4618-aa37-1abb59e63f83", "method": "GET", "status": 200, "duration_ms": 67}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b2502e64-d1e0-4266-8487-be202c7493c0", "method": "GET", "status": 200, "duration_ms": 10}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8c2a7634-abfa-412f-9838-e22a62237150", "method": "GET", "status": 200, "duration_ms": 6}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b1b684a2-0c9b-437b-8bdc-1c6a303e6ab8", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f57f1c76-8f20-4f1d-a4a6-bf7efe535820", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "15a8a612-ff0e-4dc5-8453-918f9d31de38", "method": "GET", "status": 200, "duration_ms": 10}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0b32fa75-c422-45c3-bbca-6143d31746b1", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "01325b89-c528-4031-8ebc-b8998a0fde51", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7c995db1-c9f8-42cd-ac58-a14e9d356530", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "84656554-ecfa-48c5-ae0d-a8581eb6b0b0", "method": "GET", "status": 200, "duration_ms": 4}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6b606008-5d9e-4c1c-b268-2ffe7998e8b2", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fda32dbd-2bbf-48c2-a4be-8970078449df", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "35f9e2ac-ef9c-4ab2-92ee-b56c84f68ac6", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3cf60f25-7296-4d22-9569-2ddcafa7dec2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2542210a-7f02-44c8-83c5-cbf697d4b50f", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3a691836-a4cc-4cc0-a70f-38239ee3eb8c", "method": "GET", "status": 200, "duration_ms": 2}
+api-1       | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a57efd84-83d6-4eba-8373-d46863ff1ce2", "method": "GET", "status": 200, "duration_ms": 3}

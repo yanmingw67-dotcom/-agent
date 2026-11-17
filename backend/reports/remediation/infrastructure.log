@@ -1,0 +1,33 @@
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "56c16f6d-261f-401c-8623-76ee20e0f759", "method": "POST", "status": 201, "duration_ms": 26}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories "HTTP/1.1 201 Created"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1603fb8c-669e-40cf-8ef5-6de9b552c33f", "method": "POST", "status": 202, "duration_ms": 50}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories/e2e6e8c1-db08-419f-8a19-467ad29ea91a/source "HTTP/1.1 202 Accepted"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2ce41f07-25e3-4cd6-8ae5-3c2379eb8082", "method": "POST", "status": 409, "duration_ms": 50}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories/e2e6e8c1-db08-419f-8a19-467ad29ea91a/source "HTTP/1.1 409 Conflict"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "34097749-ac6d-451a-8cc6-295ea87b0022", "method": "POST", "status": 201, "duration_ms": 4}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories "HTTP/1.1 201 Created"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "662822bf-bbaa-4421-b018-ce553035c616", "method": "POST", "status": 202, "duration_ms": 8}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories/c8f6cfd9-351c-40e1-9e3b-8b480c478a14/source "HTTP/1.1 202 Accepted"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4d34a99a-0678-4975-b077-795fe0d37bb3", "method": "POST", "status": 201, "duration_ms": 6}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories "HTTP/1.1 201 Created"
+INFO:knowledge.audit:{"event": "http_request", "correlation_id": "15daba2d-99bd-4adf-a727-84f08ac108a8", "method": "POST", "status": 202, "duration_ms": 9}
+INFO:httpx:HTTP Request: POST http://testserver/api/v1/categories/400b88ec-912d-4ba4-9336-6d86ed71f681/source "HTTP/1.1 202 Accepted"
+No new upgrade operations detected.
+{
+  "mode": "REAL_POSTGRES_REDIS_RQ_WITH_EXPLICIT_FAULT_INJECTION",
+  "checks": {
+    "concurrent_same_category_upload": [
+      202,
+      409
+    ],
+    "real_worker_before_enqueue_return": "passed",
+    "real_duplicate_message_after_ack_crash": "passed",
+    "real_redis_connection_failure_recovery": "passed",
+    "one_manifest_per_snapshot": true
+  },
+  "immediate_job_id": "79f4cf10-5a41-49e1-ae22-5ac8b6d66e92",
+  "migration": "0002 / alembic check passed",
+  "model_requests": 0,
+  "tokens": 0,
+  "model_cost": 0
+}

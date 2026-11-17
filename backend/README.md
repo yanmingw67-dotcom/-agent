@@ -7,6 +7,7 @@
 ## 快速启动（Docker Compose）
 
 在本目录执行，要求 Docker Engine、Compose 和 Python 3.12+；推荐使用 uv。
+容器基于官方 ghcr.io/astral-sh/uv 的固定版本 Python 3.12 镜像，不要求连接 Docker Hub 获取 Python。
 
 ```sh
 uv sync --frozen
@@ -105,6 +106,30 @@ ADMIN_TOKEN、READ_TOKEN 必须不同且各至少 32 字符，无固定演示口
 失联任务在执行超时加 60 秒后标 failed；管理员检查后调用 retry。
 非法归档的重试仍失败；修正源码后应提交新的 ZIP。
 归档、manifest 和解压目录均按后台 UUID 存储；不会将上传文件名当作服务器路径。
+
+## P1.1 代码审查整改复验
+
+```sh
+uv run pytest -q
+REPORT_DIR=reports/remediation uv run python scripts/compose_smoke.py
+REPORT_DIR=reports/remediation uv run python -m scripts.compose_recovery_check
+```
+
+重启恢复脚本会暂时停止本项目 Worker、重启数据库/Redis及四服务，仅在本项目独立验收环境运行；
+不会删除数据。它验证 Worker 停机接收任务、队列与数据库重启后消费，以及完成任务/manifest 持久化。
+不要在共享生产环境直接运行。
+
+真实数据库/队列竞态专项使用本机端口 15432/16379，须先启动 local override，且避免与常驻 Worker
+同时扫描同一数据库。在独立验收环境执行：
+`uv run python -m scripts.remediation_infrastructure_check`。
+此脚本新日志位于 reports/remediation，不覆盖初始报告。
+
+新增迁移 0002 记录 Redis 投递确认；先提交数据库 token 与租约，再投递 Redis，
+同一任务尝试的消息 ID 稳定，重试后才更换。详见 docs/ARCHITECTURE.md。
+二进制分类检查完整流，带 BOM UTF-16/UTF-32 保留为待解析编码，不作为已完成文本索引。
+
+存储配额、保留/清理和未覆盖故障矩阵见 docs/P1.1_STORAGE_AND_RECOVERY_PLAN.md。
+本批不新增自动删除入口。
 
 ## 文档与停止点
 

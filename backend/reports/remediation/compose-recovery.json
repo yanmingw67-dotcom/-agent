@@ -1,0 +1,35 @@
+{
+  "mode": "REAL_FOUR_SERVICE_RESTART",
+  "checks": {
+    "queued_upload_while_worker_stopped": true,
+    "redis_postgres_restart_then_worker_consumes": true,
+    "completed_job_and_manifest_persist_after_full_restart": true
+  },
+  "snapshot_id": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+  "job_id": "01c56b68-83ab-4995-8aaf-058586da3a2a",
+  "result": {
+    "id": "01c56b68-83ab-4995-8aaf-058586da3a2a",
+    "snapshot_id": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+    "job_type": "source_import",
+    "stage": "extracted",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "duration_ms": 29,
+      "model_requests": 0,
+      "tool_calls": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "index_status": "NOT_IMPLEMENTED",
+      "file_count": 4,
+      "excluded_count": 2,
+      "total_bytes": 882,
+      "sensitive_files": 0
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T06:02:41.827953Z",
+    "started_at": "2026-11-17T06:02:48.231706Z",
+    "finished_at": "2026-11-17T06:02:48.245717Z"
+  }
+}

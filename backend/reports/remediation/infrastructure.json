@@ -1,0 +1,18 @@
+{
+  "mode": "REAL_POSTGRES_REDIS_RQ_WITH_EXPLICIT_FAULT_INJECTION",
+  "checks": {
+    "concurrent_same_category_upload": [
+      202,
+      409
+    ],
+    "real_worker_before_enqueue_return": "passed",
+    "real_duplicate_message_after_ack_crash": "passed",
+    "real_redis_connection_failure_recovery": "passed",
+    "one_manifest_per_snapshot": true
+  },
+  "immediate_job_id": "79f4cf10-5a41-49e1-ae22-5ac8b6d66e92",
+  "migration": "0002 / alembic check passed",
+  "model_requests": 0,
+  "tokens": 0,
+  "model_cost": 0
+}

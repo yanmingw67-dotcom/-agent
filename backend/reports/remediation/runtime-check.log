@@ -1,0 +1,10 @@
+NAME                               IMAGE                    COMMAND                  SERVICE    CREATED         STATUS                        PORTS
+product-knowledge-p11-api-1        product-knowledge:p1.1   "sh -c 'alembic upgr…"   api        2 minutes ago   Up About a minute (healthy)   127.0.0.1:8000->8000/tcp
+product-knowledge-p11-postgres-1   postgres:16.9-bookworm   "docker-entrypoint.s…"   postgres   2 minutes ago   Up About a minute (healthy)   5432/tcp
+product-knowledge-p11-redis-1      redis:7.4.4-bookworm     "docker-entrypoint.s…"   redis      2 minutes ago   Up About a minute (healthy)   6379/tcp
+product-knowledge-p11-worker-1     product-knowledge:p1.1   "python -m app.jobs.…"   worker     2 minutes ago   Up About a minute (healthy)   8000/tcp
+0002 (head)
+No new upgrade operations detected.
+Python 3.12.11
+uid=10001(app) gid=10001(app) groups=10001(app)
+uid=10001(app) gid=10001(app) groups=10001(app)

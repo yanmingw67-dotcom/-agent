@@ -1,0 +1,33 @@
+ Image product-knowledge:p1.1 Building 
+ Image product-knowledge:p1.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.09kB done
+#1 DONE 0.0s
+
+#2 [worker internal] load build definition from Dockerfile
+#2 transferring dockerfile: 633B done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for docker.io/library/python:3.12.12-slim-bookworm
+#3 ERROR: failed to authorize: failed to fetch anonymous token: Get "https://auth.docker.io/token?scope=repository%3Alibrary%2Fpython%3Apull&service=registry.docker.io": read tcp 172.20.10.2:57491->104.18.43.178:443: read: connection reset by peer
+------
+ > [api internal] load metadata for docker.io/library/python:3.12.12-slim-bookworm:
+------
+Dockerfile:1
+
+--------------------
+
+   1 | >>> FROM python:3.12.12-slim-bookworm
+
+   2 |     ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1
+
+   3 |     RUN pip install --no-cache-dir uv==0.7.12 && groupadd -g 10001 app && useradd -u 10001 -g app -m app
+
+--------------------
+
+target worker: failed to solve: failed to fetch anonymous token: Get "https://auth.docker.io/token?scope=repository%3Alibrary%2Fpython%3Apull&service=registry.docker.io": read tcp 172.20.10.2:57491->104.18.43.178:443: read: connection reset by peer
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/f41zp6h5qonsih5zy0nzsva5x
+

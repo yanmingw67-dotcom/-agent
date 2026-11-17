@@ -1,0 +1,115 @@
+.................FF...................................................   [100%]
+=================================== FAILURES ===================================
+______________ test_worker_consumes_inside_enqueue_before_return _______________
+
+client = <starlette.testclient.TestClient object at 0x10d5616a0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d524380>
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest..._bytes=524288000, max_compression_ratio=100.0, max_depth=20, job_timeout_seconds=300, queue_name='knowledge-ingestion')
+
+    def test_worker_consumes_inside_enqueue_before_return(client, monkeypatch, environment):
+        ids = upload(client, category(client)).json()
+        jid = ids["job_id"]
+    
+        class ImmediateQueue:
+            def __init__(self, *args, **kwargs):
+                pass
+    
+            def enqueue(self, fn, job_id, token, **kwargs):
+                # 独立会话必须已能看到派发令牌，且调度事务已释放锁。
+                persisted = get_job(job_id)
+                assert persisted.dispatch_token == token
+                assert persisted.dispatched_at is not None
+                fn(job_id, token)
+                assert get_job(job_id).status == "succeeded"
+    
+        monkeypatch.setattr(queue, "Queue", ImmediateQueue)
+>       assert queue.dispatch_pending() == 1
+
+tests/integration/test_outbox_recovery.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def dispatch_pending():
+        settings = get_settings()
+        claims = claim_pending()
+        if not claims:
+            return 0
+        queue = Queue(settings.queue_name, connection=connection())
+        for job_id, token, claimed_at in claims:
+            try:
+>               queue.enqueue(
+                    import_source,
+                    job_id,
+                    token,
+                    job_id=f"{job_id}-{token}",
+                    job_timeout=settings.job_timeout_seconds,
+                    result_ttl=3600,
+                    failure_ttl=86400,
+                    on_failure=rq_failure,
+                )
+E               TypeError: test_worker_consumes_inside_enqueue_before_return.<locals>.ImmediateQueue.enqueue() got multiple values for argument 'job_id'
+
+app/jobs/queue.py:82: TypeError
+________ test_crash_after_claim_before_enqueue_reuses_message_identity _________
+
+client = <starlette.testclient.TestClient object at 0x10d5489e0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d5628d0>
+
+    def test_crash_after_claim_before_enqueue_reuses_message_identity(client, monkeypatch):
+        jid = upload(client, category(client)).json()["job_id"]
+        claims = queue.claim_pending()
+        token = claims[0][1]
+        assert get_job(jid).dispatch_token == token
+        assert queue.claim_pending() == []
+        expire_lease(jid)
+        sent = []
+    
+        class CapturingQueue:
+            def __init__(self, *args, **kwargs):
+                pass
+    
+            def enqueue(self, fn, job_id, dispatch_token, **kwargs):
+                sent.append(kwargs["job_id"])
+                assert dispatch_token == token
+                fn(job_id, dispatch_token)
+    
+        monkeypatch.setattr(queue, "Queue", CapturingQueue)
+>       assert queue.dispatch_pending() == 1
+
+tests/integration/test_outbox_recovery.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def dispatch_pending():
+        settings = get_settings()
+        claims = claim_pending()
+        if not claims:
+            return 0
+        queue = Queue(settings.queue_name, connection=connection())
+        for job_id, token, claimed_at in claims:
+            try:
+>               queue.enqueue(
+                    import_source,
+                    job_id,
+                    token,
+                    job_id=f"{job_id}-{token}",
+                    job_timeout=settings.job_timeout_seconds,
+                    result_ttl=3600,
+                    failure_ttl=86400,
+                    on_failure=rq_failure,
+                )
+E               TypeError: test_crash_after_claim_before_enqueue_reuses_message_identity.<locals>.CapturingQueue.enqueue() got multiple values for argument 'job_id'
+
+app/jobs/queue.py:82: TypeError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_outbox_recovery.py::test_worker_consumes_inside_enqueue_before_return
+FAILED tests/integration/test_outbox_recovery.py::test_crash_after_claim_before_enqueue_reuses_message_identity
+2 failed, 68 passed, 2 warnings in 1.45s

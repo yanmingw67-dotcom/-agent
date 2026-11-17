@@ -137,7 +137,9 @@ print(json.dumps({'non_root': True, 'source_mount_read_only': True,
         text=True,
     )
     report["infrastructure_checks"] = json.loads(result.stdout.strip())
-    Path("reports/compose-smoke.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))
+    output_dir = Path(os.environ.get("REPORT_DIR", "reports"))
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "compose-smoke.json").write_text(json.dumps(report, ensure_ascii=False, indent=2))
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 

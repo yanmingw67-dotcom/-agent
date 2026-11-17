@@ -1,3 +1,4 @@
+import codecs
 import hashlib
 import re
 import stat
@@ -156,6 +157,10 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                 detected_secret = False
                 tail = b""
                 output = None
+                has_nul = False
+                encoding = None
+                decoder = None
+                invalid_encoding = False
                 try:
                     with archive.open(entry.info) as source:
                         while block := source.read(64 * 1024):
@@ -166,17 +171,34 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                                 or actual_total > settings.max_total_bytes
                             ):
                                 raise ArchiveRejected("ACTUAL_SIZE_EXCEEDED")
+                            has_nul |= b"\x00" in block
                             if size == len(block):
-                                if b"\x00" in block:
-                                    reason = reason or "binary"
+                                if block.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+                                    encoding = "utf-32"
+                                elif block.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+                                    encoding = "utf-16"
+                                if encoding:
+                                    decoder = codecs.getincrementaldecoder(encoding)(
+                                        errors="strict"
+                                    )
                                 if reason is None:
                                     target.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
                                     output = target.open("xb")
+                            if decoder and not invalid_encoding:
+                                try:
+                                    decoder.decode(block, final=False)
+                                except UnicodeDecodeError:
+                                    invalid_encoding = True
                             digest.update(block)
                             detected_secret |= bool(SECRET.search(tail + block))
                             tail = block[-512:]
                             if output:
                                 output.write(block)
+                    if decoder and not invalid_encoding:
+                        try:
+                            decoder.decode(b"", final=True)
+                        except UnicodeDecodeError:
+                            invalid_encoding = True
                     if size != entry.info.file_size:
                         raise ArchiveRejected("SIZE_MISMATCH")
                     if size == 0 and reason is None:
@@ -185,11 +207,22 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                 finally:
                     if output:
                         output.close()
+                content_kind = "text_candidate"
+                if encoding and not invalid_encoding:
+                    content_kind = "encoded_text_pending"
+                elif has_nul or invalid_encoding:
+                    content_kind = "binary_or_unknown_encoding"
+                    if reason is None:
+                        reason = "binary_or_unknown_encoding"
+                        target.unlink()
                 record = {
                     "path": entry.path,
                     "sha256": digest.hexdigest(),
                     "size": size,
                     "sensitive_detected": detected_secret,
+                    "binary_detection_status": "full_stream_nul_and_bom_check",
+                    "content_kind": content_kind,
+                    "encoding": encoding,
                 }
                 if reason:
                     excluded.append({**record, "reason": reason})

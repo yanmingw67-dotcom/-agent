@@ -23,10 +23,13 @@ P1.1 的 succeeded 仅表示导入阶段完成，stage=extracted；知识库仍�
 
 ## 可靠投递与恢复
 
-Worker 每轮先扫描 outbox，投递 RQ 后保存随机 dispatch_token。
-处理器按 job_id + token + queued 状态加锁领取，重复投递不重复处理。
-数据库提交前 RQ 消息已发出但事务失败时，旧 token 不可领取；outbox 可重新投递。
-未领取消息超过 job_timeout_seconds+60 秒后可重新投递；
+Worker 每轮先扫描 outbox，在数据库事务内认领派发租约并保存 dispatch_token，
+**提交成功后**才向 Redis/RQ 投递；enqueue 返回后在另一事务记录 dispatch_enqueued_at。
+处理器按 job_id + token + queued 状态加锁领取，重复消息不重复提取。
+同一 attempt 的 token 和消息 ID 稳定，显式 retry 才清空并生成新 token。
+数据库认领提交失败时不投递；投递失败释放租约以便下轮重试；确认结果未知时仍用同一 ID 重发。
+认领后投递前、投递后确认前崩溃，均由已持久化租约扫描恢复。
+未领取消息超过 job_timeout_seconds+60 秒后可用同一消息 ID 重新投递；
 运行任务超时失联后标记 WORKER_LOST，允许管理员显式重试。
 RQ 失败回调提供 WORKER_INTERRUPTED 兜底。
 工作进程 fork 前清空 SQLAlchemy 连接池，不跨进程复用数据库 socket。
@@ -57,8 +60,11 @@ Worker：归档只读；导入路径 INGESTION_ROOT 可写；同卷 SOURCE_ROOT 
 - 支持普通单卷 ZIP（stored/deflate），保守拒绝加密、多卷、ZIP64 及其他压缩算法。
 - 拒绝绝对/穿越/反斜线/控制字符路径、链接、特殊文件、大小写及 Unicode 规范化碰撞。
 - 检查声明限额和实际读取量，CRC 校验，排除文件仍受所有展开限额约束。
-- 二进制（首块含 NUL）和常见依赖/生成目录被排除；manifest 记录哈希、原因。
-  二进制检测为保守启发式，不保证识别所有二进制或生成文件。
+- 对整个解压流检查 NUL，并对带 BOM 的 UTF-16/UTF-32 进行完整增量解码校验。
+  合法编码文件保留为 encoded_text_pending；未知编码/二进制排除并保留归档和分类记录。
+  manifest 标记 binary_detection_status、content_kind、encoding，不把无 NUL 等同于确定文本。
+  首块已写而后续才发现 NUL 时移除该临时文件；哈希和总量仍覆盖完整流。
+  二进制检测仍为保守启发式，不能识别所有无 NUL 二进制；无 BOM 特殊编码待后续适配。
 - 敏感字符串检测只记录布尔标记和数量，不写入匹配原文。本批不存在模型读取工具；
   P1.2/P1.3 必须实现工具输出前的屏蔽/访问策略，不能把此检测当作完整 DLP。
 - 从不执行 ZIP 中代码、脚本、安装指令或 README/AGENTS 指令。

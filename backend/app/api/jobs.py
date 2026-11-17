@@ -43,6 +43,7 @@ def retry_job(job_id: str, request: Request, role=Depends(admin), db: Session = 
                 raise AppError(409, "IMPORT_CONFLICT", "此品类已有导入任务")
             job.status, job.stage, job.error_code = "queued", "uploaded", None
             job.dispatch_token = job.dispatched_at = job.started_at = job.finished_at = None
+            job.dispatch_enqueued_at = None
             job.attempt += 1
             job.metrics_json = {"model_mode": "NOT_USED"}
             db.get(Snapshot, job.snapshot_id).status = "uploaded"
