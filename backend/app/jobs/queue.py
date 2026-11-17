@@ -17,23 +17,35 @@ def connection():
 
 def claim_pending():
     settings = get_settings()
-    threshold = now() - timedelta(seconds=settings.job_timeout_seconds + 60)
+    indexer = settings.worker_kind == "index"
+    types = ["source_index", "document_index"] if indexer else ["source_import"]
+    timeout = settings.index_job_timeout_seconds if indexer else settings.job_timeout_seconds
+    threshold = now() - timedelta(seconds=timeout + 60)
     claims = []
     with session_factory().begin() as db:
         stale = db.scalars(
             select(KnowledgeJob)
-            .where(KnowledgeJob.status == "running", KnowledgeJob.started_at < threshold)
+            .where(
+                KnowledgeJob.status == "running",
+                KnowledgeJob.started_at < threshold,
+                KnowledgeJob.job_type.in_(types),
+            )
             .with_for_update(skip_locked=True)
         ).all()
         for job in stale:
             job.status = job.stage = "failed"
             job.error_code = "WORKER_LOST"
             job.finished_at = now()
-            db.get(Snapshot, job.snapshot_id).status = "failed"
+            snapshot = db.get(Snapshot, job.snapshot_id)
+            if job.job_type == "source_import":
+                snapshot.status = "failed"
+            else:
+                snapshot.index_status = "failed"
         pending = db.scalars(
             select(KnowledgeJob)
             .where(
                 KnowledgeJob.status == "queued",
+                KnowledgeJob.job_type.in_(types),
                 or_(KnowledgeJob.dispatched_at.is_(None), KnowledgeJob.dispatched_at < threshold),
             )
             .order_by(KnowledgeJob.created_at)
@@ -76,15 +88,23 @@ def dispatch_pending():
     claims = claim_pending()
     if not claims:
         return 0
-    queue = Queue(settings.queue_name, connection=connection())
+    indexer = settings.worker_kind == "index"
+    if indexer:
+        from app.ingestion.indexer import run_index
+    handler = run_index if indexer else import_source
+    queue = Queue(
+        settings.index_queue_name if indexer else settings.queue_name, connection=connection()
+    )
     for job_id, token, claimed_at in claims:
         try:
             queue.enqueue(
-                import_source,
+                handler,
                 job_id,
                 token,
                 job_id=f"{job_id}-{token}",
-                job_timeout=settings.job_timeout_seconds,
+                job_timeout=settings.index_job_timeout_seconds
+                if indexer
+                else settings.job_timeout_seconds,
                 result_ttl=3600,
                 failure_ttl=86400,
                 on_failure=rq_failure,

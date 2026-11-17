@@ -1,0 +1,100 @@
+ Image product-knowledge:p1.1 Building 
+ Image product-knowledge:p1.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.09kB done
+#1 DONE 0.0s
+
+#2 [worker internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.3s
+
+#4 [worker internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [worker 1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 DONE 0.0s
+
+#6 [worker internal] load build context
+#6 transferring context: 83.64kB 0.0s done
+#6 DONE 0.0s
+
+#7 [worker 4/9] WORKDIR /app
+#7 CACHED
+
+#8 [worker 2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [worker 3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#9 CACHED
+
+#10 [worker 5/9] COPY pyproject.toml uv.lock ./
+#10 CACHED
+
+#11 [worker 6/9] RUN uv sync --frozen --no-dev
+#11 CACHED
+
+#12 [api 7/9] COPY --chown=app:app app ./app
+#12 DONE 0.0s
+
+#13 [worker 8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [worker 9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.2s
+
+#15 [worker] exporting to image
+#15 exporting layers 0.1s done
+#15 exporting manifest sha256:a5f88892b6523ba5ed6d92d4c5cdbb9ace5ce0c0363a6f7d8a91cf13e5e7d3ce 0.0s done
+#15 exporting config sha256:01c208f4b30f1e98345f65d54586f33e86169d03c2bbab2709936ce20b6a174e 0.0s done
+#15 exporting attestation manifest sha256:09ead393ba2588223f21901339e88ba3254095c11bc15290e82f70bb7206c878 0.0s done
+#15 exporting manifest list sha256:2acd39e73e52e541e2e1a6192fa4eb14a716c03e28361cbd3498765238893686 0.0s done
+#15 naming to docker.io/library/product-knowledge:p1.1 done
+#15 unpacking to docker.io/library/product-knowledge:p1.1 0.0s done
+#15 DONE 0.2s
+
+#16 [api] exporting to image
+#16 exporting layers 0.1s done
+#16 exporting manifest sha256:0e27d10998adf73bb32d5174a8dde9d0861bee47c18e9f6bdb0924266093fc3d 0.0s done
+#16 exporting config sha256:99f839a358bab4a5b06b7c6a0729576674d4e6c9fea5615d3c58b5b74f1d8af1 0.0s done
+#16 exporting attestation manifest sha256:86c94d19cdd70e22e38a9430dedf8e63411e62f4825f0a71a85a39219916e335 0.0s done
+#16 exporting manifest list sha256:67f06f7d05420d6c44769acd3981e038f913a269ce5cadbcf344644d401a8e26 0.0s done
+#16 naming to docker.io/library/product-knowledge:p1.1 done
+#16 unpacking to docker.io/library/product-knowledge:p1.1 0.0s done
+#16 DONE 0.3s
+
+#17 [worker] resolving provenance for metadata file
+#17 DONE 0.0s
+
+#18 [api] resolving provenance for metadata file
+#18 DONE 0.0s
+ Image product-knowledge:p1.1 Built 
+ Image product-knowledge:p1.1 Built 
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-api-1 Recreate 
+ Container product-knowledge-p11-api-1 Recreated 
+ Container product-knowledge-p11-worker-1 Recreate 
+ Container product-knowledge-p11-worker-1 Recreated 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Starting 
+ Container product-knowledge-p11-api-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 

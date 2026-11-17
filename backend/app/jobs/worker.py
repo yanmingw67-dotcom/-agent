@@ -15,16 +15,40 @@ def main():
     logging.basicConfig(level=logging.INFO)
     settings = get_settings()
     while True:
+        lock = None
+        acquired = False
         try:
+            if settings.worker_kind == "index":
+                lock = connection().lock(
+                    "knowledge-index-single-worker",
+                    timeout=settings.index_job_timeout_seconds + 120,
+                )
+                acquired = lock.acquire(blocking=False)
+                if not acquired:
+                    continue
             dispatch_pending()
-            # RQ fork 前关闭父进程连接，避免子进程复用 PostgreSQL socket。
+            # RQ fork 前清空连接池；分析 Worker 没有归档或源码写入挂载。
             get_engine().dispose()
             Path("/tmp/knowledge-worker-heartbeat").write_text(str(time.time()))
-            worker = Worker([settings.queue_name], connection=connection())
-            worker.work(burst=True, max_jobs=10, logging_level="WARNING")
+            worker = Worker(
+                [
+                    settings.index_queue_name
+                    if settings.worker_kind == "index"
+                    else settings.queue_name
+                ],
+                connection=connection(),
+            )
+            worker.work(
+                burst=True,
+                max_jobs=1 if settings.worker_kind == "index" else 10,
+                logging_level="WARNING",
+            )
         except Exception:
             logging.getLogger("knowledge.worker").warning("worker_dependency_unavailable")
-        time.sleep(2)
+        finally:
+            if acquired and lock and lock.owned():
+                lock.release()
+            time.sleep(2)
 
 
 if __name__ == "__main__":

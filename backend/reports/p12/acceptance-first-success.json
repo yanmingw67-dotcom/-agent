@@ -1,0 +1,1373 @@
+{
+  "mode": "REAL_SIX_CONTAINER_P12",
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 80,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "model_requests": 0,
+  "tokens": 0,
+  "example": {
+    "category_id": "76af4d09-53b1-41d7-ac63-37ba2ded47f0",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "symbol": {
+      "id": "43606729-2389-474a-9a69-1088243cd1bf",
+      "file_id": "1545bf48-c6b2-40f1-a235-e1aacd49f143",
+      "symbol_id": "43606729-2389-474a-9a69-1088243cd1bf",
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": "RobotSender.send",
+      "kind": "method",
+      "status": null,
+      "language": null,
+      "role": "source",
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "def send(self, event):",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    },
+    "source_read": {
+      "id": null,
+      "file_id": "1545bf48-c6b2-40f1-a235-e1aacd49f143",
+      "symbol_id": null,
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": null,
+      "kind": null,
+      "status": null,
+      "language": null,
+      "role": null,
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "    def send(self, event):\n        return format_event(event)",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    }
+  },
+  "initial_index": {
+    "id": "1f46bd20-c30c-4f73-bdef-bb26723f03bb",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 7,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 76,
+      "cpu_seconds": 0.053,
+      "peak_rss_bytes": 91000832
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:03.838564Z",
+    "started_at": "2026-11-17T09:22:05.342804Z",
+    "finished_at": "2026-11-17T09:22:05.409577Z"
+  },
+  "incremental_index": {
+    "id": "6095a0f4-4d80-4e75-b32e-7579d8d24111",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 37,
+      "cpu_seconds": 0.027,
+      "peak_rss_bytes": 88469504
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:05.716839Z",
+    "started_at": "2026-11-17T09:22:07.451209Z",
+    "finished_at": "2026-11-17T09:22:07.478144Z"
+  },
+  "documents": [
+    {
+      "filename": "demo_waf_manual.docx",
+      "job": {
+        "id": "b566650a-71f0-4bf3-893e-7cc7f2b3b417",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 1,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 61,
+          "cpu_seconds": 0.049,
+          "peak_rss_bytes": 97034240
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:07.714719Z",
+        "started_at": "2026-11-17T09:22:09.525405Z",
+        "finished_at": "2026-11-17T09:22:09.573178Z"
+      }
+    },
+    {
+      "filename": "demo_waf_manual.pdf",
+      "job": {
+        "id": "a192554a-c224-4262-a743-f5f0a18af911",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 2,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 40,
+          "cpu_seconds": 0.03,
+          "peak_rss_bytes": 89710592
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:09.705719Z",
+        "started_at": "2026-11-17T09:22:11.654268Z",
+        "finished_at": "2026-11-17T09:22:11.675927Z"
+      }
+    },
+    {
+      "filename": "demo_capabilities.xlsx",
+      "job": {
+        "id": "7d48a8bd-ba6a-463e-a602-0181e2f13446",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 3,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 36,
+          "cpu_seconds": 0.028,
+          "peak_rss_bytes": 92487680
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:11.769123Z",
+        "started_at": "2026-11-17T09:22:13.733986Z",
+        "finished_at": "2026-11-17T09:22:13.761493Z"
+      }
+    }
+  ],
+  "benchmark_job": {
+    "id": "e8f087ff-991f-45a2-ad3b-b37b25cc76e2",
+    "snapshot_id": "c6050389-c532-4396-a6a7-732789f0f3e6",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 3705,
+      "cpu_seconds": 2.8,
+      "peak_rss_bytes": 92921856
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:21.056431Z",
+    "started_at": "2026-11-17T09:22:22.056780Z",
+    "finished_at": "2026-11-17T09:22:25.752147Z"
+  },
+  "benchmark_elapsed_seconds": 5.089959416989586,
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 14.352,
+        "p95_ms": 33.615,
+        "max_ms": 44.219
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 9.92,
+        "p95_ms": 19.192,
+        "max_ms": 25.993
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 40,
+        "p50_ms": 14.424,
+        "p95_ms": 18.815,
+        "max_ms": 21.195
+      },
+      "search_symbols": {
+        "count": 40,
+        "p50_ms": 11.531,
+        "p95_ms": 16.203,
+        "max_ms": 17.117
+      }
+    }
+  },
+  "resource_sampling": [
+    {
+      "observed_at": 1794907342.083723,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "3.77%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "d58d0bc9e4b4",
+      "MemPerc": "6.06%",
+      "MemUsage": "93.02MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "307kB / 383kB",
+      "PIDs": "3"
+    },
+    {
+      "observed_at": 1794907342.083765,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "16.74%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "f16be31033c5",
+      "MemPerc": "8.66%",
+      "MemUsage": "66.5MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "487kB / 472kB",
+      "PIDs": "3"
+    },
+    {
+      "observed_at": 1794907344.1458838,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "80.80%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "d58d0bc9e4b4",
+      "MemPerc": "8.20%",
+      "MemUsage": "126MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "1.59MB / 1.69MB",
+      "PIDs": "3"
+    },
+    {
+      "observed_at": 1794907344.145899,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "29.85%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "f16be31033c5",
+      "MemPerc": "8.66%",
+      "MemUsage": "66.52MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "724kB / 705kB",
+      "PIDs": "3"
+    },
+    {
+      "observed_at": 1794907346.137132,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "50.05%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "d58d0bc9e4b4",
+      "MemPerc": "5.14%",
+      "MemUsage": "78.98MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "2.68MB / 2.77MB",
+      "PIDs": "1"
+    },
+    {
+      "observed_at": 1794907346.1371741,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "8.09%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "f16be31033c5",
+      "MemPerc": "8.66%",
+      "MemUsage": "66.52MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "916kB / 894kB",
+      "PIDs": "3"
+    }
+  ],
+  "raw_latency_samples": [
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 33.62958299112506
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.39554200542625
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.594499992905185
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.759332999237813
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.97262499469798
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.495042002527043
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.47524999862071
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 14.45620799495373
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.595749998581596
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 8.76070799131412
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.196791009046137
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.390999999595806
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 44.21908401127439
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.034958002506755
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.15079199068714
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.68545801192522
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.367917006486095
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 19.191582992789336
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 33.61533299903385
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 8.702750012162142
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 11.863584004458971
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.510332994977944
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 11.925499988137744
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.919583011651412
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.82549999107141
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.382165997521952
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.688042003195733
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.093000000575557
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 11.08787499833852
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.410791001049802
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.50929100974463
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.505209011374973
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 11.875083000632003
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.627875006524846
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.330957993981428
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 8.995666998089291
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.347750002751127
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 14.748832996701822
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.747791989473626
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.412332998588681
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 29.873459003283642
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 19.336291996296495
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.570542007684708
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 25.99266599281691
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 25.280999994720332
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.465707989875227
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.03229199827183
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 12.649374999455176
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.52962499752175
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.4405830061296
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.352332989801653
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 8.871291996911168
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.597833993728273
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.738374996231869
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.502750007319264
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.890374989481643
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.422250001691282
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.934165999060497
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 21.02908300003037
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 8.079042003373615
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 12.00566699844785
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 32.85129200958181
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 17.9040830116719
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 13.636832998599857
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 15.070333000039682
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 13.047000000369735
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 17.13320800627116
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 12.185749990749173
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 14.952416997402906
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 63.528041006065905
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 17.782166993129067
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 9.912958994391374
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 16.087958007119596
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 14.996500001871027
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 24.5494579867227
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 9.319333999883384
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.145624999306165
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 16.32654099375941
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 23.109000001568347
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 9.581124992109835
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.41058301134035
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.316332991351373
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 21.19537501130253
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.78741700318642
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.357000003452413
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.898083008825779
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.424291992327198
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.028332995716482
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.419749994180165
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.066624996601604
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 12.07129099930171
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.639083011890762
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.15491700451821
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.48579100461211
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.886709006736055
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.42899999790825
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.561917007900774
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.632582994527183
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.824457986629568
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.957291000522673
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 10.45383300515823
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.078582996153273
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 12.442374994861893
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.363249992020428
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.277459001983516
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.553750005783513
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 12.755250005284324
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.311999999335967
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.012291994527914
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.530624993611127
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.353625006857328
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.868584002717398
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.345958007965237
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.909832992590964
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.204374998575076
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 17.11737499863375
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.361333989654668
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.690208993968554
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.635333998943679
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.750833989935927
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.815457995515317
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.661249994882382
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 12.92516700050328
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.559084007283673
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 11.563124993699603
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 7.314708011108451
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.56445799744688
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 16.203291990677826
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.26995800365694
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.338875003275461
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.679499989142641
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 16.4551250054501
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.969290990848094
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.306458003469743
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.988457998493686
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.2514590107603
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.015083001344465
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.80958300048951
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.221375007764436
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.122749995090999
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.531417007674463
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.54304200806655
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.446332996361889
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.965208996320143
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.599334001308307
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.680082996259443
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.281167008448392
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.03800000459887
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 12.473499999032356
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.915999999269843
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.80612499290146
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.540291005279869
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.241750010522082
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.40479201078415
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.602957995724864
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.951291998731904
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.855167009751312
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.334208004176617
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 14.186500004143454
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.08420799614396
+    }
+  ],
+  "resources": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": true
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "mounts": [
+        {
+          "destination": "/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "rw": false
+        },
+        {
+          "destination": "/data/ingestion",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    }
+  ],
+  "host_engine_info": 8,
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "api_metrics": {
+    "error_code": "HTTP_404",
+    "message": "请求不能处理",
+    "correlation_id": "51a620b0-c9da-4e9c-8484-0273170ad3b7"
+  },
+  "retrieval_metrics": {
+    "error_code": "HTTP_404",
+    "message": "请求不能处理",
+    "correlation_id": "947efe4e-771f-4c64-b4ec-0dc5d36b4606"
+  },
+  "storage": {
+    "quota_bytes": 10737418240,
+    "used_bytes": 2544626,
+    "reserved_bytes": 0,
+    "reservation_count": 0,
+    "reservations": [],
+    "entries": [
+      {
+        "kind": "archive",
+        "key": "ee2d7fa6-9f2f-42a8-b18b-be7984f35b81.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "077541d5-94f8-4e3d-a1da-83a905a383ad.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "6a207a00-b67d-4c1a-90ea-c69200877310.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "433168fa-a1c0-4672-be47-d5c3c5414cdb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "c3d74b44-e101-4044-8d63-68a5b4aa8dfe.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "dbdca079-a60c-4c3d-b0ab-7c90340af77b.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "02a14a91-5c00-4835-93ce-74fb0a951968.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8a1fe17-a3cb-4d15-a9d5-a18d7a914995.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "ef66295a-4264-4f59-9082-1fc3469b91fb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0486efad-f5ba-4c25-8f48-1c6aee1ff817",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "e1ffad69-96f5-4a7b-b753-394480f6ea26",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "c6050389-c532-4396-a6a7-732789f0f3e6",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "a40a798d-1095-4101-a3ba-6245cc203054.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8fd0727e-c425-448b-9576-27fd368b1505.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "d79893bf-3914-4d14-81dc-51a2fba8847a.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      }
+    ],
+    "truncated": false,
+    "scanned_entries": 17,
+    "automatic_deletion": false
+  }
+}

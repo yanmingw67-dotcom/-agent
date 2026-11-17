@@ -7,6 +7,7 @@ from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from app.core.auth import bearer, principal
+from app.core.metrics import observe
 from app.core.security import AppError
 
 logger = logging.getLogger("knowledge.audit")
@@ -45,7 +46,7 @@ class RequestGuard:
             if (
                 scope["method"] == "POST"
                 and scope["path"].startswith("/api/v1/categories/")
-                and scope["path"].endswith("/source")
+                and scope["path"].rstrip("/").endswith(("/source", "/documents"))
             ):
                 try:
                     role = principal(await bearer(Request(scope)))
@@ -64,6 +65,12 @@ class RequestGuard:
                     return await response(scope, receive, tracked_send)
             await self.app(scope, bounded_receive, tracked_send)
         finally:
+            observe(
+                "retrieval_requests"
+                if scope["path"].startswith("/api/v1/retrieval/")
+                else "http_requests",
+                (time.monotonic() - started) * 1000,
+            )
             # 不记录 URL 参数、请求体、凭据或源码内容。
             logger.info(
                 json.dumps(

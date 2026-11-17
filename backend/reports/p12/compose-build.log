@@ -1,0 +1,189 @@
+ Image product-knowledge:p1.1 Building 
+ Image product-knowledge:p1.1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.09kB done
+#1 DONE 0.0s
+
+#2 [worker internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.8s
+
+#4 [api internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [worker 1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 CACHED
+
+#6 [api internal] load build context
+#6 transferring context: 504.82kB 0.0s done
+#6 DONE 0.0s
+
+#7 [worker 2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#7 1.331 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#7 2.147 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#7 2.910 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#7 5.027 Get:4 http://deb.debian.org/debian bookworm/main arm64 Packages [8689 kB]
+#7 5.832 Get:5 http://deb.debian.org/debian bookworm-updates/main arm64 Packages [6936 B]
+#7 6.987 Get:6 http://deb.debian.org/debian-security bookworm-security/main arm64 Packages [374 kB]
+#7 7.031 Fetched 9312 kB in 7s (1358 kB/s)
+#7 7.031 Reading package lists...
+#7 7.747 Reading package lists...
+#7 8.284 Building dependency tree...
+#7 8.415 Reading state information...
+#7 8.597 The following NEW packages will be installed:
+#7 8.597   ripgrep
+#7 10.06 0 upgraded, 1 newly installed, 0 to remove and 38 not upgraded.
+#7 10.06 Need to get 1079 kB of archives.
+#7 10.06 After this operation, 4036 kB of additional disk space will be used.
+#7 10.06 Get:1 http://deb.debian.org/debian bookworm/main arm64 ripgrep arm64 13.0.0-4+b2 [1079 kB]
+#7 10.15 debconf: delaying package configuration, since apt-utils is not installed
+#7 10.17 Fetched 1079 kB in 1s (737 kB/s)
+#7 10.18 Selecting previously unselected package ripgrep.
+#7 10.18 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6680 files and directories currently installed.)
+#7 10.19 Preparing to unpack .../ripgrep_13.0.0-4+b2_arm64.deb ...
+#7 10.19 Unpacking ripgrep (13.0.0-4+b2) ...
+#7 10.28 Setting up ripgrep (13.0.0-4+b2) ...
+#7 DONE 10.3s
+
+#8 [worker 3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#8 DONE 0.2s
+
+#9 [api 4/9] WORKDIR /app
+#9 DONE 0.0s
+
+#10 [worker 5/9] COPY pyproject.toml uv.lock ./
+#10 DONE 0.0s
+
+#11 [worker 6/9] RUN uv sync --frozen --no-dev
+#11 0.245 Using CPython 3.12.11 interpreter at: /usr/local/bin/python3
+#11 0.245 Creating virtual environment at: .venv
+#11 1.802 Downloading cryptography (4.5MiB)
+#11 2.196 Downloading lxml (4.8MiB)
+#11 2.203 Downloading pypdfium2 (3.7MiB)
+#11 2.324 Downloading pydantic-core (1.8MiB)
+#11 2.330 Downloading sqlalchemy (3.1MiB)
+#11 2.330 Downloading pillow (6.2MiB)
+#11 2.331 Downloading psycopg-binary (4.4MiB)
+#11 2.336 Downloading pdfminer-six (5.4MiB)
+#11 3.906  Downloading pydantic-core
+#11 4.682  Downloading sqlalchemy
+#11 4.958  Downloading pypdfium2
+#11 5.200  Downloading cryptography
+#11 5.206  Downloading psycopg-binary
+#11 5.259  Downloading lxml
+#11 5.261  Downloading pdfminer-six
+#11 5.479  Downloading pillow
+#11 5.480 Prepared 42 packages in 5.21s
+#11 5.507 Installed 42 packages in 27ms
+#11 6.415 Bytecode compiled 1602 files in 907ms
+#11 6.415  + alembic==1.15.2
+#11 6.415  + annotated-doc==0.0.6
+#11 6.415  + annotated-types==0.8.0
+#11 6.415  + anyio==4.16.0
+#11 6.415  + cffi==2.1.1
+#11 6.415  + charset-normalizer==3.5.2
+#11 6.415  + click==8.5.1
+#11 6.415  + cryptography==50.0.2
+#11 6.415  + defusedxml==0.7.1
+#11 6.415  + et-xmlfile==2.0.0
+#11 6.415  + fastapi==0.121.3
+#11 6.415  + greenlet==3.5.6
+#11 6.415  + h11==0.16.0
+#11 6.415  + idna==3.20
+#11 6.415  + lxml==6.1.3
+#11 6.415  + mako==1.4.3
+#11 6.416  + markupsafe==3.0.4
+#11 6.416  + openpyxl==3.1.5
+#11 6.416  + pdfminer-six==20251107
+#11 6.416  + pdfplumber==0.11.8
+#11 6.416  + pillow==13.0.0
+#11 6.416  + psutil==7.0.0
+#11 6.416  + psycopg==3.2.9
+#11 6.416  + psycopg-binary==3.2.9
+#11 6.416  + pycparser==3.12
+#11 6.416  + pydantic==2.11.4
+#11 6.416  + pydantic-core==2.33.2
+#11 6.416  + pydantic-settings==2.9.1
+#11 6.416  + pypdfium2==5.15.2
+#11 6.416  + python-docx==1.2.0
+#11 6.416  + python-dotenv==1.2.4
+#11 6.416  + python-multipart==0.0.20
+#11 6.416  + redis==5.2.1
+#11 6.416  + rq==2.3.3
+#11 6.416  + sqlalchemy==2.0.41
+#11 6.416  + starlette==0.50.0
+#11 6.416  + tree-sitter==0.25.2
+#11 6.416  + tree-sitter-go==0.25.0
+#11 6.416  + tree-sitter-python==0.25.0
+#11 6.416  + typing-extensions==4.16.0
+#11 6.416  + typing-inspection==0.4.5
+#11 6.416  + uvicorn==0.34.2
+#11 DONE 6.7s
+
+#12 [worker 7/9] COPY --chown=app:app app ./app
+#12 DONE 0.1s
+
+#13 [api 8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [api 9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.1s
+
+#15 [api] exporting to image
+#15 exporting layers
+#15 exporting layers 4.1s done
+#15 exporting manifest sha256:302a3d47411f6e6a9731ca393ca90227d4c4cb8951eff4352485aaa10331fbfa done
+#15 exporting config sha256:284f6e496fd615fd3039c936c016fbabcff597534360cc143582c6131a5e28d9 done
+#15 exporting attestation manifest sha256:9e0cdaeed54f69f882792c3d12a67d000272901eeb6462db8933cadb9d6d41ba 0.0s done
+#15 exporting manifest list sha256:9d84891886811166ea6b7b2eca156b2d9b8ee81ffe5174755994457d9a832fe4 done
+#15 naming to docker.io/library/product-knowledge:p1.1 done
+#15 unpacking to docker.io/library/product-knowledge:p1.1
+#15 unpacking to docker.io/library/product-knowledge:p1.1 1.2s done
+#15 DONE 5.4s
+
+#16 [worker] exporting to image
+#16 exporting layers 4.1s done
+#16 exporting manifest sha256:7e7b663084c7b5950f99a72b04e2db10dcd80c39db8afce8f69d5119edcb7186 done
+#16 exporting config sha256:c845f5cb2abcbad68bec24f51ed127fdae60b30a827add8769917aa89466ea63 done
+#16 exporting attestation manifest sha256:1e2dc66e447556fabd8626fa40d4029ad150a507d426caa96f255ccf0ee7c6af 0.0s done
+#16 exporting manifest list sha256:0c9684bf9e8b1c72f7e2fc0d157230a97db2da60ec2f0220c8dc4fb2d9395566 done
+#16 naming to docker.io/library/product-knowledge:p1.1 done
+#16 unpacking to docker.io/library/product-knowledge:p1.1 1.2s done
+#16 DONE 5.4s
+
+#17 [worker] resolving provenance for metadata file
+#17 DONE 0.0s
+
+#18 [api] resolving provenance for metadata file
+#18 DONE 0.0s
+ Image product-knowledge:p1.1 Built 
+ Image product-knowledge:p1.1 Built 
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-api-1 Recreate 
+ Container product-knowledge-p11-api-1 Recreated 
+ Container product-knowledge-p11-worker-1 Recreate 
+ Container product-knowledge-p11-worker-1 Recreated 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Starting 
+ Container product-knowledge-p11-api-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 

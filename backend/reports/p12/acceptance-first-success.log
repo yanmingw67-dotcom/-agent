@@ -1,0 +1,497 @@
+{
+  "mode": "REAL_SIX_CONTAINER_P12",
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 80,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "model_requests": 0,
+  "tokens": 0,
+  "example": {
+    "category_id": "76af4d09-53b1-41d7-ac63-37ba2ded47f0",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "symbol": {
+      "id": "43606729-2389-474a-9a69-1088243cd1bf",
+      "file_id": "1545bf48-c6b2-40f1-a235-e1aacd49f143",
+      "symbol_id": "43606729-2389-474a-9a69-1088243cd1bf",
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": "RobotSender.send",
+      "kind": "method",
+      "status": null,
+      "language": null,
+      "role": "source",
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "def send(self, event):",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    },
+    "source_read": {
+      "id": null,
+      "file_id": "1545bf48-c6b2-40f1-a235-e1aacd49f143",
+      "symbol_id": null,
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": null,
+      "kind": null,
+      "status": null,
+      "language": null,
+      "role": null,
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "    def send(self, event):\n        return format_event(event)",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    }
+  },
+  "initial_index": {
+    "id": "1f46bd20-c30c-4f73-bdef-bb26723f03bb",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 7,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 76,
+      "cpu_seconds": 0.053,
+      "peak_rss_bytes": 91000832
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:03.838564Z",
+    "started_at": "2026-11-17T09:22:05.342804Z",
+    "finished_at": "2026-11-17T09:22:05.409577Z"
+  },
+  "incremental_index": {
+    "id": "6095a0f4-4d80-4e75-b32e-7579d8d24111",
+    "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 37,
+      "cpu_seconds": 0.027,
+      "peak_rss_bytes": 88469504
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:05.716839Z",
+    "started_at": "2026-11-17T09:22:07.451209Z",
+    "finished_at": "2026-11-17T09:22:07.478144Z"
+  },
+  "documents": [
+    {
+      "filename": "demo_waf_manual.docx",
+      "job": {
+        "id": "b566650a-71f0-4bf3-893e-7cc7f2b3b417",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 1,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 61,
+          "cpu_seconds": 0.049,
+          "peak_rss_bytes": 97034240
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:07.714719Z",
+        "started_at": "2026-11-17T09:22:09.525405Z",
+        "finished_at": "2026-11-17T09:22:09.573178Z"
+      }
+    },
+    {
+      "filename": "demo_waf_manual.pdf",
+      "job": {
+        "id": "a192554a-c224-4262-a743-f5f0a18af911",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 2,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 40,
+          "cpu_seconds": 0.03,
+          "peak_rss_bytes": 89710592
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:09.705719Z",
+        "started_at": "2026-11-17T09:22:11.654268Z",
+        "finished_at": "2026-11-17T09:22:11.675927Z"
+      }
+    },
+    {
+      "filename": "demo_capabilities.xlsx",
+      "job": {
+        "id": "7d48a8bd-ba6a-463e-a602-0181e2f13446",
+        "snapshot_id": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 3,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "duration_ms": 36,
+          "cpu_seconds": 0.028,
+          "peak_rss_bytes": 92487680
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:22:11.769123Z",
+        "started_at": "2026-11-17T09:22:13.733986Z",
+        "finished_at": "2026-11-17T09:22:13.761493Z"
+      }
+    }
+  ],
+  "benchmark_job": {
+    "id": "e8f087ff-991f-45a2-ad3b-b37b25cc76e2",
+    "snapshot_id": "c6050389-c532-4396-a6a7-732789f0f3e6",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "duration_ms": 3705,
+      "cpu_seconds": 2.8,
+      "peak_rss_bytes": 92921856
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:22:21.056431Z",
+    "started_at": "2026-11-17T09:22:22.056780Z",
+    "finished_at": "2026-11-17T09:22:25.752147Z"
+  },
+  "benchmark_elapsed_seconds": 5.089959416989586,
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 14.352,
+        "p95_ms": 33.615,
+        "max_ms": 44.219
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 9.92,
+        "p95_ms": 19.192,
+        "max_ms": 25.993
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 40,
+        "p50_ms": 14.424,
+        "p95_ms": 18.815,
+        "max_ms": 21.195
+      },
+      "search_symbols": {
+        "count": 40,
+        "p50_ms": 11.531,
+        "p95_ms": 16.203,
+        "max_ms": 17.117
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": true
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "mounts": [
+        {
+          "destination": "/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "rw": false
+        },
+        {
+          "destination": "/data/ingestion",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    }
+  ],
+  "host_engine_info": 8,
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "api_metrics": {
+    "error_code": "HTTP_404",
+    "message": "请求不能处理",
+    "correlation_id": "51a620b0-c9da-4e9c-8484-0273170ad3b7"
+  },
+  "retrieval_metrics": {
+    "error_code": "HTTP_404",
+    "message": "请求不能处理",
+    "correlation_id": "947efe4e-771f-4c64-b4ec-0dc5d36b4606"
+  },
+  "storage": {
+    "quota_bytes": 10737418240,
+    "used_bytes": 2544626,
+    "reserved_bytes": 0,
+    "reservation_count": 0,
+    "reservations": [],
+    "entries": [
+      {
+        "kind": "archive",
+        "key": "ee2d7fa6-9f2f-42a8-b18b-be7984f35b81.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "077541d5-94f8-4e3d-a1da-83a905a383ad.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "6a207a00-b67d-4c1a-90ea-c69200877310.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "433168fa-a1c0-4672-be47-d5c3c5414cdb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "c3d74b44-e101-4044-8d63-68a5b4aa8dfe.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "dbdca079-a60c-4c3d-b0ab-7c90340af77b.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "02a14a91-5c00-4835-93ce-74fb0a951968.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8a1fe17-a3cb-4d15-a9d5-a18d7a914995.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "ef66295a-4264-4f59-9082-1fc3469b91fb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0486efad-f5ba-4c25-8f48-1c6aee1ff817",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "e1ffad69-96f5-4a7b-b753-394480f6ea26",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "c6050389-c532-4396-a6a7-732789f0f3e6",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "a40a798d-1095-4101-a3ba-6245cc203054.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8fd0727e-c425-448b-9576-27fd368b1505.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "d79893bf-3914-4d14-81dc-51a2fba8847a.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "action": "report_only"
+      }
+    ],
+    "truncated": false,
+    "scanned_entries": 17,
+    "automatic_deletion": false
+  }
+}

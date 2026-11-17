@@ -1,0 +1,118 @@
+ Image product-knowledge:p1.2 Building 
+ Image product-knowledge:p1.2 Building 
+ Image product-knowledge:p1.2 Building 
+ Image product-knowledge:p1.2 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.11kB done
+#1 DONE 0.0s
+
+#2 [retrieval internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [worker internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.5s
+
+#4 [worker internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [retrieval 1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 DONE 0.0s
+
+#6 [retrieval internal] load build context
+#6 transferring context: 5.18kB done
+#6 DONE 0.0s
+
+#7 [indexer 2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [indexer 5/9] COPY pyproject.toml uv.lock ./
+#8 CACHED
+
+#9 [indexer 7/9] COPY --chown=app:app app ./app
+#9 CACHED
+
+#10 [indexer 8/9] COPY --chown=app:app alembic.ini ./
+#10 CACHED
+
+#11 [indexer 3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#11 CACHED
+
+#12 [indexer 6/9] RUN uv sync --frozen --no-dev
+#12 CACHED
+
+#13 [indexer 4/9] WORKDIR /app
+#13 CACHED
+
+#14 [retrieval 9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 CACHED
+
+#15 [api] exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:0e27d10998adf73bb32d5174a8dde9d0861bee47c18e9f6bdb0924266093fc3d done
+#15 exporting config sha256:99f839a358bab4a5b06b7c6a0729576674d4e6c9fea5615d3c58b5b74f1d8af1 done
+#15 exporting attestation manifest sha256:f7e508eeffdb707869ab39f8b06dc2462394d00d3ed893ea5eef6c9adc1e1c3c 0.0s done
+#15 exporting manifest list sha256:7730502af377922845511427a757b34a94e85bc786a2e3abf1acac74840ef0da
+#15 exporting manifest list sha256:7730502af377922845511427a757b34a94e85bc786a2e3abf1acac74840ef0da 0.0s done
+#15 naming to docker.io/library/product-knowledge:p1.2 done
+#15 unpacking to docker.io/library/product-knowledge:p1.2 done
+#15 DONE 0.1s
+
+#16 [retrieval] exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:d7474fc31916199f4d9881b09f83ddd89dd5a6980d110af41bd6a9c6d3f18382 done
+#16 exporting config sha256:ecb5734193d85ed1e04b6b5fbc7e2a1ffd80504d27821763f5ed9cb48d1c5f42 0.0s done
+#16 exporting attestation manifest sha256:e356823195ab5365d18ec16a703b50093b3db7aae85f44a3ce278b1540f807ce 0.0s done
+#16 exporting manifest list sha256:f3b505ea602117231d55171e22dca711bd7cf08059979bc0f2e1f28b6e798165 0.0s done
+#16 naming to docker.io/library/product-knowledge:p1.2 done
+#16 unpacking to docker.io/library/product-knowledge:p1.2 done
+#16 DONE 0.1s
+
+#17 [worker] exporting to image
+#17 exporting layers done
+#17 exporting manifest sha256:a5f88892b6523ba5ed6d92d4c5cdbb9ace5ce0c0363a6f7d8a91cf13e5e7d3ce done
+#17 exporting config sha256:01c208f4b30f1e98345f65d54586f33e86169d03c2bbab2709936ce20b6a174e done
+#17 exporting attestation manifest sha256:b8c3fe3a973ca984a5d05cecde7096bf54ab644b8df86f02d58a86e827cf165a 0.0s done
+#17 exporting manifest list sha256:544bbce65637fe6de508ee56619784ae63f5d5fe09e7e0e179678ae22ea579dd 0.0s done
+#17 naming to docker.io/library/product-knowledge:p1.2 done
+#17 unpacking to docker.io/library/product-knowledge:p1.2 done
+#17 DONE 0.1s
+
+#18 [indexer] exporting to image
+#18 exporting layers done
+#18 exporting manifest sha256:c9d5dc2167c1a3d374df287a81db701236989bf7a719bd2fadb1476be67b35ab done
+#18 exporting config sha256:f7c481f6d445cf6c95a22053d5b5b581ec80466f9f97910308c4535d4ac66518 0.0s done
+#18 exporting attestation manifest sha256:fcc59b380ca526bcd4ef22b3d275b2e3fb8736ce5aaf9683a1b05cd3fd04568d 0.0s done
+#18 exporting manifest list sha256:d9e26783f959457865a991ca8b5b5da098ba78f786fc47690e0cf5b7118df0bb done
+#18 naming to docker.io/library/product-knowledge:p1.2 done
+#18 unpacking to docker.io/library/product-knowledge:p1.2 done
+#18 DONE 0.1s
+
+#19 [api] resolving provenance for metadata file
+#19 DONE 0.1s
+
+#20 [worker] resolving provenance for metadata file
+#20 DONE 0.0s
+
+#21 [indexer] resolving provenance for metadata file
+#21 DONE 0.0s
+
+#22 [retrieval] resolving provenance for metadata file
+#22 DONE 0.0s
+ Image product-knowledge:p1.2 Built 
+ Image product-knowledge:p1.2 Built 
+ Image product-knowledge:p1.2 Built 
+ Image product-knowledge:p1.2 Built 
+ Volume product-knowledge-p11_documents Creating 
+ Volume product-knowledge-p11_documents Created 
+ Volume product-knowledge-p11_control Creating 
+ Volume product-knowledge-p11_control Created 
+ Container product-knowledge-p11-postgres-1 Recreate 
+ Container product-knowledge-p11-redis-1 Recreate 
+ Container product-knowledge-p11-postgres-1 Recreated 
+ Container product-knowledge-p11-redis-1 Recreated 
+ Container product-knowledge-p11-api-1 Recreate 
+ Container product-knowledge-p11-api-1 Error response from daemon: invalid mount path: 'mode=1777' mount path must be absolute 
+Error response from daemon: invalid mount path: 'mode=1777' mount path must be absolute

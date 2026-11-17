@@ -32,7 +32,7 @@ def retry_job(job_id: str, request: Request, role=Depends(admin), db: Session = 
             # 与上传保持同一锁顺序，串行化同品类的重试/导入。
             db.scalar(select(Category).where(Category.id == category_id).with_for_update())
             job = db.scalar(select(KnowledgeJob).where(KnowledgeJob.id == job_id).with_for_update())
-            if job.status != "failed":
+            if job.status not in {"failed", "partial"}:
                 raise AppError(409, "RETRY_CONFLICT", "仅失败任务可重试")
             if db.scalar(
                 select(KnowledgeJob.id).where(
@@ -41,12 +41,20 @@ def retry_job(job_id: str, request: Request, role=Depends(admin), db: Session = 
                 )
             ):
                 raise AppError(409, "IMPORT_CONFLICT", "此品类已有导入任务")
-            job.status, job.stage, job.error_code = "queued", "uploaded", None
+            job.status, job.stage, job.error_code = (
+                "queued",
+                ("uploaded" if job.job_type == "source_import" else "extracted"),
+                None,
+            )
             job.dispatch_token = job.dispatched_at = job.started_at = job.finished_at = None
             job.dispatch_enqueued_at = None
             job.attempt += 1
             job.metrics_json = {"model_mode": "NOT_USED"}
-            db.get(Snapshot, job.snapshot_id).status = "uploaded"
+            snapshot = db.get(Snapshot, job.snapshot_id)
+            if job.job_type == "source_import":
+                snapshot.status = "uploaded"
+            else:
+                snapshot.index_status = "queued"
             db.add(
                 AuditEvent(
                     principal_id=role,

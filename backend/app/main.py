@@ -2,15 +2,18 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from sqlalchemy.exc import DBAPIError
 from starlette.exceptions import HTTPException
 
-from app.api import categories, jobs, knowledge_uploads
+from app.api import categories, indexing, jobs, knowledge_uploads, retrieval
+from app.core.auth import admin
 from app.core.config import get_settings
 from app.core.logging import RequestGuard
+from app.core.metrics import snapshot as metric_snapshot
 from app.core.security import AppError
 from app.db.session import get_engine
 from app.jobs.queue import connection
@@ -38,7 +41,7 @@ def create_app():
         logging.basicConfig(level=logging.INFO)
         yield
 
-    app = FastAPI(title="产品知识工程 API", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="产品知识索引与检索 API", version="0.2.0", lifespan=lifespan)
     app.add_middleware(RequestGuard, max_body_bytes=settings.max_upload_bytes + 1024 * 1024)
 
     @app.exception_handler(AppError)
@@ -57,6 +60,16 @@ def create_app():
             exc.status_code,
             code,
             "请求超过限额" if exc.status_code == 413 else "请求不能处理",
+        )
+
+    @app.exception_handler(DBAPIError)
+    async def database_error(request: Request, exc):
+        code = getattr(getattr(exc, "orig", None), "sqlstate", None)
+        return error_response(
+            request,
+            504 if code in {"57014", "55P03"} else 503,
+            "DATABASE_TIMEOUT" if code in {"57014", "55P03"} else "DATABASE_UNAVAILABLE",
+            "数据库请求超时" if code in {"57014", "55P03"} else "数据库暂时不可用",
         )
 
     @app.exception_handler(Exception)
@@ -79,7 +92,14 @@ def create_app():
             )
         return {"status": "ready"}
 
-    app.include_router(categories.router)
-    app.include_router(knowledge_uploads.router)
-    app.include_router(jobs.router)
+    @app.get("/api/v1/admin/metrics")
+    def metrics(role=Depends(admin)):
+        return metric_snapshot()
+
+    if settings.service_mode != "retrieval":
+        app.include_router(categories.router)
+        app.include_router(knowledge_uploads.router)
+        app.include_router(jobs.router)
+        app.include_router(indexing.router)
+    app.include_router(retrieval.router)
     return app

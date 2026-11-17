@@ -1,6 +1,9 @@
-# 产品功能参数评估系统 · P1.1
+# 产品功能参数评估系统 · P1.2
 
-本项目依据上级目录的开发设计书，实现 **工程骨架与安全源码导入**。
+本项目依据上级目录的开发设计书，实现 **安全导入、静态源码／技术文档索引与共享只读检索**。
+
+P1.2 完整运行与基准说明见 `docs/P1.2_RUNBOOK.md`，架构边界见 `docs/P1.2_ARCHITECTURE.md`。
+最新验收见 `P1.2_ACCEPTANCE_REPORT.md`；原 P1.1 及整改日志保留。
 本批没有 Agent A 功能发现、证据/能力记录、发布或 Agent B。
 导入成功仅表示 `stage=extracted`，不是知识库就绪。
 
@@ -138,4 +141,5 @@ REPORT_DIR=reports/remediation uv run python -m scripts.compose_recovery_check
 - CHANGELOG_P1.1.md：变更文件和未实现项。
 - P1.1_ACCEPTANCE_REPORT.md：实际测试、质量门槛、限制与下一批建议。
 
-P1.2～P1.5 一律未实施。P1.1 交付后暂停，等待代码审查及验收意见。
+P1.2 完成后暂停，等待代码审查及验收意见；P1.3～P1.5 未实施。
+以下 P1.1 整改脚本仍用于历史回归，不替代本批 P1.2 基准。

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_acceptance.py", line 290, in <module>
+    main()
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_acceptance.py", line 108, in main
+    sid = upload(cid, source_zip())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_acceptance.py", line 89, in upload
+    assert response.status_code == 202, response.text
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {"error_code":"INTERNAL_ERROR","message":"服务内部错误","correlation_id":"f8aaebd8-0fe2-4217-8418-0cdee161c1be"}

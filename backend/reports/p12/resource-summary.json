@@ -1,0 +1,105 @@
+{
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 114,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 15.186,
+        "p95_ms": 19.362,
+        "max_ms": 26.06
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 11.394,
+        "p95_ms": 17.699,
+        "max_ms": 19.225
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 57,
+        "p50_ms": 18.119,
+        "p95_ms": 27.492,
+        "max_ms": 47.062
+      },
+      "search_symbols": {
+        "count": 57,
+        "p50_ms": 14.037,
+        "p95_ms": 21.984,
+        "max_ms": 344.516
+      }
+    }
+  },
+  "benchmark_job": {
+    "id": "f4408095-679b-4c76-9608-75030171a83e",
+    "snapshot_id": "66f590c3-7bb4-4d42-ae3c-4efbbc5617c6",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 156.5,
+      "sampled_peak_rss_bytes": 96210944,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 6316,
+      "cpu_seconds": 4.578,
+      "peak_rss_bytes": 95752192
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:31:29.223614Z",
+    "started_at": "2026-11-17T09:31:30.717031Z",
+    "finished_at": "2026-11-17T09:31:37.021154Z"
+  },
+  "incremental_index": {
+    "id": "fc5f83c9-b473-441a-b379-89f80df5a99f",
+    "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 0.0,
+      "sampled_peak_rss_bytes": 91283456,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 54,
+      "cpu_seconds": 0.035,
+      "peak_rss_bytes": 91066368
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:31:16.270346Z",
+    "started_at": "2026-11-17T09:31:18.159382Z",
+    "finished_at": "2026-11-17T09:31:18.202328Z"
+  },
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "container_peak_cpu_percent": 96.67,
+  "container_peak_mem_strings": [
+    "81.54MiB / 1.5GiB",
+    "98.58MiB / 1.5GiB",
+    "129.7MiB / 1.5GiB",
+    "81.55MiB / 1.5GiB"
+  ],
+  "cpu_limit_sum": 4.0,
+  "memory_limit_sum_bytes": 5637144576
+}

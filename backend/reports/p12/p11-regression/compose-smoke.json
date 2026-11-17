@@ -1,0 +1,152 @@
+{
+  "mode": "REAL_COMPOSE_NO_MOCK",
+  "cases": [
+    {
+      "name": "legal",
+      "snapshot_id": "908d8cc0-1ea5-4ff0-aaad-38239ed705a1",
+      "job_id": "9c3c8c12-e88f-4ed8-bbb1-3d79923b058a",
+      "upload_response_ms": 34,
+      "result": {
+        "id": "9c3c8c12-e88f-4ed8-bbb1-3d79923b058a",
+        "snapshot_id": "908d8cc0-1ea5-4ff0-aaad-38239ed705a1",
+        "job_type": "source_import",
+        "stage": "extracted",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "duration_ms": 49,
+          "model_requests": 0,
+          "tool_calls": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "index_status": "NOT_IMPLEMENTED",
+          "file_count": 4,
+          "excluded_count": 2,
+          "total_bytes": 882,
+          "sensitive_files": 0
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:38.651022Z",
+        "started_at": "2026-11-17T09:31:39.456342Z",
+        "finished_at": "2026-11-17T09:31:39.488585Z"
+      }
+    },
+    {
+      "name": "slip",
+      "snapshot_id": "3641417f-9c45-4b8d-98cd-95e641542ffc",
+      "job_id": "d3c2cd23-1fe2-4806-a3fe-cebd0e40ba27",
+      "upload_response_ms": 31,
+      "result": {
+        "id": "d3c2cd23-1fe2-4806-a3fe-cebd0e40ba27",
+        "snapshot_id": "3641417f-9c45-4b8d-98cd-95e641542ffc",
+        "job_type": "source_import",
+        "stage": "failed",
+        "status": "failed",
+        "error_code": "UNSAFE_PATH",
+        "metrics_json": {
+          "duration_ms": 55,
+          "model_requests": 0,
+          "tool_calls": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "index_status": "NOT_IMPLEMENTED"
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:39.626346Z",
+        "started_at": "2026-11-17T09:31:41.561502Z",
+        "finished_at": "2026-11-17T09:31:41.597413Z"
+      }
+    },
+    {
+      "name": "symlink",
+      "snapshot_id": "37d3063c-6fef-48c0-8c52-17c0a8888f8c",
+      "job_id": "957bfc7f-d3a5-4b24-9c0b-9d1e200f7162",
+      "upload_response_ms": 34,
+      "result": {
+        "id": "957bfc7f-d3a5-4b24-9c0b-9d1e200f7162",
+        "snapshot_id": "37d3063c-6fef-48c0-8c52-17c0a8888f8c",
+        "job_type": "source_import",
+        "stage": "failed",
+        "status": "failed",
+        "error_code": "LINK_OR_SPECIAL_FILE",
+        "metrics_json": {
+          "duration_ms": 42,
+          "model_requests": 0,
+          "tool_calls": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "index_status": "NOT_IMPLEMENTED"
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:43.768094Z",
+        "started_at": "2026-11-17T09:31:45.738013Z",
+        "finished_at": "2026-11-17T09:31:45.765444Z"
+      }
+    },
+    {
+      "name": "bomb",
+      "snapshot_id": "59357d7c-58d5-45e5-a9d9-ad8370736053",
+      "job_id": "59d563de-0bc6-45c6-8b44-6560d18f53a8",
+      "upload_response_ms": 34,
+      "result": {
+        "id": "59d563de-0bc6-45c6-8b44-6560d18f53a8",
+        "snapshot_id": "59357d7c-58d5-45e5-a9d9-ad8370736053",
+        "job_type": "source_import",
+        "stage": "failed",
+        "status": "failed",
+        "error_code": "COMPRESSION_RATIO_EXCEEDED",
+        "metrics_json": {
+          "duration_ms": 40,
+          "model_requests": 0,
+          "tool_calls": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "index_status": "NOT_IMPLEMENTED"
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:48.044584Z",
+        "started_at": "2026-11-17T09:31:49.901180Z",
+        "finished_at": "2026-11-17T09:31:49.927755Z"
+      }
+    },
+    {
+      "name": "collision",
+      "snapshot_id": "162aac89-8992-48d0-aaa2-85bfe2c063cf",
+      "job_id": "1c58a0c6-efcd-49dc-a5eb-bb49b8dc2146",
+      "upload_response_ms": 33,
+      "result": {
+        "id": "1c58a0c6-efcd-49dc-a5eb-bb49b8dc2146",
+        "snapshot_id": "162aac89-8992-48d0-aaa2-85bfe2c063cf",
+        "job_type": "source_import",
+        "stage": "failed",
+        "status": "failed",
+        "error_code": "PATH_COLLISION",
+        "metrics_json": {
+          "duration_ms": 69,
+          "model_requests": 0,
+          "tool_calls": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "index_status": "NOT_IMPLEMENTED"
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:52.195917Z",
+        "started_at": "2026-11-17T09:31:54.126569Z",
+        "finished_at": "2026-11-17T09:31:54.176824Z"
+      }
+    }
+  ],
+  "agent_status": "NOT_IMPLEMENTED",
+  "infrastructure_checks": {
+    "non_root": true,
+    "source_mount_read_only": true,
+    "unpublished_pointer_blocked": true,
+    "audit_events": 87,
+    "manifests": 12
+  }
+}

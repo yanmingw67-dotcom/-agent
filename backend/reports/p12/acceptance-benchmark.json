@@ -1,0 +1,1825 @@
+{
+  "mode": "REAL_SIX_CONTAINER_P12",
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 114,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "model_requests": 0,
+  "tokens": 0,
+  "example": {
+    "category_id": "3c225b44-2d48-4d9d-aabb-de85090797d4",
+    "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+    "symbol": {
+      "id": "294af912-7627-4570-a73f-df8ca68d9a92",
+      "file_id": "2b401f86-341c-470f-b892-d9856127d7ed",
+      "symbol_id": "294af912-7627-4570-a73f-df8ca68d9a92",
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": "RobotSender.send",
+      "kind": "method",
+      "status": null,
+      "language": null,
+      "role": "source",
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "def send(self, event):",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    },
+    "source_read": {
+      "id": null,
+      "file_id": "2b401f86-341c-470f-b892-d9856127d7ed",
+      "symbol_id": null,
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": null,
+      "kind": null,
+      "status": null,
+      "language": null,
+      "role": null,
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "    def send(self, event):\n        return format_event(event)",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    }
+  },
+  "initial_index": {
+    "id": "2619fb06-8b1e-4cd2-adc5-ce85e11cbb4e",
+    "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 7,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 73.4,
+      "sampled_peak_rss_bytes": 93847552,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 133,
+      "cpu_seconds": 0.094,
+      "peak_rss_bytes": 93609984
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:31:14.847896Z",
+    "started_at": "2026-11-17T09:31:15.991308Z",
+    "finished_at": "2026-11-17T09:31:16.110247Z"
+  },
+  "incremental_index": {
+    "id": "fc5f83c9-b473-441a-b379-89f80df5a99f",
+    "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 0.0,
+      "sampled_peak_rss_bytes": 91283456,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 54,
+      "cpu_seconds": 0.035,
+      "peak_rss_bytes": 91066368
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:31:16.270346Z",
+    "started_at": "2026-11-17T09:31:18.159382Z",
+    "finished_at": "2026-11-17T09:31:18.202328Z"
+  },
+  "documents": [
+    {
+      "filename": "demo_waf_manual.docx",
+      "job": {
+        "id": "08a66d93-a725-4dd3-bf75-116319157575",
+        "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 1,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 91283456,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 45,
+          "cpu_seconds": 0.037,
+          "peak_rss_bytes": 99856384
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:18.409872Z",
+        "started_at": "2026-11-17T09:31:20.250238Z",
+        "finished_at": "2026-11-17T09:31:20.284977Z"
+      }
+    },
+    {
+      "filename": "demo_waf_manual.pdf",
+      "job": {
+        "id": "2bbecd15-f129-4d14-8338-cb8d956d5acc",
+        "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 2,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 91279360,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 46,
+          "cpu_seconds": 0.035,
+          "peak_rss_bytes": 92344320
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:20.409337Z",
+        "started_at": "2026-11-17T09:31:22.359536Z",
+        "finished_at": "2026-11-17T09:31:22.390147Z"
+      }
+    },
+    {
+      "filename": "demo_capabilities.xlsx",
+      "job": {
+        "id": "a184b46a-568a-4c0e-a777-60ae18a47c05",
+        "snapshot_id": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 3,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 91279360,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 41,
+          "cpu_seconds": 0.032,
+          "peak_rss_bytes": 95289344
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T09:31:22.630637Z",
+        "started_at": "2026-11-17T09:31:24.446986Z",
+        "finished_at": "2026-11-17T09:31:24.476969Z"
+      }
+    }
+  ],
+  "benchmark_job": {
+    "id": "f4408095-679b-4c76-9608-75030171a83e",
+    "snapshot_id": "66f590c3-7bb4-4d42-ae3c-4efbbc5617c6",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 156.5,
+      "sampled_peak_rss_bytes": 96210944,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 6316,
+      "cpu_seconds": 4.578,
+      "peak_rss_bytes": 95752192
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:31:29.223614Z",
+    "started_at": "2026-11-17T09:31:30.717031Z",
+    "finished_at": "2026-11-17T09:31:37.021154Z"
+  },
+  "benchmark_elapsed_seconds": 8.113542624996626,
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 15.186,
+        "p95_ms": 19.362,
+        "max_ms": 26.06
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 11.394,
+        "p95_ms": 17.699,
+        "max_ms": 19.225
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 57,
+        "p50_ms": 18.119,
+        "p95_ms": 27.492,
+        "max_ms": 47.062
+      },
+      "search_symbols": {
+        "count": 57,
+        "p50_ms": 14.037,
+        "p95_ms": 21.984,
+        "max_ms": 344.516
+      }
+    }
+  },
+  "resource_sampling": [
+    {
+      "observed_at": 1794907891.24446,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.00%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "f9e718d211da",
+      "MemPerc": "5.31%",
+      "MemUsage": "81.54MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "274kB / 348kB",
+      "PIDs": "1"
+    },
+    {
+      "observed_at": 1794907891.244481,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "15.01%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "76dbe38bf781",
+      "MemPerc": "8.64%",
+      "MemUsage": "66.33MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "619kB / 619kB",
+      "PIDs": "2"
+    },
+    {
+      "observed_at": 1794907893.29269,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "96.67%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "f9e718d211da",
+      "MemPerc": "6.42%",
+      "MemUsage": "98.58MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "1.1MB / 1.19MB",
+      "PIDs": "4"
+    },
+    {
+      "observed_at": 1794907893.292705,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "28.62%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "76dbe38bf781",
+      "MemPerc": "8.65%",
+      "MemUsage": "66.46MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "797kB / 800kB",
+      "PIDs": "2"
+    },
+    {
+      "observed_at": 1794907895.320746,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "75.00%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "f9e718d211da",
+      "MemPerc": "8.45%",
+      "MemUsage": "129.7MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "1.88MB / 1.97MB",
+      "PIDs": "4"
+    },
+    {
+      "observed_at": 1794907895.32076,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "13.75%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "76dbe38bf781",
+      "MemPerc": "8.67%",
+      "MemUsage": "66.61MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "1.01MB / 1.02MB",
+      "PIDs": "2"
+    },
+    {
+      "observed_at": 1794907897.3292391,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "54.57%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "f9e718d211da",
+      "MemPerc": "5.31%",
+      "MemUsage": "81.55MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "2.67MB / 2.76MB",
+      "PIDs": "1"
+    },
+    {
+      "observed_at": 1794907897.329261,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "9.90%",
+      "Container": "product-knowledge-p11-retrieval-1",
+      "ID": "76dbe38bf781",
+      "MemPerc": "8.64%",
+      "MemUsage": "66.38MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "1.2MB / 1.21MB",
+      "PIDs": "2"
+    }
+  ],
+  "raw_latency_samples": [
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.955125003121793
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.03875000262633
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 18.784083003993146
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 12.863290990935639
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.954540991107933
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.755709004821256
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.782333000563085
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.482333993422799
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 17.711833002977073
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.098583996295929
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.983791003236547
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 15.19620799808763
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.93266600300558
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.435250009526499
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.680874995770864
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.104291010065936
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.112583994981833
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.545124998316169
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.465292002772912
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 17.161249998025596
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 17.201999988174066
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.885374998906627
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.185625001322478
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 19.224916002713144
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 12.70904199918732
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.534582998137921
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 19.361540995305404
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 14.625750001869164
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 16.11958400462754
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.292084003798664
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.774791998206638
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 17.698915995424613
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 17.74929100065492
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 18.44041699951049
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.76970900350716
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.972291009034961
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.771000001928769
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 13.536416008719243
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.048833010951057
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 12.135875003878027
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 26.060208008857444
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 9.94583300780505
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 15.792999998666346
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 13.612499998998828
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.110041996696964
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 13.053792004939169
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 17.400417011231184
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 16.90000000235159
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.097374994889833
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.32266698894091
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.812333000008948
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.962958011077717
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 18.480208003893495
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 10.58829200337641
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 23.06025000871159
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.394375003874302
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 14.682084001833573
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 13.96158299758099
+    },
+    {
+      "phase": "idle",
+      "tool": "search_code_batch",
+      "latency_ms": 13.377750001382083
+    },
+    {
+      "phase": "idle",
+      "tool": "search_symbols",
+      "latency_ms": 11.178500004461966
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 15.486165997572243
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 11.580874997889623
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 22.3420830006944
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 19.93279199814424
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.51604199327994
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 15.737833993625827
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 26.26041699841153
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 13.507999989087693
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 20.175792000372894
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 15.211624995572492
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.73791599064134
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 17.3175420059124
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 20.635250009945594
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 13.242000000900589
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.119208005373366
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 21.99970900255721
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 17.69079201039858
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 44.92720900452696
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.13666700036265
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 19.72958400438074
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 20.42749999964144
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 12.94958300422877
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 19.646624990855344
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 20.843292004428804
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.42904200020712
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 12.798666997696273
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 18.183457999839447
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 17.616750003071502
+    },
+    {
+      "phase": "queued",
+      "tool": "search_code_batch",
+      "latency_ms": 17.18562500900589
+    },
+    {
+      "phase": "queued",
+      "tool": "search_symbols",
+      "latency_ms": 13.843416993040591
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.231124991667457
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.501833011512645
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.036582994274795
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.942459009238519
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 19.54733299498912
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.013625001301989
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.111875000409782
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.922667010570876
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.190124999615364
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.882958003203385
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.694207992055453
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.70133299799636
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.13283399294596
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 16.88875000400003
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.038499998510815
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.583166994270869
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 19.991166002000682
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.757374989334494
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.232083995826542
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.833791996352375
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 21.83712499390822
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.373750006896444
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.53741599188652
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.228582996409386
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.63566700881347
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 21.438750001834705
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.568459002883174
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 21.20600000489503
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.921792004723102
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 9.921583012328483
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 47.06212499877438
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 344.51566699135583
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 27.07324999209959
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 20.801291990210302
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 31.08570899348706
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 23.731499997666106
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 23.95370800513774
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 16.028750003897585
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.57583299675025
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.460499998065643
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.621583999949507
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.666500009596348
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 19.79258299979847
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.09316699532792
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 26.42095800547395
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.77370799309574
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.296207999810576
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 21.983584010740742
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 22.254041003179736
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.468332992284559
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.53908399748616
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.190459001227282
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 27.491667002323084
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 25.839500012807548
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.968374999938533
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 20.349124999484047
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.411375007824972
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.208083004225045
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 22.381457994924858
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.891333008767106
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.151875003241003
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.588042002287693
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.383875005180016
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.026915996102616
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.099791996064596
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 16.677749998052604
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.245124992565252
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.857541991048492
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.390457997564226
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.886499996762723
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.940624987706542
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.006083998130634
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 15.676458991947584
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.668917009956203
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.449375006137416
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.256667003384791
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.725333007751033
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.811000003945082
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.2848329966655
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.985500012291595
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 27.08033300586976
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.64275000419002
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.190333004691638
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.147665998782031
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 13.014582989853807
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.84662498801481
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.3732499970356
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.924957988318056
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.782416991190985
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.959124989924021
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 30.801000000792556
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 10.739416989963502
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.559291005250998
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 17.108250001911074
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.29495800100267
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.037000000826083
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.118624997441657
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.188916992978193
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.305041995015927
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 11.575208001886494
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 18.338041991228238
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 19.762249998166226
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.576499998336658
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.10012500511948
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.873582994681783
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 13.519832995370962
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 16.169416994671337
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 21.304833004251122
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 17.344334002700634
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 15.81395800167229
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 23.664166990783997
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 14.360874993144535
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_code_batch",
+      "latency_ms": 20.903041993733495
+    },
+    {
+      "phase": "indexing",
+      "tool": "search_symbols",
+      "latency_ms": 12.06495899532456
+    }
+  ],
+  "resources": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "mounts": [
+        {
+          "destination": "/data/control",
+          "rw": true
+        },
+        {
+          "destination": "/data/archives",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "mounts": [
+        {
+          "destination": "/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/control",
+          "rw": true
+        },
+        {
+          "destination": "/data/archives",
+          "rw": false
+        },
+        {
+          "destination": "/data/ingestion",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    }
+  ],
+  "host_engine_info": 8,
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "api_metrics": {
+    "database_queries": {
+      "count": 218,
+      "total_ms": 196.09587801005546,
+      "max_ms": 80.5482089999714,
+      "p50_ms": 0.47666600039519835,
+      "p95_ms": 1.0798749999594293
+    },
+    "http_requests": {
+      "count": 166,
+      "total_ms": 1222.8980009940642,
+      "max_ms": 121.22058300064964,
+      "p50_ms": 3.5855000005540205,
+      "p95_ms": 18.180667000706308
+    }
+  },
+  "retrieval_metrics": {
+    "database_queries": {
+      "count": 1065,
+      "total_ms": 362.5889609766091,
+      "max_ms": 1.6105419999803416,
+      "p50_ms": 0.30741699993086513,
+      "p95_ms": 0.669666999783658
+    },
+    "http_requests": {
+      "count": 6,
+      "total_ms": 83.7269190014922,
+      "max_ms": 68.78166700062138,
+      "p50_ms": 3.2863750002434244,
+      "p95_ms": 68.78166700062138
+    },
+    "retrieval_requests": {
+      "count": 214,
+      "total_ms": 1684.3192529886437,
+      "max_ms": 36.393833000147424,
+      "p50_ms": 8.172292000381276,
+      "p95_ms": 12.565624999297142
+    }
+  },
+  "storage": {
+    "quota_bytes": 10737418240,
+    "used_bytes": 7614930,
+    "reserved_bytes": 0,
+    "reservation_count": 0,
+    "reservations": [],
+    "entries": [
+      {
+        "kind": "archive",
+        "key": "ee2d7fa6-9f2f-42a8-b18b-be7984f35b81.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "077541d5-94f8-4e3d-a1da-83a905a383ad.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "1e1a162e-6a33-4ed5-a9f3-c2f80519ff7a.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "6a207a00-b67d-4c1a-90ea-c69200877310.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "de9a041d-1256-4975-b2c0-a929101e172d.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "433168fa-a1c0-4672-be47-d5c3c5414cdb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "c3d74b44-e101-4044-8d63-68a5b4aa8dfe.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "dbdca079-a60c-4c3d-b0ab-7c90340af77b.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "02a14a91-5c00-4835-93ce-74fb0a951968.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "baa40368-f988-46f2-801e-c2959e8a29ce.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "63ba1949-ff90-4b35-8e21-57a9d92b28d5.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "e2cb5780-00f8-4684-a7d2-2993d8df0e93.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8a1fe17-a3cb-4d15-a9d5-a18d7a914995.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "ef66295a-4264-4f59-9082-1fc3469b91fb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8731991-2e5d-4f8a-b265-57f4a13382ef.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "d5a6be89-712d-4ff0-98b7-ceaa53b1ec6c",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "84ab4600-2124-4784-8520-0db8458dfff5",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0486efad-f5ba-4c25-8f48-1c6aee1ff817",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "66f590c3-7bb4-4d42-ae3c-4efbbc5617c6",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "e1ffad69-96f5-4a7b-b753-394480f6ea26",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "cb1f3fdc-d838-4357-8230-65ecc96914d3",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "454e1798-739e-46cc-8f48-e18563c936df",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "c6050389-c532-4396-a6a7-732789f0f3e6",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "7e616e24-3fe6-4874-934d-2cb127efcfc5.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "a40a798d-1095-4101-a3ba-6245cc203054.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "4be1c734-ebbf-452e-95bc-77ed4a75471f.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8fd0727e-c425-448b-9576-27fd368b1505.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "6499d3a3-49d7-4ac5-bbf7-f37a8a60c383.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "1b79535d-b8aa-4c02-9162-45e9adccef22.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "d79893bf-3914-4d14-81dc-51a2fba8847a.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "e4612ea6-b1de-44d9-810b-9a86deec0c20.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "bd18fd8c-ef67-4c8a-8357-a4b5f185e5f1.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      }
+    ],
+    "truncated": false,
+    "scanned_entries": 35,
+    "automatic_deletion": false
+  }
+}

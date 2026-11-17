@@ -11,6 +11,7 @@ from fastapi import UploadFile
 from app.core.config import Settings
 from app.core.security import AppError, ArchiveRejected
 from app.ingestion.archive_guard import extract_checked
+from app.ingestion.capacity import release, reserve
 
 ALLOWED_MIMES = {"application/zip", "application/x-zip-compressed", "application/octet-stream"}
 
@@ -29,6 +30,11 @@ async def receive_archive(upload: UploadFile, settings: Settings) -> tuple[str, 
     settings.archive_root.mkdir(parents=True, exist_ok=True, mode=0o750)
     key = f"{uuid4()}.zip"
     path = settings.archive_root / key
+    reserve(
+        settings,
+        key,
+        settings.max_upload_bytes + settings.max_total_bytes + settings.max_entries * 2048,
+    )
     digest = hashlib.sha256()
     count = 0
     try:
@@ -47,6 +53,7 @@ async def receive_archive(upload: UploadFile, settings: Settings) -> tuple[str, 
         path.chmod(0o440)
     except BaseException:
         path.unlink(missing_ok=True)
+        release(settings, key)
         raise
     return key, digest.hexdigest(), count
 

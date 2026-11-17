@@ -1,0 +1,40 @@
+...........................................F............................ [ 75%]
+........................                                                 [100%]
+=================================== FAILURES ===================================
+__________________ test_retrieval_service_hides_write_routes ___________________
+
+client = <starlette.testclient.TestClient object at 0x10c4202f0>
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest..._seconds=1800, search_timeout_seconds=3.0, read_max_lines=200, retrieval_max_chars=24000, index_parser_version='p12-1')
+
+    def test_retrieval_service_hides_write_routes(client, environment):
+        from fastapi.testclient import TestClient
+    
+        from app.main import create_app
+    
+        object.__setattr__(environment, "service_mode", "retrieval")
+        with TestClient(create_app()) as search:
+>           assert (
+                search.post(
+                    "/api/v1/categories", headers=ADMIN, json={"code": "x", "name": "x"}
+                ).status_code
+                == 404
+            )
+E           AssertionError: assert 201 == 404
+E            +  where 201 = <Response [201 Created]>.status_code
+E            +    where <Response [201 Created]> = post('/api/v1/categories', headers={'Authorization': 'Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}, json={'code': 'x', 'name': 'x'})
+E            +      where post = <starlette.testclient.TestClient object at 0x10d210d40>.post
+
+tests/integration/test_p12_recovery_policy.py:53: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p12_recovery_policy.py::test_retrieval_service_hides_write_routes
+1 failed, 95 passed, 2 warnings in 7.09s

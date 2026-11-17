@@ -9,6 +9,7 @@ from app.core.config import get_settings
 from app.core.security import AppError
 from app.db.models import AuditEvent, Category, KnowledgeJob, Snapshot
 from app.db.session import get_db
+from app.ingestion.capacity import release
 from app.ingestion.content_store import receive_archive
 
 router = APIRouter(prefix="/api/v1/categories", tags=["安全导入"])
@@ -70,3 +71,4 @@ async def upload_source(
         await file.close()
         if key and not committed:
             (settings.archive_root / key).unlink(missing_ok=True)
+            release(settings, key)

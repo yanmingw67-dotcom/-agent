@@ -22,6 +22,30 @@ class Settings(BaseSettings):
     max_depth: int = 20
     job_timeout_seconds: int = 300
     queue_name: str = "knowledge-ingestion"
+    index_queue_name: str = "knowledge-index"
+    worker_kind: str = "ingestion"
+    service_mode: str = "api"
+    documents_root: Path | None = None
+    storage_control_root: Path | None = None
+    storage_quota_bytes: int = 10 * 1024**3
+    storage_min_free_bytes: int = 1024**3
+    index_max_file_bytes: int = 2 * 1024**2
+    document_max_bytes: int = 20 * 1024**2
+    document_max_segments: int = 20000
+    document_max_text_chars: int = 5_000_000
+    index_job_timeout_seconds: int = 1800
+    search_timeout_seconds: float = 3
+    read_max_lines: int = 200
+    retrieval_max_chars: int = 24000
+    index_parser_version: str = "p12-1"
+
+    @property
+    def document_store(self):
+        return self.documents_root or self.archive_root.parent / "documents"
+
+    @property
+    def control_store(self):
+        return self.storage_control_root or self.archive_root.parent / ".control"
 
     @field_validator("admin_token", "read_token")
     @classmethod
@@ -38,6 +62,15 @@ class Settings(BaseSettings):
         "max_depth",
         "job_timeout_seconds",
         "max_compression_ratio",
+        "storage_quota_bytes",
+        "index_max_file_bytes",
+        "document_max_bytes",
+        "document_max_segments",
+        "document_max_text_chars",
+        "index_job_timeout_seconds",
+        "search_timeout_seconds",
+        "read_max_lines",
+        "retrieval_max_chars",
     )
     @classmethod
     def positive_limit(cls, value):
