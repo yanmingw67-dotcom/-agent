@@ -18,6 +18,7 @@ from app.db.knowledge_models import (
 )
 from app.db.models import AuditEvent, KnowledgeJob
 from app.db.session import get_db
+from app.knowledge.classification import approve_fixture, classification
 from app.knowledge.evidence_registry import read_evidence
 from app.knowledge.schemas import InvestigationRequest
 from app.retrieval.tools import bind_context
@@ -45,6 +46,7 @@ def investigate(
         raise AppError(404, "MODULE_NOT_FOUND", "指定模块不属于该快照")
     if not modules or len(modules) > s.builder_max_modules:
         raise AppError(422, "MODULE_SELECTION_REQUIRED", "模块为空或超出单任务预算，请分批指定模块")
+    trusted_classification = classification(db, snapshot_id)
     try:
         job = KnowledgeJob(
             snapshot_id=snapshot_id,
@@ -52,8 +54,12 @@ def investigate(
             job_type="knowledge_build",
             stage="module_planning",
             metrics_json={
-                "data_classification": body.data_classification,
+                "data_classification": trusted_classification,
+                "requested_classification": body.data_classification,
                 "model_mode": "NOT_STARTED",
+                "investigation_mode": body.investigation_mode,
+                "capability_limit": body.capability_limit,
+                "include_equivalence": body.include_equivalence,
             },
         )
         db.add(job)
@@ -69,7 +75,8 @@ def investigate(
                 details_json={
                     "job_id": job.id,
                     "modules": len(modules),
-                    "data_classification": body.data_classification,
+                    "data_classification": trusted_classification,
+                    "requested_classification": body.data_classification,
                 },
             )
         )
@@ -78,6 +85,31 @@ def investigate(
     except IntegrityError as exc:
         db.rollback()
         raise AppError(409, "JOB_CONFLICT", "同品类已有在途任务") from exc
+
+
+@router.post("/snapshots/{snapshot_id}/approve-public-fixture")
+def approve_public_fixture(
+    snapshot_id: str, request: Request, role=Depends(admin), db: Session = Depends(get_db)
+):
+    snapshot = staging(db, snapshot_id)
+    previous = snapshot.data_classification
+    approve_fixture(db, snapshot)
+    db.add(
+        AuditEvent(
+            principal_id=role,
+            action="source.approve_public_fixture",
+            resource_id=snapshot_id,
+            correlation_id=request.state.correlation_id,
+            details_json={
+                "classification": "synthetic_public",
+                "previous_classification": previous,
+                "source_sha256": snapshot.source_sha256,
+                "policy": "exact_bundled_fixture_v1",
+            },
+        )
+    )
+    db.commit()
+    return {"snapshot_id": snapshot_id, "data_classification": "synthetic_public"}
 
 
 @router.get("/jobs/{job_id}/investigations")

@@ -1,0 +1,107 @@
+{
+  "artifact": "reports/p13-remediation/real-multi-equivalence.json",
+  "passed": true,
+  "job_id": "a26e47f3-04ae-436b-8c47-63180fe23682",
+  "status": "succeeded",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "bounded",
+    "capability_limit": 3,
+    "include_equivalence": true,
+    "model_requests": 5,
+    "model_responses": 5,
+    "unmeasured_requests": 0,
+    "tool_calls": 9,
+    "tokens": 11619,
+    "input_tokens": 5295,
+    "output_tokens": 6324,
+    "sampled_peak_cpu_percent": 90.3,
+    "sampled_peak_rss_bytes": 127262720,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 1,
+    "unresolved_count": 2,
+    "uncovered_modules": 0,
+    "claimed_capabilities": 3,
+    "duration_ms": 106084,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model": "glm-5.3-flash"
+  },
+  "candidates": [
+    {
+      "key": "bounded_3",
+      "name": "notify/sender.py 按平台差异化构造机器人消息体结构",
+      "category": "源码机制候选",
+      "action": "按platform分支构造不同JSON消息体（飞书msg_type/content，钉钉msgtype/text），未知平台抛ValueError",
+      "target": "notify/sender.py 的 payload(platform, events) 函数",
+      "business_goal": "使同一批事件文本适配飞书与钉钉机器人各自要求的消息格式",
+      "implementation_mechanism": "payload(platform, events)将events逐条取message字段转字符串并用换行拼接；按platform==feishu返回{\"msg_type\":\"text\",\"content\":{\"text\":...}}，按platform==ding返回{\"msgtype\":\"text\",\"text\":{\"content\":...}}，两平台字段名与嵌套结构不同，其余值直接raise ValueError(\"unsupported platform\")",
+      "supported_scope": [],
+      "conditions": [],
+      "limitations": [
+        "仅支持text文本类型，不含卡片、签名等消息格式",
+        "仅识别feishu与ding两个键，其余平台抛ValueError",
+        "事件元素缺少message键将抛KeyError",
+        "实际发送依赖外部注入的transport对象"
+      ],
+      "evidence_ids": [
+        "ev-f90c171cb6fe9bfcbb56d1ac1f0b29b824b348fd3cadeac94b85803bf1b52ce5"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "bounded_2",
+      "name": "notify/sender.py 固定平台机器人Webhook端点拼装",
+      "category": "源码机制候选",
+      "action": "按硬编码平台映射拼装 /robot/send/{token} 固定机器人Webhook并发送",
+      "target": "notify/sender.py",
+      "business_goal": "将通知通道严格限定为飞书/钉钉官方固定机器人Webhook，拒绝任意URL接入",
+      "implementation_mechanism": "PLATFORMS 硬编码飞书与钉钉官方域名，notify 以 PLATFORMS[platform]+\\\"/robot/send/\\\"+token 构造唯一端点，经注入的 transport.post 以 JSON 发送；payload 对非 feishu/ding 平台抛 ValueError，PLATFORMS 中不存在的键在 notify 中触发 KeyError，均不提供自定义URL或认证方式",
+      "supported_scope": [],
+      "conditions": [],
+      "limitations": [
+        "仅 feishu/ding 两平台，payload 仅支持文本消息格式",
+        "token 以路径段拼接，无任意URL或自定义认证头机制",
+        "notify 传入未知平台时先触发 PLATFORMS KeyError，payload 的 ValueError 分支对该路径不可达",
+        "发送依赖外部注入的 transport，代码内未实现重试或签名"
+      ],
+      "evidence_ids": [
+        "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+      ],
+      "status": "evidence_found"
+    },
+    {
+      "key": "bounded_1",
+      "name": "notify/sender.py 多事件文本机器人推送",
+      "category": "源码机制候选",
+      "action": "发送机器人通知",
+      "target": "notify/sender.py notify()",
+      "business_goal": "把一批事件合并为一条文本消息，推送到飞书或钉钉群机器人，实现群内告警触达",
+      "implementation_mechanism": "notify() 用 PLATFORMS 固定域名拼接 /robot/send/ + token 得到端点，payload() 将多个 events 的 message 字段用换行合并为一条文本消息（按平台区分 msg_type/msgtype 结构），最后通过注入的 transport.post 以 application/json POST 发送",
+      "supported_scope": [],
+      "conditions": [],
+      "limitations": [
+        "仅支持 PLATFORMS 中固定的 feishu/ding 两端点，不支持任意URL或自定义Webhook",
+        "仅发送纯文本消息体，不含其他消息类型或加签认证",
+        "URL中直接拼接token，鉴权方式由固定平台机器人机制决定",
+        "仅读取每个事件的 message 字段，无其他字段透传"
+      ],
+      "evidence_ids": [
+        "ev-04c56ced431ae1aaff4578609b9bcd3fe8378b3e3aaf3ad39a6c615a676f1e13"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

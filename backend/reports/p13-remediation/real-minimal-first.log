@@ -1,0 +1,59 @@
+{
+  "artifact": "reports/p13-remediation/real-minimal-first.json",
+  "passed": true,
+  "job_id": "c113e82a-96c2-43d5-9169-7bead615ef3d",
+  "status": "succeeded",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "bounded",
+    "capability_limit": 1,
+    "include_equivalence": false,
+    "model_requests": 1,
+    "model_responses": 1,
+    "unmeasured_requests": 0,
+    "tool_calls": 3,
+    "tokens": 2144,
+    "input_tokens": 802,
+    "output_tokens": 1342,
+    "sampled_peak_cpu_percent": 97.5,
+    "sampled_peak_rss_bytes": 126009344,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 1,
+    "unresolved_count": 2,
+    "uncovered_modules": 0,
+    "claimed_capabilities": 1,
+    "duration_ms": 24234,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model": "glm-5.3-flash"
+  },
+  "candidates": [
+    {
+      "key": "bounded_1",
+      "name": "飞书/钉钉固定平台机器人Webhook文本通知",
+      "category": "源码机制候选",
+      "action": "通过注入的transport向固定平台机器人Webhook端点POST聚合后的文本消息，实现事件群通知",
+      "target": "notify/sender.py: PLATFORMS + payload() + notify()",
+      "business_goal": "将一批事件消息以纯文本形式推送到飞书或钉钉群机器人",
+      "implementation_mechanism": "PLATFORMS字典硬编码feishu与ding两个基础URL；notify()用 PLATFORMS[platform]+\"/robot/send/\"+token 拼出端点，payload()按平台生成对应文本消息结构（feishu: msg_type/content，ding: msgtype/text），events中各条message用换行合并为一条文本，经transport.post以application/json发送",
+      "supported_scope": [],
+      "conditions": [],
+      "limitations": [
+        "仅支持feishu与ding两个硬编码平台；其他平台在notify中先因PLATFORMS[platform]抛KeyError，payload里的ValueError在该路径不可达",
+        "不支持任意Webhook URL或自定义认证头，仅固定域名+/robot/send/+token拼接，认证方式仅限该机器人token模式",
+        "仅构造纯文本消息体（feishu为msg_type/content，ding为msgtype/text），无markdown、卡片或签名等能力",
+        "transport为外部注入参数，实际HTTP发送行为不在本片段实现，片段内无测试或调用方佐证产品级接入"
+      ],
+      "evidence_ids": [
+        "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

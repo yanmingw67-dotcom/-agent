@@ -1,0 +1,312 @@
+{
+  "mode": "REAL_APPROVED_MODEL_NO_PRESET_OUTPUT",
+  "criteria": "docs/P1.3_REMEDIATION_PLAN.md",
+  "label": "real-events",
+  "module": "events",
+  "capability_limit": 1,
+  "equivalence_requested": false,
+  "category_id": "e3f3a43c-72f1-4849-8955-c4da425c1fc6",
+  "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+  "approval": {
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "data_classification": "synthetic_public"
+  },
+  "job_id": "76cae5dc-55a8-4fc2-bcec-ec9c6f9fb633",
+  "enqueue_ms": 37.708,
+  "elapsed_seconds": 24.629,
+  "job": {
+    "id": "76cae5dc-55a8-4fc2-bcec-ec9c6f9fb633",
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "job_type": "knowledge_build",
+    "stage": "review_ready",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "requested_classification": "synthetic_public",
+      "model_mode": "REAL",
+      "investigation_mode": "bounded",
+      "capability_limit": 1,
+      "include_equivalence": false,
+      "model_requests": 1,
+      "model_responses": 1,
+      "unmeasured_requests": 0,
+      "tool_calls": 3,
+      "tokens": 2180,
+      "input_tokens": 733,
+      "output_tokens": 1447,
+      "sampled_peak_cpu_percent": 99.1,
+      "sampled_peak_rss_bytes": 126148608,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 1,
+      "unresolved_count": 2,
+      "uncovered_modules": 0,
+      "claimed_capabilities": 1,
+      "duration_ms": 22848,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": "glm-5.3-flash"
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T12:39:48.928117Z",
+    "started_at": "2026-11-17T12:39:50.593987Z",
+    "finished_at": "2026-11-17T12:40:13.421198Z"
+  },
+  "investigations": [
+    {
+      "id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "module_id": "792995ae-6b0a-46bd-be41-a8d37c3c856e",
+      "status": "succeeded",
+      "attempt": 1,
+      "error_code": null,
+      "metrics": {
+        "tool_calls": 3,
+        "trace_sequence": 9,
+        "context_chars": 1893,
+        "model_requests": 1,
+        "input_tokens": 733,
+        "output_tokens": 1447,
+        "tokens": 2180,
+        "model_responses": 1,
+        "unmeasured_requests": 0
+      },
+      "result": {
+        "output": {
+          "module_id": "792995ae-6b0a-46bd-be41-a8d37c3c856e",
+          "module_summary": "有限证据候选调查；未完成全模块覆盖",
+          "capabilities": [
+            {
+              "key": "bounded_1",
+              "name": "handle_event启用开关与最低严重度前置过滤门控",
+              "category": "源码机制候选",
+              "action": "在委托发送前对事件做启用开关与最低严重度双重前置过滤",
+              "target": "events/handler.py:handle_event",
+              "business_goal": "仅对已启用且达到最低严重度阈值的事件触发通知，过滤无关或低优先级事件",
+              "implementation_mechanism": "handle_event 先检查 settings[\"enabled\"]，未启用直接返回 {\"skipped\": True}；再比较 event[\"severity\"] 与 settings[\"minimum_severity\"]，低于阈值返回 {\"filtered\": True}；两者均通过才调用 notify.sender.notify(settings[\"platform\"], settings[\"robot_id\"], [event], transport)，以单事件列表和外部注入的 transport 委托发送，并返回 notify 的结果",
+              "supported_scope": [],
+              "conditions": [],
+              "limitations": [
+                "notify 对 platform/robot_id、[event] 与 transport 的具体处理在本片段未见，不能推断认证方式或送达结果",
+                "transport 为外部传入参数，其网络行为、实时性与可达性在本片段无实现可查",
+                "settings 或 event 缺键、severity 类型异常时的行为在本片段未定义",
+                "片段仅覆盖单事件入参路径，notify 内部的批量/聚合行为未见"
+              ],
+              "evidence_ids": [
+                "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+              ],
+              "status": "evidence_found"
+            }
+          ],
+          "candidate_relations": [],
+          "unexplained_entrypoint_ids": [
+            "913c089b-6a16-4f63-833f-89b5abafd714"
+          ],
+          "open_questions": [
+            "coverage_incomplete：只调查最多3个文件前80行；文档与调用可达性未穷尽",
+            "coverage_incomplete：有限片段调查，不证明不存在其他能力或运行时可达性"
+          ]
+        },
+        "claim_ids": {
+          "bounded_1": "cap-f267d4ccfcb61da2df4904829e5e1524acaaf837ea28aa5940645189b3c21f8d"
+        },
+        "semantic_verification": "unverified",
+        "formal_compliance_decision": null,
+        "coverage_incomplete": true
+      }
+    }
+  ],
+  "trace": [
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 1,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "202ba9ae4e74e5df7bcf6512e1b70676cfd3cdf2bd1e6477cdbca58c272308ce"
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 2,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "0dd2f473a5c6f841bd2f16ac40c3101c350b390f5a648abf08500b2df8ec5139",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 3,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 4,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 733,
+        "output_tokens": 1447,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence_and_candidate",
+            "tool_call_id_hash": "f2198410920a8f21353c6d86a7ea1f9211d0359cf96546999eb37e4a3d5edb54"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 5,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "202ba9ae4e74e5df7bcf6512e1b70676cfd3cdf2bd1e6477cdbca58c272308ce"
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 6,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "9fdd0dec760a11acb32589aefcafa635d8d1e2c46b5eedf89d96a4012094ec3a",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 7,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "c6d93c740012e8c97c208f4fb29e4b8addc8e02f49a619a5487bfb764ec89a4b"
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 8,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20",
+        "quote_hash": "72a41a9cd2104f99a09136791accaa96676388d2ac9d46b14b2a8b082f44b237"
+      }
+    },
+    {
+      "investigation_id": "6950a94e-063d-4d08-a5ab-1505442c8391",
+      "attempt": 1,
+      "sequence": 9,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "bounded_1",
+        "evidence_ids": [
+          "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20"
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cap-f267d4ccfcb61da2df4904829e5e1524acaaf837ea28aa5940645189b3c21f8d",
+      "status": "evidence_found",
+      "draft": {
+        "key": "bounded_1",
+        "name": "handle_event启用开关与最低严重度前置过滤门控",
+        "category": "源码机制候选",
+        "action": "在委托发送前对事件做启用开关与最低严重度双重前置过滤",
+        "target": "events/handler.py:handle_event",
+        "business_goal": "仅对已启用且达到最低严重度阈值的事件触发通知，过滤无关或低优先级事件",
+        "implementation_mechanism": "handle_event 先检查 settings[\"enabled\"]，未启用直接返回 {\"skipped\": True}；再比较 event[\"severity\"] 与 settings[\"minimum_severity\"]，低于阈值返回 {\"filtered\": True}；两者均通过才调用 notify.sender.notify(settings[\"platform\"], settings[\"robot_id\"], [event], transport)，以单事件列表和外部注入的 transport 委托发送，并返回 notify 的结果",
+        "supported_scope": [],
+        "conditions": [],
+        "limitations": [
+          "notify 对 platform/robot_id、[event] 与 transport 的具体处理在本片段未见，不能推断认证方式或送达结果",
+          "transport 为外部传入参数，其网络行为、实时性与可达性在本片段无实现可查",
+          "settings 或 event 缺键、severity 类型异常时的行为在本片段未定义",
+          "片段仅覆盖单事件入参路径，notify 内部的批量/聚合行为未见"
+        ],
+        "evidence_ids": [
+          "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+          "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+        ],
+        "status": "evidence_found"
+      }
+    }
+  ],
+  "relations": [],
+  "evidence": [
+    {
+      "id": "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20",
+      "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "98a1bbeb-6a9a-45a6-8db0-db0976cc2ed6",
+        "path": "events/handler.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 1,
+        "end_line": 8
+      },
+      "source_hash": "f7d70f5753e37f465245520f2b28e16fbff308c9e8a56511ba34387d76ada8a4",
+      "quote_hash": "72a41a9cd2104f99a09136791accaa96676388d2ac9d46b14b2a8b082f44b237",
+      "quote": "from notify.sender import notify\n\ndef handle_event(event, settings, transport):\n    if not settings[\"enabled\"]:\n        return {\"skipped\": True}\n    if event[\"severity\"] < settings[\"minimum_severity\"]:\n        return {\"filtered\": True}\n    return notify(settings[\"platform\"], settings[\"robot_id\"], [event], transport)",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "database_records": [
+    {
+      "claim_id": "cap-f267d4ccfcb61da2df4904829e5e1524acaaf837ea28aa5940645189b3c21f8d",
+      "status": "evidence_found",
+      "evidence_id": "ev-266ac89ea5ba7ccf61c140462f41a9a03fddc56928c0e9116b615001044d5b20",
+      "support_type": "candidate_support",
+      "source_hash": "f7d70f5753e37f465245520f2b28e16fbff308c9e8a56511ba34387d76ada8a4",
+      "quote_hash": "72a41a9cd2104f99a09136791accaa96676388d2ac9d46b14b2a8b082f44b237",
+      "source_ref": {
+        "file_id": "98a1bbeb-6a9a-45a6-8db0-db0976cc2ed6",
+        "path": "events/handler.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 1,
+        "end_line": 8
+      },
+      "trusted_classification": "synthetic_public"
+    }
+  ],
+  "passed": true
+}

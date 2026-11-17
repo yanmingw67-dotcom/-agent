@@ -98,3 +98,6 @@ class ModuleInvestigationOutput(Strict):
 class InvestigationRequest(Strict):
     module_ids: list[str] = Field(default_factory=list, max_length=24)
     data_classification: Literal["synthetic_public", "enterprise"] = "enterprise"
+    investigation_mode: Literal["bounded", "explore"] = "explore"
+    capability_limit: int = Field(default=1, ge=1, le=3)
+    include_equivalence: bool = False

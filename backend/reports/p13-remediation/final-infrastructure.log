@@ -1,0 +1,10 @@
+0006 (head)
+No new upgrade operations detected.
+NAME                                IMAGE                    COMMAND                  SERVICE     CREATED         STATUS                   PORTS
+product-knowledge-p11-api-1         product-knowledge:p1.3   "sh -c 'alembic upgr…"   api         3 minutes ago   Up 3 minutes (healthy)   127.0.0.1:8000->8000/tcp
+product-knowledge-p11-builder-1     product-knowledge:p1.3   "python -m app.jobs.…"   builder     3 minutes ago   Up 2 minutes (healthy)   8000/tcp
+product-knowledge-p11-indexer-1     product-knowledge:p1.3   "python -m app.jobs.…"   indexer     3 minutes ago   Up 2 minutes (healthy)   8000/tcp
+product-knowledge-p11-postgres-1    postgres:16.9-bookworm   "docker-entrypoint.s…"   postgres    3 hours ago     Up 3 hours (healthy)     5432/tcp
+product-knowledge-p11-redis-1       redis:7.4.4-bookworm     "docker-entrypoint.s…"   redis       3 hours ago     Up 3 hours (healthy)     6379/tcp
+product-knowledge-p11-retrieval-1   product-knowledge:p1.3   "uvicorn app.main:cr…"   retrieval   3 minutes ago   Up 2 minutes (healthy)   127.0.0.1:8001->8000/tcp
+product-knowledge-p11-worker-1      product-knowledge:p1.3   "python -m app.jobs.…"   worker      3 minutes ago   Up 2 minutes (healthy)   8000/tcp

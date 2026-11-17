@@ -52,6 +52,9 @@ class CodeEdge(Base):
 
 class Document(Base):
     __tablename__ = "documents"
+    data_classification: Mapped[str] = mapped_column(
+        String(32), default="enterprise", server_default="enterprise"
+    )
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
     category_id: Mapped[str] = mapped_column(ForeignKey("product_categories.id"), index=True)
     snapshot_id: Mapped[str] = mapped_column(ForeignKey("source_snapshots.id"), index=True)

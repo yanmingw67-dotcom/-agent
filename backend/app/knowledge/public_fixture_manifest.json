@@ -1,0 +1,10 @@
+{
+  "files": {
+    "notify/sender.py": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+    "events/handler.py": "f7d70f5753e37f465245520f2b28e16fbff308c9e8a56511ba34387d76ada8a4",
+    "http/client.py": "72b60fcad9eb6a300659172dcd720ff5278d1325d7048637d964da1f97b159f6",
+    "config/notify.yaml": "054b02fc075f32389a53ab93be6b77fb6dd0920744f644943fd9f55efbe71d13",
+    "tests/test_custom_webhook.py": "55634b2f6741d2b746b29c91288bb1e32027473aaddc307de9349468a0e1e53f"
+  },
+  "manual_sha256": "dcc3f6e199bada944121d3cd3430f69055616ace839560c58cdeaefad953294c"
+}

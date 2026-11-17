@@ -4,7 +4,8 @@
 
 P1.2 完整运行与基准说明见 `docs/P1.2_RUNBOOK.md`，架构边界见 `docs/P1.2_ARCHITECTURE.md`。
 初始验收见 `P1.2_ACCEPTANCE_REPORT.md`；第一轮整改见 `P1.2_REMEDIATION_REPORT.md`。
-最新迁移为0005；原 P1.1、P1.2 测试、迁移与历史日志保留。
+最新迁移为0006；原 P1.1、P1.2、P1.3测试、迁移与历史日志保留。
+P1.3整改有限闭环及可信分类见 `docs/P1.3_REMEDIATION_RUNBOOK.md`，最新结果见 `P1.3_REMEDIATION_REPORT.md`；原验收报告保留为历史记录。
 P1.3新增Pydantic AI Knowledge Builder、真实来源证据登记、候选能力与假设关系，仍不含发布或Agent B。
 运行与模型准入见 `docs/P1.3_RUNBOOK.md`，架构见 `docs/P1.3_ARCHITECTURE.md`；验收见 `P1.3_ACCEPTANCE_REPORT.md`。
 导入成功仅表示 `stage=extracted`，不是知识库就绪。

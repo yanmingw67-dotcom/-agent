@@ -1,0 +1,61 @@
+ Image product-knowledge:p1.3 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.08kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 156.33kB 0.0s done
+#6 DONE 0.0s
+
+#7 [5/9] COPY pyproject.toml uv.lock ./
+#7 CACHED
+
+#8 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [4/9] WORKDIR /app
+#9 CACHED
+
+#10 [3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#10 CACHED
+
+#11 [6/9] RUN uv sync --frozen --no-dev
+#11 CACHED
+
+#12 [7/9] COPY --chown=app:app app ./app
+#12 DONE 0.0s
+
+#13 [8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.2s
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 exporting manifest sha256:5fe8c4771c7361061c2eeb1c35be92a306ec9f86cd0df974f69f9fe51fc4efbd done
+#15 exporting config sha256:3ac6d7ed4d7834a6c781a5ffd42076233f92a3767e60e1ebbb4cb888f8870213 done
+#15 exporting attestation manifest sha256:853d52bb81d8778694c7cf19f9e1d0620d1ef7495e19af803bafb1fbc7c5dfb8 done
+#15 exporting manifest list sha256:b15c54266d429c515968812b615fc38640ef2c208a31c2fa510246955452e8f4 done
+#15 naming to docker.io/library/product-knowledge:p1.3 done
+#15 unpacking to docker.io/library/product-knowledge:p1.3 0.0s done
+#15 DONE 0.1s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image product-knowledge:p1.3 Built 

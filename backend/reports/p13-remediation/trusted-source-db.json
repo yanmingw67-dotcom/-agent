@@ -1,0 +1,24 @@
+{
+  "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+  "source_sha256": "6f427dfe146417b4505ba45f845682123817c1d78900c56080287195ba3c656c",
+  "source_classification": "synthetic_public",
+  "effective_classification": "synthetic_public",
+  "documents": [
+    {
+      "id": "3665ef58-ba14-4fb7-9243-e8e52e180bc3",
+      "sha256": "dcc3f6e199bada944121d3cd3430f69055616ace839560c58cdeaefad953294c",
+      "classification": "synthetic_public"
+    }
+  ],
+  "approval_audit": [
+    {
+      "id": "23a033c4-8eb7-49a0-85ce-dd16118dc821",
+      "principal_id": "admin",
+      "action": "source.approve_public_fixture",
+      "details": {
+        "classification": "synthetic_public",
+        "policy": "exact_bundled_fixture_v1"
+      }
+    }
+  ]
+}

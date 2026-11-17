@@ -1,0 +1,310 @@
+{
+  "mode": "REAL_APPROVED_MODEL_NO_PRESET_OUTPUT",
+  "criteria": "docs/P1.3_REMEDIATION_PLAN.md",
+  "label": "real-minimal-repeat",
+  "module": "notify",
+  "capability_limit": 1,
+  "equivalence_requested": false,
+  "category_id": "e3f3a43c-72f1-4849-8955-c4da425c1fc6",
+  "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+  "approval": {
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "data_classification": "synthetic_public"
+  },
+  "job_id": "4d11c101-1e24-434d-9493-ee9d92ff180e",
+  "enqueue_ms": 17.492,
+  "elapsed_seconds": 20.899,
+  "job": {
+    "id": "4d11c101-1e24-434d-9493-ee9d92ff180e",
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "job_type": "knowledge_build",
+    "stage": "review_ready",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "requested_classification": "synthetic_public",
+      "model_mode": "REAL",
+      "investigation_mode": "bounded",
+      "capability_limit": 1,
+      "include_equivalence": false,
+      "model_requests": 1,
+      "model_responses": 1,
+      "unmeasured_requests": 0,
+      "tool_calls": 3,
+      "tokens": 1864,
+      "input_tokens": 802,
+      "output_tokens": 1062,
+      "sampled_peak_cpu_percent": 96.9,
+      "sampled_peak_rss_bytes": 125784064,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 1,
+      "unresolved_count": 2,
+      "uncovered_modules": 0,
+      "claimed_capabilities": 1,
+      "duration_ms": 19804,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": "glm-5.3-flash"
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T12:35:27.442954Z",
+    "started_at": "2026-11-17T12:35:28.427735Z",
+    "finished_at": "2026-11-17T12:35:48.144667Z"
+  },
+  "investigations": [
+    {
+      "id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "module_id": "6fd3887a-5773-4339-ab6d-8a0fa6fb2149",
+      "status": "succeeded",
+      "attempt": 1,
+      "error_code": null,
+      "metrics": {
+        "tool_calls": 3,
+        "trace_sequence": 9,
+        "context_chars": 2206,
+        "model_requests": 1,
+        "input_tokens": 802,
+        "output_tokens": 1062,
+        "tokens": 1864,
+        "model_responses": 1,
+        "unmeasured_requests": 0
+      },
+      "result": {
+        "output": {
+          "module_id": "6fd3887a-5773-4339-ab6d-8a0fa6fb2149",
+          "module_summary": "有限证据候选调查；未完成全模块覆盖",
+          "capabilities": [
+            {
+              "key": "bounded_1",
+              "name": "固定平台机器人Webhook批量事件文本通知",
+              "category": "源码机制候选",
+              "action": "调用notify将多条事件合并为一条文本消息，通过固定平台机器人Webhook推送",
+              "target": "notify/sender.py#notify",
+              "business_goal": "将多条事件消息聚合后经飞书/钉钉群机器人实时告警通知",
+              "implementation_mechanism": "PLATFORMS固定飞书/钉钉base URL，notify拼接\"/robot/send/\"+token作为endpoint；payload将各事件e[\"message\"]用换行join为单一text，按平台生成feishu(msg_type)或ding(msgtype)格式，其他平台抛ValueError；transport.post以application/json发送json序列化文本",
+              "supported_scope": [],
+              "conditions": [],
+              "limitations": [
+                "仅支持固定的飞书/钉钉机器人端点，不支持任意URL、自定义认证或签名",
+                "payload仅生成text类型消息，不支持卡片或富文本",
+                "事件必须为含message键的dict，否则KeyError；文本无截断或转义处理",
+                "token直接拼入URL路径，可能泄露于日志"
+              ],
+              "evidence_ids": [
+                "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+              ],
+              "status": "evidence_found"
+            }
+          ],
+          "candidate_relations": [],
+          "unexplained_entrypoint_ids": [
+            "68f9469d-3125-48d0-8d15-6cba38cd36b9"
+          ],
+          "open_questions": [
+            "coverage_incomplete：只调查最多3个文件前80行；文档与调用可达性未穷尽",
+            "coverage_incomplete：有限片段调查，不证明不存在其他能力或运行时可达性"
+          ]
+        },
+        "claim_ids": {
+          "bounded_1": "cap-1be3221f5d4a79340788a32c7edcb011c70b96c613d3d8e649b7fdd2578d15a7"
+        },
+        "semantic_verification": "unverified",
+        "formal_compliance_decision": null,
+        "coverage_incomplete": true
+      }
+    }
+  ],
+  "trace": [
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 1,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "a8989daa7919e51e1453465df4a35a3e4a531cffeb2b441a2855ce4d523e03fd"
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 2,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "183c413ec85aa55af4fac8e6c0908b895ed0cdfdc240532f132eabcdab76b5f6",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 3,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 4,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 802,
+        "output_tokens": 1062,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence_and_candidate",
+            "tool_call_id_hash": "77d4baafe23d24fbf48178dfd537672905e7be9d0f57124a7d1c9af0f13bb3d4"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 5,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "6f48670069f3e5a75c8da8e4894e2d965ec78d67014d8d18464cea2991dc532c"
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 6,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "bf0a78fd20fb12098bfd2b43fc3350a4f1f69fd8bd96f353e0019776895ef35c",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 7,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "de3922e75f483b776e55b78d08ec8d9d409b8567a4f85daad42d396f1e17fe57"
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 8,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9",
+        "quote_hash": "49c8f50e1772a7c006a6b186c5241a815f5606277837f0e81b4905305d8937f8"
+      }
+    },
+    {
+      "investigation_id": "da4e129e-26ae-481b-b437-efc22b2bb994",
+      "attempt": 1,
+      "sequence": 9,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "bounded_1",
+        "evidence_ids": [
+          "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9"
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cap-1be3221f5d4a79340788a32c7edcb011c70b96c613d3d8e649b7fdd2578d15a7",
+      "status": "evidence_found",
+      "draft": {
+        "key": "bounded_1",
+        "name": "固定平台机器人Webhook批量事件文本通知",
+        "category": "源码机制候选",
+        "action": "调用notify将多条事件合并为一条文本消息，通过固定平台机器人Webhook推送",
+        "target": "notify/sender.py#notify",
+        "business_goal": "将多条事件消息聚合后经飞书/钉钉群机器人实时告警通知",
+        "implementation_mechanism": "PLATFORMS固定飞书/钉钉base URL，notify拼接\"/robot/send/\"+token作为endpoint；payload将各事件e[\"message\"]用换行join为单一text，按平台生成feishu(msg_type)或ding(msgtype)格式，其他平台抛ValueError；transport.post以application/json发送json序列化文本",
+        "supported_scope": [],
+        "conditions": [],
+        "limitations": [
+          "仅支持固定的飞书/钉钉机器人端点，不支持任意URL、自定义认证或签名",
+          "payload仅生成text类型消息，不支持卡片或富文本",
+          "事件必须为含message键的dict，否则KeyError；文本无截断或转义处理",
+          "token直接拼入URL路径，可能泄露于日志"
+        ],
+        "evidence_ids": [
+          "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+        ],
+        "status": "evidence_found"
+      }
+    }
+  ],
+  "relations": [],
+  "evidence": [
+    {
+      "id": "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9",
+      "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "c7f22ba8-22ef-4c3f-8340-45892e0ede9e",
+        "path": "notify/sender.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 11,
+        "end_line": 15
+      },
+      "source_hash": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+      "quote_hash": "49c8f50e1772a7c006a6b186c5241a815f5606277837f0e81b4905305d8937f8",
+      "quote": "\ndef notify(platform, token, events, transport):\n    endpoint = PLATFORMS[platform] + \"/robot/send/\" + token\n    return transport.post(endpoint, json.dumps(payload(platform, events)),\n                          headers={\"Content-Type\": \"application/json\"})",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "database_records": [
+    {
+      "claim_id": "cap-1be3221f5d4a79340788a32c7edcb011c70b96c613d3d8e649b7fdd2578d15a7",
+      "status": "evidence_found",
+      "evidence_id": "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9",
+      "support_type": "candidate_support",
+      "source_hash": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+      "quote_hash": "49c8f50e1772a7c006a6b186c5241a815f5606277837f0e81b4905305d8937f8",
+      "source_ref": {
+        "file_id": "c7f22ba8-22ef-4c3f-8340-45892e0ede9e",
+        "path": "notify/sender.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 11,
+        "end_line": 15
+      },
+      "trusted_classification": "synthetic_public"
+    }
+  ],
+  "passed": true
+}

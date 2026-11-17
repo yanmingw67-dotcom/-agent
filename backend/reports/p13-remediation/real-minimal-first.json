@@ -1,0 +1,310 @@
+{
+  "mode": "REAL_APPROVED_MODEL_NO_PRESET_OUTPUT",
+  "criteria": "docs/P1.3_REMEDIATION_PLAN.md",
+  "label": "real-minimal-first",
+  "module": "notify",
+  "capability_limit": 1,
+  "equivalence_requested": false,
+  "category_id": "e3f3a43c-72f1-4849-8955-c4da425c1fc6",
+  "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+  "approval": {
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "data_classification": "synthetic_public"
+  },
+  "job_id": "c113e82a-96c2-43d5-9169-7bead615ef3d",
+  "enqueue_ms": 14.353,
+  "elapsed_seconds": 25.298,
+  "job": {
+    "id": "c113e82a-96c2-43d5-9169-7bead615ef3d",
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "job_type": "knowledge_build",
+    "stage": "review_ready",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "requested_classification": "synthetic_public",
+      "model_mode": "REAL",
+      "investigation_mode": "bounded",
+      "capability_limit": 1,
+      "include_equivalence": false,
+      "model_requests": 1,
+      "model_responses": 1,
+      "unmeasured_requests": 0,
+      "tool_calls": 3,
+      "tokens": 2144,
+      "input_tokens": 802,
+      "output_tokens": 1342,
+      "sampled_peak_cpu_percent": 97.5,
+      "sampled_peak_rss_bytes": 126009344,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 1,
+      "unresolved_count": 2,
+      "uncovered_modules": 0,
+      "claimed_capabilities": 1,
+      "duration_ms": 24234,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": "glm-5.3-flash"
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T12:34:30.603112Z",
+    "started_at": "2026-11-17T12:34:31.642950Z",
+    "finished_at": "2026-11-17T12:34:55.852651Z"
+  },
+  "investigations": [
+    {
+      "id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "module_id": "6fd3887a-5773-4339-ab6d-8a0fa6fb2149",
+      "status": "succeeded",
+      "attempt": 1,
+      "error_code": null,
+      "metrics": {
+        "tool_calls": 3,
+        "trace_sequence": 9,
+        "context_chars": 2649,
+        "model_requests": 1,
+        "input_tokens": 802,
+        "output_tokens": 1342,
+        "tokens": 2144,
+        "model_responses": 1,
+        "unmeasured_requests": 0
+      },
+      "result": {
+        "output": {
+          "module_id": "6fd3887a-5773-4339-ab6d-8a0fa6fb2149",
+          "module_summary": "有限证据候选调查；未完成全模块覆盖",
+          "capabilities": [
+            {
+              "key": "bounded_1",
+              "name": "飞书/钉钉固定平台机器人Webhook文本通知",
+              "category": "源码机制候选",
+              "action": "通过注入的transport向固定平台机器人Webhook端点POST聚合后的文本消息，实现事件群通知",
+              "target": "notify/sender.py: PLATFORMS + payload() + notify()",
+              "business_goal": "将一批事件消息以纯文本形式推送到飞书或钉钉群机器人",
+              "implementation_mechanism": "PLATFORMS字典硬编码feishu与ding两个基础URL；notify()用 PLATFORMS[platform]+\"/robot/send/\"+token 拼出端点，payload()按平台生成对应文本消息结构（feishu: msg_type/content，ding: msgtype/text），events中各条message用换行合并为一条文本，经transport.post以application/json发送",
+              "supported_scope": [],
+              "conditions": [],
+              "limitations": [
+                "仅支持feishu与ding两个硬编码平台；其他平台在notify中先因PLATFORMS[platform]抛KeyError，payload里的ValueError在该路径不可达",
+                "不支持任意Webhook URL或自定义认证头，仅固定域名+/robot/send/+token拼接，认证方式仅限该机器人token模式",
+                "仅构造纯文本消息体（feishu为msg_type/content，ding为msgtype/text），无markdown、卡片或签名等能力",
+                "transport为外部注入参数，实际HTTP发送行为不在本片段实现，片段内无测试或调用方佐证产品级接入"
+              ],
+              "evidence_ids": [
+                "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+              ],
+              "status": "evidence_found"
+            }
+          ],
+          "candidate_relations": [],
+          "unexplained_entrypoint_ids": [
+            "68f9469d-3125-48d0-8d15-6cba38cd36b9"
+          ],
+          "open_questions": [
+            "coverage_incomplete：只调查最多3个文件前80行；文档与调用可达性未穷尽",
+            "coverage_incomplete：有限片段调查，不证明不存在其他能力或运行时可达性"
+          ]
+        },
+        "claim_ids": {
+          "bounded_1": "cap-f0458bc15cd73d7a95bb8eeebef76dc55a41b36e4167ed2acf1d467d2b37de2e"
+        },
+        "semantic_verification": "unverified",
+        "formal_compliance_decision": null,
+        "coverage_incomplete": true
+      }
+    }
+  ],
+  "trace": [
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 1,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "a8989daa7919e51e1453465df4a35a3e4a531cffeb2b441a2855ce4d523e03fd"
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 2,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "21f2e08a1d13322a4efd5e4dc3c70e57016b4da1542077e710f5521d45099a93",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 3,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 4,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 802,
+        "output_tokens": 1342,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence_and_candidate",
+            "tool_call_id_hash": "4299b0a7a3a30f93159ecab7bc3c1ff862970b97a41ff619b561a738f067dcb4"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 5,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "6b68142f56d8983a634175671f0146e3515500ecbc97273635a9951f232925f2"
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 6,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "28b0ba15088f4ccc37baa7d4ea8304d246b2a0decaa28875cc8b5bd220e2d377",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 7,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "355baa62e0f5de153f001522dcb507f207df83832e12b65306a1f30ca61702ad"
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 8,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c",
+        "quote_hash": "9a7fd74c3eb0948343e9018191feedbd7c93d529ff75d5991f2870ee26aa3878"
+      }
+    },
+    {
+      "investigation_id": "f5226c57-abce-4397-a9aa-9fb96d6d581c",
+      "attempt": 1,
+      "sequence": 9,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "bounded_1",
+        "evidence_ids": [
+          "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c"
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cap-f0458bc15cd73d7a95bb8eeebef76dc55a41b36e4167ed2acf1d467d2b37de2e",
+      "status": "evidence_found",
+      "draft": {
+        "key": "bounded_1",
+        "name": "飞书/钉钉固定平台机器人Webhook文本通知",
+        "category": "源码机制候选",
+        "action": "通过注入的transport向固定平台机器人Webhook端点POST聚合后的文本消息，实现事件群通知",
+        "target": "notify/sender.py: PLATFORMS + payload() + notify()",
+        "business_goal": "将一批事件消息以纯文本形式推送到飞书或钉钉群机器人",
+        "implementation_mechanism": "PLATFORMS字典硬编码feishu与ding两个基础URL；notify()用 PLATFORMS[platform]+\"/robot/send/\"+token 拼出端点，payload()按平台生成对应文本消息结构（feishu: msg_type/content，ding: msgtype/text），events中各条message用换行合并为一条文本，经transport.post以application/json发送",
+        "supported_scope": [],
+        "conditions": [],
+        "limitations": [
+          "仅支持feishu与ding两个硬编码平台；其他平台在notify中先因PLATFORMS[platform]抛KeyError，payload里的ValueError在该路径不可达",
+          "不支持任意Webhook URL或自定义认证头，仅固定域名+/robot/send/+token拼接，认证方式仅限该机器人token模式",
+          "仅构造纯文本消息体（feishu为msg_type/content，ding为msgtype/text），无markdown、卡片或签名等能力",
+          "transport为外部注入参数，实际HTTP发送行为不在本片段实现，片段内无测试或调用方佐证产品级接入"
+        ],
+        "evidence_ids": [
+          "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+        ],
+        "status": "evidence_found"
+      }
+    }
+  ],
+  "relations": [],
+  "evidence": [
+    {
+      "id": "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c",
+      "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "c7f22ba8-22ef-4c3f-8340-45892e0ede9e",
+        "path": "notify/sender.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 2,
+        "end_line": 15
+      },
+      "source_hash": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+      "quote_hash": "9a7fd74c3eb0948343e9018191feedbd7c93d529ff75d5991f2870ee26aa3878",
+      "quote": "PLATFORMS = {\"feishu\": \"https://open.feishu.cn\", \"ding\": \"https://oapi.dingtalk.com\"}\n\ndef payload(platform, events):\n    text = \"\\n\".join(str(e[\"message\"]) for e in events)\n    if platform == \"feishu\":\n        return {\"msg_type\": \"text\", \"content\": {\"text\": text}}\n    if platform == \"ding\":\n        return {\"msgtype\": \"text\", \"text\": {\"content\": text}}\n    raise ValueError(\"unsupported platform\")\n\ndef notify(platform, token, events, transport):\n    endpoint = PLATFORMS[platform] + \"/robot/send/\" + token\n    return transport.post(endpoint, json.dumps(payload(platform, events)),\n                          headers={\"Content-Type\": \"application/json\"})",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "database_records": [
+    {
+      "claim_id": "cap-f0458bc15cd73d7a95bb8eeebef76dc55a41b36e4167ed2acf1d467d2b37de2e",
+      "status": "evidence_found",
+      "evidence_id": "ev-80872395f21d1b87c11d50510a74908e729e3c22204cf310e1a7aa6f7bab0c3c",
+      "support_type": "candidate_support",
+      "source_hash": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+      "quote_hash": "9a7fd74c3eb0948343e9018191feedbd7c93d529ff75d5991f2870ee26aa3878",
+      "source_ref": {
+        "file_id": "c7f22ba8-22ef-4c3f-8340-45892e0ede9e",
+        "path": "notify/sender.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 2,
+        "end_line": 15
+      },
+      "trusted_classification": "synthetic_public"
+    }
+  ],
+  "passed": true
+}

@@ -17,6 +17,7 @@ from app.db.models import KnowledgeJob, Snapshot, now
 from app.db.session import session_factory
 from app.ingestion.resources import ResourceSampler
 from app.ingestion.text import digest
+from app.knowledge.classification import classification as trusted_classification
 from app.knowledge.evidence_registry import canonical, register
 from app.knowledge.schemas import EvidenceRequest
 from app.knowledge.service import fence, save_output, validate_output
@@ -249,6 +250,8 @@ class AuditedModel(WrapperModel):
                             "register_evidence",
                             "get_capability_candidates",
                             "final_result",
+                            "register_evidence_and_candidate",
+                            "record_hypothesis",
                         }
                         else None,
                         "tool_call_id_hash": digest(str(getattr(p, "tool_call_id", "")).encode()),
@@ -277,7 +280,12 @@ async def investigate_module(run_id, token, model):
             policy="admin_staging",
         )
         module_id = row.module_id
+        mode = job.metrics_json.get("investigation_mode", "explore")
     deps = BuilderDeps(run_id, token, ctx)
+    if mode == "bounded":
+        from app.agents.bounded_builder import investigate_bounded
+
+        return await investigate_bounded(deps, module_id, model)
     # 预调查也计入工具/上下文预算，不将整库塞入提示。
     seed = [
         deps.query(ToolRequest(tool="get_module_context", module_id=module_id, limit=20)),
@@ -339,7 +347,8 @@ def run_builder(job_id, token, model=None):
             job.error_code = "SOURCE_INDEX_NOT_READY"
             job.finished_at = now()
             return
-        classification = job.metrics_json.get("data_classification", "enterprise")
+        classification = trusted_classification(db, job.snapshot_id)
+        job.metrics_json = {**job.metrics_json, "data_classification": classification}
         job.status = "running"
         job.stage = "investigating"
         job.started_at = now()
@@ -373,6 +382,9 @@ def run_builder(job_id, token, model=None):
                         if type(exc).__name__ == "UsageLimitExceeded"
                         else "BUILDER_TIMEOUT"
                         if isinstance(exc, TimeoutError)
+                        or type(exc).__name__ == "ModelTimeoutError"
+                        else "BUILDER_OUTPUT_LIMIT"
+                        if type(exc).__name__ == "OutputTokenLimitExceeded"
                         else "MODEL_OR_OUTPUT_ERROR"
                     )
                 )
@@ -455,7 +467,7 @@ def run_builder(job_id, token, model=None):
         }
         job.status = (
             "failed"
-            if fatal or not complete
+            if fatal or (not complete and not job.metrics_json["claimed_capabilities"])
             else ("succeeded" if complete == len(runs) else "partial")
         )
         job.stage = "review_ready" if job.status == "succeeded" else job.status

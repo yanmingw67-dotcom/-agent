@@ -1,0 +1,62 @@
+ Image product-knowledge:p1.3 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.08kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 107.52kB 0.0s done
+#6 DONE 0.0s
+
+#7 [3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#7 CACHED
+
+#8 [5/9] COPY pyproject.toml uv.lock ./
+#8 CACHED
+
+#9 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [4/9] WORKDIR /app
+#10 CACHED
+
+#11 [6/9] RUN uv sync --frozen --no-dev
+#11 CACHED
+
+#12 [7/9] COPY --chown=app:app app ./app
+#12 DONE 0.0s
+
+#13 [8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.2s
+
+#15 exporting to image
+#15 exporting layers 0.1s done
+#15 exporting manifest sha256:96115dfc04a709413f9c00757146ccfc7994885853cfcc41d8af06afeab8f38a done
+#15 exporting config sha256:27a5bdebeca963643796b4abfa3625beb513467678fdb9158019f4fcb5d485c0 done
+#15 exporting attestation manifest sha256:cb1563cc5f7f6cfd869fc5541494cb4d4386a590cdcb06d90987023f44125bd3 0.0s done
+#15 exporting manifest list sha256:3d651b70fbc7f21f822aac4f17a71eafc9ccbaec8491fa27ce825660132ac3c6
+#15 exporting manifest list sha256:3d651b70fbc7f21f822aac4f17a71eafc9ccbaec8491fa27ce825660132ac3c6 done
+#15 naming to docker.io/library/product-knowledge:p1.3 done
+#15 unpacking to docker.io/library/product-knowledge:p1.3 0.0s done
+#15 DONE 0.2s
+
+#16 resolving provenance for metadata file
+#16 DONE 0.0s
+ Image product-knowledge:p1.3 Built 

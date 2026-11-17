@@ -47,6 +47,9 @@ class Snapshot(Base):
     source_sha256: Mapped[str] = mapped_column(String(64))
     status: Mapped[str] = mapped_column(String(32), default="uploaded")
     archive_key: Mapped[str] = mapped_column(String(100), unique=True)
+    data_classification: Mapped[str] = mapped_column(
+        String(32), default="enterprise", server_default="enterprise"
+    )
     manifest_key: Mapped[str | None] = mapped_column(String(200))
     index_status: Mapped[str] = mapped_column(String(32), default="not_indexed")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

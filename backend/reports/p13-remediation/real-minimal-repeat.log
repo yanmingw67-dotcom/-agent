@@ -1,0 +1,59 @@
+{
+  "artifact": "reports/p13-remediation/real-minimal-repeat.json",
+  "passed": true,
+  "job_id": "4d11c101-1e24-434d-9493-ee9d92ff180e",
+  "status": "succeeded",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "requested_classification": "synthetic_public",
+    "model_mode": "REAL",
+    "investigation_mode": "bounded",
+    "capability_limit": 1,
+    "include_equivalence": false,
+    "model_requests": 1,
+    "model_responses": 1,
+    "unmeasured_requests": 0,
+    "tool_calls": 3,
+    "tokens": 1864,
+    "input_tokens": 802,
+    "output_tokens": 1062,
+    "sampled_peak_cpu_percent": 96.9,
+    "sampled_peak_rss_bytes": 125784064,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 1,
+    "unresolved_count": 2,
+    "uncovered_modules": 0,
+    "claimed_capabilities": 1,
+    "duration_ms": 19804,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model": "glm-5.3-flash"
+  },
+  "candidates": [
+    {
+      "key": "bounded_1",
+      "name": "固定平台机器人Webhook批量事件文本通知",
+      "category": "源码机制候选",
+      "action": "调用notify将多条事件合并为一条文本消息，通过固定平台机器人Webhook推送",
+      "target": "notify/sender.py#notify",
+      "business_goal": "将多条事件消息聚合后经飞书/钉钉群机器人实时告警通知",
+      "implementation_mechanism": "PLATFORMS固定飞书/钉钉base URL，notify拼接\"/robot/send/\"+token作为endpoint；payload将各事件e[\"message\"]用换行join为单一text，按平台生成feishu(msg_type)或ding(msgtype)格式，其他平台抛ValueError；transport.post以application/json发送json序列化文本",
+      "supported_scope": [],
+      "conditions": [],
+      "limitations": [
+        "仅支持固定的飞书/钉钉机器人端点，不支持任意URL、自定义认证或签名",
+        "payload仅生成text类型消息，不支持卡片或富文本",
+        "事件必须为含message键的dict，否则KeyError；文本无截断或转义处理",
+        "token直接拼入URL路径，可能泄露于日志"
+      ],
+      "evidence_ids": [
+        "ev-72b49fbe7f7091be67ed59c9863b179de76ec071f094e1dc036d74900e6e93d9"
+      ],
+      "unresolved_questions": [
+        "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证"
+      ],
+      "status": "evidence_found"
+    }
+  ]
+}

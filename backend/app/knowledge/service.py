@@ -69,13 +69,18 @@ def validate_output(db, context, run, output: ModuleInvestigationOutput):
     return output
 
 
-def save_output(db, context, run_id, token, output):
+def save_output(db, context, run_id, token, output, *, finalize=True):
     run = fence(db, run_id, token)
     output = validate_output(db, context, run, output)
     claim_ids = {}
     for c in output.capabilities:
         cid = "cap-" + digest(f"{run.id}:{c.key}".encode())
         claim_ids[c.key] = cid
+        existing = db.get(CapabilityClaim, cid)
+        if existing:
+            if existing.draft_json != c.model_dump():
+                raise AppError(409, "CANDIDATE_CHECKPOINT_CONFLICT", "已保存候选不允许覆盖")
+            continue
         db.add(
             CapabilityClaim(
                 id=cid,
@@ -90,6 +95,8 @@ def save_output(db, context, run_id, token, output):
     db.flush()
     for c in output.capabilities:
         for eid in c.evidence_ids:
+            if db.get(ClaimEvidenceLink, (claim_ids[c.key], eid)):
+                continue
             db.add(
                 ClaimEvidenceLink(
                     claim_id=claim_ids[c.key],
@@ -99,6 +106,8 @@ def save_output(db, context, run_id, token, output):
                 )
             )
     for i, relation in enumerate(output.candidate_relations):
+        if db.get(CapabilityRelation, "rel-" + digest(f"{run.id}:{i}".encode())):
+            continue
         db.add(
             CapabilityRelation(
                 id="rel-" + digest(f"{run.id}:{i}".encode()),
@@ -117,6 +126,6 @@ def save_output(db, context, run_id, token, output):
         "semantic_verification": "unverified",
         "formal_compliance_decision": None,
     }
-    run.status = "succeeded"
+    run.status = "succeeded" if finalize else "running"
     run.error_code = None
     return run.output_json

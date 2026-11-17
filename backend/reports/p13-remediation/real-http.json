@@ -1,0 +1,517 @@
+{
+  "mode": "REAL_APPROVED_MODEL_NO_PRESET_OUTPUT",
+  "criteria": "docs/P1.3_REMEDIATION_PLAN.md",
+  "label": "real-http",
+  "module": "http",
+  "capability_limit": 2,
+  "equivalence_requested": false,
+  "category_id": "e3f3a43c-72f1-4849-8955-c4da425c1fc6",
+  "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+  "approval": {
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "data_classification": "synthetic_public"
+  },
+  "job_id": "acb50bc0-6729-4252-af09-e85f19fdf889",
+  "enqueue_ms": 17.524,
+  "elapsed_seconds": 50.66,
+  "job": {
+    "id": "acb50bc0-6729-4252-af09-e85f19fdf889",
+    "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+    "job_type": "knowledge_build",
+    "stage": "review_ready",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "requested_classification": "synthetic_public",
+      "model_mode": "REAL",
+      "investigation_mode": "bounded",
+      "capability_limit": 2,
+      "include_equivalence": false,
+      "model_requests": 2,
+      "model_responses": 2,
+      "unmeasured_requests": 0,
+      "tool_calls": 6,
+      "tokens": 4689,
+      "input_tokens": 1577,
+      "output_tokens": 3112,
+      "sampled_peak_cpu_percent": 79.1,
+      "sampled_peak_rss_bytes": 126058496,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 1,
+      "unresolved_count": 2,
+      "uncovered_modules": 0,
+      "claimed_capabilities": 2,
+      "duration_ms": 49197,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": "glm-5.3-flash"
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T12:40:16.243119Z",
+    "started_at": "2026-11-17T12:40:17.636650Z",
+    "finished_at": "2026-11-17T12:41:06.815582Z"
+  },
+  "investigations": [
+    {
+      "id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "module_id": "9addcbb4-9c49-491d-b4ed-f111206d0e98",
+      "status": "succeeded",
+      "attempt": 1,
+      "error_code": null,
+      "metrics": {
+        "tool_calls": 6,
+        "trace_sequence": 18,
+        "context_chars": 3638,
+        "model_requests": 2,
+        "input_tokens": 1577,
+        "output_tokens": 3112,
+        "tokens": 4689,
+        "model_responses": 2,
+        "unmeasured_requests": 0
+      },
+      "result": {
+        "output": {
+          "module_id": "9addcbb4-9c49-491d-b4ed-f111206d0e98",
+          "module_summary": "有限证据候选调查；未完成全模块覆盖",
+          "capabilities": [
+            {
+              "key": "bounded_1",
+              "name": "Transport.post：经session发送HTTP POST（固定5秒超时）",
+              "category": "源码机制候选",
+              "action": "对给定url以POST发送body与headers，委托session.post执行，timeout硬编码为5秒并返回其响应结果",
+              "target": "http/client.py Transport.post",
+              "business_goal": "为事件外发提供可复用的HTTP传输通道",
+              "implementation_mechanism": "post(url, body, headers)内部调用self.session.post(url, data=body, headers=headers, timeout=5)并返回其结果；body与headers原样透传，session在Transport构造时注入，认证细节不在本片段内实现",
+              "supported_scope": [],
+              "conditions": [],
+              "limitations": [
+                "超时5秒为硬编码常量，片段内未见参数化配置或重试逻辑接入本方法",
+                "认证能力取决于传入的session对象，本片段未见其具体实现与有效性",
+                "同片段unused_retry未被post调用，不能据此确认此发送路径具备自动重试",
+                "片段未见响应校验、错误处理或送达确认逻辑"
+              ],
+              "evidence_ids": [
+                "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+              ],
+              "status": "evidence_found"
+            },
+            {
+              "key": "bounded_2",
+              "name": "unused_retry：send超时重试封装（默认3次，本片段未接入）",
+              "category": "源码机制候选",
+              "action": "按range(attempts)循环调用传入的send()，捕获TimeoutError后进入下一轮重试；当attempt+1等于attempts（末次）失败时原样raise，默认最多执行3次send",
+              "target": "http/client.py unused_retry",
+              "business_goal": "超时场景下通过多次尝试send提高发送成功概率（潜在能力）",
+              "implementation_mechanism": "for循环内try调用send()，except TimeoutError分支判断attempt+1==attempts：是则raise终止，否则继续下一轮；重试仅在该函数内部实现，片段内无调用方",
+              "supported_scope": [],
+              "conditions": [],
+              "limitations": [
+                "本片段内未见unused_retry任何调用点，不能推为产品自动重试已支持或已接入发送链路",
+                "仅捕获TimeoutError，其他异常类型不重试、直接向外传播",
+                "send构造与attempts取值均由调用方传入，片段中未定义；重试间隔未定义，失败后立即重试",
+                "TimeoutError是否真实抛出取决于send实现，片段内无法验证"
+              ],
+              "evidence_ids": [
+                "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa"
+              ],
+              "unresolved_questions": [
+                "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+                "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+              ],
+              "status": "evidence_found"
+            }
+          ],
+          "candidate_relations": [],
+          "unexplained_entrypoint_ids": [
+            "352f2f02-aae7-45cf-825b-3c9587c21f5b"
+          ],
+          "open_questions": [
+            "coverage_incomplete：只调查最多3个文件前80行；文档与调用可达性未穷尽",
+            "coverage_incomplete：有限片段调查，不证明不存在其他能力或运行时可达性"
+          ]
+        },
+        "claim_ids": {
+          "bounded_1": "cap-c6b891d969aa799465321c54ea5641058fc81afe0abf5d6f2ffb730de59d10dd",
+          "bounded_2": "cap-b5e79f852201d1675bec3767a9ff4c99493074f0230aedb3266945b3fefa0b39"
+        },
+        "semantic_verification": "unverified",
+        "formal_compliance_decision": null,
+        "coverage_incomplete": true
+      }
+    }
+  ],
+  "trace": [
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 1,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "3b02c7bf6acf78d0652c481d20a6071632175d5d27eeb31e30f4fb67ea41d2fa"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 2,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "8996fedfe2d7528d638582ae6467149a9b23eed4df7701c590899a712d0dbafc",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 3,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 4,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 765,
+        "output_tokens": 1940,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence_and_candidate",
+            "tool_call_id_hash": "184a17761484956aaae2e7695214ae7d9fec4520ba04aef554300286431ad9c1"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 5,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "4ecbeb7f0d37355bb058c21df3ba55ce7706fb626643ef25de601caa4080543b"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 6,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "1b678a2dd64cec8333b34e507cb24863614f5d562031f2142ef84b11e7c84c40",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 7,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "6ccb0c508c6cd9355ac3fd241bc22862b6312b22b360a70b90690c706fd48ede"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 8,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010",
+        "quote_hash": "a65cf6d0780061d973b48008317cada16403dc0fd53187d77881dd155cd10415"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 9,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "bounded_1",
+        "evidence_ids": [
+          "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010"
+        ]
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 10,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "3b02c7bf6acf78d0652c481d20a6071632175d5d27eeb31e30f4fb67ea41d2fa"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 11,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "e859a0a0944348a13da9cbda7ecee21d1383e9024a0ead40f1b5460a4bfa1cd0",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 12,
+      "kind": "model_request",
+      "details": {
+        "message_count": 1,
+        "reasoning_effort": "low"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 13,
+      "kind": "model_response",
+      "details": {
+        "input_tokens": 812,
+        "output_tokens": 1172,
+        "reasoning_tokens": 0,
+        "finish_reason": "tool_call",
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence_and_candidate",
+            "tool_call_id_hash": "965045f2a2104cdfecbc971f0ef8bada36ddb023aec9632d950a74217ae06e29"
+          }
+        ]
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 14,
+      "kind": "tool_call",
+      "details": {
+        "tool": "read_source",
+        "args_hash": "0b04e1ca3c63dac1ec22bd3d006b7e4c23987dba1aa18c8769be7cee8c5ad965"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 15,
+      "kind": "tool_result",
+      "details": {
+        "tool": "read_source",
+        "result_hash": "6691670f7790df3c4acdd76fbea78f0ac5750cccda43b7412c8dd863d40506b5",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 16,
+      "kind": "tool_call",
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "133162a2285b79237d5268034ff501554b4329d046fb8c3872a1abbcfbd64dac"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 17,
+      "kind": "evidence_registered",
+      "details": {
+        "evidence_id": "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa",
+        "quote_hash": "75f983f5b6d1f1d42f79e37d37601247f8fb9ad367fe44e83f59ad6a3c672847"
+      }
+    },
+    {
+      "investigation_id": "33c78630-f4bb-4d8c-a926-e9c300582623",
+      "attempt": 1,
+      "sequence": 18,
+      "kind": "candidate_checkpoint",
+      "details": {
+        "local_key": "bounded_2",
+        "evidence_ids": [
+          "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa"
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cap-b5e79f852201d1675bec3767a9ff4c99493074f0230aedb3266945b3fefa0b39",
+      "status": "evidence_found",
+      "draft": {
+        "key": "bounded_2",
+        "name": "unused_retry：send超时重试封装（默认3次，本片段未接入）",
+        "category": "源码机制候选",
+        "action": "按range(attempts)循环调用传入的send()，捕获TimeoutError后进入下一轮重试；当attempt+1等于attempts（末次）失败时原样raise，默认最多执行3次send",
+        "target": "http/client.py unused_retry",
+        "business_goal": "超时场景下通过多次尝试send提高发送成功概率（潜在能力）",
+        "implementation_mechanism": "for循环内try调用send()，except TimeoutError分支判断attempt+1==attempts：是则raise终止，否则继续下一轮；重试仅在该函数内部实现，片段内无调用方",
+        "supported_scope": [],
+        "conditions": [],
+        "limitations": [
+          "本片段内未见unused_retry任何调用点，不能推为产品自动重试已支持或已接入发送链路",
+          "仅捕获TimeoutError，其他异常类型不重试、直接向外传播",
+          "send构造与attempts取值均由调用方传入，片段中未定义；重试间隔未定义，失败后立即重试",
+          "TimeoutError是否真实抛出取决于send实现，片段内无法验证"
+        ],
+        "evidence_ids": [
+          "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+          "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+        ],
+        "status": "evidence_found"
+      }
+    },
+    {
+      "id": "cap-c6b891d969aa799465321c54ea5641058fc81afe0abf5d6f2ffb730de59d10dd",
+      "status": "evidence_found",
+      "draft": {
+        "key": "bounded_1",
+        "name": "Transport.post：经session发送HTTP POST（固定5秒超时）",
+        "category": "源码机制候选",
+        "action": "对给定url以POST发送body与headers，委托session.post执行，timeout硬编码为5秒并返回其响应结果",
+        "target": "http/client.py Transport.post",
+        "business_goal": "为事件外发提供可复用的HTTP传输通道",
+        "implementation_mechanism": "post(url, body, headers)内部调用self.session.post(url, data=body, headers=headers, timeout=5)并返回其结果；body与headers原样透传，session在Transport构造时注入，认证细节不在本片段内实现",
+        "supported_scope": [],
+        "conditions": [],
+        "limitations": [
+          "超时5秒为硬编码常量，片段内未见参数化配置或重试逻辑接入本方法",
+          "认证能力取决于传入的session对象，本片段未见其具体实现与有效性",
+          "同片段unused_retry未被post调用，不能据此确认此发送路径具备自动重试",
+          "片段未见响应校验、错误处理或送达确认逻辑"
+        ],
+        "evidence_ids": [
+          "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010"
+        ],
+        "unresolved_questions": [
+          "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+          "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+        ],
+        "status": "evidence_found"
+      }
+    }
+  ],
+  "relations": [],
+  "evidence": [
+    {
+      "id": "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa",
+      "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "8a4d7c2a-a5a7-4509-a009-415702f33b33",
+        "path": "http/client.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 8,
+        "end_line": 14
+      },
+      "source_hash": "72b60fcad9eb6a300659172dcd720ff5278d1325d7048637d964da1f97b159f6",
+      "quote_hash": "75f983f5b6d1f1d42f79e37d37601247f8fb9ad367fe44e83f59ad6a3c672847",
+      "quote": "def unused_retry(send, attempts=3):\n    for attempt in range(attempts):\n        try:\n            return send()\n        except TimeoutError:\n            if attempt + 1 == attempts:\n                raise",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    },
+    {
+      "id": "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010",
+      "snapshot_id": "e067ed21-687c-4883-8405-1a84f03c9442",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "8a4d7c2a-a5a7-4509-a009-415702f33b33",
+        "path": "http/client.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 5,
+        "end_line": 6
+      },
+      "source_hash": "72b60fcad9eb6a300659172dcd720ff5278d1325d7048637d964da1f97b159f6",
+      "quote_hash": "a65cf6d0780061d973b48008317cada16403dc0fd53187d77881dd155cd10415",
+      "quote": "    def post(self, url, body, headers):\n        return self.session.post(url, data=body, headers=headers, timeout=5)",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "database_records": [
+    {
+      "claim_id": "cap-c6b891d969aa799465321c54ea5641058fc81afe0abf5d6f2ffb730de59d10dd",
+      "status": "evidence_found",
+      "evidence_id": "ev-a3b4db93ccf10a66336743151890207403b7c28b16a2b15608a3d963002fd010",
+      "support_type": "candidate_support",
+      "source_hash": "72b60fcad9eb6a300659172dcd720ff5278d1325d7048637d964da1f97b159f6",
+      "quote_hash": "a65cf6d0780061d973b48008317cada16403dc0fd53187d77881dd155cd10415",
+      "source_ref": {
+        "file_id": "8a4d7c2a-a5a7-4509-a009-415702f33b33",
+        "path": "http/client.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 5,
+        "end_line": 6
+      },
+      "trusted_classification": "synthetic_public"
+    },
+    {
+      "claim_id": "cap-b5e79f852201d1675bec3767a9ff4c99493074f0230aedb3266945b3fefa0b39",
+      "status": "evidence_found",
+      "evidence_id": "ev-3f58f461c858007b1a671db0e3b537c81b68870c4cb50460cb6abbcfc4a083fa",
+      "support_type": "candidate_support",
+      "source_hash": "72b60fcad9eb6a300659172dcd720ff5278d1325d7048637d964da1f97b159f6",
+      "quote_hash": "75f983f5b6d1f1d42f79e37d37601247f8fb9ad367fe44e83f59ad6a3c672847",
+      "source_ref": {
+        "file_id": "8a4d7c2a-a5a7-4509-a009-415702f33b33",
+        "path": "http/client.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 8,
+        "end_line": 14
+      },
+      "trusted_classification": "synthetic_public"
+    }
+  ],
+  "passed": true
+}
