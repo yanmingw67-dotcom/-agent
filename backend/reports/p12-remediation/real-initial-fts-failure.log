@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_remediation_acceptance.py", line 154, in <module>
+    main()
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_remediation_acceptance.py", line 116, in main
+    page = tool("search_documents", query=query)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p12_remediation_acceptance.py", line 87, in tool
+    assert r.status_code == 200, r.text
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: {"error_code":"INTERNAL_ERROR","message":"服务内部错误","correlation_id":"81988947-eef9-407e-8f29-ad9fec52b223"}

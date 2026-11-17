@@ -1,0 +1,192 @@
+{
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 106,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 19.433,
+        "p95_ms": 31.69,
+        "max_ms": 56.967
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 12.854,
+        "p95_ms": 14.937,
+        "max_ms": 53.971
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 53,
+        "p50_ms": 21.134,
+        "p95_ms": 26.576,
+        "max_ms": 29.782
+      },
+      "search_symbols": {
+        "count": 53,
+        "p50_ms": 13.058,
+        "p95_ms": 17.895,
+        "max_ms": 26.47
+      }
+    }
+  },
+  "benchmark_job": {
+    "id": "da52e794-64fe-4c09-a5cf-c2208385ed28",
+    "snapshot_id": "dcf8d039-0783-416f-af46-9bcf97ad8f64",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 99.5,
+      "sampled_peak_rss_bytes": 94294016,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 5363,
+      "cpu_seconds": 4.022,
+      "peak_rss_bytes": 93913088
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:55:02.534888Z",
+    "started_at": "2026-11-17T09:55:03.386644Z",
+    "finished_at": "2026-11-17T09:55:08.737829Z"
+  },
+  "incremental_index": {
+    "id": "da301247-6091-47aa-8ca7-d9be73fa5203",
+    "snapshot_id": "efc20ddd-cc11-46d7-a85a-aca6dafc8983",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 0.0,
+      "sampled_peak_rss_bytes": 89415680,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 53,
+      "cpu_seconds": 0.038,
+      "peak_rss_bytes": 89325568
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T09:54:49.065870Z",
+    "started_at": "2026-11-17T09:54:50.844194Z",
+    "finished_at": "2026-11-17T09:54:50.884144Z"
+  },
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "cpu_limit_sum": 4.0,
+  "memory_limit_bytes_sum": 5637144576,
+  "indexer_docker_samples": [
+    {
+      "observed_at": 1794909304.5725172,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "81.54%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "8c17bf4536c8",
+      "MemPerc": "6.24%",
+      "MemUsage": "95.91MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "1.3MB / 2.71MB",
+      "PIDs": "4"
+    },
+    {
+      "observed_at": 1794909306.576202,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "77.62%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "8c17bf4536c8",
+      "MemPerc": "8.32%",
+      "MemUsage": "127.8MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "2.18MB / 3.58MB",
+      "PIDs": "4"
+    },
+    {
+      "observed_at": 1794909308.5809321,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "76.92%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "8c17bf4536c8",
+      "MemPerc": "8.33%",
+      "MemUsage": "127.9MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "3.11MB / 4.51MB",
+      "PIDs": "4"
+    },
+    {
+      "observed_at": 1794909310.597652,
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.00%",
+      "Container": "product-knowledge-p11-indexer-1",
+      "ID": "8c17bf4536c8",
+      "MemPerc": "5.19%",
+      "MemUsage": "79.77MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "3.19MB / 4.59MB",
+      "PIDs": "1"
+    }
+  ],
+  "containers": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "oom_killed": false,
+      "restart_count": 0,
+      "status": "running",
+      "health": "healthy"
+    }
+  ]
+}

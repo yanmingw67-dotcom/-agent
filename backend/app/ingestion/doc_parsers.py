@@ -40,10 +40,11 @@ def validate_office(path, settings, required):
                     tail = block[-32:]
 
 
-def parse_document(path: Path, suffix: str, settings):
+def parse_document(path: Path, suffix: str, settings, details=None):
     if path.stat().st_size > settings.document_max_bytes:
         raise DocumentError("DOCUMENT_TOO_LARGE")
     count = chars = 0
+    details = details if details is not None else {}
 
     def checked(locator, text):
         nonlocal count, chars
@@ -87,10 +88,15 @@ def parse_document(path: Path, suffix: str, settings):
             with pdfplumber.open(path) as doc:
                 if len(doc.pages) > 500:
                     raise DocumentError("DOCUMENT_PAGE_LIMIT")
+                details["pages"] = []
                 for page_index, page in enumerate(doc.pages, 1):
                     text = page.extract_text() or ""
                     if not text.strip():
-                        raise DocumentError("OCR_REQUIRED")
+                        page_status = "ocr_required" if page.images else "empty_page"
+                        details["pages"].append({"page": page_index, "status": page_status})
+                        page.close()
+                        continue
+                    details["pages"].append({"page": page_index, "status": "parsed"})
                     yield checked({"page": page_index, "kind": "page_text"}, text)
                     for table_index, table in enumerate(page.find_tables(), 1):
                         for row_index, row in enumerate(table.extract(), 1):
@@ -133,6 +139,11 @@ def parse_document(path: Path, suffix: str, settings):
                         merge_ranges[sheet.attrib["name"]] = [
                             c.attrib["ref"] for c in xml.findall("s:mergeCells/s:mergeCell", ns)
                         ]
+            details["sheet_merged_ranges"] = merge_ranges
+            merge_anchors = {
+                name: {ref.split(":")[0]: ref for ref in refs}
+                for name, refs in merge_ranges.items()
+            }
             try:
                 for sheet in book:
                     if (
@@ -149,7 +160,11 @@ def parse_document(path: Path, suffix: str, settings):
                                     {
                                         "sheet": sheet.title,
                                         "cell": cell.coordinate,
-                                        "merged_ranges": merge_ranges.get(sheet.title, []),
+                                        "merged_ranges": (
+                                            [merge_anchors[sheet.title][cell.coordinate]]
+                                            if cell.coordinate in merge_anchors.get(sheet.title, {})
+                                            else []
+                                        ),
                                         "formula_not_evaluated": cell.data_type == "f",
                                     },
                                     str(cell.value),
@@ -169,7 +184,7 @@ def parse_document(path: Path, suffix: str, settings):
         else:
             raise DocumentError("UNSUPPORTED_DOCUMENT")
         if count == 0:
-            raise DocumentError("EMPTY_DOCUMENT")
+            raise DocumentError("OCR_REQUIRED" if suffix == ".pdf" else "EMPTY_DOCUMENT")
     except DocumentError:
         raise
     except ArchiveRejected as exc:

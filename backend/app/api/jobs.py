@@ -53,7 +53,7 @@ def retry_job(job_id: str, request: Request, role=Depends(admin), db: Session = 
             snapshot = db.get(Snapshot, job.snapshot_id)
             if job.job_type == "source_import":
                 snapshot.status = "uploaded"
-            else:
+            elif job.job_type == "source_index":
                 snapshot.index_status = "queued"
             db.add(
                 AuditEvent(

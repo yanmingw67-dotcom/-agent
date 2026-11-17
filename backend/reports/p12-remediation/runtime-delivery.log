@@ -1,0 +1,11 @@
+CPUs=8 Memory=8321798144
+NAME                                IMAGE                    COMMAND                  SERVICE     CREATED              STATUS                        PORTS
+product-knowledge-p11-api-1         product-knowledge:p1.2   "sh -c 'alembic upgr…"   api         About a minute ago   Up About a minute (healthy)   127.0.0.1:8000->8000/tcp
+product-knowledge-p11-indexer-1     product-knowledge:p1.2   "python -m app.jobs.…"   indexer     About a minute ago   Up About a minute (healthy)   8000/tcp
+product-knowledge-p11-postgres-1    postgres:16.9-bookworm   "docker-entrypoint.s…"   postgres    35 minutes ago       Up 34 minutes (healthy)       5432/tcp
+product-knowledge-p11-redis-1       redis:7.4.4-bookworm     "docker-entrypoint.s…"   redis       35 minutes ago       Up 34 minutes (healthy)       6379/tcp
+product-knowledge-p11-retrieval-1   product-knowledge:p1.2   "uvicorn app.main:cr…"   retrieval   About a minute ago   Up About a minute (healthy)   127.0.0.1:8001->8000/tcp
+product-knowledge-p11-worker-1      product-knowledge:p1.2   "python -m app.jobs.…"   worker      About a minute ago   Up About a minute (healthy)   8000/tcp
+0004 (head)
+No new upgrade operations detected.
+uid=10001(app) gid=10001(app) groups=10001(app)

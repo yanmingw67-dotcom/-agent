@@ -39,7 +39,7 @@ def claim_pending():
             snapshot = db.get(Snapshot, job.snapshot_id)
             if job.job_type == "source_import":
                 snapshot.status = "failed"
-            else:
+            elif job.job_type == "source_index":
                 snapshot.index_status = "failed"
         pending = db.scalars(
             select(KnowledgeJob)

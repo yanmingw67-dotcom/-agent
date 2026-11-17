@@ -13,7 +13,7 @@ from dotenv import dotenv_values
 
 from scripts.generate_p12_fixtures import source_zip
 
-ROOT = Path("reports/p12")
+ROOT = Path(os.environ.get("REPORT_DIR", "reports/p12"))
 ROOT.mkdir(parents=True, exist_ok=True)
 
 

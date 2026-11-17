@@ -2,9 +2,10 @@ import json
 import os
 import selectors
 import subprocess
+import tempfile
 import time
 
-from sqlalchemy import select
+from sqlalchemy import func, or_, select
 from sqlalchemy import text as sql_text
 
 from app.core.config import get_settings
@@ -184,7 +185,7 @@ class ReadOnlyTools:
                     DocumentSegment.snapshot_id == sid,
                     Document.category_id == self.context.category_id,
                     Document.snapshot_id == sid,
-                    Document.parse_status == "parsed",
+                    Document.parse_status.in_(["parsed", "partial"]),
                     DocumentSegment.sensitive.is_(False),
                     DocumentSegment.text.contains(module.name, autoescape=True),
                 )
@@ -328,9 +329,14 @@ class ReadOnlyTools:
                     | CodeEdge.target_name.endswith("." + name, autoescape=True),
                 )
             )
-            rows = db.execute(query.order_by(SourceFile.path, CodeEdge.line).limit(limit + 1)).all()
+            rows = db.execute(
+                query.order_by(SourceFile.path, CodeEdge.line, CodeEdge.id)
+                .offset(request.cursor)
+                .limit(limit + 1)
+            ).all()
             items = [
                 RetrievalItem(
+                    id=e.id,
                     file_id=f.id,
                     path=f.path,
                     name=e.target_name,
@@ -350,7 +356,7 @@ class ReadOnlyTools:
                     DocumentSegment.snapshot_id == sid,
                     Document.snapshot_id == sid,
                     Document.category_id == self.context.category_id,
-                    Document.parse_status == "parsed",
+                    Document.parse_status.in_(["parsed", "partial"]),
                     DocumentSegment.sensitive.is_(False),
                 )
             )
@@ -367,7 +373,7 @@ class ReadOnlyTools:
                     fts = sql_text(
                         "to_tsvector('simple', document_segments.text) @@ plainto_tsquery('simple', :fts_query)"
                     ).bindparams(fts_query=request.query)
-                    query = query.where(fts | contains)
+                    query = query.where(or_(fts, contains))
                 else:
                     query = query.where(contains)
             rows = db.execute(
@@ -385,9 +391,12 @@ class ReadOnlyTools:
                     locator=seg.locator,
                     snippet=seg.text,
                     sha256=seg.text_hash,
+                    status=doc.parse_status,
                 )
                 for seg, doc in rows
             ]
+            if any(doc.parse_status == "partial" for _, doc in rows):
+                envelope.warnings.append("partial_document_pages; inspect document parse_details")
         elif tool == "search_code_batch":
             items, cut, warnings = self.search_code(request, files, begin)
             envelope.truncated = cut
@@ -417,6 +426,50 @@ class ReadOnlyTools:
             if remaining <= 0:
                 envelope.truncated = True
                 break
+        if tool in {
+            "search_code_batch",
+            "search_symbols",
+            "get_project_map",
+            "get_module_context",
+            "list_entrypoints",
+        }:
+            unreadable = ["oversized", "excluded", "invalid_encoding"]
+            if tool != "search_code_batch":
+                unreadable += ["unsupported", "syntax_error"]
+            skipped = db.execute(
+                files.with_only_columns(SourceFile.parse_status, func.count())
+                .where(SourceFile.parse_status.in_(unreadable))
+                .group_by(SourceFile.parse_status)
+            ).all()
+            if skipped:
+                envelope.coverage_incomplete = True
+                envelope.warnings.append(
+                    "source_coverage_incomplete:" + json.dumps(dict(skipped), sort_keys=True)
+                )
+            if db.get(Snapshot, sid).index_status != "indexed":
+                envelope.coverage_incomplete = True
+                envelope.warnings.append("source_index_not_complete")
+        if tool == "search_documents":
+            unfinished = db.execute(
+                select(Document.parse_status, func.count())
+                .where(
+                    Document.snapshot_id == sid,
+                    Document.category_id == self.context.category_id,
+                    Document.parse_status != "parsed",
+                )
+                .group_by(Document.parse_status)
+            ).all()
+            if unfinished:
+                envelope.coverage_incomplete = True
+                envelope.warnings.append(
+                    "document_coverage_incomplete:" + json.dumps(dict(unfinished), sort_keys=True)
+                )
+        if tool == "read_document" and any(item.status == "partial" for item in items):
+            envelope.coverage_incomplete = True
+        if tool == "search_code_batch" and envelope.truncated:
+            envelope.next_cursor = str(request.cursor + len(envelope.results))
+        elif envelope.next_cursor is not None:
+            envelope.next_cursor = str(request.cursor + len(envelope.results))
         envelope.duration_ms = round((time.monotonic() - begin) * 1000, 3)
         return envelope
 
@@ -459,8 +512,11 @@ class ReadOnlyTools:
                 "--no-config",
                 "--color",
                 "never",
+                "--sort",
+                "path",
+                # 全局已跳过数量+本页+前瞻；到达该上限前必已返回可继续页。
                 "--max-count",
-                "31",
+                str(request.cursor + min(request.limit, 30) + 1),
                 "--max-columns",
                 "2000",
                 "--max-columns-preview",
@@ -558,7 +614,7 @@ class ReadOnlyTools:
                     "--json",
                     "--no-config",
                     "--max-count",
-                    "31",
+                    str(request.cursor + min(request.limit, 30) + 1),
                     "--regex-size-limit",
                     "1M",
                     "--dfa-size-limit",
@@ -569,33 +625,38 @@ class ReadOnlyTools:
                 for term in request.queries or [request.query]:
                     args.extend(["-e", term])
                 args += ["--", "-"]
-                try:
-                    result = subprocess.run(
-                        args,
-                        input=decoded.encode(),
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.DEVNULL,
-                        timeout=remaining,
-                    )
-                except subprocess.TimeoutExpired:
-                    return items, True, ["search_timeout_partial"]
-                except FileNotFoundError as exc:
-                    raise AppError(503, "RIPGREP_UNAVAILABLE", "ripgrep 未安装") from exc
-                if result.returncode not in {0, 1}:
-                    raise AppError(422, "INVALID_SEARCH_REGEX", "正则表达式不合法或超限")
-                for line in result.stdout.splitlines():
-                    event = json.loads(line)
-                    if event["type"] != "match":
-                        continue
-                    line_no = event["data"]["line_number"]
-                    if (file.id, line_no) in seen:
-                        continue
-                    seen.add((file.id, line_no))
-                    if len(seen) <= request.cursor:
-                        continue
-                    item = self.read(file, line_no, line_no)
-                    item.match_terms = request.queries or [request.query]
-                    items.append(item)
-                    if len(items) > min(request.limit, 30):
-                        return items, True, ["result_budget_reached"]
+                # 输出落受限/tmp而非把大量JSON一次加载到内存；原始源码只读。
+                with tempfile.TemporaryFile() as output:
+                    try:
+                        result = subprocess.run(
+                            args,
+                            input=decoded.encode(),
+                            stdout=output,
+                            stderr=subprocess.DEVNULL,
+                            timeout=remaining,
+                        )
+                    except subprocess.TimeoutExpired:
+                        return items, True, ["search_timeout_partial"]
+                    except FileNotFoundError as exc:
+                        raise AppError(503, "RIPGREP_UNAVAILABLE", "ripgrep 未安装") from exc
+                    if result.returncode not in {0, 1}:
+                        raise AppError(422, "INVALID_SEARCH_REGEX", "正则表达式不合法或超限")
+                    output.seek(0)
+                    for line in output:
+                        if time.monotonic() - begin > self.settings.search_timeout_seconds:
+                            return items, True, ["search_timeout_partial"]
+                        event = json.loads(line)
+                        if event["type"] != "match":
+                            continue
+                        line_no = event["data"]["line_number"]
+                        if (file.id, line_no) in seen:
+                            continue
+                        seen.add((file.id, line_no))
+                        if len(seen) <= request.cursor:
+                            continue
+                        item = self.read(file, line_no, line_no)
+                        item.match_terms = request.queries or [request.query]
+                        items.append(item)
+                        if len(items) > min(request.limit, 30):
+                            return items, True, ["result_budget_reached"]
             offset += len(files)

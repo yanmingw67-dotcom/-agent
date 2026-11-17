@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     search_timeout_seconds: float = 3
     read_max_lines: int = 200
     retrieval_max_chars: int = 24000
-    index_parser_version: str = "p12-1"
+    index_parser_version: str = "p12-2"
 
     @property
     def document_store(self):

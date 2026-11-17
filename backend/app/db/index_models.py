@@ -62,6 +62,7 @@ class Document(Base):
     parse_status: Mapped[str] = mapped_column(String(40), default="pending")
     error_code: Mapped[str | None] = mapped_column(String(64))
     parser_version: Mapped[str | None] = mapped_column(String(32))
+    parse_details: Mapped[dict] = mapped_column(JSON, default=dict, server_default=text("'{}'"))
 
 
 class DocumentSegment(Base):

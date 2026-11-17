@@ -3,7 +3,8 @@
 本项目依据上级目录的开发设计书，实现 **安全导入、静态源码／技术文档索引与共享只读检索**。
 
 P1.2 完整运行与基准说明见 `docs/P1.2_RUNBOOK.md`，架构边界见 `docs/P1.2_ARCHITECTURE.md`。
-最新验收见 `P1.2_ACCEPTANCE_REPORT.md`；原 P1.1 及整改日志保留。
+初始验收见 `P1.2_ACCEPTANCE_REPORT.md`；第一轮整改见 `P1.2_REMEDIATION_REPORT.md`。
+最新迁移为0004；原 P1.1、P1.2 初始测试与日志保留。
 本批没有 Agent A 功能发现、证据/能力记录、发布或 Agent B。
 导入成功仅表示 `stage=extracted`，不是知识库就绪。
 

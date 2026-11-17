@@ -139,6 +139,8 @@ def index_document(document_id, settings):
         )
     path = settings.document_store / key
     code = None
+    details = {}
+    partial = False
     try:
         if path.stat().st_size > settings.document_max_bytes:
             raise DocumentError("DOCUMENT_TOO_LARGE")
@@ -147,7 +149,7 @@ def index_document(document_id, settings):
         with session_factory().begin() as db:
             db.execute(delete(DocumentSegment).where(DocumentSegment.document_id == document_id))
             # 受限文档输出在单文档事务内，失败不暴露部分内容。
-            for locator, text in parse_document(path, suffix, settings):
+            for locator, text in parse_document(path, suffix, settings, details):
                 db.add(
                     DocumentSegment(
                         snapshot_id=sid,
@@ -160,15 +162,19 @@ def index_document(document_id, settings):
                 )
                 db.flush()
                 db.expunge_all()
+        partial = any(p["status"] != "parsed" for p in details.get("pages", []))
     except DocumentError as exc:
         code = exc.code
     with session_factory().begin() as db:
         doc = db.get(Document, document_id)
         doc.parse_status = (
-            "ocr_required" if code == "OCR_REQUIRED" else ("failed" if code else "parsed")
+            "ocr_required"
+            if code == "OCR_REQUIRED"
+            else ("failed" if code else ("partial" if partial else "parsed"))
         )
         doc.error_code, doc.parser_version = code, settings.index_parser_version
-    return code or "parsed"
+        doc.parse_details = details
+    return code or ("partial" if partial else "parsed")
 
 
 def run_index(job_id, token):
@@ -188,7 +194,8 @@ def run_index(job_id, token):
                 "IMMUTABLE_PUBLISHED_SNAPSHOT",
             )
             return
-        snapshot.index_status = "indexing"
+        if job_type == "source_index":
+            snapshot.index_status = "indexing"
     metrics = dict(
         indexed_files=0,
         reused_files=0,
@@ -246,6 +253,5 @@ def run_index(job_id, token):
         job.stage = "failed" if error else "indexed"
         job.error_code, job.metrics_json, job.finished_at = error, metrics, now()
         snapshot = db.get(Snapshot, sid)
-        snapshot.index_status = (
-            "failed" if error else ("partial" if metrics.get("document_errors") else "indexed")
-        )
+        if job_type == "source_index":
+            snapshot.index_status = "failed" if error else "indexed"

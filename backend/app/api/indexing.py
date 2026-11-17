@@ -178,6 +178,7 @@ def list_documents(snapshot_id: str, role=Depends(admin), db: Session = Depends(
             "filename": d.filename,
             "parse_status": d.parse_status,
             "error_code": d.error_code,
+            "parse_details": d.parse_details,
         }
         for d in db.scalars(select(Document).where(Document.snapshot_id == snapshot_id).limit(200))
     ]

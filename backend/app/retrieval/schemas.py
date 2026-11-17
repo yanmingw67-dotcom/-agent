@@ -48,6 +48,7 @@ class ToolEnvelope(BaseModel):
     tool: str
     results: list[RetrievalItem] = Field(default_factory=list)
     truncated: bool = False
+    coverage_incomplete: bool = False
     next_cursor: str | None = None
     warnings: list[str] = Field(default_factory=list)
     duration_ms: float = 0

@@ -1,0 +1,655 @@
+postgres-1  | 
+postgres-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+postgres-1  | 
+postgres-1  | 2026-11-17 09:21:42.177 UTC [1] LOG:  starting PostgreSQL 16.9 (Debian 16.9-1.pgdg120+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+postgres-1  | 2026-11-17 09:21:42.177 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2026-11-17 09:21:42.177 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2026-11-17 09:21:42.181 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2026-11-17 09:21:42.185 UTC [29] LOG:  database system was shut down at 2026-11-17 09:20:02 UTC
+postgres-1  | 2026-11-17 09:21:42.194 UTC [1] LOG:  database system is ready to accept connections
+postgres-1  | 2026-11-17 09:26:42.199 UTC [27] LOG:  checkpoint starting: time
+postgres-1  | 2026-11-17 09:27:41.758 UTC [27] LOG:  checkpoint complete: wrote 581 buffers (1.8%); 0 WAL file(s) added, 0 removed, 1 recycled; write=59.547 s, sync=0.008 s, total=59.560 s; sync files=69, longest=0.002 s, average=0.001 s; distance=6927 kB, estimate=6927 kB; lsn=0/213A108, redo lsn=0/2115848
+postgres-1  | 2026-11-17 09:31:42.761 UTC [27] LOG:  checkpoint starting: time
+postgres-1  | 2026-11-17 09:31:58.690 UTC [2282] ERROR:  active snapshot must be published and category-scoped
+postgres-1  | 2026-11-17 09:31:58.690 UTC [2282] CONTEXT:  PL/pgSQL function guard_active_snapshot() line 6 at RAISE
+postgres-1  | 2026-11-17 09:31:58.690 UTC [2282] STATEMENT:  UPDATE product_categories SET active_snapshot_id=$1::VARCHAR WHERE product_categories.id = $2::VARCHAR
+postgres-1  | 2026-11-17 09:32:31.978 UTC [27] LOG:  checkpoint complete: wrote 484 buffers (1.5%); 0 WAL file(s) added, 0 removed, 0 recycled; write=49.210 s, sync=0.004 s, total=49.217 s; sync files=67, longest=0.001 s, average=0.001 s; distance=4373 kB, estimate=6672 kB; lsn=0/25B9C98, redo lsn=0/255AE58
+postgres-1  | 2026-11-17 09:55:31.458 UTC [7466] ERROR:  active snapshot must be published and category-scoped
+postgres-1  | 2026-11-17 09:55:31.458 UTC [7466] CONTEXT:  PL/pgSQL function guard_active_snapshot() line 6 at RAISE
+postgres-1  | 2026-11-17 09:55:31.458 UTC [7466] STATEMENT:  UPDATE product_categories SET active_snapshot_id=$1::VARCHAR WHERE product_categories.id = $2::VARCHAR
+retrieval-1  | INFO:     Started server process [1]
+retrieval-1  | INFO:     Waiting for application startup.
+retrieval-1  | INFO:     Application startup complete.
+retrieval-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "863720da-e995-4c15-bc40-65dd964cb35b", "method": "GET", "status": 200, "duration_ms": 64}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "66c3040c-0094-4980-96f8-cfe7acbcd282", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bf0879f2-e831-439e-88fa-e5a3002d7aae", "method": "POST", "status": 200, "duration_ms": 16}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dab06e9b-16aa-4fa4-90fa-15d10edc7691", "method": "POST", "status": 200, "duration_ms": 14}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bbebeeb4-6ee2-4b0d-b749-16b12dc07ecf", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3288c988-0021-4462-a77e-56e3bee0ca8b", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "232155e3-51d2-43e7-a096-21ed68a136ac", "method": "POST", "status": 200, "duration_ms": 18}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d8dac49a-6a4d-4528-90de-1370cd169371", "method": "POST", "status": 200, "duration_ms": 19}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a72d178-3223-4851-adb1-11ac00690e1d", "method": "POST", "status": 200, "duration_ms": 17}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "90300e32-b19b-4a2f-a0a4-b2ea908fe847", "method": "POST", "status": 200, "duration_ms": 17}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "91e0c041-be62-4d7c-9754-bcc934ac7ed3", "method": "POST", "status": 200, "duration_ms": 20}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e728ff84-448b-4c67-a99e-751bfe5cf98e", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "95392c07-355d-4e2d-b0fc-8bd3be8b43d1", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8c1b04f9-7ed5-4e56-a470-1b3c958130dd", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "96978684-4840-41ae-9bf7-3dce1c7e98c7", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f2113c5a-ca69-4cb3-b7e7-ce63ffc92b87", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "977e5568-244c-4c7d-8f5b-91fd6e1368b8", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "455430f1-a6ba-4129-bbb2-68f5ad684642", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4dd2a445-0330-4827-a2eb-03c53f7acd35", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0f3338bf-410e-4022-917e-1a177af901e0", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1048a93b-03a7-41dc-883c-790dbdd41e74", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e918f290-05ef-4795-a311-7bde016073a0", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "26c2f724-aaf8-4e59-955c-dfdb5c373164", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "53e61436-54fa-4432-b1cf-9a369337298a", "method": "POST", "status": 200, "duration_ms": 16}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "27b438f8-69f3-4633-8169-4503f7a082f0", "method": "GET", "status": 200, "duration_ms": 1}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "54005569-b379-48ba-a74e-548076019108", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fbfb5944-7158-4238-b52f-1e46b78a810d", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b10f4183-cac1-4f7a-8ed9-baa6440a9d3e", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "429dfe1a-f85d-463a-ad6e-35cdc6cf8589", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "38232684-1446-40ab-9314-9b23dc21dba9", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "41720ae7-4fb6-4568-bcc3-d59b51e04752", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "50a9c970-f520-4425-8be2-2cc71cd96df7", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5860c6d2-3416-4d42-b7bd-d8504c880ecd", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "43da270e-6f28-44fa-9014-885c5000b798", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f7c47398-3978-43c2-b2de-9f3043f43b98", "method": "POST", "status": 403, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c377ee7a-6ccc-44b2-84b6-bef116da3a97", "method": "POST", "status": 409, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6b23aab5-f901-4cd5-a005-587da5449f50", "method": "POST", "status": 404, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bb098800-c404-4c88-89b6-8f6c39e5e18e", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c97be65b-8859-4c74-9f4d-c968bb8d60bb", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "16f9eee4-de46-4dc4-a531-e2a69938ddb5", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0aace603-13ed-4bcc-95dd-41e81c58c087", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eb5999a7-0311-4676-bdab-9db304560c47", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "90b7e2ae-c11e-43db-8309-981a94d86b82", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b3cdc564-7c60-4a8e-bca3-d671f48ffaad", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c70bff6a-bf04-43ee-9685-f450d0612b56", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2747171c-74e0-49d3-a2d0-7bd2c9470f5f", "method": "POST", "status": 200, "duration_ms": 10}
+redis-1      | 1:C 17 Nov 2026 09:21:42.117 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1      | 1:C 17 Nov 2026 09:21:42.117 * Redis version=7.4.4, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1      | 1:C 17 Nov 2026 09:21:42.117 * Configuration loaded
+redis-1      | 1:M 17 Nov 2026 09:21:42.117 * monotonic clock: POSIX clock_gettime
+redis-1      | 1:M 17 Nov 2026 09:21:42.175 * Running mode=standalone, port=6379.
+redis-1      | 1:M 17 Nov 2026 09:21:42.175 * Server initialized
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * Reading RDB base file on AOF loading...
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * Loading RDB produced by version 7.4.4
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * RDB age 13143 seconds
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * RDB memory usage when created 0.93 Mb
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * RDB is base AOF
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * Done loading RDB, keys loaded: 0, keys expired: 0.
+redis-1      | 1:M 17 Nov 2026 09:21:42.176 * DB loaded from base file appendonly.aof.1.base.rdb: 0.000 seconds
+redis-1      | 1:M 17 Nov 2026 09:21:42.196 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.020 seconds
+redis-1      | 1:M 17 Nov 2026 09:21:42.196 * DB loaded from append only file: 0.020 seconds
+redis-1      | 1:M 17 Nov 2026 09:21:42.196 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+redis-1      | 1:M 17 Nov 2026 09:21:42.196 * Ready to accept connections tcp
+redis-1      | 1:M 17 Nov 2026 09:22:43.026 * 10000 changes in 60 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:22:43.026 * Background saving started by pid 142
+redis-1      | 142:C 17 Nov 2026 09:22:43.029 * DB saved on disk
+redis-1      | 142:C 17 Nov 2026 09:22:43.029 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:22:43.133 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:27:44.028 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:27:44.029 * Background saving started by pid 729
+redis-1      | 729:C 17 Nov 2026 09:27:44.032 * DB saved on disk
+redis-1      | 729:C 17 Nov 2026 09:27:44.032 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:27:44.130 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:32:45.060 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:32:45.061 * Background saving started by pid 1329
+redis-1      | 1329:C 17 Nov 2026 09:32:45.066 * DB saved on disk
+redis-1      | 1329:C 17 Nov 2026 09:32:45.066 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:32:45.162 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:37:46.053 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:37:46.054 * Background saving started by pid 1926
+redis-1      | 1926:C 17 Nov 2026 09:37:46.058 * DB saved on disk
+redis-1      | 1926:C 17 Nov 2026 09:37:46.059 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:37:46.159 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:42:47.080 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:42:47.082 * Background saving started by pid 2525
+redis-1      | 2525:C 17 Nov 2026 09:42:47.091 * DB saved on disk
+redis-1      | 2525:C 17 Nov 2026 09:42:47.091 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:42:47.185 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:47:48.066 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:47:48.068 * Background saving started by pid 3126
+redis-1      | 3126:C 17 Nov 2026 09:47:48.077 * DB saved on disk
+redis-1      | 3126:C 17 Nov 2026 09:47:48.077 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:47:48.176 * Background saving terminated with success
+redis-1      | 1:M 17 Nov 2026 09:52:49.039 * 100 changes in 300 seconds. Saving...
+redis-1      | 1:M 17 Nov 2026 09:52:49.039 * Background saving started by pid 3719
+redis-1      | 3719:C 17 Nov 2026 09:52:49.045 * DB saved on disk
+redis-1      | 3719:C 17 Nov 2026 09:52:49.046 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+redis-1      | 1:M 17 Nov 2026 09:52:49.142 * Background saving terminated with success
+api-1        | INFO:     Started server process [1]
+api-1        | INFO:     Waiting for application startup.
+api-1        | INFO:     Application startup complete.
+api-1        | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1aa79346-ba7e-4e20-ab80-e06bc08e6545", "method": "GET", "status": 200, "duration_ms": 117}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "31d8c67c-1345-4abf-a12e-ff17185b7bd9", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4d296f07-9165-489d-b315-8c3f4a64adf9", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4fec0e0d-c70d-4030-bc34-c541befc2342", "method": "POST", "status": 201, "duration_ms": 10}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c2212822-ea62-4c9e-9507-13c922c47747", "method": "POST", "status": 202, "duration_ms": 31}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "051d0272-5f93-42b0-8e13-7299cac20ce4", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dacdd5e7-9c8d-4945-ae9c-64271a52d32e", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "610ef646-d602-475b-b6e3-38a869729deb", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c6ac36db-6528-4893-838c-c0fea2f44741", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c33b86ad-7866-4410-9a9f-1d17e808e24a", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eb03cf07-14f2-44f6-935b-74ecb6d61d3c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6d641be7-5e0b-4785-a66f-5620d250663f", "method": "POST", "status": 202, "duration_ms": 28}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cb6362fe-3d4e-440a-bf28-974eb2703c44", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "acd0b0ac-8a30-4ada-81e9-83abfe42121e", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "98279e44-70d0-46ed-8fb6-47b45b374c5b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "03ffb8e2-1e99-460e-95b0-3a8f28346b14", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ec04ed0d-8b24-4a84-b4be-d7b6cac9d80a", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e393b6f9-d437-499f-94bd-058db409dd6c", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7270445e-5601-457a-800d-098987fcb7a0", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2f2c7609-a5ab-4631-9d1a-214c973e2c64", "method": "POST", "status": 202, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "59efff83-6a72-4bca-aa28-b6438a7badd5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ebe5b362-16ca-46ec-a770-6200685dacde", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0e767ec1-28dd-4578-94ab-422cdb9a04eb", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a6a1a59-0d0a-45d7-9ca0-2aff1bd6ff0d", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "31d83075-0779-4cb4-99c4-e08f5a7426be", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "85f0fa35-6b35-40fa-9f58-fd931d67e78e", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a6dbc33-ca52-4a7c-88e7-79595af13369", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e0f8f304-25de-4c79-ad51-edeb7233aaab", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a820f08d-9b1c-4aec-a0c5-d3ea894bddf2", "method": "GET", "status": 200, "duration_ms": 11}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0e4cee59-3633-4a02-82cb-70d510f6ef49", "method": "GET", "status": 200, "duration_ms": 42}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "12f4d72c-5c0a-4c7d-b21c-05d059d3dc09", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e16dcf98-aa55-4289-9cec-23ae2f442085", "method": "POST", "status": 202, "duration_ms": 25}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7dfb1af6-3785-4ab4-afa5-a194492782d7", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8241eb53-1ed4-4640-a631-ee55050fe3f1", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1cf53c2b-29bd-4946-93c0-2fff28feede6", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f11d5e58-0fba-4226-8de0-758e453fb160", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c0b2070a-a78e-4f01-9458-bf89df08a89a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "decbab13-92ac-4b20-91c1-09251601160b", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9bb3a13f-b0b9-4380-89f8-80d9d380cc88", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "03610cb0-e1b2-4dd1-9fff-9e4336b58dbc", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f3aabf10-2b60-4f24-8c2e-92a26ef78a3a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "29ea0c6e-b1e6-4e0e-a88c-122b3e8b8579", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3c079399-27b5-497f-aad7-c5e37f1f82fe", "method": "POST", "status": 202, "duration_ms": 25}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "86fd800c-e278-4d03-b0ba-80a67bfb1a1b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "801d9082-f4c1-4d97-a969-80d59ac8b6b0", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e1b62b57-e63b-4426-bf45-62446b8e033c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b30ceff8-f1fc-4015-8a37-aa81805f5a05", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e1ee64cc-be66-40f1-9444-613fbae739b3", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2fa5e644-b4ef-48bc-9bdd-07cb5d4a2683", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "60ed1de4-8e13-47b2-a331-a87b5e6f9abd", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "075dc03a-9cb1-4ef3-b3d6-17e4c597b82a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "16e16cad-7da8-4b77-bcd7-419f3a0a0647", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b48ba741-6ccf-43d7-abfa-88851b4c5220", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "172bf408-ab52-4bcc-bee9-45957216d026", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4b037558-17fa-49c0-aafb-a424ff2458bb", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7bde2cf3-7492-4519-9833-781f89205aca", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "81bc3dee-6b1a-46c4-94c5-eb32821a58b5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "625ab52d-ef59-4e3c-b11a-eba2942ebec2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "88ec1e2a-5880-4b1b-b00d-00314ceb2a1d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "36aeda23-4930-4ee0-a3b2-a8d9ebaf1413", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7ca31b78-b136-4a54-98be-1b80a0b0545a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0aad5531-0ab9-40ac-83ef-64017355deb5", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1630f1ed-9d1b-4e9c-bd16-d92e34ddf990", "method": "POST", "status": 202, "duration_ms": 28}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "05884288-c675-4a50-b067-4d4c173100ea", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b92e39c9-ab8c-4e53-a1af-1cd85d38c7a4", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1624d7c7-33c1-4e43-8f1e-b9110d7261f5", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "77e46e8b-1e32-4d86-9c03-d7ecac6afcd9", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d45c068a-b919-4a79-b883-085b786b931e", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "67fe2095-f3ca-4495-af8e-01518962beca", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7de83960-d9a6-487a-8000-3cee00692fde", "method": "GET", "status": 200, "duration_ms": 9}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6aa84f9c-7ab1-464c-b1a9-2a47508ba661", "method": "GET", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d03071e1-5499-4997-9b22-fb4df5bc85da", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ed766e4d-7174-4a16-b4ed-a13f09e3e003", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "525e6870-af1d-44ae-937b-fd0d9df7854a", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ede91142-7c6a-4f2f-9852-e5451013083f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a7da89be-05ee-46f1-97ee-61fba2135bb3", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f170553b-f836-4f3e-90cf-63bf1974a98b", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c6c1988e-a73f-41f8-892b-ac2158ea241f", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5b3c2021-5e10-4e01-ab53-e01578c5af15", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "39788c34-d217-4305-a6b7-255a9e7a3b57", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8af9d095-b96d-4342-88f8-68d93b4c9a06", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "93045ab8-9d42-4769-ad14-0ea5f392eb34", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "38fc7238-2ad2-4623-b273-548c232c6635", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "26903765-8556-45c4-8830-a62088ca00a5", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4017ca99-d68a-412e-a9ee-ed67c2bbd60f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d7e4fcb8-3463-4878-b2ae-a127a3501257", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0f3188d9-fdfc-409e-a1a0-af763ab1679f", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "79f3c8e1-0f9f-4313-9b1a-e8874de78c35", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a2668b58-bb5b-435a-a98b-af71c4f0b332", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ae910bb-c580-49fe-b8dc-1d6dfb651c00", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e58a912d-d5b8-44aa-8864-3cd832cd6826", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "836bcf56-c3d0-45be-80f5-ecb76c4f57f0", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8a449102-12d0-4c7e-ac01-6236d679a7a3", "method": "POST", "status": 200, "duration_ms": 36}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3d6b73aa-8674-4f8d-b920-98f915348d47", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b4e50b84-6d0e-4cd0-b86a-a8bb283a4e8e", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2ce0ed42-a7ba-4033-a6b3-dcca3d87a68a", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "71f520e7-790e-443f-a108-596fc2ea1472", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4a4fe1da-3976-42df-807e-054bf0ef819d", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7928af4f-cd89-4005-8601-526cb425d74f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "53d3ad7a-2748-42e3-99a4-4183a7c25149", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2d1df5ca-bf77-4a3b-9c94-dfe94cdfb633", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fa964118-e187-4321-a18f-d3d789d9968b", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "58b29564-df32-43c7-8d7b-0df088bd822a", "method": "POST", "status": 200, "duration_ms": 16}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "47f99ee1-bfc3-4058-b92c-7dcfd76daf3f", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f9b39924-ff51-4b3d-a4d4-89f74e96cfed", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bebad6c7-2a83-46d4-bc98-52e835def072", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "be512d59-b66e-4c5f-b842-ae5c5afcfe8c", "method": "POST", "status": 200, "duration_ms": 51}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f08b626b-599a-4e89-b3f1-9d6f0326aade", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "02adae96-2b45-42e5-8908-b2462509a81f", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "862ff604-9c5a-4084-8408-f264b3fcc562", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6fad5789-bb5a-47b3-94e2-bae24df07433", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5db7e4de-f3a9-41fa-8308-efda4466ecab", "method": "GET", "status": 200, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "94bb13ed-f63e-43ba-bbfb-80888d1ca955", "method": "POST", "status": 200, "duration_ms": 16}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b393cbf6-fd0b-407c-8952-52b21c1b010b", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "12fde8ed-4e22-4e09-a723-4921b2b50e66", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3988cc07-2d25-48f0-93b4-d22467a26279", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "19978200-6661-432b-ade5-b17a8cd614f7", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d04fcde4-0e2f-4317-b471-1f90a3daf823", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2875a690-4166-463c-9c31-434dde8d35f5", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b4fbdf71-26fb-444c-8e31-4d0cd7907ca5", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e7a6d6a0-3335-49ff-b09e-2d6ce807d5c6", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "35bb28c1-e8d7-455c-9c26-18ac91f2899f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "310c8b6c-5283-4065-8fbf-0d4d303d4193", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9e1423fb-2112-40e8-8d1b-f09c76900e2b", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0935bcae-ff9b-4cf8-9f69-7692694e1277", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "155a7b69-fbea-4ca9-86b0-dac12033acd2", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "835dd688-1b99-4527-8f68-a081e3dc3068", "method": "POST", "status": 200, "duration_ms": 50}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "05179a0f-92f0-450f-96cd-7c3e75bcdb08", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b9a08fc6-39d3-4509-898a-c39b326b81f3", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7d5783db-949e-4a5f-b263-aa61d5dea005", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b3ecad56-75b8-4379-a468-7a83681936a5", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3405cd31-7deb-4b84-9ece-712df6889d7a", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e9a58b80-49a9-4496-9440-22f3b3523dac", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ff2038a-f2d1-4211-8a81-86eb4b25e4e8", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "efc07560-bb1c-4176-8c5f-eb7122ebb793", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cc7a4864-5da7-458e-8e07-d54691299cf8", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a42ff7e-ecd1-48be-a499-5c00ae2f60a2", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d9f6c751-951c-4976-be80-aa1f2122229f", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d6477289-677a-48dc-9636-5d9d68c173b3", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "40488a23-ec60-4b8a-b9e4-7fb0b9a440ad", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b6afa661-f5bd-40b7-9faa-c19214210e2c", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1237caf4-b47a-4683-b947-357ae29e2b30", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1f582adc-6a48-43b9-9848-44e13e5c5461", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e32108b5-e5ef-4a19-9dba-41c552239f3f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "70e94441-85d8-4ae5-bf6b-0b95f0e9cb01", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7fa2f476-4e65-460b-97b3-ad2e7712a267", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6331b10-ab26-442b-adf2-5fe39f62d9c5", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8ab3218d-66e9-4150-80a7-464c2b002708", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "19c2bd74-a6c9-4175-8a49-a1fb4cd670ab", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "748f2e3f-3319-49e3-9c00-0fa78d3c8dc6", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a45ae53c-5a31-477d-a2ae-461400270ed6", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8a172f17-7b32-4cbc-b632-78ffb33cad71", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cfebd1fb-9491-49b6-b025-7c0ae32160f5", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9a7d1d6f-2e00-4f4e-af4c-65b727084663", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "59f15891-ab4c-47db-82b3-5a2ca8fa4d21", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a1d0aca3-d190-4817-86fb-d6837e5b363d", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "26d403ad-27ab-42be-a67a-e92ddc8302f5", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "29817158-824d-4cfc-8e59-706f61d9056c", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4eb235d7-29b0-44b0-b132-ad690e185bbf", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b55ff111-5139-4f41-bfba-a8101d3ce84d", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ed3a9ba3-7198-4d70-8eb4-138aecfd9f75", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d8344f02-5385-4b64-b34d-a9dc2463a140", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b889b653-6a91-4e26-bc30-6f949c74c283", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b19c9e68-3408-4595-9373-50e19021b8fe", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7b418fc0-bb5e-46c0-a534-dfe9bd47ecf8", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4bb67c48-0335-4326-863d-03792673cb72", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1135719a-968f-4052-ad8b-1509dfdc8ab4", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6036965-00cf-4223-8fa1-ec409b064822", "method": "POST", "status": 200, "duration_ms": 10}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ae7d6d2d-7f0e-496b-8b6d-e66f0cec7cac", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f96a4cdc-1942-4096-8092-55d8e2d6b6e3", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e6b82979-f701-44fa-a22b-d49b0038aa92", "method": "GET", "status": 200, "duration_ms": 1}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bfbc9ad0-1539-4633-8e6c-4e36031508b7", "method": "POST", "status": 201, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e3f25ce7-7052-441e-ac3c-92e7e2d283dd", "method": "POST", "status": 202, "duration_ms": 26}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "77553ce8-0c90-45f2-8963-efbc6da7a3ac", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eb4a8d83-e9df-474b-a9b0-d4e5c7ed3f9d", "method": "GET", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "bf8162af-b212-4ce7-bfba-4743dc01eb1f", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2bf90dbb-e6d3-4ee2-9593-4ce990160e35", "method": "POST", "status": 200, "duration_ms": 10}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d30d37bd-15fd-45ff-a43d-a1c2cb98cb40", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "403d3e4d-a131-41d6-8883-545e2647a1f1", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "458bc0b7-5518-466a-bc12-8235cec25187", "method": "POST", "status": 202, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5306252f-8329-4653-bf26-7c8e8408ecd0", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "808c9ed3-f4c3-4a1f-931f-d7d79e8b0793", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4a5f1498-f04c-4532-adaf-4bde88b3afbb", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ae50a753-77fd-490c-ad4e-0790ee3f5a38", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ec140d7f-eb98-4415-b064-ed55a12f71da", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ece8c189-0a48-453e-9a5f-e63bc60933f9", "method": "GET", "status": 200, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "797ec959-e28c-48ef-8f61-e6d6fa072c55", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5fd3284e-ec7a-4c47-afb1-6771790ca0b5", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "694c2d3e-ab3c-4c0b-aa79-0ce112b81536", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a0c1d3b6-222c-4811-8da3-2edc594bbfea", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "83e639cc-a2b5-4955-b5a3-d5418deab921", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f57309fd-c0aa-47e8-8224-3052452359a1", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "339808bc-eff5-4769-bcda-f38f0a3f2fd3", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "78f63790-fbcf-4ff6-8e43-1f29e6f3639d", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4512c8cb-81ef-4642-b14a-e469004bc87c", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8e74e916-f91a-4336-8c24-fee2b40e16b6", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "adb45dd2-48f2-4671-9027-ba80e4767fbc", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d2277977-b6dd-4385-9c39-6ee4c323ba36", "method": "POST", "status": 200, "duration_ms": 12}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9b478c5d-2f39-48ab-8a7c-bbb02865722c", "method": "POST", "status": 202, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f3fdf9d5-2721-41c4-a0bc-e7aadcf28e16", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6fa273e-a767-46db-97a6-dd4755b6cbf6", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b9085a06-546b-451f-8170-b0b81baa4ea5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "558074b2-405d-452e-8e1b-b8bae66a9719", "method": "GET", "status": 200, "duration_ms": 17}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f33dfd91-4e1a-479e-be68-9aaba01c9a22", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "80bc2f03-bd7a-479f-a6c3-412cb2bf90f2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5e2f9b02-6f0e-4bae-9272-7b31360af841", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3b0269c9-8b53-492d-afee-d7b1a442eaa7", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8bf40d0a-ae1a-4ca7-9ae9-d92a373f9e9a", "method": "GET", "status": 200, "duration_ms": 8}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b121c747-a5d0-4d83-8657-ce193d46d93e", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e958efdc-47ee-4d6a-8232-530aff3c5c05", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8fadee91-881a-4b09-8901-cd42bc66c4e9", "method": "POST", "status": 202, "duration_ms": 32}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b9067c46-cbbc-4f57-a461-6d7a4b26be8b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c03f8031-d857-454f-b01d-2a919f0316aa", "method": "GET", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ce9646a0-2739-4826-9f52-9f3408a6f2c9", "method": "POST", "status": 200, "duration_ms": 17}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7b50bec2-9d36-43cc-a0bb-bd74339400eb", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dac73982-33ae-49dc-8151-c7b67c4c7419", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2329f236-6ab7-4ffe-a841-b2e57114df64", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a8a70ce5-497b-41a4-a269-bbb578bf7f5f", "method": "POST", "status": 200, "duration_ms": 12}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d8490f3e-de6d-42d4-930f-cdd43e623b0f", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d8d01bc6-bdaa-4b7c-a9af-d9a1d4e747bd", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e0487a99-4d48-4def-add8-1434e8fb1b46", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c7d12ea0-fdbd-486f-a2dd-fb5913caa413", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "54b61ce6-65df-4963-aeeb-dbbeac25cb17", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b517dece-c02c-43ff-8fea-c9b67665c8be", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0f9a66a8-25dc-4d0a-880b-e5aaa64214aa", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ba1bccc-9518-4538-aaba-8cc046b7236b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eb52d129-9736-4bc0-8d49-e73a1a5e6810", "method": "POST", "status": 202, "duration_ms": 26}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "df32bf61-1ba4-4431-8d5b-c8346275e95f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a187d310-9afb-40fe-8b16-ad6336f09718", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "389078eb-af41-49d2-a29e-91837d1850b7", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "aa0ef4ad-b15d-467c-84dd-ff2ae9e92f70", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6ce7993-37c6-441c-9461-a051d4e87af4", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9edb7b62-95c7-4741-9f2b-d99ee37aef1b", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "affb92f5-bdb7-4190-b93c-02ab4aa413af", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b9e9d719-791b-4d99-aaa2-27a79f956fe9", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "01aa643c-4a93-47bc-b814-186c254c36b4", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "97f98de2-fc37-494c-9e9b-22b4db3b9bba", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6e0c7b95-6670-439a-a2f0-7289ec961915", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "690fc4a7-6b1e-4151-91b6-e6e31e3f927e", "method": "POST", "status": 202, "duration_ms": 96}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f4d842cf-79c5-45c7-b7f5-9d8a2fa035ca", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "df151853-6baa-46a9-a63e-043546def04b", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "885fbdaa-0e33-401b-9ddf-d721c2997c0d", "method": "GET", "status": 200, "duration_ms": 8}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "23e9465b-0592-4499-aa6a-5ba09fdd2402", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b7d4f2a4-6cec-4f53-98a7-4d29ae7d9581", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "48367c93-384d-47ae-99ee-c8fb40bcb19d", "method": "GET", "status": 200, "duration_ms": 12}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e36737b2-d5c8-44cd-9bc1-2cfa62ba1ed7", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7f12fea4-3123-411d-9867-187a34b61d53", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ff1819b-156f-4928-b048-c9c996fa5362", "method": "GET", "status": 200, "duration_ms": 8}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "282c7216-bdb4-4709-a79d-dbbf8c6cfb49", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "814d08be-a779-4b74-8e03-69d7130d4e8d", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "29f6ac47-8601-4350-a049-f7c8b711b544", "method": "POST", "status": 201, "duration_ms": 35}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5d1b8a0e-29b7-41b9-a240-2fdd2d233851", "method": "POST", "status": 202, "duration_ms": 26}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4135ec1f-0570-4286-bb4d-a414fda8503a", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d6586ee6-8a69-4736-8c88-dbc280e38391", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "495030ac-dba3-409e-9b04-6140a85773b6", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5276519e-ceb3-4372-b180-d37f9ee18cad", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b9c0461e-aab0-44a3-9bbc-ff0907d79202", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "94f91e5e-b84b-4d89-b9a4-a5e13a25b1ee", "method": "POST", "status": 200, "duration_ms": 12}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7e8a4891-5efe-48b2-9e64-8dd02fd3020f", "method": "POST", "status": 202, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "83bc62f8-9bfc-4b46-8efb-9ca1d120efe5", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3b841548-4a94-4cc0-b484-b8ed6d770e24", "method": "GET", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "47d6d5cd-27cb-4b04-96bc-69f0847270b4", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ef252e6b-ff6d-4ad9-9b7a-58738cfc0f17", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "20784c6b-77f2-480b-98d7-c4bafb5fc911", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "69d61655-0680-4c5d-9e48-859ca9bbc763", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "19a15702-9c4f-4291-a930-c4b4075966c2", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6413f77d-4be4-4f58-8b0f-f6c875468d2d", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1ac926f6-0292-4de4-9c0f-43da13fec71e", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f6366efb-4b52-4557-8f41-009f479acc53", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "46c085c3-d49d-4f69-8866-20a5017b2604", "method": "POST", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f3e48f4c-6897-4bd6-9293-9db8b80eabb9", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "929eac69-0150-47f5-9c4a-a4c8b1b249c0", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c0f46214-fad3-4729-8f7d-d55317aa0693", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "30eb263b-6dc3-4d3e-b722-3a40763c2aa8", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "48cfc44d-7b7f-4ea3-b4cb-fd35cb585a85", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "67f2dcce-f691-4ef6-9287-a34b91cc93ba", "method": "POST", "status": 201, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1a90e3cd-b8d0-4d13-90db-99e635c2650c", "method": "POST", "status": 200, "duration_ms": 9}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e52f789e-1c31-436b-95f0-8dd8b736b23d", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "af253f64-bd44-46f2-83b8-5f0097ad163c", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3c1b7d71-6667-445e-97e1-0e94d9798902", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "50e0c913-121d-4cef-aedb-fc7453676620", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "33ca261d-a1e6-49da-8715-3d237f6fd895", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7e154352-8f85-40ee-9b37-4bd46319b0e4", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c5e23fb6-1ebd-4cd2-9de1-e9a76896ad46", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "042bc8f6-5f69-4bc8-a783-533a60879d52", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8f76b36a-d093-423f-b523-3bc8a32b9ecd", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d66f84e6-e8ff-48b0-8a74-b51efd04b122", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d1053a4e-ae58-4524-9888-691956b792b5", "method": "POST", "status": 200, "duration_ms": 7}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "de36c59e-0da5-4fa9-b27f-51a9d8b54d9c", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5fc73177-04b8-406b-ab0e-aacb23170550", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "21be239c-2845-47da-8388-890b66281d5b", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d55437f4-ed92-417b-885a-43d13dafb82a", "method": "POST", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b649bde8-6727-4775-9ed7-0b06499439b7", "method": "POST", "status": 202, "duration_ms": 143}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5b7fe82b-6a94-48cb-bc45-75f672f04107", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "da0fb8f3-7546-4bdc-9e9a-a8f9ad6fb95b", "method": "GET", "status": 200, "duration_ms": 61}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b4a6c9a7-2287-4827-b863-2720d82583e0", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "acaf88b5-3e53-42b6-bfa0-16de60c354dd", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "574b371c-ae9b-489e-a99f-b632946be261", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "47bd4a69-86ea-496d-8798-66b6193655ce", "method": "GET", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0392dcb2-817e-478e-9616-220db527f7d0", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2e9afc66-34c1-41de-a6af-5cfb987702f7", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "78a7262f-8acf-4ea3-a921-17a32e63c4d5", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5aa81510-b443-4cd3-b81a-b42506dddead", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d58f716b-c338-450f-a93f-67e4dc25fb62", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7cec5a3c-2e43-439a-9412-6da045097a00", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f4bc3bf8-eb1a-4eda-b9a3-f932888c85d5", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c4528256-eb43-4435-9383-1c028ba4f458", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5ef7ce52-61f5-41aa-ba8f-fedd5cbbad6f", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e900df3e-6558-4b4e-a97e-b6add31ff251", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f0bba791-7064-4cba-a935-c1a86840ea51", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4bdc09ad-311d-4386-9a17-20490fdf4cbe", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e9062a96-a838-4def-97a8-ecfe81c7856a", "method": "POST", "status": 200, "duration_ms": 10}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2acce4ad-71b1-476c-a6c2-0f919b8bf395", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ea10c45c-abae-4e85-96ea-63ce15880a19", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2c8ac9ce-1a31-4776-9e04-8868644c6edb", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "85cdc536-bf81-47da-bad5-1f596809be62", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ba7372f-1c3e-4c84-9012-848f9eea635d", "method": "POST", "status": 202, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d79b5fd1-11e3-4f78-b814-68ccd156e4ae", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7874b42e-fdd4-4553-a925-6c017c554d25", "method": "POST", "status": 200, "duration_ms": 11}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "afa56d29-9a7c-4c50-a965-0ef8d34c0fbd", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eac932b5-5655-4789-9f5f-cc802d133dad", "method": "GET", "status": 200, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c97f9e7f-be7c-43ce-acae-646ba5bb5225", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0dd66073-762e-4880-9d52-332287785d3d", "method": "POST", "status": 200, "duration_ms": 11}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c1e7a274-4239-4109-8400-cc62ff607540", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e6e4aeb0-d19f-4f87-bcc2-f25768a1386e", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fa8e6637-1e66-42bd-9366-2ce9667d2f1a", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "32a2246e-9ce7-4363-af5b-359a53c941ec", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9e87e8f7-a420-413a-bea4-e6423c3e68c3", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "25ad8670-748b-4be9-a0f6-998d285d9091", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1cecb148-0a27-44d7-bc3c-1d12505b3361", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1e75c80c-1407-405a-8209-8b3ba662a814", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "19588e75-3581-4d06-8a7e-768993cbd1c1", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "70a492b2-dae5-4631-b24e-df455b782cc3", "method": "POST", "status": 200, "duration_ms": 10}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c8d6fea4-efac-48e9-9840-5476c6ed4839", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "12e99948-4347-4f67-b638-b0183d8e952a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8ebb4671-fa69-4d49-8ae1-83223c1d3c13", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "75da469c-1d0e-465a-829f-e1d9d5035065", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c32d6993-e06d-47c5-a084-29620e6d99c0", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "db541a9c-deb4-4757-9294-fab286bd27c4", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "add41232-8289-4b19-aae8-09d2809b064c", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "86063130-49ea-4d0e-a9b6-443828b0827a", "method": "POST", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "63cd7324-d9c4-40fb-97e4-2c22bb5453ae", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7d19bb34-a208-421b-88f2-3a18c7582f9d", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4146edca-b436-4fc1-a7f7-70147589f4b3", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fc6c57e3-4ecc-4b38-980b-e666bcbdd77e", "method": "POST", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6698527c-8bac-450f-8ced-0e05fee1fbb2", "method": "GET", "status": 200, "duration_ms": 18}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1dd096c0-e84a-4187-8293-9f26a7d96571", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3bd9a6df-c601-48dc-ba5c-47c1e307490f", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a6a36aa-321f-4c2e-90e1-0b4adc298cba", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1f132c84-1508-44cc-87e0-88c98a6d666c", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7142faf0-482b-48d2-a41b-29d115862010", "method": "GET", "status": 200, "duration_ms": 5}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ab140b7d-3c2a-45db-8daa-a593069225e2", "method": "GET", "status": 200, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dbda11e4-ece2-4cd0-86e9-73dfc0176372", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e85ae743-fc93-4c0f-9786-df8a2ecb2baa", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "42af55a9-01fb-4eee-8623-b51b27261dda", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3753214e-e9d8-407a-b989-c56ad5030e35", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e32973bc-18ce-4808-a837-744df323baa2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d4f95a78-8e2e-456e-9e78-0b154b09e1bc", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "521d1b11-b8c4-4d3f-908c-515055ec5baa", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "df97ba64-46d8-4585-abb4-b1a4649dade2", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "133e32db-aaba-4ff3-be49-db1ae21d3dee", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f8cd2318-7a2a-4f35-81e1-e9d03c15487a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "61add578-b3f1-41f6-a3d1-e8d5cdd1c158", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0f69926c-7c2a-4617-9ca3-d83a0ae4fc3f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "67c1823b-42bb-418a-b141-239575ef5faa", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "db63d0cb-93fb-4d41-a4ac-93ea7a6c4af6", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6fb91b90-4eab-4d48-a15f-ba9320e11538", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9e88b40f-2630-45bf-989e-0f68918288f8", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e02a0be5-709f-4e1b-8f99-c2268ec1c2a8", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "038ef8fd-6dcd-4c8e-acdd-ccc53f77d2c3", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "cff65c63-cfb1-4c7d-afd6-af3bf673711b", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a92f133e-b11b-499a-baef-17fd40ba2194", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1f18972e-3da2-4bdc-bc49-acfa260561d9", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3bb48879-5cc8-4ecb-93e6-d5bf3c987c6d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "02f6644a-04a0-47f8-b263-1e886cc54934", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e99c966a-9580-408f-b67f-1b1bcadb5155", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "30076db5-cb97-4303-b4a4-eba01a79cd0b", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d3216ec7-8d2f-4ad8-a1a7-a430b582a295", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "aab90e36-3ad0-4a80-b828-b166a61e6b5a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "71ee2bbf-de82-4c1a-915c-783f9b9b7856", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2040705a-4aee-45f1-ae47-22011f112f43", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c4cef462-438c-49c4-b8ae-8f6dd464a51a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3fd31813-428b-403a-ac90-48a6853c2bc2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "32706edb-aedb-453e-98a9-153a494b7105", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0f39ee4d-7954-4b16-8dc0-46b4dbfbaba3", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "515ab404-d73a-461b-91ee-0999b220a4dd", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a34c534a-a58a-48b3-abe7-4c3dfe1a2a7a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2f37a8f9-1c30-4c13-adae-2b76255fcf81", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "be6ca481-9922-4057-aa34-0e08517fa9f7", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "31ded14e-e403-457b-8785-57ea566466bd", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "878740f8-7971-457d-9e32-74503a492db8", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5084225b-de00-4373-999a-f3e62aee8c8c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fec1b4f2-5b1e-4878-8c9a-ab780d4e1f2b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c0a891a2-e234-48d3-b1a9-5d58bccd961d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b2b74647-5e0d-4f1f-a706-c369e9e8e381", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e95bc5a8-c186-48fc-b8f0-3a7bbb3a54b5", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3558ed15-58a6-4251-b441-16db51ea6d75", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "50922db4-d522-49b3-907b-382e9c7d33be", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "31f78166-898f-4c7f-84cc-7c8736d3bad0", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "72a07f3f-9edb-4c1a-afa3-3a5bfdba4d5f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "450f6bfd-b07b-47d7-8733-a03418b16b6f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "42559f5d-a5a6-4624-82f7-b0b4f86ab5bd", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "97447f1c-8ba2-40c7-8e5a-0053306ff9b0", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2fd8fcd0-49fb-4b6b-98d8-28ae16cd0f8b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6630daff-2823-48df-8616-383e52802688", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f91162b8-9d83-4e92-a168-d0c4ce1618d3", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "35c66f63-b64d-43ef-b1c7-9e3b95ef40b1", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2ae6f994-3386-4680-81f9-ee6eec1fa81f", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "48ef9b4b-3646-4ed6-b7c6-55cf52bafd99", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "980df1d7-c4ec-4bf2-b650-c3a42f693dfa", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0795f501-6778-410a-af00-f429146403a0", "method": "GET", "status": 200, "duration_ms": 180}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "29c0aa29-659f-457b-86c4-7aab9ffbe32b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "98a01035-9129-415e-8cf3-0528470213af", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8e3c0ab4-4eab-47bc-b41e-251340326507", "method": "GET", "status": 401, "duration_ms": 1}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a912f1d8-e774-4198-a37b-0b8cc1173299", "method": "POST", "status": 201, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5705fd19-a742-4e62-b568-96f167d5833b", "method": "POST", "status": 403, "duration_ms": 0}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e816a406-be0d-4151-82b5-bc3240322e3f", "method": "POST", "status": 202, "duration_ms": 33}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6a06307c-0b34-4937-b1e4-abe75f71839b", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1a58afc2-c71f-41d3-8710-16926161f0be", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c1537ddf-35da-4f82-afb5-a93b9d8e1870", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7a9775f6-63a6-4789-9a89-ef8ce16b7375", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6c80ed9c-a275-4da2-9edc-9b1e306f5460", "method": "POST", "status": 201, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c0c5c81a-c61c-442b-b57c-bfa79d3e64e7", "method": "POST", "status": 403, "duration_ms": 0}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1d755bf8-1d79-43b3-91e9-8f6fbcb5d59f", "method": "POST", "status": 202, "duration_ms": 31}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3aac19d2-8992-4a2d-9c36-1859bc8a9307", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "75678df4-1531-4271-9ace-3a78fda357ba", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e8fbc447-2146-43b4-93ae-33e40960de7a", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e8c75453-6471-4e56-a915-bc0370067bf6", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "140b5eb4-9a15-49f4-8d1c-30ed489a3ef2", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "da225f96-6ece-46d3-88fc-c8820c1543b3", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7627d8e7-8a85-4a9e-969e-f2fb2cd91065", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "24881e3d-5eab-48da-b661-937275e3c27a", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a986096e-22bd-4107-aff3-f7846b7cc376", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b6028302-f421-4f00-9985-788cbe821756", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b54caa89-8471-412c-82fc-50aa7c948a32", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "309e4edc-387f-40b2-8fca-f9d335967923", "method": "POST", "status": 202, "duration_ms": 13}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9c4a4593-5d77-4518-b13f-636edb216b6d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "432b6283-151d-4aec-ad59-ec4e13e04c86", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dbe4a1e9-6900-4c99-9169-c7e09bb8d9ac", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0e0ce462-20db-476d-b034-e6be511787a7", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "105ff297-148a-4e33-9174-1a96c05edd2d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ac7be263-26ed-4fb3-8f00-e3a84da82d09", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7c71a8d5-ce6c-4c19-b9ac-21be3a82fd4f", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "80fb2595-b0df-4e0f-9e81-d1a3052fbe4d", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6c14d0ca-a3a1-4cce-9246-f81262d11df1", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dc8e43f2-7889-419d-82ee-0f0798577d70", "method": "GET", "status": 200, "duration_ms": 15}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "80a84bd0-3a7a-4b49-8250-ac37fd07f0f7", "method": "GET", "status": 200, "duration_ms": 53}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c6d058d1-aed6-4811-81fe-08e098a6a3ff", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "082a405b-ddde-4bde-ba2f-3239b6681ccc", "method": "POST", "status": 201, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5f9efb95-23f5-4aec-8dc6-d24edc414d3f", "method": "POST", "status": 403, "duration_ms": 0}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "74d6403b-2e53-47de-bcae-23921e907b45", "method": "POST", "status": 202, "duration_ms": 32}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1545983d-b201-4933-8448-c2c5582aaeb4", "method": "GET", "status": 200, "duration_ms": 8}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9a3a7848-c05b-45b3-b852-5cece6e07160", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e52f8892-1219-4460-aec0-cdd20eca1b7c", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ab398324-2e42-40f3-a2f1-7788b63b6492", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2d9e6e8f-c739-4e86-b7fa-036e68e11ce4", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e30b3ab7-a5d9-4ea7-ab9d-950f87feba36", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4f0549f8-d318-45a2-badf-bc645d380168", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e5dfc407-a400-4925-a65f-fb77a391b99f", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f89d28fe-0df7-419b-b8c6-290b740065f2", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4a048559-1bce-430c-97ab-9a712c740d3c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "44e05f62-e7f8-4f6c-a0fb-5825122e46e1", "method": "POST", "status": 202, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fea99c15-5dc8-4bd8-b0ea-c9b277aea60e", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a7664035-bcdb-4242-ae4c-0fac71da36b1", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2362876f-525f-47bf-86f5-6ef62c4b824a", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ce33f1d-f548-4e51-8fd4-085be2c1817d", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b7ab28c1-8f51-434e-8be5-9271079467ff", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "68b3540e-89b7-49ff-9b2b-1e729eaf85cf", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e8f74f1f-f6c7-4ad5-b6cd-04fcb7582635", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c3ce48d6-aec3-4a9e-987e-00ae8763585f", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c6ea402f-4211-47f3-b342-8f3afc35149b", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "a3a4c0ed-6d2a-4eaf-937f-914aeb96ff21", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "16042ff7-7b15-4431-8285-2a472494bdcb", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ffe845c4-c782-4f08-9266-c6dd691b5af1", "method": "POST", "status": 201, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "29529fad-2311-4125-84e3-e4ed4ede04ad", "method": "POST", "status": 403, "duration_ms": 0}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0e598585-e5d6-4570-aff8-51e87fb696dd", "method": "POST", "status": 202, "duration_ms": 30}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c35cbaca-263d-4e86-a8bd-b95657c8b735", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "255ba196-9286-48a4-b6d5-963f214d27f6", "method": "GET", "status": 200, "duration_ms": 9}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "07ba7bf7-fe54-44a3-a58c-03d8d493ecdb", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "687cf97a-69dd-4069-ac50-c289f93e534c", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "932dbaa4-4e5d-426d-8ccc-d1ed46b0c1fe", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "8beb2f81-ec17-42b5-a28e-872925a81101", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e553e320-03f4-47fd-bcc9-da8b4fadb5f0", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ea7c5e5f-5658-43a7-874e-83cff27c5bae", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "47a9423d-092b-42f1-97fc-d0ac7e16c2d4", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3a0298fd-3535-4fce-95e5-f21e0648f6cb", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0b3bf946-8fcb-41c8-8812-56284b43c887", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "36693a7d-946a-48c1-9f2a-61a27ed1190f", "method": "POST", "status": 202, "duration_ms": 9}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "abaa62d6-b92c-4599-ba39-3b647b0514a5", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eecc4bb4-7359-44b9-acd5-65c7f925088e", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e3d1b183-09cb-421d-a61f-5ff58d001e02", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "136b681d-7499-4e61-b72c-1be05755f5da", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b2627889-c7ca-49c8-990b-83680349e10b", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "d28a5f79-fc11-4b66-855a-96c550d5e0ca", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6bc42d00-efa1-4efe-9529-c385b430f6a8", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2aa2a241-dbf2-4b4b-a1ce-881bbd83297a", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "eda3f67e-8d4b-48b3-8f97-d6f7b683c17e", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "831be009-6c1e-4455-89a0-b32b70d1a818", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f30848e9-077f-4747-8a0e-26bd944949e9", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "aa392696-6cf5-499c-b668-1b8978b82a5d", "method": "POST", "status": 201, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2e6f2588-6bfc-489a-a219-42b2802c5d46", "method": "POST", "status": 403, "duration_ms": 0}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fddc63ff-1fc9-482e-9bd5-af005a6de595", "method": "POST", "status": 202, "duration_ms": 42}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "efb8da3d-985d-425c-985b-8d57dcedb0dc", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "825f738a-e6af-48e7-9ddd-e086b426a2e1", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9b73853a-55fc-457a-8043-c75bcc3ee636", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fb81d499-d44b-4241-8f75-5041d7158709", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1720190b-94a7-4ca5-b480-cb6ade002128", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "91b788f5-11e7-4d57-b9a2-35c1be59e8b7", "method": "GET", "status": 200, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "4708e5d4-b9a5-48de-b0c7-fb2350c48b5a", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "59afed89-16cb-406c-a12d-68d06eb8fbd6", "method": "GET", "status": 200, "duration_ms": 6}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fc37de5b-183a-4d62-b412-28c6f35f9cbf", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "faa6c804-5158-46ad-a21d-9ac0d4042b52", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "768731ff-91ab-4faa-820a-8744c7156796", "method": "POST", "status": 202, "duration_ms": 7}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "28913785-be3a-498b-bf57-90048e171e61", "method": "GET", "status": 200, "duration_ms": 60}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f3b27e0c-2d67-4be0-ba52-4c9dff643f43", "method": "GET", "status": 200, "duration_ms": 2}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "66933846-14a6-423d-98d1-0f7b2de04053", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "dd843527-f098-46b9-b6fe-6e72a25c7cff", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "873c2d02-74ea-4d91-b669-3afc7ae09b94", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b98478e9-1f2f-4ad9-aa89-64f4ac265e80", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "97aee257-6ac4-4cf8-9ee2-dae77fc20b25", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "99a5b2a4-841d-45a1-ab79-57dd1621e4ea", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7599dc44-d5c8-4ce8-99f9-ab2502f3d50c", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b2eeaea5-ce78-43c1-8891-034ffefe70b0", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6263ff98-ebf7-4dda-8d03-ddd9a65f1213", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ec0d7c43-7fd7-4100-91de-ac2a6934657f", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "99f49bca-ed4a-4a18-af53-c23873aef266", "method": "GET", "status": 200, "duration_ms": 5}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "96a191e1-a5e2-4638-9de8-5a7125e2cea2", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "7e9942d4-a8d7-43c9-9a7c-e344ff802c61", "method": "GET", "status": 200, "duration_ms": 4}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ed0f423a-eb17-47b2-a1c9-391b3d26112e", "method": "GET", "status": 200, "duration_ms": 3}
+api-1        | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5a87b715-5a36-4bad-81fb-ff4483d84657", "method": "GET", "status": 200, "duration_ms": 3}

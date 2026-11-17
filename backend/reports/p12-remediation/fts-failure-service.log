@@ -1,0 +1,99 @@
+retrieval-1  | INFO:     Started server process [1]
+retrieval-1  | INFO:     Waiting for application startup.
+retrieval-1  | INFO:     Application startup complete.
+retrieval-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fc2861c2-1494-49b9-8906-489a0149d907", "method": "GET", "status": 200, "duration_ms": 59}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "e82a69bc-cb94-4c5f-a040-00c54398cf64", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f77ec8c5-2993-44d6-b461-49a88ae8645f", "method": "POST", "status": 200, "duration_ms": 25}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c9d878ec-bb44-43f9-9339-cd004631613f", "method": "POST", "status": 200, "duration_ms": 14}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2d98682c-29b2-4b9e-8d9c-b9f7dc0159d1", "method": "POST", "status": 200, "duration_ms": 13}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "506b7aaa-9b87-4309-8511-27692d3e3b59", "method": "POST", "status": 200, "duration_ms": 12}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "826da0e6-b2d5-455c-a64a-868719a755ca", "method": "POST", "status": 200, "duration_ms": 20}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "1a3ab9c4-5b46-4518-bea3-4b50cb9ed58f", "method": "POST", "status": 200, "duration_ms": 20}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "03d80aa7-b312-4fe3-ad4d-bbb491222ed6", "method": "POST", "status": 200, "duration_ms": 20}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3f2eb5eb-d748-4a10-af0b-1cad74a0f8cd", "method": "POST", "status": 200, "duration_ms": 54}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b7694184-969e-4ca5-bf8d-330cba206562", "method": "POST", "status": 200, "duration_ms": 21}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "6ab80e8a-3e5f-47c0-b3e2-9d84ae5c37b9", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "f2f3ba39-7906-4d2c-a865-8684909fd6df", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "9ae073f0-d570-4e76-a6d4-556d72598483", "method": "POST", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "889a6013-7b61-4637-8c22-b499a2b66a70", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "3c8fbcc6-e2e0-47fa-a20f-91c75a8718f5", "method": "POST", "status": 200, "duration_ms": 10}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "2351bcc2-39f6-44dc-9c45-aa89e2dc30d5", "method": "POST", "status": 200, "duration_ms": 37}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "314d932b-1c7c-445c-bff0-64c27b7e9793", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "81988947-eef9-407e-8f29-ad9fec52b223", "method": "POST", "status": 500, "duration_ms": 4}
+retrieval-1  | ERROR:    Exception in ASGI application
+retrieval-1  | Traceback (most recent call last):
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+retrieval-1  |     result = await app(  # type: ignore[func-returns-value]
+retrieval-1  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+retrieval-1  |     return await self.app(scope, receive, send)
+retrieval-1  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/applications.py", line 1134, in __call__
+retrieval-1  |     await super().__call__(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+retrieval-1  |     await self.middleware_stack(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+retrieval-1  |     raise exc
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+retrieval-1  |     await self.app(scope, receive, _send)
+retrieval-1  |   File "/app/app/core/logging.py", line 66, in __call__
+retrieval-1  |     await self.app(scope, bounded_receive, tracked_send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+retrieval-1  |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+retrieval-1  |     raise exc
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+retrieval-1  |     await app(scope, receive, sender)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+retrieval-1  |     await self.app(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+retrieval-1  |     await self.middleware_stack(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+retrieval-1  |     await route.handle(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+retrieval-1  |     await self.app(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 125, in app
+retrieval-1  |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+retrieval-1  |     raise exc
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+retrieval-1  |     await app(scope, receive, sender)
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 111, in app
+retrieval-1  |     response = await f(request)
+retrieval-1  |                ^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 391, in app
+retrieval-1  |     raw_response = await run_endpoint_function(
+retrieval-1  |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 292, in run_endpoint_function
+retrieval-1  |     return await run_in_threadpool(dependant.call, **values)
+retrieval-1  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/starlette/concurrency.py", line 32, in run_in_threadpool
+retrieval-1  |     return await anyio.to_thread.run_sync(func)
+retrieval-1  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+retrieval-1  |     return await get_async_backend().run_sync_in_worker_thread(
+retrieval-1  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2779, in run_sync_in_worker_thread
+retrieval-1  |     return await future
+retrieval-1  |            ^^^^^^^^^^^^
+retrieval-1  |   File "/app/.venv/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1124, in run
+retrieval-1  |     result = context.run(func, *args)
+retrieval-1  |              ^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/app/api/retrieval.py", line 21, in retrieve
+retrieval-1  |     return ReadOnlyTools(db, context).execute(request)
+retrieval-1  |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+retrieval-1  |   File "/app/app/retrieval/tools.py", line 376, in execute
+retrieval-1  |     query = query.where(fts | contains)
+retrieval-1  |                         ~~~~^~~~~~~~~~
+retrieval-1  | TypeError: unsupported operand type(s) for |: 'TextClause' and 'BinaryExpression'
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "fea1fb70-6200-4d94-924c-64b573addeb2", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "c081920e-43c2-452f-a4ab-f7326db927ac", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "ddec5aa1-1aa0-411d-b428-83417a77552f", "method": "GET", "status": 200, "duration_ms": 2}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "404a3153-91ea-43d2-a909-9be9f6ababd8", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "5e40620a-aa59-4184-b6c7-1a8d1a6ba028", "method": "GET", "status": 200, "duration_ms": 8}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "0ead3323-e389-44d8-841d-4eb059545501", "method": "GET", "status": 200, "duration_ms": 4}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "18206ded-26d7-4405-88c9-f1d113174988", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "70e71734-7d41-4a39-80be-b821f04200fe", "method": "GET", "status": 200, "duration_ms": 3}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "b10388f1-f4c3-4759-8c65-d1ce9733202b", "method": "GET", "status": 200, "duration_ms": 6}
+retrieval-1  | INFO:knowledge.audit:{"event": "http_request", "correlation_id": "86a81483-40a3-4d68-8d61-6bc49b0afb88", "method": "GET", "status": 200, "duration_ms": 2}
