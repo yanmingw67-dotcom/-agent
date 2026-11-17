@@ -1,0 +1,14 @@
+[
+  {
+    "tgname": "category_snapshot_guard",
+    "table_name": "product_categories",
+    "trigger_definition": "CREATE TRIGGER category_snapshot_guard BEFORE INSERT OR UPDATE ON public.product_categories FOR EACH ROW EXECUTE FUNCTION guard_active_snapshot()",
+    "function_definition": "CREATE OR REPLACE FUNCTION public.guard_active_snapshot()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\n        BEGIN\n          IF NEW.active_snapshot_id IS NOT NULL AND NOT EXISTS (\n            SELECT 1 FROM source_snapshots s WHERE s.id = NEW.active_snapshot_id\n            AND s.category_id = NEW.id AND s.status = 'published'\n          ) THEN RAISE EXCEPTION 'active snapshot must be published and category-scoped'; END IF;\n          RETURN NEW;\n        END $function$\n"
+  },
+  {
+    "tgname": "snapshot_identity_guard",
+    "table_name": "source_snapshots",
+    "trigger_definition": "CREATE TRIGGER snapshot_identity_guard BEFORE UPDATE ON public.source_snapshots FOR EACH ROW EXECUTE FUNCTION guard_snapshot_identity()",
+    "function_definition": "CREATE OR REPLACE FUNCTION public.guard_snapshot_identity()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\n        BEGIN\n          IF NEW.category_id <> OLD.category_id OR NEW.source_sha256 <> OLD.source_sha256\n             OR NEW.archive_key <> OLD.archive_key THEN\n            RAISE EXCEPTION 'snapshot identity is immutable';\n          END IF;\n          IF NEW.status <> 'published' AND EXISTS (\n            SELECT 1 FROM product_categories WHERE active_snapshot_id = OLD.id\n          ) THEN RAISE EXCEPTION 'active snapshot must remain published'; END IF;\n          RETURN NEW;\n        END $function$\n"
+  }
+]

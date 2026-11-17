@@ -52,6 +52,7 @@ def latest(db, claim_id):
         .where(ClaimRevision.claim_id == claim_id)
         .order_by(ClaimRevision.number.desc())
         .limit(1)
+        .execution_options(populate_existing=True, autoflush=False)
     )
 
 

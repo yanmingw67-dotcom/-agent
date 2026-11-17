@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 import time
 from uuid import uuid4
 
@@ -11,6 +12,38 @@ from app.core.metrics import observe
 from app.core.security import AppError
 
 logger = logging.getLogger("knowledge.audit")
+
+
+def database_diagnostic(exc, correlation_id):
+    """只保留诊断标识，不记录SQL、参数、异常正文或驱动DETAIL。"""
+    original = getattr(exc, "orig", None)
+    diagnostic = getattr(original, "diag", None)
+
+    def identifier(value, limit=100):
+        if isinstance(value, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value):
+            return value[:limit]
+        return None
+
+    state = getattr(original, "sqlstate", None)
+    context = getattr(diagnostic, "context", None) or ""
+    function = re.search(r"PL/pgSQL function ([A-Za-z_][A-Za-z0-9_]*)\(", context)
+    return {
+        "event": "database_error",
+        "correlation_id": correlation_id,
+        "exception_type": identifier(type(exc).__name__),
+        "driver_exception_type": identifier(type(original).__name__),
+        "sqlstate": state
+        if isinstance(state, str) and re.fullmatch(r"[A-Z0-9]{5}", state)
+        else None,
+        "constraint_name": identifier(getattr(diagnostic, "constraint_name", None)),
+        "table_name": identifier(getattr(diagnostic, "table_name", None)),
+        "column_name": identifier(getattr(diagnostic, "column_name", None)),
+        "function_name": identifier(function.group(1)) if function else None,
+    }
+
+
+def log_database_error(exc, correlation_id):
+    logger.error(json.dumps(database_diagnostic(exc, correlation_id), ensure_ascii=False))
 
 
 class RequestGuard:

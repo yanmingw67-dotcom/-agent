@@ -1,0 +1,28 @@
+{
+  "first_publication": {
+    "publication_id": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "payload_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90"
+  },
+  "second_publication": {
+    "publication_id": "db315185-3b36-4c8f-b9a4-3a7e055a1369",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "payload_hash": "2ba20577968bff3844d8cce6eabb017defe93769307b17096d2ac3cd966a3bfd"
+  },
+  "first_visible_claims": [
+    "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+  ],
+  "second_visible_claims": [
+    "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+    "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+    "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5"
+  ],
+  "restored_visible_claims": [
+    "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+  ],
+  "first_response_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+  "restored_response_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+  "exact_response_restored": true,
+  "failed_requests_left_no_publication_or_switch": true,
+  "historical_rows_unchanged": true
+}

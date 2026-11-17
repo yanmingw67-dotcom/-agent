@@ -1,0 +1,31 @@
+{
+  "request": {
+    "revision_ids": [
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "relation_ids": [],
+    "expected_active_publication_id": null,
+    "acknowledge_coverage_gaps": true,
+    "comment": "人工确认窄范围机制，调查未完成及不确定断言继续保留"
+  },
+  "path": "/api/v1/snapshots/d672efe9-5dec-44f6-8fb2-d305c3b015db/publish",
+  "status": 503,
+  "response": {
+    "error_code": "DATABASE_UNAVAILABLE",
+    "message": "数据库暂时不可用",
+    "correlation_id": "eb5f7a08-11d5-4607-9383-28f29457dd47"
+  },
+  "server_diagnostics": [
+    {
+      "event": "database_error",
+      "correlation_id": "eb5f7a08-11d5-4607-9383-28f29457dd47",
+      "exception_type": "ProgrammingError",
+      "driver_exception_type": "RaiseException",
+      "sqlstate": "P0001",
+      "constraint_name": null,
+      "table_name": null,
+      "column_name": null,
+      "function_name": "guard_active_snapshot"
+    }
+  ]
+}

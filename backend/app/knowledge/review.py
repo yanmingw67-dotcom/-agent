@@ -13,12 +13,35 @@ from app.knowledge.quality import context, gate, latest
 from app.knowledge.review_schemas import ReviewRequest
 
 
+def lock_category(db, category_id):
+    # FOR UPDATE 本身不刷新 identity map；也不应先 autoflush 陈旧缓存。
+    with db.no_autoflush:
+        category = db.scalar(
+            select(Category)
+            .where(Category.id == category_id)
+            .with_for_update()
+            .execution_options(populate_existing=True)
+        )
+    if not category:
+        raise AppError(404, "CATEGORY_NOT_FOUND", "品类不存在")
+    return category
+
+
 def lock_snapshot(db, sid):
-    snapshot = db.get(Snapshot, sid)
+    with db.no_autoflush:
+        category_id = db.scalar(select(Snapshot.category_id).where(Snapshot.id == sid))
+    if category_id is None:
+        raise AppError(404, "SNAPSHOT_NOT_FOUND", "快照不存在")
+    lock_category(db, category_id)
+    with db.no_autoflush:
+        snapshot = db.scalar(
+            select(Snapshot)
+            .where(Snapshot.id == sid)
+            .with_for_update()
+            .execution_options(populate_existing=True)
+        )
     if not snapshot:
         raise AppError(404, "SNAPSHOT_NOT_FOUND", "快照不存在")
-    db.scalar(select(Category).where(Category.id == snapshot.category_id).with_for_update())
-    snapshot = db.scalar(select(Snapshot).where(Snapshot.id == sid).with_for_update())
     if snapshot.status not in {"extracted", "published"} or snapshot.index_status != "indexed":
         raise AppError(409, "REVIEW_SOURCE_NOT_READY", "源码尚未就绪")
     if db.scalar(
@@ -228,15 +251,21 @@ def relation(db, body):
 
 
 def merge(db, body):
-    source, target = latest(db, body.source_claim_id), latest(db, body.target_claim_id)
-    if (
-        not source
-        or not target
-        or source.snapshot_id != target.snapshot_id
-        or source.claim_id == target.claim_id
-    ):
+    # 只读取不可变作用域定位，不在取得品类/快照锁前读取审核版本。
+    with db.no_autoflush:
+        scopes = dict(
+            db.execute(
+                select(CapabilityClaim.id, CapabilityClaim.snapshot_id).where(
+                    CapabilityClaim.id.in_([body.source_claim_id, body.target_claim_id])
+                )
+            ).all()
+        )
+    if len(scopes) != 2 or len(set(scopes.values())) != 1:
         raise AppError(422, "MERGE_SCOPE_INVALID", "合并双方必须同快照不同候选")
-    lock_snapshot(db, source.snapshot_id)
+    lock_snapshot(db, scopes[body.source_claim_id])
+    source, target = latest(db, body.source_claim_id), latest(db, body.target_claim_id)
+    if not source or not target:
+        raise AppError(422, "MERGE_SCOPE_INVALID", "合并双方必须具有审核修订")
     if source.number != body.source_revision or target.number != body.target_revision:
         raise AppError(409, "MERGE_REVISION_CONFLICT", "修订已改变")
     if not body.human_confirmed or source.decision != "accept" or target.decision != "accept":

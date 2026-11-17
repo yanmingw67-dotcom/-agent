@@ -20,7 +20,7 @@ from app.api import (
 )
 from app.core.auth import admin
 from app.core.config import get_settings
-from app.core.logging import RequestGuard
+from app.core.logging import RequestGuard, log_database_error
 from app.core.metrics import snapshot as metric_snapshot
 from app.core.security import AppError
 from app.db.session import get_engine
@@ -72,6 +72,7 @@ def create_app():
 
     @app.exception_handler(DBAPIError)
     async def database_error(request: Request, exc):
+        log_database_error(exc, request.state.correlation_id)
         code = getattr(getattr(exc, "orig", None), "sqlstate", None)
         return error_response(
             request,

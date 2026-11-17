@@ -1,0 +1,352 @@
+{
+  "services": [
+    {
+      "service": "api",
+      "image_id": "sha256:9aaf1aff4db7bce5d8d26c5a543c80cc0cdcdb4a6ccb7d81031d32f69c6a7e10",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 512.0,
+      "cpu_quota": 0.5,
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 128,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "writable": false
+        },
+        {
+          "destination": "/data/documents",
+          "writable": true
+        },
+        {
+          "destination": "/data/control",
+          "writable": true
+        },
+        {
+          "destination": "/data/archives",
+          "writable": true
+        }
+      ],
+      "enterprise_external_enabled": null
+    },
+    {
+      "service": "builder",
+      "image_id": "sha256:9aaf1aff4db7bce5d8d26c5a543c80cc0cdcdb4a6ccb7d81031d32f69c6a7e10",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 1024.0,
+      "cpu_quota": 0.5,
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 128,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "writable": false
+        },
+        {
+          "destination": "/data/documents",
+          "writable": false
+        }
+      ],
+      "enterprise_external_enabled": "false"
+    },
+    {
+      "service": "indexer",
+      "image_id": "sha256:9aaf1aff4db7bce5d8d26c5a543c80cc0cdcdb4a6ccb7d81031d32f69c6a7e10",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 1280.0,
+      "cpu_quota": 0.75,
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 128,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "writable": false
+        },
+        {
+          "destination": "/data/sources",
+          "writable": false
+        }
+      ],
+      "enterprise_external_enabled": null
+    },
+    {
+      "service": "postgres",
+      "image_id": "sha256:253815cf7579ffa05e1673d92e78d37273e61be0e4414e9a1449337d7925be94",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 1536.0,
+      "cpu_quota": 0.75,
+      "read_only_root": false,
+      "cap_drop": null,
+      "security_opt": null,
+      "pids_limit": null,
+      "user": "",
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "writable": true
+        }
+      ],
+      "enterprise_external_enabled": null
+    },
+    {
+      "service": "redis",
+      "image_id": "sha256:7b5ee51c14cf5febd4adde3a4b6cced72efdf154df7e9a0383163b13e16e9091",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 256.0,
+      "cpu_quota": 0.25,
+      "read_only_root": false,
+      "cap_drop": null,
+      "security_opt": null,
+      "pids_limit": null,
+      "user": "",
+      "mounts": [
+        {
+          "destination": "/data",
+          "writable": true
+        }
+      ],
+      "enterprise_external_enabled": null
+    },
+    {
+      "service": "retrieval",
+      "image_id": "sha256:9aaf1aff4db7bce5d8d26c5a543c80cc0cdcdb4a6ccb7d81031d32f69c6a7e10",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 768.0,
+      "cpu_quota": 1.0,
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 128,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "writable": false
+        }
+      ],
+      "enterprise_external_enabled": null
+    },
+    {
+      "service": "worker",
+      "image_id": "sha256:9aaf1aff4db7bce5d8d26c5a543c80cc0cdcdb4a6ccb7d81031d32f69c6a7e10",
+      "health": "healthy",
+      "oom_killed": false,
+      "restart_count": 0,
+      "memory_limit_mib": 768.0,
+      "cpu_quota": 0.25,
+      "read_only_root": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "pids_limit": 128,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "writable": false
+        },
+        {
+          "destination": "/data/ingestion",
+          "writable": true
+        },
+        {
+          "destination": "/data/sources",
+          "writable": false
+        },
+        {
+          "destination": "/data/documents",
+          "writable": false
+        },
+        {
+          "destination": "/data/control",
+          "writable": true
+        }
+      ],
+      "enterprise_external_enabled": null
+    }
+  ],
+  "configured_cpu_total": 4.0,
+  "configured_memory_mib_total": 6144.0,
+  "docker_host": {
+    "cpus": 8,
+    "memory_bytes": 8321798144
+  },
+  "point_in_time_stats": [
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.29%",
+      "Container": "d1be215a5d0b34d5c697864cb5a07f8c593b400e249f5c48959aa97ac5a6a5cd",
+      "ID": "d1be215a5d0b",
+      "MemPerc": "13.19%",
+      "MemUsage": "67.54MiB / 512MiB",
+      "Name": "product-knowledge-p11-api-1",
+      "NetIO": "3.71MB / 1.05MB",
+      "PIDs": "2"
+    },
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.00%",
+      "Container": "149b77b0ab79c2f7b5fe4db5b41d135ff834d2f76d3443c6ffb445bd8425f564",
+      "ID": "149b77b0ab79",
+      "MemPerc": "5.72%",
+      "MemUsage": "58.62MiB / 1GiB",
+      "Name": "product-knowledge-p11-builder-1",
+      "NetIO": "1.85MB / 1.19MB",
+      "PIDs": "1"
+    },
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "2.05%",
+      "Container": "82b98b99b38495c33edd64eb799759b6d55fd67139f8a6fd8390922de9061353",
+      "ID": "82b98b99b384",
+      "MemPerc": "4.58%",
+      "MemUsage": "58.61MiB / 1.25GiB",
+      "Name": "product-knowledge-p11-indexer-1",
+      "NetIO": "1.86MB / 1.21MB",
+      "PIDs": "1"
+    },
+    {
+      "BlockIO": "0B / 120MB",
+      "CPUPerc": "1.50%",
+      "Container": "4e1dde3d217c780299eb57840b03183c9b187cda6b4d03026db87a85325a835b",
+      "ID": "4e1dde3d217c",
+      "MemPerc": "3.41%",
+      "MemUsage": "52.39MiB / 1.5GiB",
+      "Name": "product-knowledge-p11-postgres-1",
+      "NetIO": "120MB / 120MB",
+      "PIDs": "8"
+    },
+    {
+      "BlockIO": "69.5MB / 125MB",
+      "CPUPerc": "4.26%",
+      "Container": "b3f475fe2511951249cf95c29c476f134adbd30afe5a2587cc35414b2c07b97c",
+      "ID": "b3f475fe2511",
+      "MemPerc": "4.49%",
+      "MemUsage": "11.5MiB / 256MiB",
+      "Name": "product-knowledge-p11-redis-1",
+      "NetIO": "163MB / 385MB",
+      "PIDs": "6"
+    },
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.24%",
+      "Container": "f1a38cd823b135091915f930fb317ef1559a89165a1edcb3ad5b64ebd0c5eda8",
+      "ID": "f1a38cd823b1",
+      "MemPerc": "8.45%",
+      "MemUsage": "64.92MiB / 768MiB",
+      "Name": "product-knowledge-p11-retrieval-1",
+      "NetIO": "41.9kB / 54.1kB",
+      "PIDs": "2"
+    },
+    {
+      "BlockIO": "0B / 0B",
+      "CPUPerc": "0.00%",
+      "Container": "c417ca9923867ef0e15468938f793a151bf512ed943d8f6562acf3dfe0fb5a3d",
+      "ID": "c417ca992386",
+      "MemPerc": "7.62%",
+      "MemUsage": "58.52MiB / 768MiB",
+      "Name": "product-knowledge-p11-worker-1",
+      "NetIO": "1.74MB / 1.05MB",
+      "PIDs": "1"
+    }
+  ],
+  "health_checks": [
+    {
+      "port": 8000,
+      "path": "/health/live",
+      "status": 200,
+      "response": {
+        "status": "ok"
+      }
+    },
+    {
+      "port": 8000,
+      "path": "/health/ready",
+      "status": 200,
+      "response": {
+        "status": "ready"
+      }
+    },
+    {
+      "port": 8001,
+      "path": "/health/live",
+      "status": 200,
+      "response": {
+        "status": "ok"
+      }
+    },
+    {
+      "port": 8001,
+      "path": "/health/ready",
+      "status": 200,
+      "response": {
+        "status": "ready"
+      }
+    }
+  ],
+  "metrics": {
+    "database_queries": {
+      "count": 287,
+      "total_ms": 250.75197196565568,
+      "max_ms": 52.231458001188,
+      "p50_ms": 0.2993750022142194,
+      "p95_ms": 0.8523750002495944
+    },
+    "http_requests": {
+      "count": 69,
+      "total_ms": 1129.1697079832375,
+      "max_ms": 220.68679199946928,
+      "p50_ms": 3.858290998323355,
+      "p95_ms": 58.656375000282424
+    }
+  },
+  "deployed_source_hashes": {
+    "app/core/logging.py": "a6f959712df9f2c0372af716f63c5b11e596291d6e6ba1eedfb0db77a631c9e7",
+    "app/main.py": "2d9b27fac32793355d0b43736bc67bf86c75a5ff30f03b8aa03adbfadf8acda2",
+    "app/knowledge/review.py": "4c68f621ced021675a0bc72ce6633f6591c860f7b7f4fb36a81ddc7822284de5",
+    "app/knowledge/publisher.py": "270c28c29b7455aec3931d55987b9491794f7305c66a62c4049bb1dcbb9ec105",
+    "app/knowledge/quality.py": "39776907a3e92e3a8a682ebfbb52ab2e462d0c9626ba38b3e2fdd90f13303a8b"
+  },
+  "deployed_matches_worktree": true,
+  "not_production_load_test": true,
+  "not_dedicated_4c8g_host": true
+}

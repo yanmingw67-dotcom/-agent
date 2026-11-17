@@ -1,0 +1,14 @@
+{
+  "scanned_files": 31,
+  "actual_local_secrets_scanned_without_printing": true,
+  "patterns": [
+    "private_key",
+    "github_token",
+    "api_key"
+  ],
+  "findings": [],
+  "env_ignored": true,
+  "env_permissions": "0o600",
+  "protected_tracked_files_unchanged": true,
+  "limitations": "精确本地秘密匹配与指定模式扫描，不宣称可识别所有未知秘密。"
+}

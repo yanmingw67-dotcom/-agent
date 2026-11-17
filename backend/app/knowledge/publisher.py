@@ -9,7 +9,7 @@ from app.ingestion.text import digest
 from app.knowledge.coverage import coverage
 from app.knowledge.evidence_registry import canonical, read_evidence
 from app.knowledge.quality import context, gate, latest
-from app.knowledge.review import lock_snapshot
+from app.knowledge.review import lock_category, lock_snapshot
 
 
 def validate_revision(db, revision):
@@ -32,7 +32,7 @@ def publish(db, sid, body):
     category = db.get(Category, snapshot.category_id)
     if category.active_publication_id != body.expected_active_publication_id:
         raise AppError(409, "PUBLICATION_POINTER_CONFLICT", "当前知识已改变，请重新核对")
-    rows = [db.get(ClaimRevision, rid) for rid in body.revision_ids]
+    rows = [db.get(ClaimRevision, rid, populate_existing=True) for rid in body.revision_ids]
     if any(not r or r.snapshot_id != sid for r in rows) or len({r.claim_id for r in rows}) != len(
         rows
     ):
@@ -116,6 +116,9 @@ def publish(db, sid, body):
     db.flush()
     previous = category.active_publication_id
     snapshot.status = "published"
+    # 既有 PG BEFORE 触发器立即检查快照状态；flush 排序不等同于 commit。
+    # 保持同一事务，先落快照状态，再同时切换两个品类指针。
+    db.flush()
     category.active_snapshot_id = sid
     category.active_publication_id = row.id
     db.add(
@@ -133,9 +136,7 @@ def publish(db, sid, body):
 
 
 def rollback(db, category_id, body):
-    category = db.scalar(select(Category).where(Category.id == category_id).with_for_update())
-    if not category:
-        raise AppError(404, "CATEGORY_NOT_FOUND", "品类不存在")
+    category = lock_category(db, category_id)
     if category.active_publication_id != body.expected_active_publication_id:
         raise AppError(409, "PUBLICATION_POINTER_CONFLICT", "当前知识已改变")
     row = db.get(Publication, body.publication_id)
