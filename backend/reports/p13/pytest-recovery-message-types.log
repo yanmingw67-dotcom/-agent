@@ -1,0 +1,82 @@
+消息类型 [['UserPromptPart']]
+消息类型 [['UserPromptPart'], ['ToolCallPart'], ['ToolReturnPart']]
+F.
+=================================== FAILURES ===================================
+_________ test_invalid_segment_is_retryable_and_followed_by_valid_read _________
+
+client = <starlette.testclient.TestClient object at 0x10b987c20>
+
+    def test_invalid_segment_is_retryable_and_followed_by_valid_read(client):
+        cid, sid = indexed(client)
+        file = tool(client, cid, sid, "search_paths", query="notify/sender.py").json()["results"][0]
+        jid, _, mid = setup_job(client, cid, sid)
+    
+        async def respond(messages, info):
+            print("消息类型", [[type(p).__name__ for p in m.parts] for m in messages])
+            retries = [p for m in messages for p in m.parts if isinstance(p, RetryPromptPart)]
+            returns = [p for m in messages for p in m.parts if isinstance(p, ToolReturnPart)]
+            if not retries:
+                return ModelResponse(
+                    parts=[
+                        ToolCallPart(
+                            "query_knowledge",
+                            {
+                                "request": {
+                                    "tool": "read_document",
+                                    "segment_id": "nonexistent-synthetic-id",
+                                }
+                            },
+                        )
+                    ]
+                )
+            if not returns:
+                return ModelResponse(
+                    parts=[
+                        ToolCallPart(
+                            "query_knowledge",
+                            {
+                                "request": {
+                                    "tool": "read_source",
+                                    "file_id": file["file_id"],
+                                    "start_line": 2,
+                                    "end_line": 3,
+                                }
+                            },
+                        )
+                    ]
+                )
+            return ModelResponse(parts=[ToolCallPart(info.output_tools[0].name, output(mid))])
+    
+        run_builder(jid, "p13-test", FunctionModel(respond))
+        job = job_row(jid)
+        from sqlalchemy import select
+    
+        from app.db.knowledge_models import Investigation, InvestigationTrace
+        from app.db.session import session_factory
+    
+        with session_factory()() as db:
+            rows = list(
+                db.scalars(
+                    select(InvestigationTrace).join(Investigation).where(Investigation.job_id == jid)
+                )
+            )
+            errors = [
+                (r.kind, r.details_json) for r in rows if r.kind in {"module_error", "tool_error"}
+            ]
+>       assert job.status == "succeeded", errors
+E       AssertionError: [('tool_error', {'error_code': 'SEGMENT_NOT_FOUND', 'tool': 'read_document'}), ('tool_error', {'error_code': 'SEGMENT_...ad_document'}), ('module_error', {'error_code': 'MODEL_OR_OUTPUT_ERROR', 'exception_type': 'UnexpectedModelBehavior'})]
+E       assert 'failed' == 'succeeded'
+E         
+E         - succeeded
+E         + failed
+
+tests/integration/test_p13_tool_recovery.py:74: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p13_tool_recovery.py::test_invalid_segment_is_retryable_and_followed_by_valid_read
+1 failed, 1 passed, 1 warning in 1.03s

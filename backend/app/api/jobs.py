@@ -49,7 +49,8 @@ def retry_job(job_id: str, request: Request, role=Depends(admin), db: Session = 
             job.dispatch_token = job.dispatched_at = job.started_at = job.finished_at = None
             job.dispatch_enqueued_at = None
             job.attempt += 1
-            job.metrics_json = {"model_mode": "NOT_USED"}
+            if job.job_type != "knowledge_build":
+                job.metrics_json = {"model_mode": "NOT_USED"}
             snapshot = db.get(Snapshot, job.snapshot_id)
             if job.job_type == "source_import":
                 snapshot.status = "uploaded"

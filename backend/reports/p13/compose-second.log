@@ -1,0 +1,170 @@
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.62kB done
+#1 DONE 0.0s
+
+#2 [builder internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [api internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.2s
+
+#4 [builder internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [api 1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a done
+#5 DONE 0.0s
+
+#6 [indexer internal] load build context
+#6 transferring context: 73.58kB 0.0s done
+#6 DONE 0.0s
+
+#7 [api 2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [api 3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#8 CACHED
+
+#9 [api 4/9] WORKDIR /app
+#9 CACHED
+
+#10 [api 5/9] COPY pyproject.toml uv.lock ./
+#10 CACHED
+
+#11 [api 6/9] RUN uv sync --frozen --no-dev
+#11 CACHED
+
+#12 [retrieval 7/9] COPY --chown=app:app app ./app
+#12 DONE 0.0s
+
+#13 [builder 8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [worker 9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.1s
+
+#15 [worker] exporting to image
+#15 exporting layers 0.0s done
+#15 exporting manifest sha256:c05a99b9187864fc43f5d4be90d7dfb64a9f65bfb836f5d0f20da2c4ca049d41 0.0s done
+#15 exporting config sha256:9d57de05c48484a0e87654be42530aa0dd305bc6811a29a458cc312e16acaeb8 0.0s done
+#15 exporting attestation manifest sha256:1df7b008132a99d3170b734b71751e2b5e2a739921247804c44beb3c24820479 0.0s done
+#15 exporting manifest list sha256:82f70f717359664da4dd664ec4ec0200992f5594bac4c4da60f76194d98a297e
+#15 exporting manifest list sha256:82f70f717359664da4dd664ec4ec0200992f5594bac4c4da60f76194d98a297e 0.0s done
+#15 naming to docker.io/library/product-knowledge:p1.3 done
+#15 unpacking to docker.io/library/product-knowledge:p1.3 0.1s done
+#15 DONE 0.2s
+
+#16 [builder] exporting to image
+#16 exporting layers 0.0s done
+#16 exporting manifest sha256:e1aee88597433acc3f81dbdbb4ea090d7bfb2394f63ff04e1c7e9d889f42098b 0.0s done
+#16 exporting config sha256:4536bc33a595427559f68756db7db55c4e4cb3421147083bfc30d6afec8dd8fe 0.0s done
+#16 exporting attestation manifest sha256:da30bc59945187b5a1e38e34ae35d94fe1aaf69ded13253f6be150921efe2db8 0.0s done
+#16 exporting manifest list sha256:acc2a21d933a7577dba8421ee8dd51be1b474da859bcb4a5fd96c2c8bfc190c8 0.0s done
+#16 naming to docker.io/library/product-knowledge:p1.3 done
+#16 unpacking to docker.io/library/product-knowledge:p1.3 0.1s done
+#16 DONE 0.2s
+
+#17 [api] exporting to image
+#17 exporting layers 0.0s done
+#17 exporting manifest sha256:3df5a65951dcbc54b35e14c75b08cef3c31e999a017f5ea04041ee78c8c92d8c 0.0s done
+#17 exporting config sha256:e83b33da30d57947d9115824905adcf2cc58cb3c947339cab2e26dbbd7662777 0.0s done
+#17 exporting attestation manifest sha256:306f3b65bac4b7e50fa6e9c6911fee4c958489d5d31c57218c5138936e8c3a54 0.0s done
+#17 exporting manifest list sha256:d91d3ef73897afe3ddb6a62b27b89836a3d868f376bac3ed7703454e9ca5a8ca 0.0s done
+#17 naming to docker.io/library/product-knowledge:p1.3 done
+#17 unpacking to docker.io/library/product-knowledge:p1.3 0.1s done
+#17 DONE 0.2s
+
+#18 [indexer] exporting to image
+#18 exporting layers 0.0s done
+#18 exporting manifest sha256:c97028c0c2a235c31bdf77d89f7cc57c6807b2698f950ad64e420290fcb5c284 0.0s done
+#18 exporting config sha256:1d0c8dc356bf5c8cc54c3046a041efff84badb703945d88c469a8c894ca21796 0.0s done
+#18 exporting attestation manifest sha256:705e49e8929aed1415aede070b8c6538dc7d9d2448575e80e1e983d39694e2d5 0.0s done
+#18 exporting manifest list sha256:f9cd55389a8cbfdc81231179bad1eef3ea0489462462013ae0defec2307f3cbe 0.0s done
+#18 naming to docker.io/library/product-knowledge:p1.3 done
+#18 unpacking to docker.io/library/product-knowledge:p1.3 0.1s done
+#18 DONE 0.2s
+
+#19 [retrieval] exporting to image
+#19 exporting layers 0.0s done
+#19 exporting manifest sha256:e2058fe95d1dc176e63b1199f74accfa17e59547869c6fb415f1560c01612245 0.0s done
+#19 exporting config sha256:be639ae8f200413d647475270ee7a5c36fd6dbbbaadc4037d9e09e82b7436513 0.0s done
+#19 exporting attestation manifest sha256:83edd1950e951832113506097c91f7ecc22069e418978787aafad7c192995102 0.0s done
+#19 exporting manifest list sha256:a5fb5542064ca576f49e84504f3fed0a8c03e9e752c9ffac260052a9710cc26e 0.0s done
+#19 naming to docker.io/library/product-knowledge:p1.3 done
+#19 unpacking to docker.io/library/product-knowledge:p1.3 0.1s done
+#19 DONE 0.3s
+
+#20 [builder] resolving provenance for metadata file
+#20 DONE 0.1s
+
+#21 [retrieval] resolving provenance for metadata file
+#21 DONE 0.0s
+
+#22 [api] resolving provenance for metadata file
+#22 DONE 0.0s
+
+#23 [worker] resolving provenance for metadata file
+#23 DONE 0.1s
+
+#24 [indexer] resolving provenance for metadata file
+#24 DONE 0.0s
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-api-1 Recreate 
+ Container product-knowledge-p11-api-1 Recreated 
+ Container product-knowledge-p11-indexer-1 Recreate 
+ Container product-knowledge-p11-builder-1 Recreate 
+ Container product-knowledge-p11-worker-1 Recreate 
+ Container product-knowledge-p11-retrieval-1 Recreate 
+ Container product-knowledge-p11-indexer-1 Recreated 
+ Container product-knowledge-p11-retrieval-1 Recreated 
+ Container product-knowledge-p11-builder-1 Recreated 
+ Container product-knowledge-p11-worker-1 Recreated 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Starting 
+ Container product-knowledge-p11-api-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-builder-1 Starting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-indexer-1 Starting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-retrieval-1 Starting 
+ Container product-knowledge-p11-indexer-1 Started 
+ Container product-knowledge-p11-builder-1 Started 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-retrieval-1 Started 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-indexer-1 Waiting 
+ Container product-knowledge-p11-builder-1 Waiting 
+ Container product-knowledge-p11-retrieval-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-retrieval-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 
+ Container product-knowledge-p11-builder-1 Healthy 
+ Container product-knowledge-p11-indexer-1 Healthy 

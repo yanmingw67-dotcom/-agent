@@ -18,8 +18,17 @@ def connection():
 def claim_pending():
     settings = get_settings()
     indexer = settings.worker_kind == "index"
-    types = ["source_index", "document_index"] if indexer else ["source_import"]
-    timeout = settings.index_job_timeout_seconds if indexer else settings.job_timeout_seconds
+    builder = settings.worker_kind == "builder"
+    types = (
+        ["knowledge_build"]
+        if builder
+        else (["source_index", "document_index"] if indexer else ["source_import"])
+    )
+    timeout = (
+        settings.builder_job_timeout_seconds
+        if builder
+        else (settings.index_job_timeout_seconds if indexer else settings.job_timeout_seconds)
+    )
     threshold = now() - timedelta(seconds=timeout + 60)
     claims = []
     with session_factory().begin() as db:
@@ -91,9 +100,15 @@ def dispatch_pending():
     indexer = settings.worker_kind == "index"
     if indexer:
         from app.ingestion.indexer import run_index
-    handler = run_index if indexer else import_source
+    builder = settings.worker_kind == "builder"
+    if builder:
+        from app.agents.runtime import run_builder
+    handler = run_builder if builder else (run_index if indexer else import_source)
     queue = Queue(
-        settings.index_queue_name if indexer else settings.queue_name, connection=connection()
+        settings.builder_queue_name
+        if builder
+        else (settings.index_queue_name if indexer else settings.queue_name),
+        connection=connection(),
     )
     for job_id, token, claimed_at in claims:
         try:
@@ -102,9 +117,11 @@ def dispatch_pending():
                 job_id,
                 token,
                 job_id=f"{job_id}-{token}",
-                job_timeout=settings.index_job_timeout_seconds
-                if indexer
-                else settings.job_timeout_seconds,
+                job_timeout=settings.builder_job_timeout_seconds
+                if builder
+                else (
+                    settings.index_job_timeout_seconds if indexer else settings.job_timeout_seconds
+                ),
                 result_ttl=3600,
                 failure_ttl=86400,
                 on_failure=rq_failure,

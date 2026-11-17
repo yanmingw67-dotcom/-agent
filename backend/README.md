@@ -1,11 +1,12 @@
-# 产品功能参数评估系统 · P1.2
+# 产品功能参数评估系统 · P1.3
 
-本项目依据上级目录的开发设计书，实现 **安全导入、静态源码／技术文档索引与共享只读检索**。
+本项目依据上级目录的开发设计书，实现 **安全导入、静态索引、共享只读检索及候选知识调查**。
 
 P1.2 完整运行与基准说明见 `docs/P1.2_RUNBOOK.md`，架构边界见 `docs/P1.2_ARCHITECTURE.md`。
 初始验收见 `P1.2_ACCEPTANCE_REPORT.md`；第一轮整改见 `P1.2_REMEDIATION_REPORT.md`。
-最新迁移为0004；原 P1.1、P1.2 初始测试与日志保留。
-本批没有 Agent A 功能发现、证据/能力记录、发布或 Agent B。
+最新迁移为0005；原 P1.1、P1.2 测试、迁移与历史日志保留。
+P1.3新增Pydantic AI Knowledge Builder、真实来源证据登记、候选能力与假设关系，仍不含发布或Agent B。
+运行与模型准入见 `docs/P1.3_RUNBOOK.md`，架构见 `docs/P1.3_ARCHITECTURE.md`；验收见 `P1.3_ACCEPTANCE_REPORT.md`。
 导入成功仅表示 `stage=extracted`，不是知识库就绪。
 
 ## 快速启动（Docker Compose）
@@ -85,7 +86,8 @@ application/x-zip-compressed 和 application/octet-stream，另检查内容签�
 四服务部署成功后另运行 `scripts/compose_smoke.py` 验证容器链路：
 人工 demo_waf_source.zip → 上传 202 → 后台校验与解压 → 任务 extracted，
 产生 4 个保留文件、2 个排除文件和逐文件 SHA-256 manifest。
-manifest 不是证据记录；evidence_id 和能力链路为 NOT_IMPLEMENTED。
+manifest不是证据记录。需先索引，再由管理员显式调用investigate启动模型调查；
+只有完整回读并经服务端核验后才生成evidence_id，能力仍仅为待人工核验候选。
 
 ## 本地开发（不用容器运行 API）
 
@@ -142,5 +144,5 @@ REPORT_DIR=reports/remediation uv run python -m scripts.compose_recovery_check
 - CHANGELOG_P1.1.md：变更文件和未实现项。
 - P1.1_ACCEPTANCE_REPORT.md：实际测试、质量门槛、限制与下一批建议。
 
-P1.2 完成后暂停，等待代码审查及验收意见；P1.3～P1.5 未实施。
+P1.3交付后暂停，等待代码审查及验收意见；P1.4～P1.5未实施，不自动推送本轮提交。
 以下 P1.1 整改脚本仍用于历史回归，不替代本批 P1.2 基准。

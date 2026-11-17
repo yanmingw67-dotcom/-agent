@@ -1,0 +1,142 @@
+{
+  "status": "NOT_EVALUATED_REAL_MODEL",
+  "reason": "三轮真实模型均未完成模块输出，候选数为0；不能将未完成运行视为15项机制均不支持，亦不能以FunctionModel预置输出计算发现率。",
+  "scope": "人工样例的notify模块；gold亦含events/http/test等其他模块，未运行全项目模型调查。",
+  "mechanism_recall": null,
+  "false_positive_rate": null,
+  "semantic_verification": "unverified",
+  "mechanisms": [
+    {
+      "name": "飞书载荷",
+      "path": "notify/sender.py",
+      "symbol": "payload",
+      "limitation": "平台限定",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "钉钉载荷",
+      "path": "notify/sender.py",
+      "symbol": "payload",
+      "limitation": "平台限定",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "未知平台拒绝",
+      "path": "notify/sender.py",
+      "symbol": "payload",
+      "limitation": "错误分支",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "批量文本拼接",
+      "path": "notify/sender.py",
+      "symbol": "payload",
+      "limitation": "不是入口批量事件",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "JSON序列化",
+      "path": "notify/sender.py",
+      "symbol": "notify",
+      "limitation": "编码机制",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "固定平台域名",
+      "path": "notify/sender.py",
+      "symbol": "notify",
+      "limitation": "非任意Webhook",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "机器人标识拼接",
+      "path": "notify/sender.py",
+      "symbol": "notify",
+      "limitation": "认证未验证",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "Content-Type",
+      "path": "notify/sender.py",
+      "symbol": "notify",
+      "limitation": "非自定义认证",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "启用开关",
+      "path": "events/handler.py",
+      "symbol": "handle_event",
+      "limitation": "enabled才继续",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "严重性过滤",
+      "path": "events/handler.py",
+      "symbol": "handle_event",
+      "limitation": "阈值以下不发送",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "事件到通知调用",
+      "path": "events/handler.py",
+      "symbol": "handle_event",
+      "limitation": "运行时待验证",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "HTTP超时",
+      "path": "http/client.py",
+      "symbol": "Transport.post",
+      "limitation": "5秒",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "HTTP辅助",
+      "path": "http/client.py",
+      "symbol": "Transport.post",
+      "limitation": "不等于产品任意Webhook",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "重试辅助",
+      "path": "http/client.py",
+      "symbol": "unused_retry",
+      "limitation": "未接入入口",
+      "evaluation": "NOT_EVALUATED"
+    },
+    {
+      "name": "测试任意URL",
+      "path": "tests/test_custom_webhook.py",
+      "symbol": "only_test_arbitrary_url",
+      "limitation": "不属于已验证产品能力",
+      "evaluation": "NOT_EVALUATED"
+    }
+  ],
+  "negative_cases": [
+    {
+      "case": "固定平台不等于任意Webhook",
+      "real_model_evaluation": "NOT_EVALUATED",
+      "structural_controls": "强类型candidate/evidence_found、hypothesis、来源核验、受限只读工具；见确定性回归，不作真实模型效果证明"
+    },
+    {
+      "case": "重试未接入不得验证",
+      "real_model_evaluation": "NOT_EVALUATED",
+      "structural_controls": "强类型candidate/evidence_found、hypothesis、来源核验、受限只读工具；见确定性回归，不作真实模型效果证明"
+    },
+    {
+      "case": "测试代码不代表产品配置",
+      "real_model_evaluation": "NOT_EVALUATED",
+      "structural_controls": "强类型candidate/evidence_found、hypothesis、来源核验、受限只读工具；见确定性回归，不作真实模型效果证明"
+    },
+    {
+      "case": "文档无实现不直接判支持或不支持",
+      "real_model_evaluation": "NOT_EVALUATED",
+      "structural_controls": "强类型candidate/evidence_found、hypothesis、来源核验、受限只读工具；见确定性回归，不作真实模型效果证明"
+    },
+    {
+      "case": "不可信指令不能触发Shell或批准",
+      "real_model_evaluation": "NOT_EVALUATED",
+      "structural_controls": "强类型candidate/evidence_found、hypothesis、来源核验、受限只读工具；见确定性回归，不作真实模型效果证明"
+    }
+  ]
+}

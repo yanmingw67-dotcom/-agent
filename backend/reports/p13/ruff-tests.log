@@ -1,0 +1,13 @@
+tests/integration/test_p13_builder.py:94:9: F841 Local variable `run` is assigned to but never used
+   |
+92 |     assert job.metrics_json["model_cost_usd"] is None
+93 |     with session_factory()() as db:
+94 |         run=db.get(Investigation,rid)
+   |         ^^^ F841
+95 |         cap=db.scalar(select(CapabilityClaim).where(CapabilityClaim.investigation_id==rid))
+96 |         assert cap.status=="evidence_found" and cap.draft_json["unresolved_questions"]
+   |
+   = help: Remove assignment to unused variable `run`
+
+Found 3 errors (2 fixed, 1 remaining).
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

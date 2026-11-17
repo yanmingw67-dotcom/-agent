@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p13_acceptance.py", line 154, in <module>
+    main()
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p13_acceptance.py", line 110, in main
+    raise AssertionError(job)
+AssertionError: {'id': '19bb2bcd-2b85-4e72-9623-ca0a23e7e06d', 'snapshot_id': '3c540b1d-eecc-49d2-88d6-9cd5407fd5f0', 'job_type': 'knowledge_build', 'stage': 'failed', 'status': 'failed', 'error_code': 'MODULE_INVESTIGATION_FAILED', 'metrics_json': {'data_classification': 'synthetic_public', 'model_mode': 'REAL', 'model_requests': 2, 'model_responses': 1, 'unmeasured_requests': 0, 'tool_calls': 9, 'tokens': 4744, 'input_tokens': 3435, 'output_tokens': 1309, 'sampled_peak_cpu_percent': 90.5, 'sampled_peak_rss_bytes': 126304256, 'resource_sample_interval_ms': 50, 'completed_modules': 0, 'unresolved_count': 1, 'uncovered_modules': 1, 'claimed_capabilities': 0, 'duration_ms': 78793, 'model_cost_usd': None, 'cost_basis': 'unknown_not_zero', 'usage_incomplete': True, 'model': 'glm-5.3-flash'}, 'attempt': 1, 'created_at': '2026-11-17T11:05:10.826689Z', 'started_at': '2026-11-17T11:05:13.745823Z', 'finished_at': '2026-11-17T11:06:32.526308Z'}

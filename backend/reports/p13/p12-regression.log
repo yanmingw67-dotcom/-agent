@@ -1,0 +1,1113 @@
+{
+  "mode": "REAL_SIX_CONTAINER_P12",
+  "checks": {
+    "cross_module_real_symbol_read": true,
+    "docx_pdf_xlsx_real_async_parse": true,
+    "product_snapshot_and_staging_isolation": true,
+    "retrieval_responds_while_index_running": 102,
+    "indexer_read_only_without_archive_mount": true
+  },
+  "model_requests": 0,
+  "tokens": 0,
+  "example": {
+    "category_id": "7979fbec-5ace-47c6-93a0-c902c2c736ae",
+    "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+    "symbol": {
+      "id": "22f91e6f-e36f-43fd-bb1b-41f1dd7390e9",
+      "file_id": "92065ddb-fd80-4fe4-a956-e33872cd4aaa",
+      "symbol_id": "22f91e6f-e36f-43fd-bb1b-41f1dd7390e9",
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": "RobotSender.send",
+      "kind": "method",
+      "status": null,
+      "language": null,
+      "role": "source",
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "def send(self, event):",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    },
+    "source_read": {
+      "id": null,
+      "file_id": "92065ddb-fd80-4fe4-a956-e33872cd4aaa",
+      "symbol_id": null,
+      "document_id": null,
+      "module_id": null,
+      "path": "notify/sender.py",
+      "name": null,
+      "kind": null,
+      "status": null,
+      "language": null,
+      "role": null,
+      "sha256": "e52ccd98013b84a849c7d626ac4a0d325a2a26c2724e474a0d61a7964966834e",
+      "start_line": 2,
+      "end_line": 3,
+      "snippet": "    def send(self, event):\n        return format_event(event)",
+      "locator": {},
+      "match_terms": [],
+      "unresolved": false
+    }
+  },
+  "initial_index": {
+    "id": "145473df-3984-48b8-9437-5d78f9f9a9ac",
+    "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 7,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 57.7,
+      "sampled_peak_rss_bytes": 90255360,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 138,
+      "cpu_seconds": 0.08,
+      "peak_rss_bytes": 89866240
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T10:56:44.272915Z",
+    "started_at": "2026-11-17T10:56:45.750564Z",
+    "finished_at": "2026-11-17T10:56:45.874235Z"
+  },
+  "incremental_index": {
+    "id": "00d12b51-2f47-4087-8632-98778a49676e",
+    "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 0,
+      "reused_files": 7,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 0.0,
+      "sampled_peak_rss_bytes": 87711744,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 48,
+      "cpu_seconds": 0.035,
+      "peak_rss_bytes": 87388160
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T10:56:46.099344Z",
+    "started_at": "2026-11-17T10:56:47.928797Z",
+    "finished_at": "2026-11-17T10:56:47.964912Z"
+  },
+  "documents": [
+    {
+      "filename": "demo_waf_manual.docx",
+      "job": {
+        "id": "c0384bd8-36a2-4c5d-8f11-215629fb24b8",
+        "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 1,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 87773184,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 54,
+          "cpu_seconds": 0.043,
+          "peak_rss_bytes": 96460800
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T10:56:48.083361Z",
+        "started_at": "2026-11-17T10:56:50.025576Z",
+        "finished_at": "2026-11-17T10:56:50.065498Z"
+      }
+    },
+    {
+      "filename": "demo_waf_manual.pdf",
+      "job": {
+        "id": "baa85809-8110-4dab-bc10-f506376487de",
+        "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 2,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 87707648,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 37,
+          "cpu_seconds": 0.029,
+          "peak_rss_bytes": 88748032
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T10:56:50.307175Z",
+        "started_at": "2026-11-17T10:56:52.128054Z",
+        "finished_at": "2026-11-17T10:56:52.154452Z"
+      }
+    },
+    {
+      "filename": "demo_capabilities.xlsx",
+      "job": {
+        "id": "5051e992-2fc5-4331-8a29-3c2671ac35ba",
+        "snapshot_id": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+        "job_type": "document_index",
+        "stage": "indexed",
+        "status": "succeeded",
+        "error_code": null,
+        "metrics_json": {
+          "indexed_files": 0,
+          "reused_files": 0,
+          "documents": 3,
+          "model_requests": 0,
+          "tokens": 0,
+          "model_cost": 0,
+          "model_mode": "NOT_USED",
+          "semantic_index": "semantic_index_unavailable",
+          "sampled_peak_cpu_percent": 0.0,
+          "sampled_peak_rss_bytes": 87711744,
+          "resource_sample_interval_ms": 50,
+          "duration_ms": 54,
+          "cpu_seconds": 0.043,
+          "peak_rss_bytes": 91652096
+        },
+        "attempt": 1,
+        "created_at": "2026-11-17T10:56:52.317124Z",
+        "started_at": "2026-11-17T10:56:54.217735Z",
+        "finished_at": "2026-11-17T10:56:54.260004Z"
+      }
+    }
+  ],
+  "benchmark_job": {
+    "id": "ec2dc527-e7a7-4108-822a-06d6140a54a2",
+    "snapshot_id": "5f222e6e-d55b-47c0-9898-239a64c37bb9",
+    "job_type": "source_index",
+    "stage": "indexed",
+    "status": "succeeded",
+    "error_code": null,
+    "metrics_json": {
+      "indexed_files": 607,
+      "reused_files": 0,
+      "documents": 0,
+      "model_requests": 0,
+      "tokens": 0,
+      "model_cost": 0,
+      "model_mode": "NOT_USED",
+      "semantic_index": "semantic_index_unavailable",
+      "sampled_peak_cpu_percent": 99.4,
+      "sampled_peak_rss_bytes": 92782592,
+      "resource_sample_interval_ms": 50,
+      "duration_ms": 5619,
+      "cpu_seconds": 4.163,
+      "peak_rss_bytes": 92422144
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T10:57:02.893688Z",
+    "started_at": "2026-11-17T10:57:04.627872Z",
+    "finished_at": "2026-11-17T10:57:10.233922Z"
+  },
+  "benchmark_elapsed_seconds": 8.081080499992822,
+  "latencies": {
+    "idle": {
+      "search_code_batch": {
+        "count": 30,
+        "p50_ms": 17.65,
+        "p95_ms": 23.412,
+        "max_ms": 50.793
+      },
+      "search_symbols": {
+        "count": 30,
+        "p50_ms": 13.378,
+        "p95_ms": 18.519,
+        "max_ms": 23.778
+      }
+    },
+    "indexing": {
+      "search_code_batch": {
+        "count": 51,
+        "p50_ms": 20.658,
+        "p95_ms": 29.998,
+        "max_ms": 100.123
+      },
+      "search_symbols": {
+        "count": 51,
+        "p50_ms": 16.293,
+        "p95_ms": 27.266,
+        "max_ms": 32.482
+      }
+    }
+  },
+  "resources": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": true
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-builder-1",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 1073741824,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1342177280,
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "mounts": [
+        {
+          "destination": "/data",
+          "rw": true
+        }
+      ],
+      "user": ""
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 805306368,
+      "mounts": [
+        {
+          "destination": "/data/ingestion",
+          "rw": true
+        },
+        {
+          "destination": "/data/sources",
+          "rw": false
+        },
+        {
+          "destination": "/data/documents",
+          "rw": false
+        },
+        {
+          "destination": "/data/control",
+          "rw": true
+        },
+        {
+          "destination": "/data/archives",
+          "rw": false
+        }
+      ],
+      "user": "app"
+    }
+  ],
+  "host_engine_info": 8,
+  "resource_scope": "container quotas sum <=4 CPU and <=8GiB; not a dedicated 4C8G VM",
+  "api_metrics": {
+    "database_queries": {
+      "count": 387,
+      "total_ms": 249.74682103129453,
+      "max_ms": 42.56112500115705,
+      "p50_ms": 0.4509589998633601,
+      "p95_ms": 1.0612080004648305
+    },
+    "http_requests": {
+      "count": 314,
+      "total_ms": 2006.3497060200461,
+      "max_ms": 136.23620799990022,
+      "p50_ms": 3.4380420001980383,
+      "p95_ms": 29.19004100112943
+    }
+  },
+  "retrieval_metrics": {
+    "database_queries": {
+      "count": 1928,
+      "total_ms": 672.5130059894582,
+      "max_ms": 2.5515830002404982,
+      "p50_ms": 0.2770000010059448,
+      "p95_ms": 0.6727079999109264
+    },
+    "http_requests": {
+      "count": 6,
+      "total_ms": 96.80891600146424,
+      "max_ms": 82.95574999829114,
+      "p50_ms": 3.114916000413359,
+      "p95_ms": 82.95574999829114
+    },
+    "retrieval_requests": {
+      "count": 290,
+      "total_ms": 2584.2583799931163,
+      "max_ms": 42.697041999417706,
+      "p50_ms": 7.338207999055157,
+      "p95_ms": 15.077915999427205
+    }
+  },
+  "storage": {
+    "quota_bytes": 10737418240,
+    "used_bytes": 12747096,
+    "reserved_bytes": 0,
+    "reservation_count": 0,
+    "reservations": [],
+    "entries": [
+      {
+        "kind": "archive",
+        "key": "a7d9be06-79e3-467a-af7c-3e136fad5981.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "ee2d7fa6-9f2f-42a8-b18b-be7984f35b81.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "7d52d9ef-89d2-4e72-9db8-dfa3cb6dda04.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "077541d5-94f8-4e3d-a1da-83a905a383ad.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "1e1a162e-6a33-4ed5-a9f3-c2f80519ff7a.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "6a207a00-b67d-4c1a-90ea-c69200877310.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "de9a041d-1256-4975-b2c0-a929101e172d.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "a0606d4c-7730-4bd7-b70a-8710155be9e8.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "54b1d4a6-7dac-4026-9470-55beee11fea1.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "1f29cb06-6168-493e-80f9-ca3cfb77f330.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "adc16b1f-5e07-4fdd-a678-0083a989ce2c.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "433168fa-a1c0-4672-be47-d5c3c5414cdb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "e3a9f2e6-f26d-4f67-b280-27c0a4d90160.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "58698870-fbc0-4af8-885d-a164540178c3.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "10c1f2ca-a2b8-417b-9ff7-bbb57b5212da.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "d70a2f90-96f9-405c-a93c-c2cde5565979.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "b775287c-1082-4a38-8529-8e0567eb464d.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f7db46d4-3d59-440a-a9ca-d2b3512ffeb2.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "c3d74b44-e101-4044-8d63-68a5b4aa8dfe.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "dbdca079-a60c-4c3d-b0ab-7c90340af77b.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "02a14a91-5c00-4835-93ce-74fb0a951968.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "65c12304-2d80-40d2-acfd-7cfb157b8255.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "baa40368-f988-46f2-801e-c2959e8a29ce.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "63ba1949-ff90-4b35-8e21-57a9d92b28d5.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f57fee73-ea80-49df-97ab-2ce78dc6388c.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "e67f8584-f7c6-4f80-ad19-89fcf9caa6c4.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "db8b7d40-7215-4645-9ef5-fa7f483af46f.zip",
+        "referenced": true,
+        "inflight_protected": true,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "fb6afc1c-f884-44e6-a544-655bbe1bd2a3.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f75295d9-48bf-4f2c-a244-af44594a2a04.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "c81648a4-eed4-4e66-9d41-bcad1ad3af6f.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "17cf5669-fba0-420e-b75e-a102edb6bd72.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "e2cb5780-00f8-4684-a7d2-2993d8df0e93.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8a1fe17-a3cb-4d15-a9d5-a18d7a914995.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "6520b947-6d86-4bfa-aa41-f41918684e0b.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "ef66295a-4264-4f59-9082-1fc3469b91fb.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "archive",
+        "key": "f8731991-2e5d-4f8a-b265-57f4a13382ef.zip",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "1c0715d7-e29e-46f1-9416-064884dc5cd2",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "64b6c76f-c19c-45a4-adac-cec16d4c160f",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "489f079b-daf8-4ca6-aad0-0ce0a9d73d12",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "4f660c9d-1dc4-4e4f-8b6a-d722ceb6430d",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "4f841005-00ec-4cd0-b223-c4bee80553d5",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "d5a6be89-712d-4ff0-98b7-ceaa53b1ec6c",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "5f222e6e-d55b-47c0-9898-239a64c37bb9",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "da224f1a-2a29-4500-81f7-2dd449d5e828",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "84ab4600-2124-4784-8520-0db8458dfff5",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0a478450-75e2-41db-b2e3-16e72e6cc462",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0486efad-f5ba-4c25-8f48-1c6aee1ff817",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "5720403a-2a36-4128-8aae-eff9ab348d9d",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "66f590c3-7bb4-4d42-ae3c-4efbbc5617c6",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "e1ffad69-96f5-4a7b-b753-394480f6ea26",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "cb1f3fdc-d838-4357-8230-65ecc96914d3",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "0a70f790-73cd-449c-8b77-5c0e6cdca9d7",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "908d8cc0-1ea5-4ff0-aaad-38239ed705a1",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "454e1798-739e-46cc-8f48-e18563c936df",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "dcd2e6cf-e317-4439-924a-2c9dda575e38",
+        "referenced": true,
+        "inflight_protected": true,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "119f276c-cbd5-4871-babe-abef052a5c39",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "efc20ddd-cc11-46d7-a85a-aca6dafc8983",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "8a8e6df2-fb00-4f71-b451-10947e6f2617",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "dcf8d039-0783-416f-af46-9bcf97ad8f64",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "snapshot",
+        "key": "c6050389-c532-4396-a6a7-732789f0f3e6",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "6333d037-2342-4a30-a7ac-2cd93dfae58d.md",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "7e616e24-3fe6-4874-934d-2cb127efcfc5.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "133397df-0941-48ed-ac53-739751fabaef.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "a40a798d-1095-4101-a3ba-6245cc203054.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "4be1c734-ebbf-452e-95bc-77ed4a75471f.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "153ec6c6-3d22-41b6-a297-0462fc37e4d4.txt",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8d1a64d3-a099-4bfd-ad78-47a610c6d5eb.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8fd0727e-c425-448b-9576-27fd368b1505.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "b719e5c9-2bde-4179-8562-b75c1c9a986a.md",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "8b6670e1-e710-4b3b-a5be-922d4342a8ac.txt",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "a7508e56-5fd5-4314-8bf8-5c4f7cb433de.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "be251967-8d7a-488d-a073-fd8cda553868.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "6499d3a3-49d7-4ac5-bbf7-f37a8a60c383.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "1b79535d-b8aa-4c02-9162-45e9adccef22.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "26119bcb-90a9-474e-b8b3-620e10876024.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "d79893bf-3914-4d14-81dc-51a2fba8847a.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "caf56b33-2a07-424f-aa2f-9293d0622c9e.docx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "882df06a-be36-4d70-ac2c-5f9976a53a66.md",
+        "referenced": true,
+        "inflight_protected": true,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "98b65dab-777d-479c-bd99-6892dee08f7e.txt",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "7fef1454-e0d3-49ec-ba1d-d3753a315a10.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "e4612ea6-b1de-44d9-810b-9a86deec0c20.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "44e8095e-2e80-4f51-920b-152a01d8b5bd.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "d9d94803-9e86-4724-9eb4-ceafbe8af406.xlsx",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      },
+      {
+        "kind": "document",
+        "key": "bd18fd8c-ef67-4c8a-8357-a4b5f185e5f1.pdf",
+        "referenced": true,
+        "inflight_protected": false,
+        "orphan_candidate": false,
+        "action": "report_only"
+      }
+    ],
+    "truncated": false,
+    "scanned_entries": 84,
+    "automatic_deletion": false
+  }
+}

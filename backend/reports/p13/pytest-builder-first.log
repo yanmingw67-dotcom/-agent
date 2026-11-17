@@ -1,0 +1,32 @@
+......F...                                                               [100%]
+=================================== FAILURES ===================================
+_____________ test_module_and_role_scope_are_not_user_overridable ______________
+
+client = <starlette.testclient.TestClient object at 0x1113ef590>
+
+    def test_module_and_role_scope_are_not_user_overridable(client):
+        cid, sid = indexed(client, "one")
+        other, osid = indexed(client, "two")
+        with session_factory()() as db:
+            foreign = db.scalar(select(Module.id).where(Module.snapshot_id == osid))
+>       assert (
+            client.post(
+                f"/api/v1/snapshots/{sid}/investigate", headers=ADMIN, json={"module_ids": [foreign]}
+            ).status_code
+            == 404
+        )
+E       AssertionError: assert 422 == 404
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+E        +    where <Response [422 Unprocessable Entity]> = post('/api/v1/snapshots/6b17a8e7-6281-47ae-8a55-84b02fb5e146/investigate', headers={'Authorization': 'Bearer aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}, json={'module_ids': ['fa97f55a-cee3-4d5f-8143-cd0d578775c7']})
+E        +      where post = <starlette.testclient.TestClient object at 0x1113ef590>.post
+
+tests/integration/test_p13_builder.py:235: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p13_builder.py::test_module_and_role_scope_are_not_user_overridable
+1 failed, 9 passed, 1 warning in 2.74s

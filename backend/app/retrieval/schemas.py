@@ -78,7 +78,9 @@ class ToolRequest(BaseModel):
     module_id: str | None = None
     file_id: str | None = None
     symbol_id: str | None = None
-    segment_id: str | None = None
+    segment_id: str | None = Field(
+        default=None, description="search_documents返回的results[].id；不是document_id，禁止猜测"
+    )
     start_line: int = Field(default=1, ge=1)
     end_line: int | None = Field(default=None, ge=1)
     limit: int = Field(default=30, ge=1, le=100)

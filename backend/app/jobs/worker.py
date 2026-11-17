@@ -18,10 +18,18 @@ def main():
         lock = None
         acquired = False
         try:
-            if settings.worker_kind == "index":
+            if settings.worker_kind in {"index", "builder"}:
+                builder = settings.worker_kind == "builder"
                 lock = connection().lock(
-                    "knowledge-index-single-worker",
-                    timeout=settings.index_job_timeout_seconds + 120,
+                    "knowledge-builder-single-worker"
+                    if builder
+                    else "knowledge-index-single-worker",
+                    timeout=(
+                        settings.builder_job_timeout_seconds
+                        if builder
+                        else settings.index_job_timeout_seconds
+                    )
+                    + 120,
                 )
                 acquired = lock.acquire(blocking=False)
                 if not acquired:
@@ -32,15 +40,19 @@ def main():
             Path("/tmp/knowledge-worker-heartbeat").write_text(str(time.time()))
             worker = Worker(
                 [
-                    settings.index_queue_name
-                    if settings.worker_kind == "index"
-                    else settings.queue_name
+                    settings.builder_queue_name
+                    if settings.worker_kind == "builder"
+                    else (
+                        settings.index_queue_name
+                        if settings.worker_kind == "index"
+                        else settings.queue_name
+                    )
                 ],
                 connection=connection(),
             )
             worker.work(
                 burst=True,
-                max_jobs=1 if settings.worker_kind == "index" else 10,
+                max_jobs=1 if settings.worker_kind in {"index", "builder"} else 10,
                 logging_level="WARNING",
             )
         except Exception:

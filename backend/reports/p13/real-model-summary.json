@@ -1,0 +1,111 @@
+{
+  "real_model_status": "FAILED_END_TO_END_NOT_ACCEPTED",
+  "model": "glm-5.3-flash",
+  "rounds": [
+    {
+      "round": 1,
+      "artifact": "real-first-segment-failure.json",
+      "job_id": "0793b46d-2d30-4c3f-94d7-d4ae4f916825",
+      "status": "failed",
+      "model_mode": "REAL",
+      "model_requests": 4,
+      "model_responses": 4,
+      "input_tokens": 21157,
+      "output_tokens": 1361,
+      "tokens": 22518,
+      "tool_calls": 15,
+      "duration_ms": 35145,
+      "claimed_capabilities": 0,
+      "usage_incomplete": false,
+      "model_cost_usd": null,
+      "module_errors": [
+        {
+          "code": "SEGMENT_NOT_FOUND"
+        }
+      ],
+      "exceptions": [],
+      "retrieval_samples": 0,
+      "retrieval_p50_ms": null,
+      "retrieval_p95_ms": null
+    },
+    {
+      "round": 2,
+      "artifact": "real-failed-b01f0e47-dad8-4be9-9ea1-32037036ce6a.json",
+      "job_id": "b01f0e47-dad8-4be9-9ea1-32037036ce6a",
+      "status": "failed",
+      "model_mode": "REAL",
+      "model_requests": 3,
+      "model_responses": 3,
+      "input_tokens": 15581,
+      "output_tokens": 5099,
+      "tokens": 20680,
+      "tool_calls": 10,
+      "duration_ms": 79367,
+      "claimed_capabilities": 0,
+      "usage_incomplete": false,
+      "model_cost_usd": null,
+      "module_errors": [
+        {
+          "code": "MODEL_OR_OUTPUT_ERROR"
+        }
+      ],
+      "exceptions": [
+        {
+          "error_code": "MODEL_OR_OUTPUT_ERROR",
+          "exception_type": "OutputTokenLimitExceeded"
+        }
+      ],
+      "retrieval_samples": 588,
+      "retrieval_p50_ms": 16.881,
+      "retrieval_p95_ms": 24.569
+    },
+    {
+      "round": 3,
+      "artifact": "real-failed-19bb2bcd-2b85-4e72-9623-ca0a23e7e06d.json",
+      "job_id": "19bb2bcd-2b85-4e72-9623-ca0a23e7e06d",
+      "status": "failed",
+      "model_mode": "REAL",
+      "model_requests": 2,
+      "model_responses": 1,
+      "input_tokens": 3435,
+      "output_tokens": 1309,
+      "tokens": 4744,
+      "tool_calls": 9,
+      "duration_ms": 78793,
+      "claimed_capabilities": 0,
+      "usage_incomplete": true,
+      "model_cost_usd": null,
+      "module_errors": [
+        {
+          "code": "MODEL_OR_OUTPUT_ERROR"
+        }
+      ],
+      "exceptions": [
+        {
+          "error_code": "MODEL_OR_OUTPUT_ERROR",
+          "exception_type": "ModelTimeoutError"
+        }
+      ],
+      "retrieval_samples": 579,
+      "retrieval_p50_ms": 17.246,
+      "retrieval_p95_ms": 31.546
+    }
+  ],
+  "totals": {
+    "model_requests": 9,
+    "model_responses": 8,
+    "input_tokens": 40173,
+    "output_tokens": 7769,
+    "tokens": 47942,
+    "tool_calls": 34
+  },
+  "usage_complete": false,
+  "token_total_basis": "仅已返回响应的供应商用量；超时请求用量未知",
+  "model_cost_usd": null,
+  "cost_basis": "unknown_not_zero",
+  "real_source_to_evidence_to_candidate_example": null,
+  "deterministic_example_is_real_model": false,
+  "data_scope": "synthetic_public_only",
+  "enterprise_egress_authorized": false,
+  "further_model_requests": "STOPPED"
+}

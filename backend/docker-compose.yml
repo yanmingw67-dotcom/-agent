@@ -1,7 +1,7 @@
 name: product-knowledge-p11
 x-app: &app
   build: .
-  image: product-knowledge:p1.2
+  image: product-knowledge:p1.3
   environment: &app-env
     DATABASE_URL: postgresql+psycopg://knowledge:${POSTGRES_PASSWORD:?请先生成 .env}@postgres:5432/knowledge
     REDIS_URL: redis://redis:6379/0
@@ -43,6 +43,7 @@ services:
       retries: 20
   worker:
     <<: *app
+    cpus: 0.25
     command: ["python", "-m", "app.jobs.worker"]
     volumes:
       - archives:/data/archives:ro
@@ -66,8 +67,40 @@ services:
       WORKER_KIND: index
       JOB_TIMEOUT_SECONDS: 1800
     command: ["python", "-m", "app.jobs.worker"]
-    cpus: 1
-    mem_limit: 1536m
+    cpus: 0.75
+    mem_limit: 1280m
+    volumes:
+      - sources:/data/sources:ro
+      - documents:/data/documents:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; assert time.time()-float(Path('/tmp/knowledge-worker-heartbeat').read_text()) < 1860"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+  builder:
+    <<: *app
+    environment:
+      <<: *app-env
+      WORKER_KIND: builder
+      BUILDER_MODEL: ${BUILDER_MODEL:-}
+      BUILDER_BASE_URL: ${BUILDER_BASE_URL:-}
+      BUILDER_API_KEY: ${BUILDER_API_KEY:-}
+      BUILDER_ALLOW_SYNTHETIC: ${BUILDER_ALLOW_SYNTHETIC:-false}
+      BUILDER_ALLOW_ENTERPRISE: ${BUILDER_ALLOW_ENTERPRISE:-false}
+      BUILDER_INPUT_USD_PER_MILLION: ${BUILDER_INPUT_USD_PER_MILLION:-}
+      BUILDER_OUTPUT_USD_PER_MILLION: ${BUILDER_OUTPUT_USD_PER_MILLION:-}
+      BUILDER_MAX_REQUESTS: ${BUILDER_MAX_REQUESTS:-8}
+      BUILDER_MAX_TOOL_CALLS: ${BUILDER_MAX_TOOL_CALLS:-30}
+      BUILDER_MAX_TOKENS: ${BUILDER_MAX_TOKENS:-30000}
+      BUILDER_MAX_CONTEXT_CHARS: ${BUILDER_MAX_CONTEXT_CHARS:-80000}
+      BUILDER_REASONING_EFFORT: ${BUILDER_REASONING_EFFORT:-}
+      BUILDER_MAX_OUTPUT_TOKENS: ${BUILDER_MAX_OUTPUT_TOKENS:-4000}
+    command: ["python", "-m", "app.jobs.worker"]
+    cpus: 0.5
+    mem_limit: 1024m
     volumes:
       - sources:/data/sources:ro
       - documents:/data/documents:ro

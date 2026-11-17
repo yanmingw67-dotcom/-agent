@@ -1,0 +1,92 @@
+[
+  {
+    "name": "飞书载荷",
+    "path": "notify/sender.py",
+    "symbol": "payload",
+    "limitation": "平台限定"
+  },
+  {
+    "name": "钉钉载荷",
+    "path": "notify/sender.py",
+    "symbol": "payload",
+    "limitation": "平台限定"
+  },
+  {
+    "name": "未知平台拒绝",
+    "path": "notify/sender.py",
+    "symbol": "payload",
+    "limitation": "错误分支"
+  },
+  {
+    "name": "批量文本拼接",
+    "path": "notify/sender.py",
+    "symbol": "payload",
+    "limitation": "不是入口批量事件"
+  },
+  {
+    "name": "JSON序列化",
+    "path": "notify/sender.py",
+    "symbol": "notify",
+    "limitation": "编码机制"
+  },
+  {
+    "name": "固定平台域名",
+    "path": "notify/sender.py",
+    "symbol": "notify",
+    "limitation": "非任意Webhook"
+  },
+  {
+    "name": "机器人标识拼接",
+    "path": "notify/sender.py",
+    "symbol": "notify",
+    "limitation": "认证未验证"
+  },
+  {
+    "name": "Content-Type",
+    "path": "notify/sender.py",
+    "symbol": "notify",
+    "limitation": "非自定义认证"
+  },
+  {
+    "name": "启用开关",
+    "path": "events/handler.py",
+    "symbol": "handle_event",
+    "limitation": "enabled才继续"
+  },
+  {
+    "name": "严重性过滤",
+    "path": "events/handler.py",
+    "symbol": "handle_event",
+    "limitation": "阈值以下不发送"
+  },
+  {
+    "name": "事件到通知调用",
+    "path": "events/handler.py",
+    "symbol": "handle_event",
+    "limitation": "运行时待验证"
+  },
+  {
+    "name": "HTTP超时",
+    "path": "http/client.py",
+    "symbol": "Transport.post",
+    "limitation": "5秒"
+  },
+  {
+    "name": "HTTP辅助",
+    "path": "http/client.py",
+    "symbol": "Transport.post",
+    "limitation": "不等于产品任意Webhook"
+  },
+  {
+    "name": "重试辅助",
+    "path": "http/client.py",
+    "symbol": "unused_retry",
+    "limitation": "未接入入口"
+  },
+  {
+    "name": "测试任意URL",
+    "path": "tests/test_custom_webhook.py",
+    "symbol": "only_test_arbitrary_url",
+    "limitation": "不属于已验证产品能力"
+  }
+]

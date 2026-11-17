@@ -1,0 +1,144 @@
+{
+  "mode": "REAL_SERVICES_REAL_MODEL_ONLY",
+  "checks": {
+    "async_queue_and_retrieval": true,
+    "container_resource_budget": true
+  },
+  "latencies_ms": [
+    42.80637500050943,
+    19.20724999217782,
+    11.998083995422348,
+    13.213291007559747,
+    12.292667001020163,
+    18.184125001425855,
+    14.724167005624622,
+    15.64370800042525,
+    10.861875009140931,
+    17.111249995650724,
+    15.794040999026038,
+    11.495375001686625,
+    11.612082991632633,
+    13.211291006882675,
+    18.384208000497892,
+    11.061290992074646,
+    12.658541003474966,
+    16.403250003349967,
+    11.857165998662822,
+    11.462833994301036,
+    16.099832995678298,
+    36.52645899273921,
+    12.87166700058151
+  ],
+  "enqueue_latency_ms": 16.235,
+  "category_id": "a1e24cf2-402f-4af7-885d-29ea43e4f0ff",
+  "snapshot_id": "64b6c76f-c19c-45a4-adac-cec16d4c160f",
+  "job_id": "0cb46392-5b69-478a-8ee8-fddd225cfae0",
+  "job": {
+    "id": "0cb46392-5b69-478a-8ee8-fddd225cfae0",
+    "snapshot_id": "64b6c76f-c19c-45a4-adac-cec16d4c160f",
+    "job_type": "knowledge_build",
+    "stage": "failed",
+    "status": "failed",
+    "error_code": "MODEL_NOT_CONFIGURED",
+    "metrics_json": {
+      "data_classification": "synthetic_public",
+      "model_mode": "NOT_STARTED",
+      "model_requests": 0,
+      "model_responses": 0,
+      "tool_calls": 0,
+      "tokens": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "sampled_peak_cpu_percent": 0.0,
+      "sampled_peak_rss_bytes": 90877952,
+      "resource_sample_interval_ms": 50,
+      "completed_modules": 0,
+      "unresolved_count": 1,
+      "uncovered_modules": 1,
+      "claimed_capabilities": 0,
+      "duration_ms": 68,
+      "model_cost_usd": null,
+      "cost_basis": "unknown_not_zero",
+      "usage_incomplete": false,
+      "model": ""
+    },
+    "attempt": 1,
+    "created_at": "2026-11-17T10:21:29.909849Z",
+    "started_at": "2026-11-17T10:21:32.736886Z",
+    "finished_at": "2026-11-17T10:21:32.790473Z"
+  },
+  "investigations": [
+    {
+      "id": "465f7234-4511-4a8e-957a-018ba6340a72",
+      "module_id": "3b1b5349-8a7b-4a98-9f4f-e3f5ff775bd5",
+      "status": "pending",
+      "attempt": 0,
+      "error_code": null,
+      "metrics": {},
+      "result": {}
+    }
+  ],
+  "actual_model_tool_trace": [],
+  "real_model_status": "BLOCKED",
+  "blocker": "MODEL_NOT_CONFIGURED",
+  "source_to_claim_evidence_example": null,
+  "containers": [
+    {
+      "name": "/product-knowledge-p11-api-1",
+      "cpu_limit": 0.5,
+      "memory_limit": 536870912,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-builder-1",
+      "cpu_limit": 0.5,
+      "memory_limit": 1073741824,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-indexer-1",
+      "cpu_limit": 0.75,
+      "memory_limit": 1342177280,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-postgres-1",
+      "cpu_limit": 0.75,
+      "memory_limit": 1610612736,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-redis-1",
+      "cpu_limit": 0.25,
+      "memory_limit": 268435456,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-retrieval-1",
+      "cpu_limit": 1.0,
+      "memory_limit": 805306368,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    },
+    {
+      "name": "/product-knowledge-p11-worker-1",
+      "cpu_limit": 0.25,
+      "memory_limit": 805306368,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy"
+    }
+  ],
+  "target_vm_status": "NOT_TESTED"
+}

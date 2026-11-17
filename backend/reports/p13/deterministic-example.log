@@ -1,0 +1,539 @@
+{
+  "model_mode": "TEST_FUNCTION_MODEL",
+  "real_model_evaluation": false,
+  "input": "人工p13_assets.source_zip + MANUAL",
+  "job_id": "3b8fcd15-0048-47ce-a626-6e8f215e42f7",
+  "snapshot_id": "64b6c76f-c19c-45a4-adac-cec16d4c160f",
+  "module_id": "3b1b5349-8a7b-4a98-9f4f-e3f5ff775bd5",
+  "metrics": {
+    "data_classification": "synthetic_public",
+    "model_requests": 3,
+    "model_responses": 3,
+    "tool_calls": 5,
+    "tokens": 1367,
+    "input_tokens": 1206,
+    "output_tokens": 161,
+    "sampled_peak_cpu_percent": 58.2,
+    "sampled_peak_rss_bytes": 114368512,
+    "resource_sample_interval_ms": 50,
+    "completed_modules": 1,
+    "unresolved_count": 4,
+    "uncovered_modules": 0,
+    "claimed_capabilities": 2,
+    "duration_ms": 287,
+    "model_cost_usd": null,
+    "cost_basis": "unknown_not_zero",
+    "usage_incomplete": false,
+    "model_mode": "TEST_FUNCTION_MODEL",
+    "model": "injected_test_model"
+  },
+  "result": {
+    "output": {
+      "module_id": "3b1b5349-8a7b-4a98-9f4f-e3f5ff775bd5",
+      "module_summary": "确定性结构测试输出，不是自主发现效果",
+      "capabilities": [
+        {
+          "key": "platform_text",
+          "name": "固定平台文本载荷候选",
+          "category": "通知",
+          "action": "按平台格式化文本消息",
+          "target": "机器人平台",
+          "business_goal": "通知消息编码",
+          "implementation_mechanism": "payload按feishu/ding选择载荷结构，并用换行拼接事件消息",
+          "supported_scope": [],
+          "conditions": [
+            "仅固定平台"
+          ],
+          "limitations": [
+            "没有证明任意第三方URL"
+          ],
+          "evidence_ids": [
+            "ev-8ad22d555b0030c42e74553e2ff1beca36496a8f4a2b5ef51e1243b7a9bc9be3"
+          ],
+          "unresolved_questions": [
+            "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+            "入口批量事件/网络送达/认证未验证"
+          ],
+          "status": "evidence_found"
+        },
+        {
+          "key": "webhook_hypothesis",
+          "name": "Webhook用途假设",
+          "category": "通知",
+          "action": "探索JSON投递机制用途",
+          "target": "机器人平台",
+          "business_goal": "通知消息编码",
+          "implementation_mechanism": "payload按feishu/ding选择载荷结构，并用换行拼接事件消息",
+          "supported_scope": [],
+          "conditions": [
+            "仅固定平台"
+          ],
+          "limitations": [
+            "没有证明任意第三方URL"
+          ],
+          "evidence_ids": [
+            "ev-8ad22d555b0030c42e74553e2ff1beca36496a8f4a2b5ef51e1243b7a9bc9be3"
+          ],
+          "unresolved_questions": [
+            "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+            "任意地址和认证均未证明"
+          ],
+          "status": "evidence_found"
+        }
+      ],
+      "candidate_relations": [
+        {
+          "source_key": "platform_text",
+          "target_key": "webhook_hypothesis",
+          "relation_type": "possible_equivalent",
+          "rationale": "共享JSON文本机制仅可形成待调查线索",
+          "evidence_ids": [
+            "ev-8ad22d555b0030c42e74553e2ff1beca36496a8f4a2b5ef51e1243b7a9bc9be3"
+          ],
+          "unverified_gaps": [
+            "固定平台不能推出任意第三方URL支持"
+          ]
+        }
+      ],
+      "unexplained_entrypoint_ids": [
+        "7ede8e50-8982-4a6b-923e-cbc74098bde2"
+      ],
+      "open_questions": [
+        "get_module_context:coverage_incomplete；不得用无命中判不支持",
+        "list_entrypoints:coverage_incomplete；不得用无命中判不支持",
+        "list_entrypoints:unresolved；语法候选不证明可达性",
+        "所有业务语义待人工核查"
+      ]
+    },
+    "claim_ids": {
+      "platform_text": "cap-7e71293394fce48724a891e0a990793abb750beff0c3ab5c41a3f314dc622d16",
+      "webhook_hypothesis": "cap-81e9124912beeb2752c621054aaef3244f2c05b5a1324afc2e5d1caa40ee518c"
+    },
+    "semantic_verification": "unverified",
+    "formal_compliance_decision": null,
+    "coverage_incomplete": true
+  },
+  "evidence": [
+    {
+      "id": "ev-8ad22d555b0030c42e74553e2ff1beca36496a8f4a2b5ef51e1243b7a9bc9be3",
+      "snapshot_id": "64b6c76f-c19c-45a4-adac-cec16d4c160f",
+      "kind": "source",
+      "source_ref": {
+        "file_id": "e959fd87-e1a3-476b-9db2-48b3a965ac7e",
+        "path": "notify/sender.py",
+        "role": "source"
+      },
+      "locator": {
+        "start_line": 4,
+        "end_line": 10
+      },
+      "source_hash": "b0705951c3c0d7ac9eb08dc4fe5667b8cac5589f8bb2a041919ea8b413698642",
+      "quote_hash": "e74f49186fff243e6d2a3fe92127d9391f5b751324a055a3190a4a5dc2533d5c",
+      "quote": "def payload(platform, events):\n    text = \"\\n\".join(str(e[\"message\"]) for e in events)\n    if platform == \"feishu\":\n        return {\"msg_type\": \"text\", \"content\": {\"text\": text}}\n    if platform == \"ding\":\n        return {\"msgtype\": \"text\", \"text\": {\"content\": text}}\n    raise ValueError(\"unsupported platform\")",
+      "verification_state": "source_verified",
+      "semantic_verification": "unverified",
+      "warnings": [
+        "semantic_support_unverified",
+        "runtime_reachability_unverified"
+      ]
+    }
+  ],
+  "tool_trace": [
+    {
+      "kind": "tool_call",
+      "sequence": 1,
+      "details": {
+        "tool": "get_module_context",
+        "args_hash": "2305a64d0e65d33fb2a7ee993ab8e5b678f2a8a5d9d4bc008b7c16bf5c2b6b35"
+      }
+    },
+    {
+      "kind": "tool_result",
+      "sequence": 2,
+      "details": {
+        "tool": "get_module_context",
+        "result_hash": "b21063807d90b5ada4a5d3037496934cc4008b82ce01e16b54561721846c7e25",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": true,
+        "unresolved": false
+      }
+    },
+    {
+      "kind": "tool_call",
+      "sequence": 3,
+      "details": {
+        "tool": "list_entrypoints",
+        "args_hash": "fbe47fb60a748de5a2b92574c21dd1711cd7d2fa8a6d92f83e97f7f63ba06a61"
+      }
+    },
+    {
+      "kind": "tool_result",
+      "sequence": 4,
+      "details": {
+        "tool": "list_entrypoints",
+        "result_hash": "95015c260512151228871dd2662971d9d5fc5371b5dc67f8f5afb87b319668ea",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": true,
+        "unresolved": true
+      }
+    },
+    {
+      "kind": "tool_call",
+      "sequence": 5,
+      "details": {
+        "tool": "search_documents",
+        "args_hash": "3d09eb8e31a222dbb3a03b0f5166c0f67fc7512bfc6744c6380c8d127596daf5"
+      }
+    },
+    {
+      "kind": "tool_result",
+      "sequence": 6,
+      "details": {
+        "tool": "search_documents",
+        "result_hash": "f858920004f742483b9c70d0356e8172ba170fb92a254f6e6d16227e557c1e98",
+        "result_count": 0,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "kind": "model_request",
+      "sequence": 7,
+      "details": {
+        "message_count": 1
+      }
+    },
+    {
+      "kind": "model_response",
+      "sequence": 8,
+      "details": {
+        "input_tokens": 318,
+        "output_tokens": 12,
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "query_knowledge",
+            "tool_call_id_hash": "0fb2feb1919def15212779db3966762ac0408ac21ce2b75977ce7a14ea9bd3df"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "tool_call",
+      "sequence": 9,
+      "details": {
+        "tool": "read_source",
+        "args_hash": "c60a1aab6305536b9ca10ab604d96729fdbbbc45f09b78911393e5dd1df14326"
+      }
+    },
+    {
+      "kind": "tool_result",
+      "sequence": 10,
+      "details": {
+        "tool": "read_source",
+        "result_hash": "ea8563f384e6afe4809f411a6d18decd3b45368f1f88295959a46cda83b6e64a",
+        "result_count": 1,
+        "truncated": false,
+        "coverage_incomplete": false,
+        "unresolved": false
+      }
+    },
+    {
+      "kind": "model_request",
+      "sequence": 11,
+      "details": {
+        "message_count": 3
+      }
+    },
+    {
+      "kind": "model_response",
+      "sequence": 12,
+      "details": {
+        "input_tokens": 428,
+        "output_tokens": 29,
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "register_evidence",
+            "tool_call_id_hash": "cc8e1e23f8579b33e71e8f3959c6073406f58ddd86ad8fa47fa16abc030b89e7"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "tool_call",
+      "sequence": 13,
+      "details": {
+        "tool": "register_evidence",
+        "args_hash": "c6a6bc6d7fb9e0b30c8cb3e6f0900a2c2819e14e6673164c0fafe492f8f7df1b"
+      }
+    },
+    {
+      "kind": "evidence_registered",
+      "sequence": 14,
+      "details": {
+        "evidence_id": "ev-8ad22d555b0030c42e74553e2ff1beca36496a8f4a2b5ef51e1243b7a9bc9be3",
+        "quote_hash": "e74f49186fff243e6d2a3fe92127d9391f5b751324a055a3190a4a5dc2533d5c"
+      }
+    },
+    {
+      "kind": "model_request",
+      "sequence": 15,
+      "details": {
+        "message_count": 5
+      }
+    },
+    {
+      "kind": "model_response",
+      "sequence": 16,
+      "details": {
+        "input_tokens": 460,
+        "output_tokens": 120,
+        "parts": [
+          {
+            "kind": "tool-call",
+            "tool": "final_result",
+            "tool_call_id_hash": "67965dc7c29838deb56554b12a6e78cafec308d16d7164fb4189d482de7d87a8"
+          }
+        ]
+      }
+    }
+  ],
+  "retrieval_during_function_model_ms": [
+    22.294417009106837,
+    11.39612500264775,
+    16.257208000752144,
+    20.985292008845136,
+    10.476625000592321,
+    11.136624991195276,
+    11.600959012866952,
+    23.569375000079162,
+    25.485833000857383,
+    12.98566699551884,
+    15.574417004245333,
+    11.348290994646959,
+    13.398750001215376,
+    10.001957998611033,
+    10.840083006769419,
+    10.508958002901636,
+    8.307124997372739,
+    15.363917002105154,
+    9.67237500299234,
+    10.755334005807526,
+    9.21829100116156,
+    8.890333992894739,
+    9.108874990488403,
+    8.9979580079671,
+    12.204875005409122,
+    11.45183299377095,
+    10.842207993846387,
+    13.170999998692423,
+    10.054500002297573,
+    10.319833003450185,
+    9.957999995094724,
+    15.642375001334585,
+    14.631041995016858,
+    12.547082995297387,
+    69.3934159935452,
+    12.224082995089702,
+    11.999958005617373,
+    12.45408300019335,
+    38.7568750011269,
+    11.229334006202407,
+    14.065458992263302,
+    12.739958008751273,
+    11.508665993460454,
+    18.336374996579252,
+    17.234833008842543,
+    22.267499996814877,
+    16.180165999685414,
+    12.793792004231364,
+    11.613458002102561,
+    15.450624996447004,
+    15.232332996674813,
+    13.246375005110167,
+    11.273000010987744,
+    15.820040993276052,
+    12.79933299520053,
+    12.88291699893307,
+    15.82783300545998,
+    20.957375003490597,
+    18.532999994931743,
+    19.34583400725387,
+    8.950832998380065,
+    12.211041001137346,
+    21.807540993904695,
+    30.646541999885812,
+    13.305541011504829,
+    15.6964159978088,
+    14.324999996460974,
+    10.332290999940597,
+    15.012750009191222,
+    24.831082992022857,
+    10.601791989756748,
+    11.378416995285079,
+    10.472458001459017,
+    10.042499998235144,
+    11.449500001617707,
+    12.9564999951981,
+    10.182708996580914,
+    10.942749999230728,
+    9.55295900348574,
+    10.232625005301088,
+    9.919916003127582,
+    13.69299998623319,
+    10.778166993986815,
+    14.49787498859223,
+    17.549541997141205,
+    9.467209005379118,
+    13.177417000406422,
+    19.405458006076515,
+    10.070167001686059,
+    15.498458000365645,
+    17.452999993111007,
+    11.595249990932643,
+    10.52062500093598,
+    15.422291995491832,
+    11.249041999690235,
+    11.048000000300817,
+    12.509124993812293,
+    14.133374992525205,
+    11.312874994473532,
+    13.016666998737492,
+    11.231084004975855,
+    11.979916991549544,
+    11.405208992073312,
+    11.845083994558081,
+    15.340375000960194,
+    17.62733398936689,
+    10.009667006670497,
+    11.59725000616163,
+    12.135833996580914,
+    14.76912500220351,
+    13.944459002232179,
+    10.75033299275674,
+    11.572917006560601,
+    14.11299999745097,
+    18.396542000118643,
+    15.29562500945758,
+    14.67508300265763,
+    12.691625001025386,
+    19.6507499931613,
+    11.814917001174763,
+    14.303290998213924,
+    13.996749999932945,
+    12.71837500098627,
+    13.654334004968405,
+    17.156583999167196,
+    13.458542001899332,
+    13.679999989108182,
+    13.190166995627806,
+    16.533999994862825,
+    16.999916988424957,
+    16.934083003434353,
+    13.8737920060521,
+    20.37166700756643,
+    13.176125008612871,
+    18.32000000285916,
+    11.369083993486129,
+    10.585875003016554,
+    20.24133299710229,
+    11.724582989700139,
+    16.063416987890378,
+    19.148708001011983,
+    11.526375004905276,
+    13.34191599744372,
+    12.562874995637685,
+    16.934250001213513,
+    14.030666003236547,
+    15.29879099689424,
+    15.255541991791688,
+    14.124332999926992,
+    24.05791600176599,
+    44.74279198620934,
+    13.336415999219753,
+    14.17316599690821,
+    13.004791995626874,
+    26.3818329985952,
+    39.71708299650345,
+    23.04875000845641,
+    13.46324999758508,
+    100.71320799761452,
+    23.4204580046935,
+    23.913958997582085,
+    26.475040998775512,
+    23.722666999674402,
+    38.78770800656639,
+    41.67945800872985,
+    13.105958001688123,
+    12.721499995677732,
+    50.85008298920002,
+    42.672124996897765,
+    20.654209001804702,
+    53.655374998925254,
+    17.068290995666757,
+    20.91729099629447,
+    18.06712499819696,
+    12.989000009838492,
+    19.281624990981072,
+    20.028750004712492,
+    21.72116700967308,
+    33.37629200541414,
+    15.410584004712291,
+    16.455667006084695,
+    19.983042002422735,
+    14.387834002263844,
+    17.8234170016367,
+    18.020667004748248,
+    16.94987500377465,
+    17.28299999376759,
+    11.054332993808202,
+    14.116291000391357,
+    14.213916001608595,
+    11.209291988052428,
+    16.677834006259218,
+    15.722833995823748,
+    13.543292006943375,
+    12.556041998323053,
+    17.44004199281335,
+    13.428958001895808,
+    19.56870900176,
+    13.420957999187522,
+    21.264791997964494,
+    12.12887499423232,
+    16.59120801195968,
+    17.682000005152076,
+    12.21687500947155,
+    12.514792004367337,
+    16.71141698898282,
+    19.041999999899417,
+    14.641457994002849,
+    10.271999999531545,
+    14.622832997702062,
+    17.580458996235393,
+    14.561499992851168,
+    18.10787498834543,
+    15.09375000023283,
+    20.090999998501502,
+    17.308291004155762,
+    16.54854200023692,
+    15.35958300519269,
+    16.003125012503006,
+    14.021166003658436,
+    17.71537499735132,
+    18.56541600136552,
+    18.618999994941987,
+    13.798166997730732,
+    13.078832998871803,
+    12.254875007783994,
+    18.740667001111433,
+    13.480583002092317,
+    14.878375004627742,
+    14.541124997776933,
+    21.853625003132038,
+    17.204292002134025
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "containers": [
+    {
+      "service": "api",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 536870912,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": true,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/archives",
+          "read_only": false
+        },
+        {
+          "destination": "/data/sources",
+          "read_only": true
+        },
+        {
+          "destination": "/data/documents",
+          "read_only": false
+        },
+        {
+          "destination": "/data/control",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "service": "builder",
+      "cpu_limit": 0.5,
+      "memory_limit_bytes": 1073741824,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": true,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "read_only": true
+        },
+        {
+          "destination": "/data/documents",
+          "read_only": true
+        }
+      ]
+    },
+    {
+      "service": "indexer",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1342177280,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": true,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/documents",
+          "read_only": true
+        },
+        {
+          "destination": "/data/sources",
+          "read_only": true
+        }
+      ]
+    },
+    {
+      "service": "postgres",
+      "cpu_limit": 0.75,
+      "memory_limit_bytes": 1610612736,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": false,
+      "user": "",
+      "mounts": [
+        {
+          "destination": "/var/lib/postgresql/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "service": "redis",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 268435456,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": false,
+      "user": "",
+      "mounts": [
+        {
+          "destination": "/data",
+          "read_only": false
+        }
+      ]
+    },
+    {
+      "service": "retrieval",
+      "cpu_limit": 1.0,
+      "memory_limit_bytes": 805306368,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": true,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/sources",
+          "read_only": true
+        }
+      ]
+    },
+    {
+      "service": "worker",
+      "cpu_limit": 0.25,
+      "memory_limit_bytes": 805306368,
+      "oom_killed": false,
+      "restart_count": 0,
+      "health": "healthy",
+      "readonly_rootfs": true,
+      "user": "app",
+      "mounts": [
+        {
+          "destination": "/data/control",
+          "read_only": false
+        },
+        {
+          "destination": "/data/archives",
+          "read_only": true
+        },
+        {
+          "destination": "/data/ingestion",
+          "read_only": false
+        },
+        {
+          "destination": "/data/sources",
+          "read_only": true
+        },
+        {
+          "destination": "/data/documents",
+          "read_only": true
+        }
+      ]
+    }
+  ],
+  "cpu_total": 4.0,
+  "memory_total_bytes": 6442450944,
+  "host_cpu": 8,
+  "dedicated_4c8g_vm": "NOT_TESTED"
+}

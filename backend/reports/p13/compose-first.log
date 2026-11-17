@@ -1,0 +1,261 @@
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+ Image product-knowledge:p1.3 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.62kB done
+#1 DONE 0.0s
+
+#2 [builder internal] load build definition from Dockerfile
+#2 transferring dockerfile: 750B done
+#2 DONE 0.0s
+
+#3 [builder internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#3 DONE 2.8s
+
+#4 [worker internal] load .dockerignore
+#4 transferring context: 124B done
+#4 DONE 0.0s
+
+#5 [retrieval 1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#5 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#5 DONE 0.0s
+
+#6 [api internal] load build context
+#6 transferring context: 555.85kB 0.0s done
+#6 DONE 0.0s
+
+#7 [retrieval 3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#7 CACHED
+
+#8 [retrieval 2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [retrieval 4/9] WORKDIR /app
+#9 CACHED
+
+#10 [retrieval 5/9] COPY pyproject.toml uv.lock ./
+#10 DONE 0.0s
+
+#11 [retrieval 6/9] RUN uv sync --frozen --no-dev
+#11 0.275 Using CPython 3.12.11 interpreter at: /usr/local/bin/python3
+#11 0.275 Creating virtual environment at: .venv
+#11 2.901 Downloading pydantic-core (2.0MiB)
+#11 2.904 Downloading pdfminer-six (5.4MiB)
+#11 2.904 Downloading openai (2.3MiB)
+#11 3.101 Downloading cryptography (4.5MiB)
+#11 3.102 Downloading psycopg-binary (4.4MiB)
+#11 3.109 Downloading lxml (4.8MiB)
+#11 3.109 Downloading sqlalchemy (3.1MiB)
+#11 3.109 Downloading pillow (6.2MiB)
+#11 3.568 Downloading pydantic-ai-slim (2.9MiB)
+#11 3.618 Downloading pypdfium2 (3.7MiB)
+#11 3.763 Downloading tiktoken (1.1MiB)
+#11 5.305  Downloading tiktoken
+#11 6.062  Downloading pydantic-core
+#11 6.193  Downloading openai
+#11 6.571  Downloading pydantic-ai-slim
+#11 6.594  Downloading sqlalchemy
+#11 6.875  Downloading pypdfium2
+#11 7.115  Downloading psycopg-binary
+#11 7.129  Downloading cryptography
+#11 7.176  Downloading lxml
+#11 7.181  Downloading pdfminer-six
+#11 7.366  Downloading pillow
+#11 7.366 Prepared 59 packages in 7.07s
+#11 7.416 Installed 59 packages in 49ms
+#11 8.891 Bytecode compiled 4388 files in 1.47s
+#11 8.891  + alembic==1.15.2
+#11 8.891  + annotated-doc==0.0.6
+#11 8.891  + annotated-types==0.8.0
+#11 8.891  + anyio==4.16.0
+#11 8.891  + certifi==2026.10.23
+#11 8.891  + cffi==2.1.1
+#11 8.891  + charset-normalizer==3.5.2
+#11 8.891  + click==8.5.1
+#11 8.891  + cryptography==50.0.2
+#11 8.891  + defusedxml==0.7.1
+#11 8.891  + et-xmlfile==2.0.0
+#11 8.891  + fastapi==0.121.3
+#11 8.891  + genai-prices==0.2.3
+#11 8.891  + greenlet==3.5.6
+#11 8.891  + griffelib==2.4.1
+#11 8.891  + h11==0.16.0
+#11 8.891  + httpcore2==2.16.2
+#11 8.891  + httpx2==2.16.2
+#11 8.891  + idna==3.20
+#11 8.891  + jiter==0.19.0
+#11 8.891  + logfire-api==5.6.0
+#11 8.891  + lxml==6.1.3
+#11 8.891  + mako==1.4.3
+#11 8.891  + markupsafe==3.0.4
+#11 8.891  + openai==3.52.0
+#11 8.891  + openpyxl==3.1.5
+#11 8.891  + opentelemetry-api==1.45.2
+#11 8.891  + pdfminer-six==20251107
+#11 8.891  + pdfplumber==0.11.8
+#11 8.891  + pillow==13.0.0
+#11 8.891  + psutil==7.0.0
+#11 8.891  + psycopg==3.2.9
+#11 8.891  + psycopg-binary==3.2.9
+#11 8.891  + pycparser==3.12
+#11 8.891  + pydantic==2.14.3
+#11 8.891  + pydantic-ai-slim==2.69.0
+#11 8.891  + pydantic-core==2.50.4
+#11 8.891  + pydantic-graph==2.69.0
+#11 8.891  + pydantic-settings==2.9.1
+#11 8.891  + pypdfium2==5.15.2
+#11 8.891  + python-docx==1.2.0
+#11 8.891  + python-dotenv==1.2.4
+#11 8.891  + python-multipart==0.0.20
+#11 8.891  + redis==5.2.1
+#11 8.891  + regex==2026.11.15
+#11 8.891  + requests==2.34.2
+#11 8.891  + rq==2.3.3
+#11 8.891  + sniffio==1.3.1
+#11 8.892  + sqlalchemy==2.0.41
+#11 8.892  + starlette==0.50.0
+#11 8.892  + tiktoken==0.14.0
+#11 8.892  + tree-sitter==0.25.2
+#11 8.892  + tree-sitter-go==0.25.0
+#11 8.892  + tree-sitter-python==0.25.0
+#11 8.892  + truststore==0.10.5
+#11 8.892  + typing-extensions==4.16.0
+#11 8.892  + typing-inspection==0.4.5
+#11 8.892  + urllib3==2.8.0
+#11 8.892  + uvicorn==0.34.2
+#11 DONE 9.2s
+
+#12 [api 7/9] COPY --chown=app:app app ./app
+#12 DONE 0.1s
+
+#13 [retrieval 8/9] COPY --chown=app:app alembic.ini ./
+#13 DONE 0.0s
+
+#14 [retrieval 9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#14 DONE 0.1s
+
+#15 [retrieval] exporting to image
+#15 exporting layers
+#15 exporting layers 5.1s done
+#15 exporting manifest sha256:bb7f28eb71d695af0079644be7e2d4429ad5145f6549e057d6e6b2bbc3c88693 0.0s done
+#15 exporting config sha256:00fbbc8e9c91bc0afcd8021585739b60a26951181169319c41feb26b6bb5b6dc 0.0s done
+#15 exporting attestation manifest sha256:2c60496912f5d797b41b6322af07b5b82327adcc919f9c6d0b4b71e6cfdb7081 0.0s done
+#15 exporting manifest list sha256:303846c44a3379cf6bfe56ad56193240dae114d39e8575279e60263ab58afbbe
+#15 exporting manifest list sha256:303846c44a3379cf6bfe56ad56193240dae114d39e8575279e60263ab58afbbe 0.0s done
+#15 naming to docker.io/library/product-knowledge:p1.3 done
+#15 unpacking to docker.io/library/product-knowledge:p1.3
+#15 ...
+
+#16 [builder] exporting to image
+#16 exporting layers 5.1s done
+#16 exporting manifest sha256:97f9b2b93b6a18d279c764089ecad02514558ab6b456801b522f167687eb1c85 0.0s done
+#16 exporting config sha256:66bdff31798e169d045bc0fd63b4dfffdcb99b22192bcd723faa71f100355a61 0.0s done
+#16 exporting attestation manifest sha256:13d3552d46c21eb22e6ce49eadbdf8cb6ebfb14fe91e4552d74e8fb1946b5839 0.0s done
+#16 exporting manifest list sha256:6a664aaf634cf9a591f2a92e67babe23c559556b732133fdcddfdc3db758fc90 0.0s done
+#16 naming to docker.io/library/product-knowledge:p1.3 done
+#16 unpacking to docker.io/library/product-knowledge:p1.3 4.0s done
+#16 DONE 9.3s
+
+#17 [indexer] exporting to image
+#17 exporting layers 5.1s done
+#17 exporting manifest sha256:c885bcef8a92754cd78d93585ef10f846f8f79d27e6c1d8d1109aaa1e55fe197 0.0s done
+#17 exporting config sha256:112f909c27b9635522b9a532d4b57e341ed79eb19cff336e353157ff566266f5 0.0s done
+#17 exporting attestation manifest sha256:818582b3bb02f5e6d97d67652cfd70b03073ac2273e0e6b70042a5cd3b6283f3 0.0s done
+#17 exporting manifest list sha256:fe3528eae9f9ee307bbc7215e6c8c6c943c5e8a312b7895505c53051a0c84bfb 0.0s done
+#17 naming to docker.io/library/product-knowledge:p1.3 done
+#17 unpacking to docker.io/library/product-knowledge:p1.3 4.0s done
+#17 DONE 9.3s
+
+#18 [worker] exporting to image
+#18 exporting layers 5.1s done
+#18 exporting manifest sha256:94ed50f3775f0e643614de99a0ff8dbb5d6a5dacd2c96781190e8fdb8628d864 0.0s done
+#18 exporting config sha256:75d55c5c24a80651219466690d46e2561627754cc582828931b9db6264dc97f3 0.0s done
+#18 exporting attestation manifest sha256:f482ceb907d4fcb9316be717e086c7497d8ee85f7895070fd05b4ce37da98a32 0.0s done
+#18 exporting manifest list sha256:804330934f13a6edbfe4b8a7ab01840efbfb832af6c8fdc4a20b3df1d5c4bcb1 0.0s done
+#18 naming to docker.io/library/product-knowledge:p1.3 done
+#18 unpacking to docker.io/library/product-knowledge:p1.3 4.0s done
+#18 DONE 9.3s
+
+#15 [retrieval] exporting to image
+#15 unpacking to docker.io/library/product-knowledge:p1.3 4.0s done
+#15 DONE 9.3s
+
+#19 [api] exporting to image
+#19 exporting layers 5.1s done
+#19 exporting manifest sha256:95d781f73a13e78ae2197304e3fb10f0fa6464d388761d899e351d018705ffec 0.0s done
+#19 exporting config sha256:c0bcd1770338a6382c144930a7f4544c946c947f725782702debd71c6ee0fc8a 0.0s done
+#19 exporting attestation manifest sha256:128a291242bd127073ab938bc86d4ee2da74e48f0fddc1364d4eafbfe31b3bb8 0.0s done
+#19 exporting manifest list sha256:2dd48837dc9ffb173877161342f1503b816e170c60c48d91b7bf1acc06c537ea 0.0s done
+#19 naming to docker.io/library/product-knowledge:p1.3 0.0s done
+#19 unpacking to docker.io/library/product-knowledge:p1.3 4.0s done
+#19 DONE 9.3s
+
+#20 [builder] resolving provenance for metadata file
+#20 DONE 0.1s
+
+#21 [worker] resolving provenance for metadata file
+#21 DONE 0.0s
+
+#22 [api] resolving provenance for metadata file
+#22 DONE 0.1s
+
+#23 [indexer] resolving provenance for metadata file
+#23 DONE 0.1s
+
+#24 [retrieval] resolving provenance for metadata file
+#24 DONE 0.1s
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Image product-knowledge:p1.3 Built 
+ Container product-knowledge-p11-postgres-1 Running 
+ Container product-knowledge-p11-redis-1 Running 
+ Container product-knowledge-p11-api-1 Recreate 
+ Container product-knowledge-p11-api-1 Recreated 
+ Container product-knowledge-p11-builder-1 Creating 
+ Container product-knowledge-p11-retrieval-1 Recreate 
+ Container product-knowledge-p11-worker-1 Recreate 
+ Container product-knowledge-p11-indexer-1 Recreate 
+ Container product-knowledge-p11-builder-1 Created 
+ Container product-knowledge-p11-indexer-1 Recreated 
+ Container product-knowledge-p11-retrieval-1 Recreated 
+ Container product-knowledge-p11-worker-1 Recreated 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Starting 
+ Container product-knowledge-p11-api-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-retrieval-1 Starting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-indexer-1 Starting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-builder-1 Starting 
+ Container product-knowledge-p11-worker-1 Starting 
+ Container product-knowledge-p11-retrieval-1 Started 
+ Container product-knowledge-p11-worker-1 Started 
+ Container product-knowledge-p11-indexer-1 Started 
+ Container product-knowledge-p11-builder-1 Started 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-worker-1 Waiting 
+ Container product-knowledge-p11-indexer-1 Waiting 
+ Container product-knowledge-p11-builder-1 Waiting 
+ Container product-knowledge-p11-retrieval-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-retrieval-1 Healthy 
+ Container product-knowledge-p11-worker-1 Healthy 
+ Container product-knowledge-p11-builder-1 Healthy 
+ Container product-knowledge-p11-indexer-1 Healthy 

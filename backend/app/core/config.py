@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -38,6 +39,37 @@ class Settings(BaseSettings):
     read_max_lines: int = 200
     retrieval_max_chars: int = 24000
     index_parser_version: str = "p12-2"
+    builder_queue_name: str = "knowledge-builder"
+    builder_job_timeout_seconds: int = 1800
+    builder_module_timeout_seconds: int = 180
+    builder_max_modules: int = 24
+    builder_max_requests: int = 8
+    builder_max_tool_calls: int = 30
+    builder_max_tokens: int = 30000
+    builder_max_context_chars: int = 80000
+    builder_max_output_tokens: int = 4000
+    builder_reasoning_effort: Literal["", "low", "high"] = ""
+    builder_model: str = ""
+    builder_base_url: str = ""
+    builder_api_key: SecretStr = SecretStr("")
+    builder_allow_synthetic: bool = False
+    builder_allow_enterprise: bool = False
+    builder_input_usd_per_million: float | None = None
+    builder_output_usd_per_million: float | None = None
+
+    @field_validator(
+        "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
+    )
+    @classmethod
+    def nonnegative_price(cls, value):
+        if value is None or value == "":
+            return None
+        number = float(value)
+        import math
+
+        if not math.isfinite(number) or number < 0:
+            raise ValueError("模型计价必须为非负有限数")
+        return number
 
     @property
     def document_store(self):
@@ -71,6 +103,14 @@ class Settings(BaseSettings):
         "search_timeout_seconds",
         "read_max_lines",
         "retrieval_max_chars",
+        "builder_job_timeout_seconds",
+        "builder_module_timeout_seconds",
+        "builder_max_modules",
+        "builder_max_requests",
+        "builder_max_tool_calls",
+        "builder_max_tokens",
+        "builder_max_context_chars",
+        "builder_max_output_tokens",
     )
     @classmethod
     def positive_limit(cls, value):

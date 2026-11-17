@@ -1,1 +1,1 @@
-"""NOT_IMPLEMENTED：P1.3 引入 Agent A，只返回候选数据，不直接持久化事实。"""
+"""P1.3 Knowledge Builder：结构化候选调查；证据与持久化由业务服务核验。"""
