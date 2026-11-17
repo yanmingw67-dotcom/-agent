@@ -1,0 +1,36 @@
+...............F........................................................ [ 44%]
+........................................................................ [ 89%]
+.................                                                        [100%]
+=================================== FAILURES ===================================
+____________________ test_product_scope_and_unknown_routes _____________________
+
+client = <starlette.testclient.TestClient object at 0x110ad1370>
+
+    def test_product_scope_and_unknown_routes(client):
+        cid1, cid2 = category(client, "waf"), category(client, "ndr")
+        first = upload(client, cid1)
+        second = upload(client, cid2)
+        assert first.status_code == second.status_code == 202
+        assert first.json()["snapshot_id"] != second.json()["snapshot_id"]
+        assert upload(client, "unknown").status_code == 404
+        assert client.get("/api/v1/jobs/unknown", headers=ADMIN).status_code == 404
+>       assert client.get("/api/v1/capabilities", headers=READ).status_code == 404
+E       AssertionError: assert 422 == 404
+E        +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+E        +    where <Response [422 Unprocessable Entity]> = get('/api/v1/capabilities', headers={'Authorization': 'Bearer rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr'})
+E        +      where get = <starlette.testclient.TestClient object at 0x110ad1370>.get
+
+tests/integration/test_import_api.py:223: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_import_api.py::test_product_scope_and_unknown_routes
+1 failed, 160 passed, 2 warnings in 25.05s

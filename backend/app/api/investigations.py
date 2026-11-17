@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.indexing import staging
-from app.core.auth import admin
+from app.core.auth import admin, principal
 from app.core.config import get_settings
 from app.core.security import AppError
 from app.db.index_models import Module
@@ -226,9 +226,25 @@ def candidates(
 def evidence(
     evidence_id: str,
     category_id: str,
-    snapshot_id: str,
-    role=Depends(admin),
+    snapshot_id: str | None = None,
+    role=Depends(principal),
     db: Session = Depends(get_db),
 ):
     context = bind_context(db, category_id, role, snapshot_id)
+    if snapshot_id is None:
+        from app.knowledge.publisher import current
+
+        publication = current(db, category_id)
+        ids = set()
+        for capability in publication.payload_json["capabilities"]:
+            ids.update(capability["reachability_evidence_ids"])
+            for assertion in capability["assertions"]:
+                ids.update(assertion["evidence_ids"])
+                ids.update(assertion.get("implementation_evidence_ids", []))
+                for dependency in assertion.get("dependencies", []):
+                    ids.update(dependency["evidence_ids"])
+        for relation in publication.payload_json["relations"]:
+            ids.update(relation["details"]["evidence_ids"])
+        if evidence_id not in ids:
+            raise AppError(404, "EVIDENCE_NOT_PUBLISHED", "证据不在当前审核发布清单")
     return read_evidence(db, context, evidence_id)

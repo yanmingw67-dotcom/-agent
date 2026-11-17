@@ -527,7 +527,24 @@ def run_builder(job_id, token, model=None):
             else ("succeeded" if complete == len(runs) else "partial")
         )
         job.stage = "review_ready" if job.status == "succeeded" else job.status
-        job.error_code = fatal or (
-            None if job.status == "succeeded" else "MODULE_INVESTIGATION_FAILED"
-        )
+        runtime_errors = [r.error_code for r in runs if r.error_code]
+        if job.metrics_json.get("investigation_mode") == "autonomous":
+            reasons = [r.metrics_json.get("exploration", {}).get("stop_reason") for r in runs]
+            partial_reason = (
+                "failed"
+                if fatal or runtime_errors
+                else "fragment_budget"
+                if "fragment_budget" in reasons
+                else "task_budget"
+                if any(str(reason).startswith("task_") for reason in reasons)
+                else "dependency_gap"
+                if job.status == "partial"
+                else None
+            )
+            job.metrics_json = {**job.metrics_json, "partial_reason": partial_reason}
+            job.error_code = fatal or (runtime_errors[0] if runtime_errors else None)
+        else:
+            job.error_code = fatal or (
+                None if job.status == "succeeded" else "MODULE_INVESTIGATION_FAILED"
+            )
         job.finished_at = now()

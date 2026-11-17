@@ -697,6 +697,16 @@ def finish(deps, state, reason):
         )
         row.status = "partial" if incomplete else "succeeded"
         row.error_code = None
+        row.metrics_json = {
+            **row.metrics_json,
+            "partial_reason": "fragment_budget"
+            if reason == "fragment_budget"
+            else "task_budget"
+            if reason.startswith("task_")
+            else "dependency_gap"
+            if incomplete
+            else None,
+        }
 
 
 async def investigate_autonomous(deps, module_id, model):

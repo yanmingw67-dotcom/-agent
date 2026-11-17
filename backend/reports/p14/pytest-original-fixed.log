@@ -1,0 +1,45 @@
+........................................................................ [ 40%]
+......................................................F................. [ 80%]
+...................................                                      [100%]
+=================================== FAILURES ===================================
+______________ test_cross_product_evidence_and_rollback_rejected _______________
+
+client = <starlette.testclient.TestClient object at 0x111b94ce0>
+
+        client.post(f"/api/v1/capabilities/{ids[0]}/review", headers=ADMIN, json=b).status_code
+        == 422
+>   )
+
+tests/integration/test_p14_review_publication.py:222: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_p14_review_publication.py:24: in setup
+    cid, sid = indexed(client, data=FIXTURE.read_bytes())
+tests/integration/test_p12_index_retrieval.py:24: in indexed
+    cid = category(client, code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x111b94ce0>, code = 'p12'
+
+    def category(client, code="waf"):
+        response = client.post(
+            "/api/v1/categories", headers=ADMIN, json={"code": code, "name": "测试产品"}
+        )
+>       assert response.status_code == 201, response.text
+E       AssertionError: {"error_code":"CATEGORY_CONFLICT","message":"产品品类编码已存在","correlation_id":"bc4c37bd-560d-4c5b-a3d0-b883f3a8b81d"}
+E       assert 409 == 201
+E        +  where 409 = <Response [409 Conflict]>.status_code
+
+tests/integration/test_import_api.py:19: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p14_review_publication.py::test_cross_product_evidence_and_rollback_rejected
+1 failed, 178 passed, 2 warnings in 29.79s

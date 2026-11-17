@@ -34,6 +34,7 @@ class Category(Base):
     active_snapshot_id: Mapped[str | None] = mapped_column(
         String(36), ForeignKey("source_snapshots.id", use_alter=True, name="fk_active_snapshot")
     )
+    active_publication_id: Mapped[str | None] = mapped_column(String(36))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 
 

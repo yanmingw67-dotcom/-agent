@@ -1,0 +1,34 @@
+{
+  "source_files": 16,
+  "files": {
+    "api/routes.py": "39cebecd5892a47dcb852ad70a0fb5528528aa02aa15791113e96579dcdb2cef",
+    "core/dispatch.py": "c0baf72dcae010c6fc760ca254efed438a7bf3287b5a62080d0b0734e5bfbbad",
+    "callbacks/registry.py": "2fe9437f4744cf60b09d6047bd8971cfd765565a65868c36a22b75958f731589",
+    "bootstrap/wiring.py": "f3aa410692ce9f785be374ce4edf486857858e2026271e754c982f26c2b09bdb",
+    "callbacks/audit.py": "077ef4d25183b699fba953ed94925452fb607d72321150f70a3b9280a999ccba",
+    "config/defaults.py": "1ae50b3a71bcd56feb3a3b48b60e1d7caa484b392d0017ed9fb02615e3a2515b",
+    "helpers/dedup.py": "e9bbf1188f81831e6804b3051091a4767bff8f1a9f13975e9703b5abde037c16",
+    "helpers/cache.py": "1f63d08e04d56b2d384ff4e33feee79bcaf580d362174421b7caea103f0b313a",
+    "backend_adapter/store.py": "ac3afa5574e5b78bf9573803f923420f182ef6bc041e54acd94812c0cf832c3e",
+    "unused/retry.py": "f7574502b72650fee71fdfc68cacf10773bb6080d30df880d9bcb3be7c007938",
+    "config/limits.py": "e1744d05dc3e6f80ea2838387109b4b8dd45e7d45f4f3d03cecf4d60fb1a302d",
+    "helpers/format.py": "87e62f37e8dfbe72ce283590e48ca2d458cf97d977e8d4ca14431a2ae6537427",
+    "helpers/clock.py": "897108f56bf32453a19e812c2c1c534dbc36320503f073904556880e99ebb7a8",
+    "helpers/check.py": "21f29ffb67f7e28dd7a212f37cb4f3a65942bdf70dac1eebe0f19b7ed973dadf",
+    "docs/claims.md": "97948da0ae0af65ec90cc49c4a78f11c136411aad16f586cc737335eb18f201e",
+    "examples/local.py": "9e5837961b5ed90580e3ee4f8b7c49b9cd6c19a0c2ded6f5c57c1f40ebedb7d0",
+    "tests/test_only.py": "94c24763b8886b5636ee06635fa1914bb52d9781bf927192ae142d8f5a5b171a"
+  },
+  "runtime_clues": [
+    "bootstrap.install -> subscribe(on_audit)",
+    "register_routes -> router.add_route(receive)",
+    "receive -> dispatch -> notify_callbacks"
+  ],
+  "not_executed": true,
+  "negative_cases": [
+    "cache_value assignment is not persistent storage",
+    "reserve_once wrapper lacks actual store implementation",
+    "retry_once is unconnected",
+    "test_only not product support"
+  ]
+}

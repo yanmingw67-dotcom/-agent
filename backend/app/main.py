@@ -9,7 +9,15 @@ from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError
 from starlette.exceptions import HTTPException
 
-from app.api import categories, indexing, investigations, jobs, knowledge_uploads, retrieval
+from app.api import (
+    capabilities,
+    categories,
+    indexing,
+    investigations,
+    jobs,
+    knowledge_uploads,
+    retrieval,
+)
 from app.core.auth import admin
 from app.core.config import get_settings
 from app.core.logging import RequestGuard
@@ -102,5 +110,6 @@ def create_app():
         app.include_router(jobs.router)
         app.include_router(indexing.router)
         app.include_router(investigations.router)
+        app.include_router(capabilities.router)
     app.include_router(retrieval.router)
     return app

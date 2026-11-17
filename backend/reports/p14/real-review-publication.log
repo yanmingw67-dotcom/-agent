@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p14_acceptance.py", line 320, in <module>
+    main()
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p14_acceptance.py", line 181, in main
+    p1 = pub("首次实际原子发布", [accepted_preview["id"]], None)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p14_acceptance.py", line 168, in pub
+    return call(
+           ^^^^^
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/p14_acceptance.py", line 64, in call
+    assert response.status_code == expected, (label, response.status_code, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('首次实际原子发布', 503, {'error_code': 'DATABASE_UNAVAILABLE', 'message': '数据库暂时不可用', 'correlation_id': 'd1bb9e07-480c-4edb-bd4f-625b91b4e6e2'})

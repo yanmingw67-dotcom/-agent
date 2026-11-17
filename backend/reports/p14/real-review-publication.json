@@ -1,0 +1,1067 @@
+{
+  "mode": "REAL_EXISTING_MODEL_DRAFTS_DEVELOPER_REVIEW_REAL_API_POSTGRES",
+  "model_requests_this_phase": 0,
+  "model_tokens_this_phase": 0,
+  "cost_this_phase_usd": null,
+  "cost_basis": "not_called_no_new_model_bill",
+  "source_model_job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "decisions_are_developer_review_not_independent_human_signoff": true,
+  "steps": [
+    {
+      "label": "读取真实原始模型草稿",
+      "method": "GET",
+      "path": "/api/v1/admin/capabilities/cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "original_model_output": {
+          "key": "auto_874db914733092313598361f",
+          "name": "事件批处理校验去重",
+          "category": "源码机制候选",
+          "action": "逐条校验事件租户必填，按配置以(tenant,id)去重，返回通过校验的事件列表",
+          "target": "process_batch",
+          "business_goal": "防止缺失租户或重复的事件进入接受结果",
+          "implementation_mechanism": "遍历events：settings[\"tenant_required\"]为真且缺tenant时抛ValueError；settings[\"deduplicate\"]为真时调用reserve_once(store,tenant,id)占位失败则continue跳过；accepted收集并返回通过事件",
+          "supported_scope": [
+            "core/h_engine.py process_batch 批量事件入口"
+          ],
+          "conditions": [
+            "settings须含tenant_required与deduplicate键",
+            "去重仅在deduplicate为真时按(tenant,id)判重"
+          ],
+          "limitations": [
+            "reserve_once实现不在片段内，占位原子性未核验",
+            "无预览/提交模式语义及片段外保证"
+          ],
+          "evidence_ids": [
+            "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+          ],
+          "unresolved_questions": [
+            "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+            "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+          ],
+          "status": "evidence_found"
+        },
+        "machine_declaration_type": "unknown",
+        "latest_revision": null,
+        "review_events": []
+      }
+    },
+    {
+      "label": "读取真实原始模型草稿",
+      "method": "GET",
+      "path": "/api/v1/admin/capabilities/cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "original_model_output": {
+          "key": "auto_efbf8dc0c0d8735a1296f90c",
+          "name": "展开commit提交路径",
+          "category": "源码机制候选",
+          "action": "检索process_batch与preview_unique实现，核验提交处理、去重与存储注入行为。",
+          "target": "process_batch（commit分支提交处理）",
+          "business_goal": "确认重复事件、跨租户与重复请求对提交结果的影响。",
+          "implementation_mechanism": "commit分支把events、注入store与settings传入process_batch；文档称配置控制提交、存储取决于注入实现，去重与租户隔离行为待核验。",
+          "supported_scope": [
+            "commit模式结果幂等与租户隔离"
+          ],
+          "conditions": [
+            "mode == \"commit\"",
+            "store、settings由调用方注入"
+          ],
+          "limitations": [
+            "process_batch/preview_unique未展示未核验",
+            "入口接线仅名称启发"
+          ],
+          "evidence_ids": [
+            "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb"
+          ],
+          "unresolved_questions": [
+            "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+            "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+          ],
+          "status": "evidence_found"
+        },
+        "machine_declaration_type": "investigation_action",
+        "latest_revision": null,
+        "review_events": []
+      }
+    },
+    {
+      "label": "读取真实原始模型草稿",
+      "method": "GET",
+      "path": "/api/v1/admin/capabilities/cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "original_model_output": {
+          "key": "auto_f6097ab877e2da6e11874abc",
+          "name": "预览按id顺序去重",
+          "category": "源码机制候选",
+          "action": "遍历事件列表，以事件id为键去重，保留首个出现的事件并按原顺序返回新列表",
+          "target": "preview_unique函数处理的输入事件列表",
+          "business_goal": "为预览模式提供本地去重便利，使运维预览到去重后的事件结果",
+          "implementation_mechanism": "用seen集合记录已见event['id']，id首次出现则追加进result，后续同id事件跳过；返回保持原顺序的新列表，不做校验、不区分租户、不涉及存储",
+          "supported_scope": [
+            "core/i_preview.py preview_unique预览事件列表",
+            "同id事件仅保留首次出现项"
+          ],
+          "conditions": [
+            "输入须为含可哈希'id'键的事件字典列表",
+            "仅用于预览本地便利，不属提交或存储路径"
+          ],
+          "limitations": [
+            "去重键仅id不含租户，不同租户同id会被误判为重复",
+            "事件缺'id'键会抛KeyError，且无类型或空值校验"
+          ],
+          "evidence_ids": [
+            "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+          ],
+          "unresolved_questions": [
+            "语义支持与产品可达性未经人工核验；来源哈希核验不等于能力已验证",
+            "有限片段只反映当前实现；认证有效性、平台接口兼容及产品全局支持范围均未经验证"
+          ],
+          "status": "evidence_found"
+        },
+        "machine_declaration_type": "unknown",
+        "latest_revision": null,
+        "review_events": []
+      }
+    },
+    {
+      "label": "实际回读源码原文及哈希",
+      "method": "GET",
+      "path": "/api/v1/evidence/ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d?category_id=76d40f66-1c3e-487d-9a67-47d84da8fa69&snapshot_id=d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "kind": "source",
+        "source_ref": {
+          "file_id": "3596baf8-45b9-4283-b1dc-c2b9291ea3c8",
+          "path": "core/h_engine.py",
+          "role": "source"
+        },
+        "locator": {
+          "start_line": 118,
+          "end_line": 128
+        },
+        "source_hash": "a25cadf956d55151311f3b228922ced8da70c7cb9b9bdeaab3d130b29fbbe352",
+        "quote_hash": "2cba7478cb834a5355f1f3255c3326b95e508e89cee0f585a35617f39499d629",
+        "quote": "def process_batch(events, store, settings):\n    accepted = []\n    for event in events:\n        tenant = event.get(\"tenant\")\n        if settings[\"tenant_required\"] and not tenant:\n            raise ValueError(\"tenant required\")\n        if settings[\"deduplicate\"]:\n            if not reserve_once(store, tenant, event[\"id\"]):\n                continue\n        accepted.append(event)\n    return accepted",
+        "verification_state": "source_verified",
+        "semantic_verification": "unverified",
+        "warnings": [
+          "semantic_support_unverified",
+          "runtime_reachability_unverified"
+        ]
+      }
+    },
+    {
+      "label": "实际回读源码原文及哈希",
+      "method": "GET",
+      "path": "/api/v1/evidence/ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf?category_id=76d40f66-1c3e-487d-9a67-47d84da8fa69&snapshot_id=d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "kind": "source",
+        "source_ref": {
+          "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+          "path": "core/i_preview.py",
+          "role": "source"
+        },
+        "locator": {
+          "start_line": 1,
+          "end_line": 8
+        },
+        "source_hash": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+        "quote_hash": "4d3ed2ab84dec09eae765edd1609eaa4260d7df9af0b329864d200dbc6d015c4",
+        "quote": "def preview_unique(events):\n    seen = set()\n    result = []\n    for event in events:\n        if event[\"id\"] not in seen:\n            seen.add(event[\"id\"])\n            result.append(event)\n    return result",
+        "verification_state": "source_verified",
+        "semantic_verification": "unverified",
+        "warnings": [
+          "semantic_support_unverified",
+          "runtime_reachability_unverified"
+        ]
+      }
+    },
+    {
+      "label": "实际回读源码原文及哈希",
+      "method": "GET",
+      "path": "/api/v1/evidence/ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb?category_id=76d40f66-1c3e-487d-9a67-47d84da8fa69&snapshot_id=d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+        "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+        "kind": "source",
+        "source_ref": {
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "path": "api/endpoint.py",
+          "role": "source"
+        },
+        "locator": {
+          "start_line": 5,
+          "end_line": 10
+        },
+        "source_hash": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+        "quote_hash": "fe80cfbe5ad6338023c44f0b509679106feadf1e85a67d3a6559ca03ee7624bb",
+        "quote": "def handle_events(mode, events, store, settings):\n    if mode == \"preview\":\n        return preview_unique(events)\n    if mode != \"commit\":\n        raise ValueError(\"unknown mode\")\n    return process_batch(events, store, settings)",
+        "verification_state": "source_verified",
+        "semantic_verification": "unverified",
+        "warnings": [
+          "semantic_support_unverified",
+          "runtime_reachability_unverified"
+        ]
+      }
+    },
+    {
+      "label": "调查动作退回",
+      "method": "POST",
+      "path": "/api/v1/capabilities/cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672/review",
+      "request": {
+        "action": "return",
+        "expected_revision": 0,
+        "declaration_type": "investigation_action",
+        "comment": "原始name/action是展开/检索计划，不能作为产品能力。保留原稿并退回。"
+      },
+      "status": 200,
+      "response": {
+        "id": "f8b09034-ea7b-4fd4-8e0b-b72ed7b8cf49",
+        "claim_id": "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+        "number": 1,
+        "declaration_type": "investigation_action",
+        "decision": "return",
+        "content": {
+          "name": "展开commit提交路径",
+          "action": "检索process_batch与preview_unique实现，核验提交处理、去重与存储注入行为。",
+          "target": "process_batch（commit分支提交处理）",
+          "business_goal": "确认重复事件、跨租户与重复请求对提交结果的影响。",
+          "implementation_mechanism": "commit分支把events、注入store与settings传入process_batch；文档称配置控制提交、存储取决于注入实现，去重与租户隔离行为待核验。",
+          "supported_scope": [
+            "commit模式结果幂等与租户隔离"
+          ],
+          "conditions": [
+            "mode == \"commit\"",
+            "store、settings由调用方注入"
+          ],
+          "limitations": [
+            "process_batch/preview_unique未展示未核验",
+            "入口接线仅名称启发"
+          ]
+        },
+        "assertions": [],
+        "gate": {
+          "errors": [
+            "NOT_REVIEWED"
+          ]
+        },
+        "merged_into": null
+      }
+    },
+    {
+      "label": "无底层实现的持久断言阻断",
+      "method": "POST",
+      "path": "/api/v1/capabilities/cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5/validate",
+      "request": {
+        "action": "accept",
+        "expected_revision": 0,
+        "declaration_type": "technical_mechanism",
+        "content": {
+          "name": "持久化幂等去重",
+          "action": "持久占位保证跨请求幂等",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "持久化幂等去重",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "action",
+            "text": "持久占位保证跨请求幂等",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          }
+        ],
+        "comment": "开发方源码复核：局部机制，不是正式产品支持保证",
+        "human_confirmed": true
+      },
+      "status": 200,
+      "response": {
+        "eligible_for_human_acceptance": false,
+        "errors": [
+          "DEPENDENCY_EVIDENCE_GAP",
+          "HIGH_RISK_IMPLEMENTATION_GAP"
+        ],
+        "dependency_gaps": [
+          {
+            "field": "name",
+            "reason": "high_risk_unclosed"
+          },
+          {
+            "field": "action",
+            "reason": "high_risk_unclosed"
+          }
+        ],
+        "source_verified_is_not_semantic_verified": true,
+        "semantic_verification": "human_review_required",
+        "evidence_ids": [
+          "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+        ],
+        "reachability_evidence_ids": []
+      }
+    },
+    {
+      "label": "不得人工确认绕过高风险缺口",
+      "method": "POST",
+      "path": "/api/v1/capabilities/cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5/review",
+      "request": {
+        "action": "accept",
+        "expected_revision": 0,
+        "declaration_type": "technical_mechanism",
+        "content": {
+          "name": "持久化幂等去重",
+          "action": "持久占位保证跨请求幂等",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "持久化幂等去重",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "action",
+            "text": "持久占位保证跨请求幂等",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          }
+        ],
+        "comment": "开发方源码复核：局部机制，不是正式产品支持保证",
+        "human_confirmed": true
+      },
+      "status": 422,
+      "response": {
+        "error_code": "REVIEW_GATE_FAILED",
+        "message": "断言、类型或依赖证据门槛未闭合",
+        "correlation_id": "38a0f31b-5b1f-43a8-bad2-a9d2adc97643"
+      }
+    },
+    {
+      "label": "窄化修订不自动接受",
+      "method": "POST",
+      "path": "/api/v1/capabilities/cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555/review",
+      "request": {
+        "action": "modify",
+        "expected_revision": 0,
+        "declaration_type": "technical_mechanism",
+        "content": {
+          "name": "单次调用按标识保序首项机制",
+          "action": "保留每个标识首次出现的事件",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "单次调用按标识保序首项机制",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "action",
+            "text": "保留每个标识首次出现的事件",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          }
+        ],
+        "comment": "开发方源码复核：局部机制，不是正式产品支持保证",
+        "human_confirmed": true
+      },
+      "status": 200,
+      "response": {
+        "id": "9302198e-067e-49f4-94d9-f9574e46afd6",
+        "claim_id": "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+        "number": 1,
+        "declaration_type": "technical_mechanism",
+        "decision": "modify",
+        "content": {
+          "name": "单次调用按标识保序首项机制",
+          "action": "保留每个标识首次出现的事件",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "单次调用按标识保序首项机制",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "action",
+            "text": "保留每个标识首次出现的事件",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          }
+        ],
+        "gate": {
+          "eligible_for_human_acceptance": true,
+          "errors": [],
+          "dependency_gaps": [],
+          "source_verified_is_not_semantic_verified": true,
+          "semantic_verification": "human_review_required",
+          "evidence_ids": [
+            "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+          ],
+          "reachability_evidence_ids": []
+        },
+        "merged_into": null
+      }
+    },
+    {
+      "label": "未接受修订不能发布",
+      "method": "POST",
+      "path": "/api/v1/snapshots/d672efe9-5dec-44f6-8fb2-d305c3b015db/publish",
+      "request": {
+        "revision_ids": [
+          "9302198e-067e-49f4-94d9-f9574e46afd6"
+        ],
+        "expected_active_publication_id": null,
+        "acknowledge_coverage_gaps": true,
+        "comment": "故意尝试未审核发布，必须失败"
+      },
+      "status": 422,
+      "response": {
+        "error_code": "PUBLICATION_REVIEW_REQUIRED",
+        "message": "只能发布最新人工接受修订",
+        "correlation_id": "d6a60304-d3ed-487c-8894-c3ddb983526b"
+      }
+    },
+    {
+      "label": "逐断言显式接受局部预览机制",
+      "method": "POST",
+      "path": "/api/v1/capabilities/cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555/review",
+      "request": {
+        "action": "accept",
+        "expected_revision": 1,
+        "declaration_type": "technical_mechanism",
+        "content": {
+          "name": "单次调用按标识保序首项机制",
+          "action": "保留每个标识首次出现的事件",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "单次调用按标识保序首项机制",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "action",
+            "text": "保留每个标识首次出现的事件",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证"
+          }
+        ],
+        "comment": "开发方源码复核：局部机制，不是正式产品支持保证",
+        "human_confirmed": true
+      },
+      "status": 200,
+      "response": {
+        "id": "60108a33-e894-44ee-9034-c85e050fb6b7",
+        "claim_id": "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555",
+        "number": 2,
+        "declaration_type": "technical_mechanism",
+        "decision": "accept",
+        "content": {
+          "name": "单次调用按标识保序首项机制",
+          "action": "保留每个标识首次出现的事件",
+          "target": "事件列表",
+          "business_goal": "生成预览列表",
+          "implementation_mechanism": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+          "supported_scope": [
+            "单次函数调用内"
+          ],
+          "conditions": [
+            "事件含id且id可哈希"
+          ],
+          "limitations": [
+            "不同租户的相同id也会合并",
+            "不保证跨调用效果"
+          ]
+        },
+        "assertions": [
+          {
+            "field": "name",
+            "text": "单次调用按标识保序首项机制",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "action",
+            "text": "保留每个标识首次出现的事件",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "target",
+            "text": "事件列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "business_goal",
+            "text": "生成预览列表",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "implementation_mechanism",
+            "text": "局部seen集合记录已出现标识；首次遇到时追加事件到result，最后返回result",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "supported_scope.0",
+            "text": "单次函数调用内",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "conditions.0",
+            "text": "事件含id且id可哈希",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "limitations.0",
+            "text": "不同租户的相同id也会合并",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          },
+          {
+            "field": "limitations.1",
+            "text": "不保证跨调用效果",
+            "evidence_ids": [
+              "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+            ],
+            "semantic_decision": "supported",
+            "rationale": "开发方按实际回读逐项核对，只确认函数局部语义，不扩展产品保证",
+            "dependencies": [],
+            "implementation_evidence_ids": []
+          }
+        ],
+        "gate": {
+          "eligible_for_human_acceptance": true,
+          "errors": [],
+          "dependency_gaps": [],
+          "source_verified_is_not_semantic_verified": true,
+          "semantic_verification": "human_review_required",
+          "evidence_ids": [
+            "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+          ],
+          "reachability_evidence_ids": []
+        },
+        "merged_into": null
+      }
+    },
+    {
+      "label": "首次实际原子发布",
+      "method": "POST",
+      "path": "/api/v1/snapshots/d672efe9-5dec-44f6-8fb2-d305c3b015db/publish",
+      "request": {
+        "revision_ids": [
+          "60108a33-e894-44ee-9034-c85e050fb6b7"
+        ],
+        "relation_ids": [],
+        "expected_active_publication_id": null,
+        "acknowledge_coverage_gaps": true,
+        "comment": "人工确认窄范围机制，调查未完成及不确定断言继续保留"
+      },
+      "status": 503,
+      "response": {
+        "error_code": "DATABASE_UNAVAILABLE",
+        "message": "数据库暂时不可用",
+        "correlation_id": "d1bb9e07-480c-4edb-bd4f-625b91b4e6e2"
+      }
+    }
+  ]
+}
