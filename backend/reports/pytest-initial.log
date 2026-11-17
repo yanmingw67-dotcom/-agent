@@ -1,0 +1,99 @@
+..F...........F.................................F...                     [100%]
+=================================== FAILURES ===================================
+______________ test_real_import_handler_no_model_and_idempotency _______________
+
+client = <starlette.testclient.TestClient object at 0x10d7e59d0>
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest..._bytes=524288000, max_compression_ratio=100.0, max_depth=20, job_timeout_seconds=300, queue_name='knowledge-ingestion')
+
+    def test_real_import_handler_no_model_and_idempotency(client, environment):
+        cid = category(client)
+        accepted = upload(client, cid)
+        assert accepted.status_code == 202
+        jid = accepted.json()["job_id"]
+        assert client.get(f"/api/v1/jobs/{jid}", headers=ADMIN).json()["status"] == "queued"
+        assert not environment.ingestion_root.exists()
+        execute(jid)
+        first = client.get(f"/api/v1/jobs/{jid}", headers=ADMIN).json()
+>       assert first["status"] == "succeeded" and first["stage"] == "extracted"
+E       AssertionError: assert ('failed' == 'succeeded'
+E         
+E         - succeeded
+E         + failed)
+
+tests/integration/test_import_api.py:60: AssertionError
+________________ test_outbox_dispatch_and_worker_lost_recovery _________________
+
+client = <starlette.testclient.TestClient object at 0x10d924dd0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d918ce0>
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest..._bytes=524288000, max_compression_ratio=100.0, max_depth=20, job_timeout_seconds=300, queue_name='knowledge-ingestion')
+
+    def test_outbox_dispatch_and_worker_lost_recovery(client, monkeypatch, environment):
+        jid = upload(client, category(client)).json()["job_id"]
+        calls = []
+        class CapturingQueue:
+            def __init__(self, *args, **kwargs):
+                pass
+            def enqueue(self, *args, **kwargs):
+                calls.append((args, kwargs))
+        monkeypatch.setattr("app.jobs.queue.Queue", CapturingQueue)
+        assert dispatch_pending() == 1
+        assert dispatch_pending() == 0
+        fn, job_id, token = calls[0][0]
+        assert job_id == jid
+        fn(job_id, token)
+>       assert client.get(f"/api/v1/jobs/{jid}", headers=ADMIN).json()["stage"] == "extracted"
+E       AssertionError: assert 'failed' == 'extracted'
+E         
+E         - extracted
+E         + failed
+
+tests/integration/test_import_api.py:174: AssertionError
+_______________________ test_recovery_and_hash_tampering _______________________
+
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest..._bytes=524288000, max_compression_ratio=100.0, max_depth=20, job_timeout_seconds=300, queue_name='knowledge-ingestion')
+
+    def test_recovery_and_hash_tampering(environment):
+        environment.archive_root.mkdir()
+        archive = environment.archive_root / "a.zip"
+        archive.write_bytes(make_zip())
+        sha = hash_file(archive)
+>       key, manifest = extract_snapshot("a.zip", sha, "test-id", environment)
+
+tests/unit/test_archive_guard.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/ingestion/content_store.py:92: in extract_snapshot
+    temp.rename(destination)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-306/test_recovery_and_hash_tamperi0/ingestion/.test-id-sxsq7s7w')
+target = PosixPath('/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-306/test_recovery_and_hash_tamperi0/ingestion/test-id')
+
+    def rename(self, target):
+        """
+        Rename this path to the target path.
+    
+        The target path may be absolute or relative. Relative paths are
+        interpreted relative to the current working directory, *not* the
+        directory of the Path object.
+    
+        Returns the new Path instance pointing to the target path.
+        """
+>       os.rename(self, target)
+E       PermissionError: [Errno 13] Permission denied: '/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-306/test_recovery_and_hash_tamperi0/ingestion/.test-id-sxsq7s7w' -> '/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-306/test_recovery_and_hash_tamperi0/ingestion/test-id'
+
+../../../../.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/pathlib.py:1363: PermissionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_import_api.py::test_real_import_handler_no_model_and_idempotency
+FAILED tests/integration/test_import_api.py::test_outbox_dispatch_and_worker_lost_recovery
+FAILED tests/unit/test_archive_guard.py::test_recovery_and_hash_tampering - P...
+3 failed, 49 passed, 2 warnings in 0.85s

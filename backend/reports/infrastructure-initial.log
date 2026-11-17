@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/wangyanming/Desktop/coding/参数评估agent/backend/scripts/infrastructure_check.py", line 16, in <module>
+    from app.core.config import get_settings
+ModuleNotFoundError: No module named 'app'

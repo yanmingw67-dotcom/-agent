@@ -1,0 +1,6 @@
+# 仅用于本机 Python + 容器数据库/Redis 集成验证，不用于生产。
+services:
+  postgres:
+    ports: ["127.0.0.1:15432:5432"]
+  redis:
+    ports: ["127.0.0.1:16379:6379"]

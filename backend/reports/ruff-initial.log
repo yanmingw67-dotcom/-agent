@@ -1,0 +1,6 @@
+app/db/migrations/versions/0001_ingestion.py:2:1: I001 [*] Import block is un-sorted or un-formatted
+app/db/models.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+app/db/models.py:4:93: F401 [*] `sqlalchemy.Text` imported but unused
+tests/unit/test_archive_guard.py:1:8: F401 [*] `io` imported but unused
+Found 4 errors.
+[*] 4 fixable with the `--fix` option.
