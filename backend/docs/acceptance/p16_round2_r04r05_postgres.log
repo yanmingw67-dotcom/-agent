@@ -1,0 +1,47 @@
+$ DATABASE_URL='postgresql+psycopg://knowledge:testpass@localhost:55432/knowledge' P14_RUN_POSTGRES=1 P16_RUN_POSTGRES=1 uv run pytest -q -vv tests/infrastructure/test_p14_r1_postgres.py tests/infrastructure/test_p15_postgres.py tests/infrastructure/test_p16_postgres.py
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 29 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [  3%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [  6%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 13%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 17%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 24%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 27%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 31%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 34%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 37%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 41%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 44%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 48%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 51%]
+tests/infrastructure/test_p15_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 55%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 58%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 62%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_concurrent_source_review_prevents_merge PASSED [ 65%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_concurrent_target_review_prevents_merge PASSED [ 68%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 72%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 75%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_probe_keeps_request_snapshot_across_publication_switch PASSED [ 79%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_probe_preserves_frozen_publication_until_publish_or_rollback PASSED [ 82%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_probe_readonly_transaction_cannot_update_knowledge PASSED [ 86%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_publish_two_snapshots_and_rollback PASSED [ 89%]
+tests/infrastructure/test_p15_postgres.py::ProbePostgresTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 93%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 96%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 29 passed, 1 warning in 6.71s =========================

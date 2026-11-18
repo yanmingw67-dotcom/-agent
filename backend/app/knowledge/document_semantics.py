@@ -107,6 +107,7 @@ class SemanticUnit:
     headers: dict = field(default_factory=dict)
     merged_context: dict = field(default_factory=dict)
     reasons: list = field(default_factory=list)
+    segment_texts: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -248,7 +249,10 @@ def _check_anchor(draft, units_by_segment):
         unit = units_by_segment.get(anchor.segment_id)
         if unit is None:
             return None, "MODEL_ANCHOR_NOT_PROVIDED"
-        if normalized(anchor.quote) not in normalized(unit.text):
+        segment_text = unit.segment_texts.get(anchor.segment_id)
+        if segment_text is None:
+            return None, "MODEL_ANCHOR_SEGMENT_NOT_FOUND"
+        if normalized(anchor.quote) not in normalized(segment_text):
             return None, "MODEL_ANCHOR_QUOTE_MISMATCH"
         quote_parts.append(anchor.quote)
         used_units.append(unit)
@@ -349,7 +353,8 @@ def make_batches(units, batch_size, max_batches, max_chars, max_text):
     current_chars = 0
     for unit in units:
         text = unit.text[:max_text]
-        item_chars = len(text) + len(unit.key) + 200
+        segment_chars = sum(len(value) for value in unit.segment_texts.values())
+        item_chars = len(text) + segment_chars + len(unit.key) + 200
         if current and (len(current) >= batch_size or current_chars + item_chars > max_chars):
             batches.append(current)
             current, current_chars = [], 0
@@ -426,6 +431,13 @@ async def extract_semantics(
                     {
                         "unit_key": unit.key,
                         "segment_ids": unit.segment_ids,
+                        "segments": [
+                            {
+                                "segment_id": segment_id,
+                                "text": unit.segment_texts.get(segment_id, ""),
+                            }
+                            for segment_id in unit.segment_ids
+                        ],
                         "locator": unit.locator,
                         "classification": unit.classification,
                         "text": text,

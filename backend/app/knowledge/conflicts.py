@@ -24,8 +24,22 @@ COMPONENT = re.compile(
     r"|数据库|消息队列|缓存|对象存储|驱动|组件|接口|API"
 )
 CONFIG = re.compile(
-    r"默认|可选|必须|开启|启用|关闭|禁用|参数|配置项|版本|许可|授权|部署模式|高可用"
+    r"默认|可选|必须|需|须|要求|允许|开启|启用|打开|关闭|禁用|禁止"
+    r"|参数|配置项|版本|许可|授权|部署模式|高可用"
 )
+SCOPE_PREFIX = re.compile(r"^(?:仅支持|只支持|仅限|只限|适用于|支持)")
+SCOPE_SUFFIX = re.compile(r"(?:部署|环境|模式|方式|场景)$")
+CONDITION_PREFIX = re.compile(r"^(?:必须|需|须|要求|可选|允许|支持)")
+STATE_ON = {"开启", "启用", "打开", "允许"}
+STATE_OFF = {"关闭", "禁用", "禁止", "不支持"}
+REQUIRED = {"必须", "需", "须", "要求"}
+OPTIONAL = {"可选", "允许"}
+EXCLUSIVE_TERMS = [
+    ("生产", "测试"),
+    ("集群", "单机"),
+    ("公有", "私有"),
+    ("内部", "外部"),
+]
 SYNONYMS = {
     "多租户": "租户",
     "租户隔离": "租户隔离",
@@ -120,6 +134,18 @@ def _disjoint(left, right):
     return bool(left and right and not (left & right))
 
 
+def _state_conflict(left, right):
+    left_on, right_on = left & STATE_ON, right & STATE_ON
+    left_off, right_off = left & STATE_OFF, right & STATE_OFF
+    if (left_on and right_off) or (right_on and left_off):
+        return True
+    return bool((left & REQUIRED and right & OPTIONAL) or (right & REQUIRED and left & OPTIONAL))
+
+
+def _config_state_conflict(left, right):
+    return _state_conflict(left["config"], right["config"])
+
+
 def dimension_mismatch(left, right):
     left_dims, right_dims = _dimensions(left), _dimensions(right)
     if _disjoint(left_dims["form"], right_dims["form"]):
@@ -129,17 +155,106 @@ def dimension_mismatch(left, right):
     left_config, right_config = left_dims["config"], right_dims["config"]
     if _disjoint(left_config, right_config):
         return "configuration"
-    left_on = bool(left_config & {"开启", "启用"})
-    right_off = bool(right_config & {"关闭", "禁用"})
-    right_on = bool(right_config & {"开启", "启用"})
-    left_off = bool(left_config & {"关闭", "禁用"})
-    if (left_on and right_off) or (right_on and left_off):
-        return "configuration"
-    if ("必须" in left_config and "可选" in right_config) or (
-        "可选" in left_config and "必须" in right_config
-    ):
+    if _config_state_conflict(left_dims, right_dims):
         return "configuration"
     return None
+
+
+def _scope_value(value):
+    text = normalize(value)
+    text = SCOPE_PREFIX.sub("", text)
+    return SCOPE_SUFFIX.sub("", text)
+
+
+def _condition_value(value):
+    return CONDITION_PREFIX.sub("", normalize(value))
+
+
+def _known_exclusive(left, right):
+    for first, second in EXCLUSIVE_TERMS:
+        if (first in left and second in right) or (second in left and first in right):
+            return True
+    return False
+
+
+def _scope_relation(left, right):
+    """只有双方均有明确范围且可证明互斥时才返回 exclusive。"""
+    left_scope = {
+        value
+        for value in (_scope_value(item) for item in (left.get("supported_scope") or []))
+        if len(value) >= 2
+    }
+    right_scope = {
+        value
+        for value in (_scope_value(item) for item in (right.get("supported_scope") or []))
+        if len(value) >= 2
+    }
+    if not left_scope or not right_scope:
+        return "unknown"
+    if any(
+        left_value == right_value or left_value in right_value or right_value in left_value
+        for left_value in left_scope
+        for right_value in right_scope
+    ):
+        return "overlap"
+    if any(
+        _known_exclusive(left_value, right_value)
+        for left_value in left_scope
+        for right_value in right_scope
+    ):
+        return "exclusive"
+    return "unknown"
+
+
+def _condition_relation(left, right):
+    left_conditions = {
+        value
+        for value in (_condition_value(item) for item in (left.get("conditions") or []))
+        if len(value) >= 2
+    }
+    right_conditions = {
+        value
+        for value in (_condition_value(item) for item in (right.get("conditions") or []))
+        if len(value) >= 2
+    }
+    if not left_conditions or not right_conditions:
+        return "unknown"
+    if any(
+        left_value == right_value or left_value in right_value or right_value in left_value
+        for left_value in left_conditions
+        for right_value in right_conditions
+    ):
+        return "overlap"
+    raw_left = " ".join(str(item) for item in (left.get("conditions") or []))
+    raw_right = " ".join(str(item) for item in (right.get("conditions") or []))
+    if _state_conflict(set(CONFIG.findall(raw_left)), set(CONFIG.findall(raw_right))):
+        return "exclusive"
+    if any(
+        _known_exclusive(left_value, right_value)
+        for left_value in left_conditions
+        for right_value in right_conditions
+    ):
+        return "exclusive"
+    return "unknown"
+
+
+def applicability_relation(left, right):
+    """比较能力适用范围；unknown 时必须保留潜在冲突。"""
+    left_dims, right_dims = _dimensions(left), _dimensions(right)
+    if _disjoint(left_dims["form"], right_dims["form"]):
+        return "exclusive"
+    if _disjoint(left_dims["component"], right_dims["component"]):
+        return "exclusive"
+    if _config_state_conflict(left_dims, right_dims):
+        return "exclusive"
+    left_draft, right_draft = left.draft_json or {}, right.draft_json or {}
+    scope_relation = _scope_relation(left_draft, right_draft)
+    condition_relation = _condition_relation(left_draft, right_draft)
+    if scope_relation == "exclusive" or condition_relation == "exclusive":
+        return "exclusive"
+    if scope_relation == "unknown" or condition_relation == "unknown":
+        return "unknown"
+    return "overlap"
 
 
 def scope_mismatch(left, right):
@@ -170,30 +285,40 @@ def classify_pair(left, right):
         < 0.66
     ):
         return None
-    if dimension_mismatch(left, right):
+    if applicability_relation(left, right) == "exclusive":
         return None
     if is_exclusion(left) != is_exclusion(right):
         return "support_exclusion_conflict"
     if left.source_channel != right.source_channel:
-        return None if scope_mismatch(left, right) else "possible_duplicate"
+        return "possible_duplicate"
     return None
 
 
 def match_pair(left, right):
-    left_name = (left.draft_json or {}).get("name") or left.name
-    right_name = (right.draft_json or {}).get("name") or right.name
-    score = round(max(similarity(left_name, right_name), similarity(left.name, right.name)), 3)
+    left_draft, right_draft = left.draft_json or {}, right.draft_json or {}
+    left_name = left_draft.get("name") or left.name
+    right_name = right_draft.get("name") or right.name
+    name_score = max(similarity(left_name, right_name), similarity(left.name, right.name))
+    target_score = (
+        similarity(left_draft.get("target"), right_draft.get("target"))
+        if left_draft.get("target") and right_draft.get("target")
+        else 0.0
+    )
+    action_score = (
+        similarity(left_draft.get("action"), right_draft.get("action"))
+        if left_draft.get("action") and right_draft.get("action")
+        else 0.0
+    )
+    score = round(max(name_score, target_score, action_score), 3)
     if score < 0.66:
         return None
-    mismatch = dimension_mismatch(left, right)
-    if mismatch:
+    relation = applicability_relation(left, right)
+    if relation == "exclusive":
         return None
     left_exclusion, right_exclusion = is_exclusion(left), is_exclusion(right)
     if left_exclusion != right_exclusion:
         kind = "support_exclusion_conflict"
     elif left.source_channel != right.source_channel:
-        if scope_mismatch(left, right):
-            return None
         kind = "possible_duplicate"
     else:
         return None
@@ -215,7 +340,8 @@ def match_pair(left, right):
                 "left": {key: sorted(value) for key, value in _dimensions(left).items()},
                 "right": {key: sorted(value) for key, value in _dimensions(right).items()},
             },
-            "scope_or_condition_mismatch": scope_mismatch(left, right),
+            "applicability_relation": relation,
+            "scope_or_condition_mismatch": relation if relation == "exclusive" else None,
             "auto_merge": False,
             "auto_resolve": False,
         },

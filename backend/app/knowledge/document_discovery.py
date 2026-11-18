@@ -253,7 +253,12 @@ def model_state(run, snapshot, mode, classification, model=None):
     return "NOT_INVOKED", "DOCUMENT_DISCOVERY_MODEL_NOT_INVOKED"
 
 
-def semantic_unit(unit):
+def semantic_unit(unit, segment_texts=None):
+    texts = {
+        segment_id: segment_texts[segment_id]
+        for segment_id in unit.segment_ids
+        if segment_texts and segment_id in segment_texts
+    }
     return SemanticUnit(
         key=unit.key,
         document_id=unit.document_id,
@@ -267,6 +272,7 @@ def semantic_unit(unit):
         headers=getattr(unit, "headers", {}),
         merged_context=getattr(unit, "merged_context", {}),
         reasons=list(getattr(unit, "reasons", [])),
+        segment_texts=texts,
     )
 
 
@@ -420,6 +426,18 @@ def prepare_candidates(db, run, limit):
         "ocr_gap_count": sum(1 for g in gaps if g.get("ocr_required")),
         "unclassified_units": sum(1 for u in units if u.classification == "unclassified"),
     }
+    segment_ids = {segment_id for unit in eligible_units for segment_id in unit.segment_ids}
+    segment_texts = {}
+    if segment_ids:
+        segment_texts = {
+            segment.id: segment.text
+            for segment in db.scalars(
+                select(DocumentSegment).where(
+                    DocumentSegment.snapshot_id == run.snapshot_id,
+                    DocumentSegment.id.in_(segment_ids),
+                )
+            )
+        }
     return Prepared(
         candidates=candidates,
         metrics=metrics,
@@ -427,7 +445,7 @@ def prepare_candidates(db, run, limit):
         gaps=gaps,
         units=units,
         documents=documents,
-        semantic_units=[semantic_unit(unit) for unit in eligible_units],
+        semantic_units=[semantic_unit(unit, segment_texts) for unit in eligible_units],
     )
 
 

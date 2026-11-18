@@ -30,6 +30,13 @@ def unit_with(payload, needle):
     raise AssertionError(f"没有找到包含 {needle} 的文档单元")
 
 
+def segment_with(unit, needle):
+    for segment in unit["segments"]:
+        if needle in segment["text"]:
+            return segment["segment_id"]
+    raise AssertionError(f"没有找到包含 {needle} 的原生分段")
+
+
 def synthetic_model(payloads):
     async def respond(messages, info):
         payload = prompt_payload(messages)
@@ -38,6 +45,10 @@ def synthetic_model(payloads):
         bypass = unit_with(payload, "旁路镜像")
         exclusion = unit_with(payload, "不支持规则同步至旧版本节点")
         xlsx = unit_with(payload, "SQL 注入")
+        bridge_segment = segment_with(bridge, "当前版本支持透明桥")
+        bypass_segment = segment_with(bypass, "旁路镜像")
+        exclusion_segment = segment_with(exclusion, "不支持规则同步至旧版本节点")
+        xlsx_segment = segment_with(xlsx, "支持 SQL 注入与 XSS 攻击检测和阻断")
         candidates = [
             {
                 "name": "透明桥部署",
@@ -49,9 +60,7 @@ def synthetic_model(payloads):
                 "limitations": [],
                 "implementation_mechanism": "文档未记录底层实现机制",
                 "claim_type": "current_capability",
-                "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "当前版本支持透明桥"}
-                ],
+                "anchors": [{"segment_id": bridge_segment, "quote": "当前版本支持透明桥"}],
             },
             {
                 "name": "旁路镜像部署",
@@ -63,7 +72,7 @@ def synthetic_model(payloads):
                 "limitations": [],
                 "implementation_mechanism": "文档未记录底层实现机制",
                 "claim_type": "deployment",
-                "anchors": [{"segment_id": bypass["segment_ids"][0], "quote": "旁路镜像"}],
+                "anchors": [{"segment_id": bypass_segment, "quote": "旁路镜像"}],
             },
             {
                 "name": "旧版本规则同步",
@@ -77,7 +86,7 @@ def synthetic_model(payloads):
                 "claim_type": "exclusion",
                 "anchors": [
                     {
-                        "segment_id": exclusion["segment_ids"][0],
+                        "segment_id": exclusion_segment,
                         "quote": "不支持规则同步至旧版本节点",
                     }
                 ],
@@ -94,18 +103,14 @@ def synthetic_model(payloads):
                 "action": "支持引文不匹配",
                 "target": "引文",
                 "claim_type": "current_capability",
-                "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "这段引文不在分段中"}
-                ],
+                "anchors": [{"segment_id": bridge_segment, "quote": "这段引文不在分段中"}],
             },
             {
                 "name": "量子加密",
                 "action": "支持量子加密",
                 "target": "量子加密",
                 "claim_type": "current_capability",
-                "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "当前版本支持透明桥"}
-                ],
+                "anchors": [{"segment_id": bridge_segment, "quote": "当前版本支持透明桥"}],
             },
             {
                 "name": "透明桥部署",
@@ -113,9 +118,9 @@ def synthetic_model(payloads):
                 "target": "透明桥",
                 "claim_type": "current_capability",
                 "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "当前版本支持透明桥"},
+                    {"segment_id": bridge_segment, "quote": "当前版本支持透明桥"},
                     {
-                        "segment_id": xlsx["segment_ids"][0],
+                        "segment_id": xlsx_segment,
                         "quote": "支持 SQL 注入与 XSS 攻击检测和阻断",
                     },
                 ],
@@ -125,25 +130,21 @@ def synthetic_model(payloads):
                 "action": "支持所有流量透明桥",
                 "target": "透明桥",
                 "claim_type": "current_capability",
-                "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "当前版本支持透明桥"}
-                ],
+                "anchors": [{"segment_id": bridge_segment, "quote": "当前版本支持透明桥"}],
             },
             {
                 "name": "旁路镜像 10000 QPS",
                 "action": "支持旁路镜像",
                 "target": "旁路镜像",
                 "claim_type": "current_capability",
-                "anchors": [{"segment_id": bypass["segment_ids"][0], "quote": "旁路镜像"}],
+                "anchors": [{"segment_id": bypass_segment, "quote": "旁路镜像"}],
             },
             {
                 "name": "友商对比",
                 "action": "友商也支持透明桥",
                 "target": "透明桥",
                 "claim_type": "current_capability",
-                "anchors": [
-                    {"segment_id": bridge["segment_ids"][0], "quote": "当前版本支持透明桥"}
-                ],
+                "anchors": [{"segment_id": bridge_segment, "quote": "当前版本支持透明桥"}],
             },
         ]
         return ModelResponse(
