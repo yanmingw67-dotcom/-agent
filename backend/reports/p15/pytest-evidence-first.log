@@ -1,0 +1,83 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_____________ test_changed_source_is_not_returned_as_product_fact ______________
+
+channels = (<starlette.testclient.TestClient object at 0x11010e000>, <starlette.testclient.TestClient object at 0x110125bb0>)
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest...ynthetic=True, builder_allow_enterprise=False, builder_input_usd_per_million=None, builder_output_usd_per_million=None)
+
+    def test_changed_source_is_not_returned_as_product_fact(channels, environment):
+        _, reader, cid, sid, _, _, _, _, _ = prepared(channels)
+        source = Path(environment.source_root) / sid / "source" / "core" / "i_preview.py"
+        assert source.exists()
+>       source.write_text("# 证据登记后源码改变\n", encoding="utf-8")
+
+tests/integration/test_p15_probe_failures.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../../.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/pathlib.py:1047: in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-383/test_changed_source_is_not_ret0/ingestion/84104ad7-5436-4baa-a2c1-90a209b9ab34/source/core/i_preview.py')
+mode = 'w', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+E       PermissionError: [Errno 13] Permission denied: '/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-383/test_changed_source_is_not_ret0/ingestion/84104ad7-5436-4baa-a2c1-90a209b9ab34/source/core/i_preview.py'
+
+../../../../.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/pathlib.py:1013: PermissionError
+________ test_missing_source_fails_closed_without_disclosing_file_path _________
+
+channels = (<starlette.testclient.TestClient object at 0x1103c00e0>, <starlette.testclient.TestClient object at 0x1103c3590>)
+environment = Settings(database_url='sqlite:////private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest...ynthetic=True, builder_allow_enterprise=False, builder_input_usd_per_million=None, builder_output_usd_per_million=None)
+
+    def test_missing_source_fails_closed_without_disclosing_file_path(channels, environment):
+        _, reader, cid, sid, _, _, _, _, _ = prepared(channels)
+        source = Path(environment.source_root) / sid / "source" / "core" / "i_preview.py"
+        assert source.exists()
+>       source.unlink()
+
+tests/integration/test_p15_probe_failures.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-383/test_missing_source_fails_clos0/ingestion/d22aaa64-e3ad-42bf-ad2f-c1a60c2e1852/source/core/i_preview.py')
+missing_ok = False
+
+    def unlink(self, missing_ok=False):
+        """
+        Remove this file or link.
+        If the path is a directory, use rmdir() instead.
+        """
+        try:
+>           os.unlink(self)
+E           PermissionError: [Errno 13] Permission denied: '/private/var/folders/76/xx555kn928v6wb8q1k9gt0g80000gn/T/pytest-of-wangyanming/pytest-383/test_missing_source_fails_clos0/ingestion/d22aaa64-e3ad-42bf-ad2f-c1a60c2e1852/source/core/i_preview.py'
+
+../../../../.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/pathlib.py:1342: PermissionError
+________________ test_empty_manifest_is_unknown_not_unsupported ________________
+
+channels = (<starlette.testclient.TestClient object at 0x1100fb350>, <starlette.testclient.TestClient object at 0x1104b57c0>)
+
+    def test_empty_manifest_is_unknown_not_unsupported(channels):
+        _, reader, cid, _, _, _, _, _, published = prepared(channels)
+        with Session(get_engine()) as db:
+>           row = db.get(Publication, published.json()["publication_id"])
+E           AttributeError: 'dict' object has no attribute 'json'
+
+tests/integration/test_p15_probe_failures.py:45: AttributeError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p15_probe_failures.py::test_changed_source_is_not_returned_as_product_fact
+FAILED tests/integration/test_p15_probe_failures.py::test_missing_source_fails_closed_without_disclosing_file_path
+FAILED tests/integration/test_p15_probe_failures.py::test_empty_manifest_is_unknown_not_unsupported
+3 failed, 1 warning in 1.33s

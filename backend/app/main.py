@@ -16,6 +16,7 @@ from app.api import (
     investigations,
     jobs,
     knowledge_uploads,
+    probe,
     retrieval,
 )
 from app.core.auth import admin
@@ -113,4 +114,5 @@ def create_app():
         app.include_router(investigations.router)
         app.include_router(capabilities.router)
     app.include_router(retrieval.router)
+    app.include_router(probe.router)
     return app

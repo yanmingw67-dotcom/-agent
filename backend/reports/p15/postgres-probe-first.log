@@ -1,0 +1,23 @@
+test_commit_time_constraint_failure_rolls_back_everything (__main__.PostgreSQLRemediationTests.test_commit_time_constraint_failure_rolls_back_everything) ... ok
+test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected (__main__.PostgreSQLRemediationTests.test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected) ... ok
+test_concurrent_source_review_prevents_merge (__main__.PostgreSQLRemediationTests.test_concurrent_source_review_prevents_merge) ... ok
+test_concurrent_target_review_prevents_merge (__main__.PostgreSQLRemediationTests.test_concurrent_target_review_prevents_merge) ... ok
+test_failure_after_pointer_update_rolls_back_everything (__main__.PostgreSQLRemediationTests.test_failure_after_pointer_update_rolls_back_everything) ... ok
+test_identity_map_refresh_rejects_changed_snapshot (__main__.PostgreSQLRemediationTests.test_identity_map_refresh_rejects_changed_snapshot) ... ok
+test_publish_two_snapshots_and_rollback (__main__.PostgreSQLRemediationTests.test_publish_two_snapshots_and_rollback) ... ok
+test_stale_identity_map_cannot_rollback_new_publication (__main__.PostgreSQLRemediationTests.test_stale_identity_map_cannot_rollback_new_publication) ... ok
+test_commit_time_constraint_failure_rolls_back_everything (__main__.ProbePostgresTests.test_commit_time_constraint_failure_rolls_back_everything) ... ok
+test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected (__main__.ProbePostgresTests.test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected) ... ok
+test_concurrent_source_review_prevents_merge (__main__.ProbePostgresTests.test_concurrent_source_review_prevents_merge) ... ok
+test_concurrent_target_review_prevents_merge (__main__.ProbePostgresTests.test_concurrent_target_review_prevents_merge) ... ok
+test_failure_after_pointer_update_rolls_back_everything (__main__.ProbePostgresTests.test_failure_after_pointer_update_rolls_back_everything) ... ok
+test_identity_map_refresh_rejects_changed_snapshot (__main__.ProbePostgresTests.test_identity_map_refresh_rejects_changed_snapshot) ... ok
+test_probe_keeps_request_snapshot_across_publication_switch (__main__.ProbePostgresTests.test_probe_keeps_request_snapshot_across_publication_switch) ... ok
+test_probe_readonly_transaction_cannot_update_knowledge (__main__.ProbePostgresTests.test_probe_readonly_transaction_cannot_update_knowledge) ... ok
+test_publish_two_snapshots_and_rollback (__main__.ProbePostgresTests.test_publish_two_snapshots_and_rollback) ... ok
+test_stale_identity_map_cannot_rollback_new_publication (__main__.ProbePostgresTests.test_stale_identity_map_cannot_rollback_new_publication) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.737s
+
+OK

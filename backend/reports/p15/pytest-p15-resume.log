@@ -1,0 +1,91 @@
+E.................EEEEEEEE                                               [100%]
+==================================== ERRORS ====================================
+________ ERROR at setup of test_upload_autonomous_review_publish_probe _________
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_e2e.py, line 15
+  def test_upload_autonomous_review_publish_probe(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_e2e.py::<event_loop>, tests::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_e2e.py:15
+________ ERROR at setup of test_json_field_names_are_not_product_facts _________
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py, line 13
+  def test_json_field_names_are_not_product_facts(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_boundaries.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py:13
+_ ERROR at setup of test_publish_update_and_rollback_read_only_current_manifest _
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py, line 21
+  def test_publish_update_and_rollback_read_only_current_manifest(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_boundaries.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py:21
+_____ ERROR at setup of test_manifest_tamper_is_not_returned_as_knowledge ______
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py, line 50
+  def test_manifest_tamper_is_not_returned_as_knowledge(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_boundaries.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py:50
+___________ ERROR at setup of test_cross_product_pointer_is_rejected ___________
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py, line 64
+  def test_cross_product_pointer_is_rejected(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_boundaries.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py:64
+_ ERROR at setup of test_candidate_limit_does_not_truncate_business_boundaries _
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py, line 74
+  def test_candidate_limit_does_not_truncate_business_boundaries(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_boundaries.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_boundaries.py:74
+____ ERROR at setup of test_changed_source_is_not_returned_as_product_fact _____
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py, line 14
+  def test_changed_source_is_not_returned_as_product_fact(channels, environment):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_failures.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py:14
+_ ERROR at setup of test_missing_source_fails_closed_without_disclosing_file_path _
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py, line 30
+  def test_missing_source_fails_closed_without_disclosing_file_path(channels, environment):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_failures.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py:30
+_______ ERROR at setup of test_empty_manifest_is_unknown_not_unsupported _______
+file /Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py, line 44
+  def test_empty_manifest_is_unknown_not_unsupported(channels):
+E       fixture 'channels' not found
+>       available fixtures: _session_event_loop, anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, client, doctest_namespace, environment, event_loop, event_loop_policy, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, tests/integration/test_p15_probe_failures.py::<event_loop>, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, unused_tcp_port, unused_tcp_port_factory, unused_udp_port, unused_udp_port_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/Users/wangyanming/Desktop/coding/参数评估agent/backend/tests/integration/test_p15_probe_failures.py:44
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/integration/test_p15_e2e.py::test_upload_autonomous_review_publish_probe
+ERROR tests/integration/test_p15_probe_boundaries.py::test_json_field_names_are_not_product_facts
+ERROR tests/integration/test_p15_probe_boundaries.py::test_publish_update_and_rollback_read_only_current_manifest
+ERROR tests/integration/test_p15_probe_boundaries.py::test_manifest_tamper_is_not_returned_as_knowledge
+ERROR tests/integration/test_p15_probe_boundaries.py::test_cross_product_pointer_is_rejected
+ERROR tests/integration/test_p15_probe_boundaries.py::test_candidate_limit_does_not_truncate_business_boundaries
+ERROR tests/integration/test_p15_probe_failures.py::test_changed_source_is_not_returned_as_product_fact
+ERROR tests/integration/test_p15_probe_failures.py::test_missing_source_fails_closed_without_disclosing_file_path
+ERROR tests/integration/test_p15_probe_failures.py::test_empty_manifest_is_unknown_not_unsupported
+17 passed, 1 warning, 9 errors in 2.93s

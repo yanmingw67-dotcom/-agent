@@ -1,0 +1,1 @@
+{"passed": true, "summary": {"errors": 0, "load_p95_ms": 43.652, "load_p95_under_3000ms": true}, "output": "reports/p15/p15-probe-benchmark-compose.json"}

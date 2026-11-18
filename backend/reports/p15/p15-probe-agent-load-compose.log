@@ -1,0 +1,11 @@
+ Container product-knowledge-p11-builder-1 Stopping 
+ Container product-knowledge-p11-builder-1 Stopped 
+ Container product-knowledge-p11-postgres-1 Waiting 
+ Container product-knowledge-p11-redis-1 Waiting 
+ Container product-knowledge-p11-postgres-1 Healthy 
+ Container product-knowledge-p11-redis-1 Healthy 
+ Container product-knowledge-p11-api-1 Waiting 
+ Container product-knowledge-p11-api-1 Healthy 
+ Container product-knowledge-p11-builder-1 Starting 
+ Container product-knowledge-p11-builder-1 Started 
+{"passed": true, "summary": {"errors": 0, "p95_ms": 49.421, "job_status": "partial", "function_model": true}, "output": "reports/p15/p15-probe-agent-load-compose.json"}

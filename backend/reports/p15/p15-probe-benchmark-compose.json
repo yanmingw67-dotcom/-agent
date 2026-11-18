@@ -1,0 +1,290 @@
+{
+  "mode": "P1.5_PROBE_COMPOSE_BENCHMARK_SYNTHETIC_BUILDER_LOAD",
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "requirement_text": "事件 预览 模式 分发 筛选",
+  "model_calls_this_phase": 0,
+  "cost_this_phase_usd": 0,
+  "environment": {
+    "api_limits": {
+      "nano_cpus": 500000000,
+      "memory_bytes": 536870912,
+      "pids_limit": 128
+    },
+    "retrieval_limits": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 805306368,
+      "pids_limit": 128
+    },
+    "builder_limits": {
+      "nano_cpus": 500000000,
+      "memory_bytes": 1073741824,
+      "pids_limit": 128
+    },
+    "postgres_limits": {
+      "nano_cpus": 750000000,
+      "memory_bytes": 1610612736,
+      "pids_limit": null
+    },
+    "note": "Docker Compose cgroup配额；不是独立4C8G虚拟机实测"
+  },
+  "load_mode": "builder容器内CPU自旋+PostgreSQL只读计数，非真实Agent A模型任务",
+  "phases": {
+    "idle": {
+      "requests": 120,
+      "concurrency": 1,
+      "wall_s": 1.72,
+      "throughput_rps": 69.76,
+      "status_counts": {
+        "200": 120
+      },
+      "errors": [],
+      "client": {
+        "count": 120,
+        "min_ms": 9.981,
+        "p50_ms": 13.357,
+        "p95_ms": 20.529,
+        "p99_ms": 22.375,
+        "max_ms": 22.783,
+        "mean_ms": 14.184
+      },
+      "server": {
+        "count": 120,
+        "min_ms": 3.562,
+        "p50_ms": 4.567,
+        "p95_ms": 5.448,
+        "p99_ms": 5.929,
+        "max_ms": 6.523,
+        "mean_ms": 4.585
+      },
+      "bytes": {
+        "count": 120,
+        "min_ms": 13100,
+        "p50_ms": 13101,
+        "p95_ms": 13101,
+        "p99_ms": 13101,
+        "max_ms": 13101,
+        "mean_ms": 13100.883
+      },
+      "publication_ids": [
+        "1af83dd5-e04e-4517-a81c-ab8a15201280"
+      ]
+    },
+    "idle_concurrent": {
+      "requests": 160,
+      "concurrency": 4,
+      "wall_s": 1.576,
+      "throughput_rps": 101.53,
+      "status_counts": {
+        "200": 160
+      },
+      "errors": [],
+      "client": {
+        "count": 160,
+        "min_ms": 15.155,
+        "p50_ms": 33.32,
+        "p95_ms": 84.523,
+        "p99_ms": 91.456,
+        "max_ms": 101.028,
+        "mean_ms": 39.187
+      },
+      "server": {
+        "count": 160,
+        "min_ms": 3.899,
+        "p50_ms": 13.604,
+        "p95_ms": 57.391,
+        "p99_ms": 66.511,
+        "max_ms": 68.733,
+        "mean_ms": 16.491
+      },
+      "bytes": {
+        "count": 160,
+        "min_ms": 13099,
+        "p50_ms": 13102,
+        "p95_ms": 13102,
+        "p99_ms": 13102,
+        "max_ms": 13102,
+        "mean_ms": 13101.731
+      },
+      "publication_ids": [
+        "1af83dd5-e04e-4517-a81c-ab8a15201280"
+      ]
+    },
+    "under_builder_load": {
+      "requests": 160,
+      "concurrency": 4,
+      "wall_s": 1.33,
+      "throughput_rps": 120.34,
+      "status_counts": {
+        "200": 160
+      },
+      "errors": [],
+      "client": {
+        "count": 160,
+        "min_ms": 16.579,
+        "p50_ms": 33.304,
+        "p95_ms": 43.652,
+        "p99_ms": 47.029,
+        "max_ms": 54.215,
+        "mean_ms": 32.887
+      },
+      "server": {
+        "count": 160,
+        "min_ms": 4.329,
+        "p50_ms": 13.782,
+        "p95_ms": 19.188,
+        "p99_ms": 20.961,
+        "max_ms": 21.596,
+        "mean_ms": 13.253
+      },
+      "bytes": {
+        "count": 160,
+        "min_ms": 13100,
+        "p50_ms": 13102,
+        "p95_ms": 13102,
+        "p99_ms": 13102,
+        "max_ms": 13102,
+        "mean_ms": 13101.731
+      },
+      "publication_ids": [
+        "1af83dd5-e04e-4517-a81c-ab8a15201280"
+      ]
+    },
+    "under_builder_load_sequential": {
+      "requests": 120,
+      "concurrency": 1,
+      "wall_s": 2.009,
+      "throughput_rps": 59.74,
+      "status_counts": {
+        "200": 120
+      },
+      "errors": [],
+      "client": {
+        "count": 120,
+        "min_ms": 11.962,
+        "p50_ms": 16.155,
+        "p95_ms": 20.145,
+        "p99_ms": 26.044,
+        "max_ms": 27.213,
+        "mean_ms": 16.559
+      },
+      "server": {
+        "count": 120,
+        "min_ms": 3.401,
+        "p50_ms": 4.568,
+        "p95_ms": 5.569,
+        "p99_ms": 6.374,
+        "max_ms": 9.838,
+        "mean_ms": 4.648
+      },
+      "bytes": {
+        "count": 120,
+        "min_ms": 13099,
+        "p50_ms": 13101,
+        "p95_ms": 13101,
+        "p99_ms": 13101,
+        "max_ms": 13101,
+        "mean_ms": 13100.917
+      },
+      "publication_ids": [
+        "1af83dd5-e04e-4517-a81c-ab8a15201280"
+      ]
+    }
+  },
+  "resources": {
+    "before": {
+      "product-knowledge-p11-builder-1": {
+        "cpu_percent": "1.32%",
+        "memory": "61.3MiB / 1GiB",
+        "memory_percent": "5.99%",
+        "pids": "1"
+      },
+      "product-knowledge-p11-retrieval-1": {
+        "cpu_percent": "0.17%",
+        "memory": "68.6MiB / 768MiB",
+        "memory_percent": "8.93%",
+        "pids": "2"
+      },
+      "product-knowledge-p11-api-1": {
+        "cpu_percent": "0.20%",
+        "memory": "68.94MiB / 512MiB",
+        "memory_percent": "13.46%",
+        "pids": "2"
+      },
+      "product-knowledge-p11-postgres-1": {
+        "cpu_percent": "0.65%",
+        "memory": "59.89MiB / 1.5GiB",
+        "memory_percent": "3.90%",
+        "pids": "11"
+      }
+    },
+    "during_load": {
+      "product-knowledge-p11-builder-run-eb5429ee2e80": {
+        "cpu_percent": "50.34%",
+        "memory": "45.57MiB / 1GiB",
+        "memory_percent": "4.45%",
+        "pids": "1"
+      },
+      "product-knowledge-p11-builder-1": {
+        "cpu_percent": "0.96%",
+        "memory": "61.32MiB / 1GiB",
+        "memory_percent": "5.99%",
+        "pids": "1"
+      },
+      "product-knowledge-p11-retrieval-1": {
+        "cpu_percent": "19.45%",
+        "memory": "68.76MiB / 768MiB",
+        "memory_percent": "8.95%",
+        "pids": "6"
+      },
+      "product-knowledge-p11-api-1": {
+        "cpu_percent": "1.92%",
+        "memory": "68.94MiB / 512MiB",
+        "memory_percent": "13.46%",
+        "pids": "2"
+      },
+      "product-knowledge-p11-postgres-1": {
+        "cpu_percent": "13.07%",
+        "memory": "61.76MiB / 1.5GiB",
+        "memory_percent": "4.02%",
+        "pids": "12"
+      }
+    },
+    "after": {
+      "product-knowledge-p11-builder-1": {
+        "cpu_percent": "10.10%",
+        "memory": "61.81MiB / 1GiB",
+        "memory_percent": "6.04%",
+        "pids": "1"
+      },
+      "product-knowledge-p11-retrieval-1": {
+        "cpu_percent": "0.12%",
+        "memory": "68.67MiB / 768MiB",
+        "memory_percent": "8.94%",
+        "pids": "2"
+      },
+      "product-knowledge-p11-api-1": {
+        "cpu_percent": "0.16%",
+        "memory": "68.94MiB / 512MiB",
+        "memory_percent": "13.46%",
+        "pids": "2"
+      },
+      "product-knowledge-p11-postgres-1": {
+        "cpu_percent": "4.07%",
+        "memory": "59.89MiB / 1.5GiB",
+        "memory_percent": "3.90%",
+        "pids": "11"
+      }
+    }
+  },
+  "passed": true,
+  "load": {
+    "returncode": 0,
+    "log": " Container product-knowledge-p11-builder-run-eb5429ee2e80 Creating \n Container product-knowledge-p11-builder-run-eb5429ee2e80 Created \n{\"queries\": 58564, \"duration_s\": 45.0, \"cpu_burn\": 2666466670000}\n",
+    "duration_s": 45
+  },
+  "summary": {
+    "errors": 0,
+    "load_p95_ms": 43.652,
+    "load_p95_under_3000ms": true
+  }
+}

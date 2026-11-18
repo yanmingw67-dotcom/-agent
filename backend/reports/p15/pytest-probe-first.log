@@ -1,0 +1,29 @@
+.F...............                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_complete_boundaries_and_verified_evidence_are_preserved _________
+
+channels = (<starlette.testclient.TestClient object at 0x10e397e60>, <starlette.testclient.TestClient object at 0x10e417770>)
+
+    def test_complete_boundaries_and_verified_evidence_are_preserved(channels):
+        _, reader, cid, sid, _, _, body, revision, publication = prepared(channels)
+        response = query(reader, cid)
+        assert response.status_code == 200, response.text
+        data = response.json()
+        candidate = data["candidates"][0]
+        assert candidate["content"] == body["content"]
+>       assert candidate["assertions"] == body["assertions"]
+E       AssertionError: assert [{'dependenci...[], ...}, ...] == [{'evidence_i...d', ...}, ...]
+E         
+E         At index 0 diff: {'field': 'name', 'text': '事件列表首项保留机制', 'evidence_ids': ['ev-fc88512fa281aea421162eca33eabd60dc9e15fd76fa08b179743a289dd5e759'], 'semantic_decision': 'supported', 'rationale': '人工逐项核对源码局部集合与分支，限于单函数', 'dependencies': [], 'implementation_evidence_ids': []} != {'field': 'name', 'text': '事件列表首项保留机制', 'evidence_ids': ['ev-fc88512fa281aea421162eca33eabd60dc9e15fd76fa08b179743a289dd5e759'], 'semantic_decision': 'supported', 'rationale': '人工逐项核对源码局部集合与分支，限于单函数'}
+E         Use -v to get more diff
+
+tests/integration/test_p15_probe.py:69: AssertionError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/integration/test_p15_probe.py::test_complete_boundaries_and_verified_evidence_are_preserved
+1 failed, 16 passed, 1 warning in 3.31s

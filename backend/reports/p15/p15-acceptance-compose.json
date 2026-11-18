@@ -1,0 +1,1575 @@
+{
+  "mode": "P1.5_COMPOSE_REAL_POSTGRES_HISTORICAL_REAL_MODEL_RECORD",
+  "criteria": "AgentA_Phase1_Development_Spec_v1.0.md §11 AC-14/AC-16",
+  "model_calls_this_phase": 0,
+  "cost_this_phase_usd": null,
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "reused_p13_job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "reused_publications": {
+    "p1": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "p2": "db315185-3b36-4c8f-b9a4-3a7e055a1369"
+  },
+  "steps": [
+    {
+      "label": "空闲Probe读取P1",
+      "status": 200
+    },
+    {
+      "label": "匿名Probe拒绝",
+      "status": 401,
+      "error_code": "UNAUTHENTICATED"
+    },
+    {
+      "label": "错误Token拒绝",
+      "status": 401,
+      "error_code": "UNAUTHENTICATED"
+    },
+    {
+      "label": "管理员Probe允许",
+      "status": 200
+    },
+    {
+      "label": "额外snapshot_id",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "额外publication_id",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "越界limit",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "空白需求",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "查询参数覆盖拒绝",
+      "status": 422,
+      "error_code": "PROBE_SCOPE_OVERRIDE_FORBIDDEN"
+    },
+    {
+      "label": "后台API不执行Probe",
+      "status": 503,
+      "error_code": "PROBE_RETRIEVAL_SERVICE_REQUIRED"
+    },
+    {
+      "label": "检索服务无品类写入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "检索服务无发布入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "检索服务无回滚入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "未知品类",
+      "status": 404,
+      "error_code": "CATEGORY_NOT_FOUND"
+    },
+    {
+      "label": "创建新品类",
+      "status": 201
+    },
+    {
+      "label": "上传人工公开ZIP",
+      "status": 202
+    },
+    {
+      "label": "触发静态索引",
+      "status": 202
+    },
+    {
+      "label": "读取新快照模块图",
+      "status": 200
+    },
+    {
+      "label": "未发布品类不可见",
+      "status": 409,
+      "error_code": "KNOWLEDGE_NOT_PUBLISHED"
+    },
+    {
+      "label": "读取P1.3真实模型任务",
+      "status": 200,
+      "error_code": "MODULE_INVESTIGATION_FAILED"
+    },
+    {
+      "label": "读取历史调查记录",
+      "status": 200
+    },
+    {
+      "label": "切换到P2发布",
+      "status": 200
+    },
+    {
+      "label": "读取P2",
+      "status": 200
+    },
+    {
+      "label": "回滚到P1发布",
+      "status": 200
+    },
+    {
+      "label": "回滚后读取P1",
+      "status": 200
+    }
+  ],
+  "checks": {
+    "probe_p1_status": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_publication": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_candidate": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_formal_decision_null": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_support_not_assessed": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_evidence_present": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_coverage_present": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_coverage_incomplete_gap": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_semantic_unverified": {
+      "passed": true,
+      "detail": null
+    },
+    "evidence_traceability": {
+      "passed": true,
+      "detail": []
+    },
+    "evidence_relative_paths": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_anonymous_401": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_bad_token_401": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_admin_allowed": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_额外snapshot_id": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_额外publication_id": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_越界limit": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_空白需求": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_query_override": {
+      "passed": true,
+      "detail": null
+    },
+    "api_probe_503": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_品类写": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_发布": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_回滚": {
+      "passed": true,
+      "detail": null
+    },
+    "unknown_category_404": {
+      "passed": true,
+      "detail": null
+    },
+    "fresh_import_succeeded": {
+      "passed": true,
+      "detail": "succeeded"
+    },
+    "fresh_index_succeeded": {
+      "passed": true,
+      "detail": "succeeded"
+    },
+    "fresh_project_map": {
+      "passed": true,
+      "detail": null
+    },
+    "fresh_unpublished_409": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_job_exists": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_job_status": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_investigations": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_claims": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_evidence": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_real_mode": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_read_200": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_publication": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_three_capabilities": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_evidence_present": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_evidence_snapshot": {
+      "passed": true,
+      "detail": null
+    },
+    "rollback_exact_restore": {
+      "passed": true,
+      "detail": null
+    },
+    "rollback_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "final_publication_is_p1": {
+      "passed": true,
+      "detail": null
+    }
+  },
+  "environment": {
+    "compose": [
+      "{\"Command\":\"\\\"sh -c 'alembic upgr…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:09 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"6e2581275da9\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,com.docker.compose.depends_on=redis:service_healthy:false,postgres:service_healthy:false,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,desktop.docker.io/ports/8000/tcp=127.0.0.1:8000,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.title=uv,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.replace=api-1,com.docker.compose.service=api,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.config-hash=b74eac222c20cf6d591d8a62766b64e2fd67c0c3f9115c7b27ba73c1e09b59e6,com.docker.compose.container-number=1\",\"LocalVolumes\":\"4\",\"Mounts\":\"product-knowle…,product-knowle…,product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-api-1\",\"Names\":\"product-knowledge-p11-api-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"127.0.0.1:8000-\\u003e8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8000,\"PublishedPort\":8000,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"api\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"65a317836922\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.replace=builder-1,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.service=builder,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.config-hash=cbb64eacd2ee6ae364868840b1e4b992181eb842cb604ee49ad752b04ff7b7b5,com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,org.opencontainers.image.title=uv,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.project=product-knowledge-p11,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.source=https://github.com/astral-sh/uv\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-builder-1\",\"Names\":\"product-knowledge-p11-builder-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"builder\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"875fe4b0fec7\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"com.docker.compose.version=5.3.0,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.oneoff=False,com.docker.compose.replace=indexer-1,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.config-hash=cadf7b75a40ec294221f78ffbe03957250fbf5b81c2d585603ea108520afd5c5,com.docker.compose.project=product-knowledge-p11,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,org.opencontainers.image.url=https://github.com/astral-sh/uv,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,com.docker.compose.container-number=1,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.service=indexer,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.title=uv,desktop.docker.io/ports.scheme=v2\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-indexer-1\",\"Names\":\"product-knowledge-p11-indexer-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"indexer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}",
+      "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-11-17 17:20:02 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"4e1dde3d217c\",\"Image\":\"postgres:16.9-bookworm\",\"Labels\":\"com.docker.compose.image=sha256:253815cf7579ffa05e1673d92e78d37273e61be0e4414e9a1449337d7925be94,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.replace=postgres-1,com.docker.compose.service=postgres,desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=abe400bb6760b3c9cdb9e159aca420f846c576808280f7cd9847e4804a820bad,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,com.docker.compose.version=5.3.0,com.docker.compose.container-number=1\",\"LocalVolumes\":\"1\",\"Mounts\":\"product-knowle…\",\"Name\":\"product-knowledge-p11-postgres-1\",\"Names\":\"product-knowledge-p11-postgres-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"5432/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":5432,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"21 hours ago\",\"Service\":\"postgres\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 21 hours (healthy)\"}",
+      "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-11-17 17:20:02 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"b3f475fe2511\",\"Image\":\"redis:7.4.4-bookworm\",\"Labels\":\"com.docker.compose.replace=redis-1,desktop.docker.io/ports.scheme=v2,com.docker.compose.container-number=1,com.docker.compose.image=sha256:7b5ee51c14cf5febd4adde3a4b6cced72efdf154df7e9a0383163b13e16e9091,com.docker.compose.service=redis,com.docker.compose.version=5.3.0,com.docker.compose.config-hash=dce830b219a46c057daa9936756b55c48ea7f95ccae2bf3278430ba8388a023b,com.docker.compose.depends_on=,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend\",\"LocalVolumes\":\"1\",\"Mounts\":\"product-knowle…\",\"Name\":\"product-knowledge-p11-redis-1\",\"Names\":\"product-knowledge-p11-redis-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"6379/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":6379,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"21 hours ago\",\"Service\":\"redis\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 21 hours (healthy)\"}",
+      "{\"Command\":\"\\\"uvicorn app.main:cr…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"54b99e606c6c\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.config-hash=bbd917617cc792ccc1fd11bd488ec386f88b9ea692eea9eaff2a438f7a7e9b52,com.docker.compose.container-number=1,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.project=product-knowledge-p11,com.docker.compose.replace=retrieval-1,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.licenses=Apache-2.0,com.docker.compose.version=5.3.0,org.opencontainers.image.title=uv,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.service=retrieval,desktop.docker.io/ports/8000/tcp=127.0.0.1:8001,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-retrieval-1\",\"Names\":\"product-knowledge-p11-retrieval-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"127.0.0.1:8001-\\u003e8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8000,\"PublishedPort\":8001,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"retrieval\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"27037d5ac2cf\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.title=uv,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.service=worker,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,com.docker.compose.container-number=1,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.config-hash=0a85a1eb0cd80cd864190a9e3ea67551f6da93cbaea583fb29be0a90d502aeeb,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.replace=worker-1,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml\",\"LocalVolumes\":\"5\",\"Mounts\":\"product-knowle…,product-knowle…,product-knowle…,product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-worker-1\",\"Names\":\"product-knowledge-p11-worker-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"worker\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}"
+    ],
+    "api_limits": {
+      "container": "6e2581275da9",
+      "nano_cpus": 500000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 536870912,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "retrieval_limits": {
+      "container": "54b99e606c6c",
+      "nano_cpus": 1000000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 805306368,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "builder_limits": {
+      "container": "65a317836922",
+      "nano_cpus": 500000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 1073741824,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "note": "Docker Compose cgroup配额，不是独立4C8G虚拟机实测"
+  },
+  "probe_p1": {
+    "status": "candidate_retrieval",
+    "publication_id": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "capability_ids": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "analyzed_ranges": {
+        "2421d77e-4621-4b2c-9870-4a56cf5efcc9": [
+          [
+            5,
+            10
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            10
+          ]
+        ],
+        "3596baf8-45b9-4283-b1dc-c2b9291ea3c8": [
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ]
+        ],
+        "4008c835-6b67-413a-b62e-9d89203ad806": [
+          [
+            1,
+            8
+          ],
+          [
+            1,
+            8
+          ]
+        ]
+      },
+      "uninvestigated_files": [
+        {
+          "id": "2a90ea48-0f15-4d6e-8647-3b6ae8bae056",
+          "path": "config/settings.py",
+          "status": "parsed"
+        },
+        {
+          "id": "e5414ac3-4cfe-4809-8f24-6630cb2b6924",
+          "path": "core/a_codec.py",
+          "status": "parsed"
+        },
+        {
+          "id": "1f77c1c8-8641-4d29-bc70-5b30a3adb3f6",
+          "path": "core/b_labels.py",
+          "status": "parsed"
+        },
+        {
+          "id": "70f16344-e53e-4e3d-b730-468ddf574a23",
+          "path": "core/c_clock.py",
+          "status": "parsed"
+        },
+        {
+          "id": "8fb12c29-189c-45ae-8c52-317f06f2c029",
+          "path": "core/d_limits.py",
+          "status": "parsed"
+        },
+        {
+          "id": "0e7f6335-9a7f-4b53-b917-476259dda9d4",
+          "path": "core/e_format.py",
+          "status": "parsed"
+        },
+        {
+          "id": "7854c119-fbba-4205-af21-7f641db771ae",
+          "path": "core/j_metrics.py",
+          "status": "parsed"
+        },
+        {
+          "id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "path": "storage/durable.py",
+          "status": "parsed"
+        },
+        {
+          "id": "ba00de11-2d6b-4857-9581-2c6a95c5e98a",
+          "path": "tests/test_preview.py",
+          "status": "parsed"
+        }
+      ],
+      "unexplained_entrypoints": [
+        {
+          "id": "8f8145f5-9e00-412e-90eb-53afa892ec83",
+          "type": "event",
+          "source_ref": {
+            "path": "api/endpoint.py",
+            "start_line": 5,
+            "basis": "name heuristic; wiring unverified"
+          }
+        },
+        {
+          "id": "d3a0ea46-f1e0-41df-853c-1702de129cd4",
+          "type": "api",
+          "source_ref": {
+            "path": "core/h_engine.py",
+            "start_line": 121,
+            "basis": "AST registration call; runtime wiring unverified"
+          }
+        }
+      ],
+      "pending": [
+        {
+          "id": "f6097ab877e2da6e11874abc",
+          "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+          "sha256": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+          "path": "core/i_preview.py",
+          "module_id": "a9de3014-2ee6-45f1-bc1b-116343eb5d68",
+          "symbol_id": "8142ccab-855e-4562-a64d-713eb7a916d3",
+          "symbol": "preview_unique",
+          "start_line": 1,
+          "end_line": 8,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:preview_unique"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        }
+      ],
+      "deferred": [
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch settings 提交处理 配置逻辑",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "store 注入实现 存储行为 跨租户重复事件",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "api/endpoint.py:handle_events",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "commit 处理 配置控制 存储注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "重复事件 跨租户 请求重复 去重行为",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "reserve_once 定义与 store 去重实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings tenant_required deduplicate 配置来源",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "preview_unique 去重范围与租户/重复请求语义",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 依赖的 settings 配置项与 store 注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "add",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 定义 实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings commit 配置项",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        }
+      ],
+      "unverified_assertions": [
+        {
+          "claim_id": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-2930cb20f0bc5a668b6459234b615b5d73bfe7c23dd77f7fe5d4b882364166c4",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-f21e1e0cc47968b9902d38f1539c0f6bbb747c1f649d1fd7049af3c8286aaefe",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-8bf1b789f358b726d2f659fab0e24617b592aee6d14ffcfada3d95f3b859be6c",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+          "review_decision": "return",
+          "gaps": {
+            "errors": [
+              "NOT_REVIEWED"
+            ]
+          }
+        },
+        {
+          "claim_id": "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        }
+      ],
+      "unverified_document_segments": [
+        "95778df5-1e86-4089-b186-0970d4389e07",
+        "9022c6a5-2062-486d-bec2-ef42cef4cd9c"
+      ],
+      "documents_truncated": false,
+      "note": "已阅读入口不自动视为运行时接线已验证；普通bounded及旧explore没有全片段覆盖记录。"
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": 4.795
+  },
+  "fresh_ingestion": {
+    "category_id": "5fccf45d-d5a2-4dd0-8d08-7250949eab41",
+    "snapshot_id": "4bccbf27-e661-4137-a6d5-3a6c6cb4d761",
+    "import_job_id": "2c1b4d5f-30e8-492e-8813-088f43ec4735",
+    "index_job_id": "5443dcd9-34b2-481c-97d3-5bc4b8000b9f",
+    "modules": 5
+  },
+  "historical_chain": {
+    "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+    "job_status": "partial",
+    "claims": 3,
+    "evidence": 3,
+    "investigations_status": 200,
+    "real_model_record": true,
+    "model_calls_this_phase": 0
+  },
+  "probe_p2": {
+    "status": "candidate_retrieval",
+    "publication_id": "db315185-3b36-4c8f-b9a4-3a7e055a1369",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "2ba20577968bff3844d8cce6eabb017defe93769307b17096d2ac3cd966a3bfd",
+    "capability_ids": [
+      "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "8a18067a-b135-492b-9883-2d02bda394e8",
+      "6b99b2f2-7186-4ef7-acc5-7fba739ea0ac",
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+      "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "analyzed_ranges": {
+        "2421d77e-4621-4b2c-9870-4a56cf5efcc9": [
+          [
+            5,
+            10
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            10
+          ]
+        ],
+        "3596baf8-45b9-4283-b1dc-c2b9291ea3c8": [
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ]
+        ],
+        "4008c835-6b67-413a-b62e-9d89203ad806": [
+          [
+            1,
+            8
+          ],
+          [
+            1,
+            8
+          ]
+        ]
+      },
+      "uninvestigated_files": [
+        {
+          "id": "2a90ea48-0f15-4d6e-8647-3b6ae8bae056",
+          "path": "config/settings.py",
+          "status": "parsed"
+        },
+        {
+          "id": "e5414ac3-4cfe-4809-8f24-6630cb2b6924",
+          "path": "core/a_codec.py",
+          "status": "parsed"
+        },
+        {
+          "id": "1f77c1c8-8641-4d29-bc70-5b30a3adb3f6",
+          "path": "core/b_labels.py",
+          "status": "parsed"
+        },
+        {
+          "id": "70f16344-e53e-4e3d-b730-468ddf574a23",
+          "path": "core/c_clock.py",
+          "status": "parsed"
+        },
+        {
+          "id": "8fb12c29-189c-45ae-8c52-317f06f2c029",
+          "path": "core/d_limits.py",
+          "status": "parsed"
+        },
+        {
+          "id": "0e7f6335-9a7f-4b53-b917-476259dda9d4",
+          "path": "core/e_format.py",
+          "status": "parsed"
+        },
+        {
+          "id": "7854c119-fbba-4205-af21-7f641db771ae",
+          "path": "core/j_metrics.py",
+          "status": "parsed"
+        },
+        {
+          "id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "path": "storage/durable.py",
+          "status": "parsed"
+        },
+        {
+          "id": "ba00de11-2d6b-4857-9581-2c6a95c5e98a",
+          "path": "tests/test_preview.py",
+          "status": "parsed"
+        }
+      ],
+      "unexplained_entrypoints": [
+        {
+          "id": "8f8145f5-9e00-412e-90eb-53afa892ec83",
+          "type": "event",
+          "source_ref": {
+            "path": "api/endpoint.py",
+            "start_line": 5,
+            "basis": "name heuristic; wiring unverified"
+          }
+        },
+        {
+          "id": "d3a0ea46-f1e0-41df-853c-1702de129cd4",
+          "type": "api",
+          "source_ref": {
+            "path": "core/h_engine.py",
+            "start_line": 121,
+            "basis": "AST registration call; runtime wiring unverified"
+          }
+        }
+      ],
+      "pending": [
+        {
+          "id": "f6097ab877e2da6e11874abc",
+          "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+          "sha256": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+          "path": "core/i_preview.py",
+          "module_id": "a9de3014-2ee6-45f1-bc1b-116343eb5d68",
+          "symbol_id": "8142ccab-855e-4562-a64d-713eb7a916d3",
+          "symbol": "preview_unique",
+          "start_line": 1,
+          "end_line": 8,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:preview_unique"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        }
+      ],
+      "deferred": [
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch settings 提交处理 配置逻辑",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "store 注入实现 存储行为 跨租户重复事件",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "api/endpoint.py:handle_events",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "commit 处理 配置控制 存储注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "重复事件 跨租户 请求重复 去重行为",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "reserve_once 定义与 store 去重实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings tenant_required deduplicate 配置来源",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "preview_unique 去重范围与租户/重复请求语义",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 依赖的 settings 配置项与 store 注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "add",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 定义 实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings commit 配置项",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        }
+      ],
+      "unverified_assertions": [
+        {
+          "claim_id": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-2930cb20f0bc5a668b6459234b615b5d73bfe7c23dd77f7fe5d4b882364166c4",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-f21e1e0cc47968b9902d38f1539c0f6bbb747c1f649d1fd7049af3c8286aaefe",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-8bf1b789f358b726d2f659fab0e24617b592aee6d14ffcfada3d95f3b859be6c",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        }
+      ],
+      "unverified_document_segments": [
+        "95778df5-1e86-4089-b186-0970d4389e07",
+        "9022c6a5-2062-486d-bec2-ef42cef4cd9c"
+      ],
+      "documents_truncated": false,
+      "note": "已阅读入口不自动视为运行时接线已验证；普通bounded及旧explore没有全片段覆盖记录。"
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": 14.037
+  },
+  "probe_after_rollback": {
+    "status": "candidate_retrieval",
+    "publication_id": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "capability_ids": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "analyzed_ranges": {
+        "2421d77e-4621-4b2c-9870-4a56cf5efcc9": [
+          [
+            5,
+            10
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            5,
+            10
+          ],
+          [
+            5,
+            10
+          ]
+        ],
+        "3596baf8-45b9-4283-b1dc-c2b9291ea3c8": [
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ],
+          [
+            118,
+            128
+          ]
+        ],
+        "4008c835-6b67-413a-b62e-9d89203ad806": [
+          [
+            1,
+            8
+          ],
+          [
+            1,
+            8
+          ]
+        ]
+      },
+      "uninvestigated_files": [
+        {
+          "id": "2a90ea48-0f15-4d6e-8647-3b6ae8bae056",
+          "path": "config/settings.py",
+          "status": "parsed"
+        },
+        {
+          "id": "e5414ac3-4cfe-4809-8f24-6630cb2b6924",
+          "path": "core/a_codec.py",
+          "status": "parsed"
+        },
+        {
+          "id": "1f77c1c8-8641-4d29-bc70-5b30a3adb3f6",
+          "path": "core/b_labels.py",
+          "status": "parsed"
+        },
+        {
+          "id": "70f16344-e53e-4e3d-b730-468ddf574a23",
+          "path": "core/c_clock.py",
+          "status": "parsed"
+        },
+        {
+          "id": "8fb12c29-189c-45ae-8c52-317f06f2c029",
+          "path": "core/d_limits.py",
+          "status": "parsed"
+        },
+        {
+          "id": "0e7f6335-9a7f-4b53-b917-476259dda9d4",
+          "path": "core/e_format.py",
+          "status": "parsed"
+        },
+        {
+          "id": "7854c119-fbba-4205-af21-7f641db771ae",
+          "path": "core/j_metrics.py",
+          "status": "parsed"
+        },
+        {
+          "id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "path": "storage/durable.py",
+          "status": "parsed"
+        },
+        {
+          "id": "ba00de11-2d6b-4857-9581-2c6a95c5e98a",
+          "path": "tests/test_preview.py",
+          "status": "parsed"
+        }
+      ],
+      "unexplained_entrypoints": [
+        {
+          "id": "8f8145f5-9e00-412e-90eb-53afa892ec83",
+          "type": "event",
+          "source_ref": {
+            "path": "api/endpoint.py",
+            "start_line": 5,
+            "basis": "name heuristic; wiring unverified"
+          }
+        },
+        {
+          "id": "d3a0ea46-f1e0-41df-853c-1702de129cd4",
+          "type": "api",
+          "source_ref": {
+            "path": "core/h_engine.py",
+            "start_line": 121,
+            "basis": "AST registration call; runtime wiring unverified"
+          }
+        }
+      ],
+      "pending": [
+        {
+          "id": "f6097ab877e2da6e11874abc",
+          "file_id": "4008c835-6b67-413a-b62e-9d89203ad806",
+          "sha256": "af3530cce7470cafdd26e741d839465b78f7d38e0a0ee8f4d7688ea73c8b0338",
+          "path": "core/i_preview.py",
+          "module_id": "a9de3014-2ee6-45f1-bc1b-116343eb5d68",
+          "symbol_id": "8142ccab-855e-4562-a64d-713eb7a916d3",
+          "symbol": "preview_unique",
+          "start_line": 1,
+          "end_line": 8,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:preview_unique"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 100,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        },
+        {
+          "id": "5fe019c648bbaa171f1b24fd",
+          "file_id": "2421d77e-4621-4b2c-9870-4a56cf5efcc9",
+          "sha256": "6d9aaa3622774be5fc602db2b68cce2e50ab57c89ecd228228e0f2543fcf702c",
+          "path": "api/endpoint.py",
+          "module_id": "f50393a6-4d25-4d37-ac3e-0a287429d2b2",
+          "symbol_id": null,
+          "symbol": null,
+          "start_line": 1,
+          "end_line": 4,
+          "priority": 119,
+          "reasons": [
+            "unexplained_lines"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 0
+        },
+        {
+          "id": "d2dc9c0ea858f807060e5bf3",
+          "file_id": "c8d1f7d2-8524-45ae-955c-b8d9dbc93db1",
+          "sha256": "af76aa546dfe6eb243fb7c5a95bf68b33538a959c1519177ef264ac739f72a19",
+          "path": "storage/durable.py",
+          "module_id": "febc32e4-f685-44c9-8db6-b08988dec66a",
+          "symbol_id": "39e922c2-80b8-414c-b9bf-ab4ed9b9695f",
+          "symbol": "reserve_once",
+          "start_line": 1,
+          "end_line": 3,
+          "priority": 120,
+          "reasons": [
+            "search_symbols:reserve_once"
+          ],
+          "status": "pending",
+          "expanded": false,
+          "depth": 2
+        }
+      ],
+      "deferred": [
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch settings 提交处理 配置逻辑",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "store 注入实现 存储行为 跨租户重复事件",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "api/endpoint.py:handle_events",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "commit 处理 配置控制 存储注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "重复事件 跨租户 请求重复 去重行为",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "reserve_once 定义与 store 去重实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings tenant_required deduplicate 配置来源",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "preview_unique 去重范围与租户/重复请求语义",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 依赖的 settings 配置项与 store 注入实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "add",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "process_batch 定义 实现",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_code_batch",
+          "query": "settings commit 配置项",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        },
+        {
+          "tool": "search_symbols",
+          "query": "ValueError",
+          "reason": "expansion_round_limit"
+        }
+      ],
+      "unverified_assertions": [
+        {
+          "claim_id": "cap-8adc3f8b78296e0b27704c747c57305b848ac694b08cdb024810326f07706023",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-ffe2a2750636d9c569eb6c3a65a7e81dd3892a2fc880ea8e640c265d63b2e26d",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-2930cb20f0bc5a668b6459234b615b5d73bfe7c23dd77f7fe5d4b882364166c4",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-f21e1e0cc47968b9902d38f1539c0f6bbb747c1f649d1fd7049af3c8286aaefe",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-8bf1b789f358b726d2f659fab0e24617b592aee6d14ffcfada3d95f3b859be6c",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        },
+        {
+          "claim_id": "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+          "review_decision": "return",
+          "gaps": {
+            "errors": [
+              "NOT_REVIEWED"
+            ]
+          }
+        },
+        {
+          "claim_id": "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+          "review_decision": "unreviewed",
+          "gaps": {
+            "reason": "assertions_unverified"
+          }
+        }
+      ],
+      "unverified_document_segments": [
+        "95778df5-1e86-4089-b186-0970d4389e07",
+        "9022c6a5-2062-486d-bec2-ef42cef4cd9c"
+      ],
+      "documents_truncated": false,
+      "note": "已阅读入口不自动视为运行时接线已验证；普通bounded及旧explore没有全片段覆盖记录。"
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": null
+  },
+  "comparison": {
+    "p1_candidates": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "p2_candidates": [
+      "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "restored_candidates": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "p1_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "p2_hash": "2ba20577968bff3844d8cce6eabb017defe93769307b17096d2ac3cd966a3bfd",
+    "restored_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90"
+  },
+  "passed": true
+}
