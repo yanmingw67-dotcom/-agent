@@ -43,6 +43,9 @@ class Assertion(Strict):
     rationale: Short
     dependencies: list[Dependency] = Field(default_factory=list, max_length=10)
     implementation_evidence_ids: list[str] = Field(default_factory=list, max_length=10)
+    # P1.6：证据类型只表示来源，不表示权威高低；文档支持须管理员逐断言确认引文。
+    proof_basis: Literal["source", "document", "mixed"] | None = None
+    document_scope_confirmed: bool = False
 
 
 class ReviewRequest(Strict):
@@ -54,6 +57,8 @@ class ReviewRequest(Strict):
     reachability_evidence_ids: list[str] = Field(default_factory=list, max_length=10)
     comment: Short
     human_confirmed: bool = False
+    availability_basis: Literal["source_runtime", "document_declared", "mixed"] | None = None
+    product_scope_confirmed: bool = False
 
 
 class RelationRequest(Strict):
@@ -92,3 +97,9 @@ class RollbackRequest(Strict):
     publication_id: str
     expected_active_publication_id: str | None
     comment: Short
+
+
+class ConflictResolutionRequest(Strict):
+    decision: Literal["resolved", "dismissed"]
+    explanation: Short
+    human_confirmed: bool = False

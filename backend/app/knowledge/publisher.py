@@ -4,7 +4,13 @@ from sqlalchemy import select
 
 from app.core.security import AppError
 from app.db.models import Category
-from app.db.review_models import ClaimRevision, Publication, PublicationSwitch, ReviewedRelation
+from app.db.review_models import (
+    ClaimRevision,
+    ConflictFinding,
+    Publication,
+    PublicationSwitch,
+    ReviewedRelation,
+)
 from app.ingestion.text import digest
 from app.knowledge.coverage import coverage
 from app.knowledge.evidence_registry import canonical, read_evidence
@@ -22,7 +28,21 @@ def validate_revision(db, revision):
         revision.content_json,
         revision.assertions_json,
         revision.gate_json.get("reachability_evidence_ids", []),
+        availability_basis=revision.availability_basis,
+        product_scope_confirmed=revision.product_scope_confirmed,
     )
+    unresolved = db.scalar(
+        select(ConflictFinding.id)
+        .where(
+            ConflictFinding.snapshot_id == revision.snapshot_id,
+            ConflictFinding.status == "unresolved",
+            (ConflictFinding.source_claim_id == revision.claim_id)
+            | (ConflictFinding.target_claim_id == revision.claim_id),
+        )
+        .limit(1)
+    )
+    if unresolved:
+        raise AppError(422, "PUBLICATION_CONFLICT_UNRESOLVED", "能力存在未解决冲突")
     if result["errors"]:
         raise AppError(422, "PUBLICATION_ASSERTION_GATE_FAILED", "发布时断言证据核验未闭合")
 

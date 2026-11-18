@@ -22,7 +22,11 @@ def claim_pending():
     types = (
         ["knowledge_build"]
         if builder
-        else (["source_index", "document_index"] if indexer else ["source_import"])
+        else (
+            ["source_index", "document_index", "document_discovery"]
+            if indexer
+            else ["source_import"]
+        )
     )
     timeout = (
         settings.builder_job_timeout_seconds
@@ -50,6 +54,14 @@ def claim_pending():
                 snapshot.status = "failed"
             elif job.job_type == "source_index":
                 snapshot.index_status = "failed"
+            elif job.job_type == "document_discovery":
+                from app.db.knowledge_models import DocumentDiscoveryRun
+
+                run = db.scalar(
+                    select(DocumentDiscoveryRun).where(DocumentDiscoveryRun.job_id == job.id)
+                )
+                if run and run.status in {"pending", "running"}:
+                    run.status, run.error_code, run.finished_at = "failed", "WORKER_LOST", now()
         pending = db.scalars(
             select(KnowledgeJob)
             .where(
@@ -66,7 +78,7 @@ def claim_pending():
             job.dispatch_token = job.dispatch_token or str(uuid4())
             job.dispatched_at = now()
             job.dispatch_enqueued_at = None
-            claims.append((job.id, job.dispatch_token, job.dispatched_at))
+            claims.append((job.id, job.dispatch_token, job.dispatched_at, job.job_type))
     # 只有事务提交成功后，调用者才可能向 Redis 发布。
     return claims
 
@@ -110,10 +122,15 @@ def dispatch_pending():
         else (settings.index_queue_name if indexer else settings.queue_name),
         connection=connection(),
     )
-    for job_id, token, claimed_at in claims:
+    for job_id, token, claimed_at, job_type in claims:
+        target = handler
+        if job_type == "document_discovery":
+            from app.knowledge.document_discovery import run_document_discovery
+
+            target = run_document_discovery
         try:
             queue.enqueue(
-                handler,
+                target,
                 job_id,
                 token,
                 job_id=f"{job_id}-{token}",

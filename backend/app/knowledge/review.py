@@ -6,7 +6,7 @@ from app.core.security import AppError
 from app.db.index_models import CodeEdge, CodeSymbol
 from app.db.knowledge_models import CapabilityClaim
 from app.db.models import Category, KnowledgeJob, Snapshot
-from app.db.review_models import ClaimRevision, ReviewedRelation, ReviewEvent
+from app.db.review_models import ClaimRevision, ConflictFinding, ReviewedRelation, ReviewEvent
 from app.ingestion.text import sensitive_text
 from app.knowledge.evidence_registry import read_evidence
 from app.knowledge.quality import context, gate, latest
@@ -114,15 +114,35 @@ def review(db, claim_id, body: ReviewRequest):
             content,
             assertions,
             body.reachability_evidence_ids,
+            availability_basis=body.availability_basis,
+            product_scope_confirmed=body.product_scope_confirmed,
         )
         if body.content
         else {"errors": ["NOT_REVIEWED"]}
     )
+    conflicts = list(
+        db.scalars(
+            select(ConflictFinding).where(
+                ConflictFinding.snapshot_id == claim.snapshot_id,
+                (ConflictFinding.source_claim_id == claim.id)
+                | (ConflictFinding.target_claim_id == claim.id),
+            )
+        )
+    )
     if body.action == "accept":
         if not body.human_confirmed:
             raise AppError(422, "HUMAN_CONFIRMATION_REQUIRED", "必须由管理员显式确认人工语义审核")
+        if any(item.status == "unresolved" for item in conflicts):
+            raise AppError(422, "UNRESOLVED_CONFLICT", "存在未解决的双源冲突，不能接受该能力")
         if checks["errors"]:
             raise AppError(422, "REVIEW_GATE_FAILED", "断言、类型或依赖证据门槛未闭合")
+    proof_kind = None
+    if body.content:
+        has_document = any(a.get("proof_basis") in {"document", "mixed"} for a in assertions)
+        has_source = any(a.get("proof_basis") in {"source", "mixed"} for a in assertions)
+        proof_kind = (
+            "mixed" if has_document and has_source else ("document" if has_document else "source")
+        )
     row = ClaimRevision(
         claim_id=claim_id,
         snapshot_id=claim.snapshot_id,
@@ -132,6 +152,10 @@ def review(db, claim_id, body: ReviewRequest):
         content_json=content,
         assertions_json=assertions,
         gate_json=checks,
+        availability_basis=body.availability_basis,
+        product_scope_confirmed=body.product_scope_confirmed,
+        proof_kind=proof_kind,
+        conflict_ids=[item.id for item in conflicts],
         reviewer_id="admin",
     )
     db.add(row)

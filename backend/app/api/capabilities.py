@@ -84,6 +84,8 @@ def validate(
         body.content.model_dump(),
         [a.model_dump() for a in body.assertions],
         body.reachability_evidence_ids,
+        availability_basis=body.availability_basis,
+        product_scope_confirmed=body.product_scope_confirmed,
     )
 
 

@@ -12,6 +12,7 @@ from starlette.exceptions import HTTPException
 from app.api import (
     capabilities,
     categories,
+    conflicts,
     indexing,
     investigations,
     jobs,
@@ -113,6 +114,7 @@ def create_app():
         app.include_router(indexing.router)
         app.include_router(investigations.router)
         app.include_router(capabilities.router)
+        app.include_router(conflicts.router)
     app.include_router(retrieval.router)
     app.include_router(probe.router)
     return app

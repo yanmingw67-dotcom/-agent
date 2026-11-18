@@ -56,6 +56,16 @@ class Settings(BaseSettings):
     builder_allow_enterprise: bool = False
     builder_input_usd_per_million: float | None = None
     builder_output_usd_per_million: float | None = None
+    document_discovery_mode: Literal["structural", "model", "hybrid"] = "structural"
+    document_discovery_max_documents: int = 20
+    document_discovery_max_units: int = 240
+    document_discovery_batch_units: int = 6
+    document_discovery_max_batches: int = 20
+    document_discovery_max_candidates: int = 40
+    document_discovery_max_requests: int = 20
+    document_discovery_max_tokens: int = 60000
+    document_discovery_max_context_chars: int = 60000
+    document_discovery_max_text_chars: int = 12000
 
     @field_validator(
         "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
@@ -111,6 +121,15 @@ class Settings(BaseSettings):
         "builder_max_tokens",
         "builder_max_context_chars",
         "builder_max_output_tokens",
+        "document_discovery_max_documents",
+        "document_discovery_max_units",
+        "document_discovery_batch_units",
+        "document_discovery_max_batches",
+        "document_discovery_max_candidates",
+        "document_discovery_max_requests",
+        "document_discovery_max_tokens",
+        "document_discovery_max_context_chars",
+        "document_discovery_max_text_chars",
     )
     @classmethod
     def positive_limit(cls, value):

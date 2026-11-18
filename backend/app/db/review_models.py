@@ -21,6 +21,10 @@ class ClaimRevision(Base):
     assertions_json: Mapped[list] = mapped_column(JSON)
     gate_json: Mapped[dict] = mapped_column(JSON)
     merged_into: Mapped[str | None] = mapped_column(String(80))
+    availability_basis: Mapped[str | None] = mapped_column(String(32))
+    product_scope_confirmed: Mapped[bool] = mapped_column(default=False, server_default="false")
+    proof_kind: Mapped[str | None] = mapped_column(String(16))
+    conflict_ids: Mapped[list] = mapped_column(JSON, default=list, server_default="'[]'")
     reviewer_id: Mapped[str] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 
@@ -48,6 +52,33 @@ class ReviewedRelation(Base):
     details_json: Mapped[dict] = mapped_column(JSON)
     reviewer_id: Mapped[str] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+
+class ConflictFinding(Base):
+    """双源或同源能力冲突；阻断未解决断言的接受与发布，不自动合并。"""
+
+    __tablename__ = "conflict_findings"
+    __table_args__ = (
+        UniqueConstraint(
+            "snapshot_id",
+            "source_claim_id",
+            "target_claim_id",
+            "conflict_type",
+            name="uq_conflict_finding_pair",
+        ),
+    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    category_id: Mapped[str] = mapped_column(ForeignKey("product_categories.id"), index=True)
+    snapshot_id: Mapped[str] = mapped_column(ForeignKey("source_snapshots.id"), index=True)
+    source_claim_id: Mapped[str] = mapped_column(ForeignKey("capability_claims.id"))
+    target_claim_id: Mapped[str] = mapped_column(ForeignKey("capability_claims.id"))
+    conflict_type: Mapped[str] = mapped_column(String(40))
+    details_json: Mapped[dict] = mapped_column(JSON)
+    status: Mapped[str] = mapped_column(String(16), default="unresolved")
+    resolution_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    resolved_by: Mapped[str | None] = mapped_column(String(32))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Publication(Base):

@@ -5,9 +5,11 @@ import re
 from sqlalchemy import select
 
 from app.core.security import AppError
-from app.db.index_models import CodeSymbol
+from app.db.index_models import CodeSymbol, Document, DocumentSegment
 from app.db.models import Snapshot
 from app.db.review_models import ClaimRevision
+from app.knowledge.document_structure import ALLOWED as DOCUMENT_ALLOWED
+from app.knowledge.document_structure import build_document_units
 from app.knowledge.evidence_registry import read_evidence
 from app.knowledge.review_schemas import ReviewedContent
 from app.retrieval.schemas import RunContext
@@ -18,6 +20,11 @@ INVESTIGATION = re.compile(
 )
 RISK = re.compile(
     r"持久|原子|幂等|隔离|可配置|任意.{0,12}(?:URL|地址|认证)|跨请求|exactly.once|durab|persist|atomic|idempoten|isolat|configurab",
+    re.I,
+)
+# 文档只能证明其明示范围；这些“扩大化”措辞若不在原文引文中，直接阻断。
+DOCUMENT_EXPANSION = re.compile(
+    r"所有|全部|任意|零丢失|百分百|100%|强事务|全局一致|绝对|exactly.once|zero.loss",
     re.I,
 )
 NEGATIVE = re.compile(
@@ -66,7 +73,57 @@ def fields(content):
     return result
 
 
-def gate(db, sid, declaration_type, content, assertions, reachability):
+def flatten(value):
+    return re.sub(r"\s+", "", value or "")
+
+
+def document_units(db, ctx, document_id, cache):
+    if document_id in cache:
+        return cache[document_id]
+    document = db.get(Document, document_id)
+    if not document or document.snapshot_id != ctx.snapshot_id:
+        cache[document_id] = {}
+        return cache[document_id]
+    segments = list(
+        db.scalars(
+            select(DocumentSegment)
+            .where(DocumentSegment.document_id == document_id)
+            .order_by(DocumentSegment.id)
+        )
+    )
+    units = build_document_units(document, segments)
+    mapping = {}
+    for unit in units:
+        for segment_id in unit.segment_ids:
+            mapping[segment_id] = unit
+    cache[document_id] = mapping
+    return mapping
+
+
+def document_support(db, ctx, item, cache):
+    """返回 (unit, error)：文档证据必须落在当前产品能力单元内。"""
+    segment_id = item["source_ref"].get("segment_id")
+    document_id = item["source_ref"].get("document_id")
+    unit = document_units(db, ctx, document_id, cache).get(segment_id)
+    if unit is None:
+        return None, "DOCUMENT_EVIDENCE_UNIT_UNRESOLVED"
+    if not unit.eligible or unit.classification not in DOCUMENT_ALLOWED:
+        return unit, "DOCUMENT_EVIDENCE_NOT_PRODUCT_SCOPE"
+    if flatten(item["quote"]) not in flatten(unit.text):
+        return unit, "DOCUMENT_EVIDENCE_QUOTE_MISMATCH"
+    return unit, None
+
+
+def gate(
+    db,
+    sid,
+    declaration_type,
+    content,
+    assertions,
+    reachability,
+    availability_basis=None,
+    product_scope_confirmed=False,
+):
     content = ReviewedContent.model_validate(content).model_dump()
     ctx = context(db, sid)
     errors = []
@@ -80,6 +137,8 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
         errors.append("ASSERTION_FIELDS_INCOMPLETE")
     evidence = {}
     dependency_gaps = []
+    document_cache = {}
+    document_only_ok = False
     for field, text in expected.items():
         a = by_field.get(field)
         if not a or a["text"] != text:
@@ -98,7 +157,40 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
             for e in a["evidence_ids"]
             if evidence[e]["kind"] == "source" and evidence[e]["source_ref"].get("role") != "test"
         ]
-        if not sources:
+        documents = [evidence[e] for e in a["evidence_ids"] if evidence[e]["kind"] == "document"]
+        if documents and not a.get("proof_basis"):
+            errors.append("ASSERTION_PROOF_BASIS_REQUIRED")
+        if a.get("proof_basis"):
+            expected_basis = (
+                "mixed"
+                if sources and documents
+                else ("document" if documents else ("source" if sources else None))
+            )
+            if expected_basis and a["proof_basis"] != expected_basis:
+                errors.append("ASSERTION_PROOF_BASIS_MISMATCH")
+        if documents and not a.get("document_scope_confirmed"):
+            errors.append("DOCUMENT_SCOPE_CONFIRMATION_REQUIRED")
+        if documents and availability_basis not in {"document_declared", "mixed"}:
+            errors.append("DOCUMENT_AVAILABILITY_BASIS_REQUIRED")
+        if documents and not sources and not product_scope_confirmed:
+            errors.append("PRODUCT_SCOPE_CONFIRMATION_REQUIRED")
+        if documents and not sources and a.get("document_scope_confirmed"):
+            document_only_ok = True
+        positive_text = not re.search(r"不支持|不提供|不具备|仅支持|仅限|除外|限制", text, re.I)
+        for item in documents:
+            unit, problem = document_support(db, ctx, item, document_cache)
+            if problem:
+                errors.append(problem)
+                continue
+            if positive_text and unit.classification in {"limitation", "exclusion"}:
+                errors.append("DOCUMENT_EVIDENCE_NEGATIVE_SCOPE")
+        if documents:
+            quotes = " ".join(item.get("quote", "") for item in documents)
+            for term in DOCUMENT_EXPANSION.findall(text):
+                if term.casefold() not in quotes.casefold():
+                    errors.append("DOCUMENT_SCOPE_EXPANSION")
+                    break
+        if not sources and not documents:
             errors.append("ASSERTION_NEEDS_NONTEST_SOURCE")
         for dependency in a.get("dependencies", []):
             symbol = db.get(CodeSymbol, dependency["symbol_id"])
@@ -131,7 +223,20 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
             )
             for clause in risk_clauses
         )
-        if risk_promise:
+        if risk_promise and documents:
+            # 文档明示范围可支持产品级能力，但不得借此推导未记载的底层机制。
+            # 双源（document+source）同样以文档明示范围为准，避免把“函数存在”误当底层机制证明。
+            document_only_ok = True
+            if availability_basis not in {"document_declared", "mixed"}:
+                errors.append("HIGH_RISK_DOCUMENT_BASIS_REQUIRED")
+            if not product_scope_confirmed:
+                errors.append("HIGH_RISK_PRODUCT_SCOPE_UNCONFIRMED")
+            if any(
+                evidence[e].get("kind") == "document" and not a.get("document_scope_confirmed")
+                for e in a["evidence_ids"]
+            ):
+                errors.append("HIGH_RISK_DOCUMENT_SCOPE_UNCONFIRMED")
+        elif risk_promise:
             implementation = [
                 evidence[e]
                 for e in a.get("implementation_evidence_ids", [])
@@ -215,7 +320,7 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
         errors.append("DEPENDENCY_EVIDENCE_GAP")
     if declaration_type == "product_function":
         reachable = [read_evidence(db, ctx, eid) for eid in reachability]
-        if not any(
+        wired = any(
             e["kind"] == "source"
             and e["source_ref"].get("role") != "test"
             and re.search(
@@ -224,8 +329,21 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
                 re.I,
             )
             for e in reachable
-        ):
-            errors.append("RUNTIME_WIRING_EVIDENCE_REQUIRED")
+        )
+        if not wired:
+            # 文档单源不要求伪造运行时接线；但必须由管理员显式确认产品范围。
+            document_route = (
+                document_only_ok
+                and availability_basis == "document_declared"
+                and product_scope_confirmed
+                and all(
+                    a.get("document_scope_confirmed")
+                    for a in assertions
+                    if any(evidence[e]["kind"] == "document" for e in a["evidence_ids"])
+                )
+            )
+            if not document_route:
+                errors.append("RUNTIME_WIRING_EVIDENCE_REQUIRED")
     return {
         "eligible_for_human_acceptance": not errors,
         "errors": sorted(set(errors)),
@@ -234,4 +352,7 @@ def gate(db, sid, declaration_type, content, assertions, reachability):
         "semantic_verification": "human_review_required",
         "evidence_ids": sorted(evidence),
         "reachability_evidence_ids": reachability,
+        "availability_basis": availability_basis,
+        "product_scope_confirmed": product_scope_confirmed,
+        "document_evidence_used": any(e["kind"] == "document" for e in evidence.values()),
     }

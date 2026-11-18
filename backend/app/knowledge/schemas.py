@@ -57,6 +57,17 @@ class CapabilityClaimDraft(Strict):
     evidence_ids: Ids = Field(default_factory=list)
     unresolved_questions: Notes = Field(default_factory=list)
     status: Literal["candidate", "evidence_found"] = "candidate"
+    # P1.6 向后兼容来源元数据；旧草稿缺省等价于源码通道。
+    source_channel: Literal["source", "document", "merged"] = "source"
+    claim_type: Literal[
+        "current_capability",
+        "technical_implementation",
+        "limitation",
+        "exclusion",
+        "support_scope",
+        "non_product",
+    ] = "current_capability"
+    discovery_unit: dict | None = None
 
 
 class CandidateRelation(Strict):

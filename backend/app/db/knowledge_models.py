@@ -53,6 +53,28 @@ class CapabilityClaim(Base):
     name: Mapped[str] = mapped_column(String(1000))
     status: Mapped[str] = mapped_column(String(32))
     draft_json: Mapped[dict] = mapped_column(JSON)
+    source_channel: Mapped[str] = mapped_column(
+        String(16), default="source", server_default="source"
+    )
+    origin_json: Mapped[dict] = mapped_column(JSON, default=dict, server_default="'{}'")
+
+
+class DocumentDiscoveryRun(Base):
+    """文档独立发现运行；记录预算、覆盖缺口与检查点，不作批准或发布。"""
+
+    __tablename__ = "document_discovery_runs"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uid)
+    category_id: Mapped[str] = mapped_column(ForeignKey("product_categories.id"), index=True)
+    snapshot_id: Mapped[str] = mapped_column(ForeignKey("source_snapshots.id"), index=True)
+    job_id: Mapped[str | None] = mapped_column(ForeignKey("knowledge_jobs.id"), index=True)
+    mode: Mapped[str] = mapped_column(String(16))
+    status: Mapped[str] = mapped_column(String(32), default="pending")
+    metrics_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    coverage_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    error_code: Mapped[str | None] = mapped_column(String(64))
+    started_at: Mapped[datetime | None] = mapped_column()
+    finished_at: Mapped[datetime | None] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(default=now)
 
 
 class ClaimEvidenceLink(Base):

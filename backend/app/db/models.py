@@ -53,6 +53,8 @@ class Snapshot(Base):
     )
     manifest_key: Mapped[str | None] = mapped_column(String(200))
     index_status: Mapped[str] = mapped_column(String(32), default="not_indexed")
+    derived_from_snapshot_id: Mapped[str | None] = mapped_column(String(36))
+    derivation_type: Mapped[str | None] = mapped_column(String(32))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
 
 
