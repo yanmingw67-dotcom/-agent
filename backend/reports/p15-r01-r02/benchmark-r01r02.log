@@ -1,0 +1,1 @@
+{"passed": true, "summary": {"errors": 0, "load_p95_ms": 90.216, "load_p95_under_3000ms": true}, "output": "reports/p15/p15-probe-benchmark-r01r02.json"}

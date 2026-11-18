@@ -1,0 +1,26 @@
+ Container product-knowledge-p11-api-run-9555d685fd9f Creating 
+ Container product-knowledge-p11-api-run-9555d685fd9f Created 
+test_commit_time_constraint_failure_rolls_back_everything (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_commit_time_constraint_failure_rolls_back_everything) ... ok
+test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected) ... ok
+test_concurrent_source_review_prevents_merge (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_concurrent_source_review_prevents_merge) ... ok
+test_concurrent_target_review_prevents_merge (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_concurrent_target_review_prevents_merge) ... ok
+test_failure_after_pointer_update_rolls_back_everything (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_failure_after_pointer_update_rolls_back_everything) ... ok
+test_identity_map_refresh_rejects_changed_snapshot (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_identity_map_refresh_rejects_changed_snapshot) ... ok
+test_publish_two_snapshots_and_rollback (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_publish_two_snapshots_and_rollback) ... ok
+test_stale_identity_map_cannot_rollback_new_publication (tests.infrastructure.test_p14_r1_postgres.PostgreSQLRemediationTests.test_stale_identity_map_cannot_rollback_new_publication) ... ok
+test_commit_time_constraint_failure_rolls_back_everything (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_commit_time_constraint_failure_rolls_back_everything) ... ok
+test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected) ... ok
+test_concurrent_source_review_prevents_merge (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_concurrent_source_review_prevents_merge) ... ok
+test_concurrent_target_review_prevents_merge (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_concurrent_target_review_prevents_merge) ... ok
+test_failure_after_pointer_update_rolls_back_everything (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_failure_after_pointer_update_rolls_back_everything) ... ok
+test_identity_map_refresh_rejects_changed_snapshot (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_identity_map_refresh_rejects_changed_snapshot) ... ok
+test_probe_keeps_request_snapshot_across_publication_switch (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_probe_keeps_request_snapshot_across_publication_switch) ... ok
+test_probe_preserves_frozen_publication_until_publish_or_rollback (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_probe_preserves_frozen_publication_until_publish_or_rollback) ... ok
+test_probe_readonly_transaction_cannot_update_knowledge (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_probe_readonly_transaction_cannot_update_knowledge) ... ok
+test_publish_two_snapshots_and_rollback (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_publish_two_snapshots_and_rollback) ... ok
+test_stale_identity_map_cannot_rollback_new_publication (tests.infrastructure.test_p15_postgres.ProbePostgresTests.test_stale_identity_map_cannot_rollback_new_publication) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 2.416s
+
+OK

@@ -3,7 +3,7 @@
 import re
 import time
 
-from sqlalchemy import func, select, text
+from sqlalchemy import select, text
 
 from app.core.config import get_settings
 from app.core.metrics import observe
@@ -12,9 +12,11 @@ from app.db.models import Category, Snapshot
 from app.db.review_models import ClaimRevision, Publication, ReviewedRelation
 from app.db.session import get_engine
 from app.ingestion.text import digest
+from app.knowledge.coverage import coverage_summary
 from app.knowledge.evidence_registry import canonical, read_evidence
 from app.retrieval.probe_schemas import (
     ProbeCapability,
+    ProbeCoverageSummary,
     ProbeEvidence,
     ProbeGap,
     ProbeRelation,
@@ -122,7 +124,9 @@ class KnowledgeProbe:
             candidates=[],
             relations=[],
             evidence=[],
-            coverage=payload.get("coverage", {}),
+            coverage=ProbeCoverageSummary.model_validate(
+                coverage_summary(payload.get("coverage", {}))
+            ),
             unverified_gaps=[],
             warnings=[
                 "lexical_retrieval_not_semantic_proof",
@@ -133,23 +137,8 @@ class KnowledgeProbe:
             ],
         )
         response.unverified_gaps.append(ProbeGap(code="REQUIREMENT_COMPLIANCE_NOT_ASSESSED"))
-        if response.coverage.get("coverage_incomplete", True):
+        if response.coverage.coverage_incomplete:
             response.unverified_gaps.append(ProbeGap(code="KNOWLEDGE_COVERAGE_INCOMPLETE"))
-        claim_ids = [c["id"] for c in caps]
-        numbers = (
-            dict(
-                self.db.execute(
-                    select(ClaimRevision.claim_id, func.max(ClaimRevision.number))
-                    .where(
-                        ClaimRevision.snapshot_id == snapshot.id,
-                        ClaimRevision.claim_id.in_(claim_ids),
-                    )
-                    .group_by(ClaimRevision.claim_id)
-                ).all()
-            )
-            if claim_ids
-            else {}
-        )
         revisions = (
             {
                 r.id: r
@@ -181,11 +170,6 @@ class KnowledgeProbe:
             ):
                 response.unverified_gaps.append(
                     ProbeGap(code="PUBLICATION_REVISION_INVALID", capability_id=item["id"])
-                )
-                continue
-            if r.number != numbers.get(r.claim_id):
-                response.unverified_gaps.append(
-                    ProbeGap(code="NEWER_REVIEW_NOT_PUBLISHED", capability_id=item["id"])
                 )
                 continue
             haystack = " ".join(
@@ -252,22 +236,10 @@ class KnowledgeProbe:
             if not {item["source_revision_id"], item["target_revision_id"]}.issubset(selected):
                 continue
             relation = self.db.get(ReviewedRelation, item["id"])
-            last = self.db.scalar(
-                select(ReviewedRelation.id)
-                .where(
-                    ReviewedRelation.source_revision_id == item["source_revision_id"],
-                    ReviewedRelation.target_revision_id == item["target_revision_id"],
-                    ReviewedRelation.relation_type == item["type"],
-                    ReviewedRelation.snapshot_id == snapshot.id,
-                )
-                .order_by(ReviewedRelation.created_at.desc(), ReviewedRelation.id.desc())
-                .limit(1)
-            )
             if (
                 not relation
                 or relation.snapshot_id != snapshot.id
                 or relation.decision != "accept"
-                or last != relation.id
                 or relation.details_json != item["details"]
                 or relation.source_revision_id != item["source_revision_id"]
                 or relation.target_revision_id != item["target_revision_id"]

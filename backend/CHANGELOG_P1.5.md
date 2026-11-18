@@ -12,8 +12,13 @@
   不接受调用方指定版本、快照或发布。
 - 发布一致性：校验品类双指针、发布记录与快照的品类/快照/发布状态、清单作用域与
   `payload_hash`；不一致时 fail closed。
-- 修订新鲜度：只读取冻结发布清单中的已审核修订；旧批准修订若已有更新审核，
-  保守隐藏并返回 `NEWER_REVIEW_NOT_PUBLISHED`，不自动采用未发布修订。
+- 发布冻结：Probe 只读取当前生效发布清单及其中的已审核修订；未发布的新审核修订
+  （accept/modify/return/reject/merged）不改变当前清单，也不隐藏已发布能力。只有正式发布、
+  回滚或明确授权撤回才改变生效内容；发布侧仍强制最新接受修订与证据门槛。
+- 覆盖信息分级：Probe 的 `coverage` 仅返回固定摘要（覆盖布尔值、语义覆盖状态、
+  各类计数与缺口类型）；未发布候选 ID、审核事件、调查任务和源码文件清单不进入 Probe。
+  管理员仍可通过 `GET /api/v1/snapshots/{snapshot_id}/coverage` 读取完整详情；
+  `GET /api/v1/capabilities` 对 admin 返回完整覆盖，对 read 返回摘要。
 - 证据回读：按同一快照复验来源哈希、引文哈希、文档哈希和证据身份；失效证据不进入
   结果，只返回结构化缺口。
 - 检索为确定性词法匹配：不调用模型、不生成满足/不满足或合规结论；
@@ -43,12 +48,12 @@
 
 | 项目 | 结果 | 证据 |
 |---|---|---|
-| 全量 pytest | 230 passed，26 skipped | `reports/p15/pytest-full-final.log` |
-| Ruff lint/format | 全部通过；131 files formatted | `reports/p15/ruff-final.log`、`ruff-format-final.log` |
-| 真实 PostgreSQL | 18 tests OK | `reports/p15/postgres-p15-final.log` |
-| Compose 端到端 | 44/44 checks，25 steps | `reports/p15/p15-acceptance-compose.json` |
-| 性能基线 | 0 错误；负载 4 并发 P95 43.652 ms | `reports/p15/p15-probe-benchmark-compose.json` |
-| Agent A 运行时 | 160/160 成功；P95 49.421 ms | `reports/p15/p15-probe-agent-load-compose.json` |
+| 全量 pytest | 233 passed，27 skipped | `reports/p15-r01-r02/pytest-full-final.log` |
+| Ruff lint/format | 全部通过；132 files formatted | `reports/p15-r01-r02/ruff-check.log`、`ruff-format-check.log` |
+| 真实 PostgreSQL | 19 tests OK | `reports/p15-r01-r02/postgres-p15-r01-r02.log` |
+| Compose 端到端 | 44/44 checks，25 steps | `reports/p15/p15-acceptance-r01r02.json` |
+| 性能基线 | 0 错误；4 并发负载 P95 90.216 ms | `reports/p15/p15-probe-benchmark-r01r02.json` |
+| Agent A 运行时 | 基线 160/160 成功；P95 49.421 ms（本轮未重跑） | `reports/p15/p15-probe-agent-load-compose.json` |
 
 本轮真实模型请求 0、费用 0 USD；真实模型链复用 P1.3/P1.4 记录。
 Agent 负载使用 FunctionModel 驱动真实运行时，标记 `TEST_FUNCTION_MODEL`，
@@ -59,7 +64,7 @@ Agent 负载使用 FunctionModel 驱动真实运行时，标记 `TEST_FUNCTION_M
 - 性能数据来自 Docker Compose cgroup 配额，不是独立 4C8G 虚拟机实测。
 - 未重跑真实模型；FunctionModel 是测试替身，不代表模型能力、延迟或 Token 成本。
 - 公开 12 文件人工样例不代表企业规模；未做长稳、容量规划或生产并发承诺。
-- 标准 pytest 跳过真实 PostgreSQL 项；一致性结论以 Compose 内 18 项真实 PG 测试为准。
+- 标准 pytest 跳过真实 PostgreSQL 项；一致性结论以 Compose 内 19 项真实 PG 测试为准。
 - 未进入 Agent B、自动能力合并、自动审核/发布或语义检索。
 - 未提交任何 API Key、密码、`.env` 或企业源码。
 
@@ -68,4 +73,5 @@ Agent 负载使用 FunctionModel 驱动真实运行时，标记 `TEST_FUNCTION_M
 - 验收范围与边界：`P1.5_ACCEPTANCE_REPORT.md`
 - 架构/降级/安全边界：`docs/P1.5_ARCHITECTURE.md`
 - 运行与复现：`docs/P1.5_RUNBOOK.md`
-- 原始日志与 JSON：`reports/p15/`
+- 原始日志与 JSON：`reports/p15/`（基线）、`reports/p15-r01-r02/`（第一轮审核整改）
+- 整改报告：`P1.5_ROUND1_REMEDIATION_REPORT.md`

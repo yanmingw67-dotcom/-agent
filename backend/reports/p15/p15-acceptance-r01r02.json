@@ -1,0 +1,544 @@
+{
+  "mode": "P1.5_COMPOSE_REAL_POSTGRES_HISTORICAL_REAL_MODEL_RECORD",
+  "criteria": "AgentA_Phase1_Development_Spec_v1.0.md §11 AC-14/AC-16",
+  "model_calls_this_phase": 0,
+  "cost_this_phase_usd": null,
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "reused_p13_job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+  "reused_publications": {
+    "p1": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "p2": "db315185-3b36-4c8f-b9a4-3a7e055a1369"
+  },
+  "steps": [
+    {
+      "label": "空闲Probe读取P1",
+      "status": 200
+    },
+    {
+      "label": "匿名Probe拒绝",
+      "status": 401,
+      "error_code": "UNAUTHENTICATED"
+    },
+    {
+      "label": "错误Token拒绝",
+      "status": 401,
+      "error_code": "UNAUTHENTICATED"
+    },
+    {
+      "label": "管理员Probe允许",
+      "status": 200
+    },
+    {
+      "label": "额外snapshot_id",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "额外publication_id",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "越界limit",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "空白需求",
+      "status": 422,
+      "error_code": "VALIDATION_ERROR"
+    },
+    {
+      "label": "查询参数覆盖拒绝",
+      "status": 422,
+      "error_code": "PROBE_SCOPE_OVERRIDE_FORBIDDEN"
+    },
+    {
+      "label": "后台API不执行Probe",
+      "status": 503,
+      "error_code": "PROBE_RETRIEVAL_SERVICE_REQUIRED"
+    },
+    {
+      "label": "检索服务无品类写入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "检索服务无发布入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "检索服务无回滚入口",
+      "status": 404,
+      "error_code": "HTTP_404"
+    },
+    {
+      "label": "未知品类",
+      "status": 404,
+      "error_code": "CATEGORY_NOT_FOUND"
+    },
+    {
+      "label": "创建新品类",
+      "status": 201
+    },
+    {
+      "label": "上传人工公开ZIP",
+      "status": 202
+    },
+    {
+      "label": "触发静态索引",
+      "status": 202
+    },
+    {
+      "label": "读取新快照模块图",
+      "status": 200
+    },
+    {
+      "label": "未发布品类不可见",
+      "status": 409,
+      "error_code": "KNOWLEDGE_NOT_PUBLISHED"
+    },
+    {
+      "label": "读取P1.3真实模型任务",
+      "status": 200,
+      "error_code": "MODULE_INVESTIGATION_FAILED"
+    },
+    {
+      "label": "读取历史调查记录",
+      "status": 200
+    },
+    {
+      "label": "切换到P2发布",
+      "status": 200
+    },
+    {
+      "label": "读取P2",
+      "status": 200
+    },
+    {
+      "label": "回滚到P1发布",
+      "status": 200
+    },
+    {
+      "label": "回滚后读取P1",
+      "status": 200
+    }
+  ],
+  "checks": {
+    "probe_p1_status": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_publication": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_candidate": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_formal_decision_null": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_support_not_assessed": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_evidence_present": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_coverage_present": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_coverage_incomplete_gap": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_p1_semantic_unverified": {
+      "passed": true,
+      "detail": null
+    },
+    "evidence_traceability": {
+      "passed": true,
+      "detail": []
+    },
+    "evidence_relative_paths": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_anonymous_401": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_bad_token_401": {
+      "passed": true,
+      "detail": null
+    },
+    "probe_admin_allowed": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_额外snapshot_id": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_额外publication_id": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_越界limit": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_空白需求": {
+      "passed": true,
+      "detail": null
+    },
+    "reject_query_override": {
+      "passed": true,
+      "detail": null
+    },
+    "api_probe_503": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_品类写": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_发布": {
+      "passed": true,
+      "detail": null
+    },
+    "retrieval_no_write_回滚": {
+      "passed": true,
+      "detail": null
+    },
+    "unknown_category_404": {
+      "passed": true,
+      "detail": null
+    },
+    "fresh_import_succeeded": {
+      "passed": true,
+      "detail": "succeeded"
+    },
+    "fresh_index_succeeded": {
+      "passed": true,
+      "detail": "succeeded"
+    },
+    "fresh_project_map": {
+      "passed": true,
+      "detail": null
+    },
+    "fresh_unpublished_409": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_job_exists": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_job_status": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_investigations": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_claims": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_evidence": {
+      "passed": true,
+      "detail": null
+    },
+    "historical_real_mode": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_read_200": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_publication": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_three_capabilities": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_evidence_present": {
+      "passed": true,
+      "detail": null
+    },
+    "p2_evidence_snapshot": {
+      "passed": true,
+      "detail": null
+    },
+    "rollback_exact_restore": {
+      "passed": true,
+      "detail": null
+    },
+    "rollback_hash": {
+      "passed": true,
+      "detail": null
+    },
+    "final_publication_is_p1": {
+      "passed": true,
+      "detail": null
+    }
+  },
+  "environment": {
+    "compose": [
+      "{\"Command\":\"\\\"sh -c 'alembic upgr…\\\"\",\"CreatedAt\":\"2026-11-18 15:17:27 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"1ba85e030586\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"com.docker.compose.config-hash=b74eac222c20cf6d591d8a62766b64e2fd67c0c3f9115c7b27ba73c1e09b59e6,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.source=https://github.com/astral-sh/uv,com.docker.compose.container-number=1,com.docker.compose.project=product-knowledge-p11,com.docker.compose.replace=api-1,desktop.docker.io/ports/8000/tcp=127.0.0.1:8000,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,com.docker.compose.depends_on=,com.docker.compose.image=sha256:f0afe91734ce762317171bc21b55f557104aa5a417090cf41ab7dc9f4507c3c0,com.docker.compose.service=api,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.title=uv,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.oneoff=False,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim\",\"LocalVolumes\":\"4\",\"Mounts\":\"product-knowle…,product-knowle…,product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-api-1\",\"Names\":\"product-knowledge-p11-api-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"127.0.0.1:8000-\\u003e8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8000,\"PublishedPort\":8000,\"Protocol\":\"tcp\"}],\"RunningFor\":\"44 seconds ago\",\"Service\":\"api\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 41 seconds (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"65a317836922\",\"Image\":\"sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.project=product-knowledge-p11,com.docker.compose.version=5.3.0,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,com.docker.compose.config-hash=cbb64eacd2ee6ae364868840b1e4b992181eb842cb604ee49ad752b04ff7b7b5,com.docker.compose.oneoff=False,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.title=uv,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.replace=builder-1,com.docker.compose.service=builder,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,org.opencontainers.image.source=https://github.com/astral-sh/uv,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.url=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-builder-1\",\"Names\":\"product-knowledge-p11-builder-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"builder\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 33 minutes (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"875fe4b0fec7\",\"Image\":\"sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202\",\"Labels\":\"com.docker.compose.config-hash=cadf7b75a40ec294221f78ffbe03957250fbf5b81c2d585603ea108520afd5c5,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.replace=indexer-1,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.container-number=1,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,desktop.docker.io/ports.scheme=v2,com.docker.compose.project=product-knowledge-p11,com.docker.compose.service=indexer,com.docker.compose.version=5.3.0,org.opencontainers.image.url=https://github.com/astral-sh/uv,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.title=uv\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-indexer-1\",\"Names\":\"product-knowledge-p11-indexer-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"indexer\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}",
+      "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-11-17 17:20:02 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"4e1dde3d217c\",\"Image\":\"postgres:16.9-bookworm\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.image=sha256:253815cf7579ffa05e1673d92e78d37273e61be0e4414e9a1449337d7925be94,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.replace=postgres-1,com.docker.compose.service=postgres,com.docker.compose.version=5.3.0,com.docker.compose.config-hash=abe400bb6760b3c9cdb9e159aca420f846c576808280f7cd9847e4804a820bad,com.docker.compose.depends_on=,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,desktop.docker.io/ports.scheme=v2\",\"LocalVolumes\":\"1\",\"Mounts\":\"product-knowle…\",\"Name\":\"product-knowledge-p11-postgres-1\",\"Names\":\"product-knowledge-p11-postgres-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"5432/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":5432,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"22 hours ago\",\"Service\":\"postgres\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 22 hours (healthy)\"}",
+      "{\"Command\":\"\\\"docker-entrypoint.s…\\\"\",\"CreatedAt\":\"2026-11-17 17:20:02 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"b3f475fe2511\",\"Image\":\"redis:7.4.4-bookworm\",\"Labels\":\"com.docker.compose.container-number=1,com.docker.compose.depends_on=,com.docker.compose.image=sha256:7b5ee51c14cf5febd4adde3a4b6cced72efdf154df7e9a0383163b13e16e9091,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.service=redis,desktop.docker.io/ports.scheme=v2,com.docker.compose.config-hash=dce830b219a46c057daa9936756b55c48ea7f95ccae2bf3278430ba8388a023b,com.docker.compose.project=product-knowledge-p11,com.docker.compose.replace=redis-1,com.docker.compose.version=5.3.0\",\"LocalVolumes\":\"1\",\"Mounts\":\"product-knowle…\",\"Name\":\"product-knowledge-p11-redis-1\",\"Names\":\"product-knowledge-p11-redis-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"6379/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":6379,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"22 hours ago\",\"Service\":\"redis\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 22 hours (healthy)\"}",
+      "{\"Command\":\"\\\"uvicorn app.main:cr…\\\"\",\"CreatedAt\":\"2026-11-18 15:17:29 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"bbbfbd676078\",\"Image\":\"product-knowledge:p1.3\",\"Labels\":\"org.opencontainers.image.licenses=Apache-2.0,com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,com.docker.compose.replace=retrieval-1,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,desktop.docker.io/ports/8000/tcp=127.0.0.1:8001,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,com.docker.compose.config-hash=bbd917617cc792ccc1fd11bd488ec386f88b9ea692eea9eaff2a438f7a7e9b52,com.docker.compose.image=sha256:f0afe91734ce762317171bc21b55f557104aa5a417090cf41ab7dc9f4507c3c0,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.title=uv,org.opencontainers.image.url=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.container-number=1,com.docker.compose.service=retrieval,com.docker.compose.oneoff=False,com.docker.compose.project=product-knowledge-p11,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.\",\"LocalVolumes\":\"2\",\"Mounts\":\"product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-retrieval-1\",\"Names\":\"product-knowledge-p11-retrieval-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"127.0.0.1:8001-\\u003e8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"127.0.0.1\",\"TargetPort\":8000,\"PublishedPort\":8001,\"Protocol\":\"tcp\"}],\"RunningFor\":\"42 seconds ago\",\"Service\":\"retrieval\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 35 seconds (healthy)\"}",
+      "{\"Command\":\"\\\"python -m app.jobs.…\\\"\",\"CreatedAt\":\"2026-11-18 09:59:10 +0800 CST\",\"ExitCode\":0,\"Health\":\"healthy\",\"ID\":\"27037d5ac2cf\",\"Image\":\"sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202\",\"Labels\":\"com.docker.compose.depends_on=api:service_healthy:false,com.docker.compose.project=product-knowledge-p11,com.docker.compose.service=worker,org.opencontainers.image.created=2025-06-06T20:30:16.035Z,org.opencontainers.image.description=An extremely fast Python package and project manager, written in Rust.,org.opencontainers.image.licenses=Apache-2.0,org.opencontainers.image.revision=dc3fd464728fe0456c26e79beb56017d8d56a08d,com.docker.compose.container-number=1,com.docker.compose.image=sha256:2084638e1ea3eae4ed507778c031a26b715d0d032073a4c1199f3efc4bf6f202,com.docker.compose.replace=worker-1,com.docker.compose.version=5.3.0,desktop.docker.io/ports.scheme=v2,org.opencontainers.image.source=https://github.com/astral-sh/uv,org.opencontainers.image.title=uv,com.docker.compose.project.config_files=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docker-compose.yml,com.docker.compose.oneoff=False,com.docker.compose.project.working_dir=/Users/wangyanming/Desktop/coding/参数评估agent/backend,org.opencontainers.image.url=https://github.com/astral-sh/uv,org.opencontainers.image.version=0.7.12-python3.12-bookworm-slim,com.docker.compose.config-hash=0a85a1eb0cd80cd864190a9e3ea67551f6da93cbaea583fb29be0a90d502aeeb\",\"LocalVolumes\":\"5\",\"Mounts\":\"product-knowle…,product-knowle…,product-knowle…,product-knowle…,product-knowle…\",\"Name\":\"product-knowledge-p11-worker-1\",\"Names\":\"product-knowledge-p11-worker-1\",\"Networks\":\"product-knowledge-p11_default\",\"Ports\":\"8000/tcp\",\"Project\":\"product-knowledge-p11\",\"Publishers\":[{\"URL\":\"\",\"TargetPort\":8000,\"PublishedPort\":0,\"Protocol\":\"tcp\"}],\"RunningFor\":\"5 hours ago\",\"Service\":\"worker\",\"Size\":\"0B\",\"State\":\"running\",\"Status\":\"Up 5 hours (healthy)\"}"
+    ],
+    "api_limits": {
+      "container": "1ba85e030586",
+      "nano_cpus": 500000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 536870912,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "retrieval_limits": {
+      "container": "bbbfbd676078",
+      "nano_cpus": 1000000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 805306368,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "builder_limits": {
+      "container": "65a317836922",
+      "nano_cpus": 500000000,
+      "cpu_quota": 0,
+      "cpu_period": 0,
+      "memory_bytes": 1073741824,
+      "pids_limit": 128,
+      "read_only_rootfs": true
+    },
+    "note": "Docker Compose cgroup配额，不是独立4C8G虚拟机实测"
+  },
+  "probe_p1": {
+    "status": "candidate_retrieval",
+    "publication_id": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "capability_ids": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "uninvestigated_file_count": 9,
+      "unexplained_entrypoint_count": 2,
+      "pending_investigation_count": 6,
+      "deferred_investigation_count": 17,
+      "unverified_assertion_count": 7,
+      "unverified_document_segment_count": 2,
+      "documents_truncated": false,
+      "gap_types": [
+        "COVERAGE_INCOMPLETE",
+        "SEMANTIC_COVERAGE_UNKNOWN",
+        "UNINVESTIGATED_FILES",
+        "UNEXPLAINED_ENTRYPOINTS",
+        "PENDING_INVESTIGATION",
+        "DEFERRED_INVESTIGATION",
+        "UNVERIFIED_ASSERTIONS",
+        "UNVERIFIED_DOCUMENT_SEGMENTS"
+      ]
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": 4.053
+  },
+  "fresh_ingestion": {
+    "category_id": "d089ec96-ebb6-4031-99dd-f7c3fb05fa7b",
+    "snapshot_id": "d1b072a3-e1b0-4e81-a5f7-1d8d6767c038",
+    "import_job_id": "cf4a09cc-3364-47f8-a5ac-1cea1f1fe34a",
+    "index_job_id": "cab1bd0a-19ff-40af-87a9-6cdea07fa48e",
+    "modules": 5
+  },
+  "historical_chain": {
+    "job_id": "69d68180-a37f-4a79-80d5-aa16ecc23118",
+    "job_status": "partial",
+    "claims": 3,
+    "evidence": 3,
+    "investigations_status": 200,
+    "real_model_record": true,
+    "model_calls_this_phase": 0
+  },
+  "probe_p2": {
+    "status": "candidate_retrieval",
+    "publication_id": "db315185-3b36-4c8f-b9a4-3a7e055a1369",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "2ba20577968bff3844d8cce6eabb017defe93769307b17096d2ac3cd966a3bfd",
+    "capability_ids": [
+      "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "8a18067a-b135-492b-9883-2d02bda394e8",
+      "6b99b2f2-7186-4ef7-acc5-7fba739ea0ac",
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-b262f9b0b9d1602ae75af782a6808676f71c535e008304c50ef7095251cd5deb",
+      "ev-35fe4bf1a228c36872410067639524227f254efd3167634c4a9e51b675fe051d",
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "uninvestigated_file_count": 9,
+      "unexplained_entrypoint_count": 2,
+      "pending_investigation_count": 6,
+      "deferred_investigation_count": 17,
+      "unverified_assertion_count": 5,
+      "unverified_document_segment_count": 2,
+      "documents_truncated": false,
+      "gap_types": [
+        "COVERAGE_INCOMPLETE",
+        "SEMANTIC_COVERAGE_UNKNOWN",
+        "UNINVESTIGATED_FILES",
+        "UNEXPLAINED_ENTRYPOINTS",
+        "PENDING_INVESTIGATION",
+        "DEFERRED_INVESTIGATION",
+        "UNVERIFIED_ASSERTIONS",
+        "UNVERIFIED_DOCUMENT_SEGMENTS"
+      ]
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": 66.424
+  },
+  "probe_after_rollback": {
+    "status": "candidate_retrieval",
+    "publication_id": "1af83dd5-e04e-4517-a81c-ab8a15201280",
+    "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+    "publication_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "capability_ids": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "revision_ids": [
+      "60108a33-e894-44ee-9034-c85e050fb6b7"
+    ],
+    "evidence_ids": [
+      "ev-7ef9c3a574c7a64f46d2e8025be97856ab68c1c0c3bc893d10db74b4ff91e6cf"
+    ],
+    "coverage": {
+      "coverage_incomplete": true,
+      "knowledge_build_complete": false,
+      "semantic_coverage": "unknown",
+      "source_file_count": 12,
+      "uninvestigated_file_count": 9,
+      "unexplained_entrypoint_count": 2,
+      "pending_investigation_count": 6,
+      "deferred_investigation_count": 17,
+      "unverified_assertion_count": 7,
+      "unverified_document_segment_count": 2,
+      "documents_truncated": false,
+      "gap_types": [
+        "COVERAGE_INCOMPLETE",
+        "SEMANTIC_COVERAGE_UNKNOWN",
+        "UNINVESTIGATED_FILES",
+        "UNEXPLAINED_ENTRYPOINTS",
+        "PENDING_INVESTIGATION",
+        "DEFERRED_INVESTIGATION",
+        "UNVERIFIED_ASSERTIONS",
+        "UNVERIFIED_DOCUMENT_SEGMENTS"
+      ]
+    },
+    "gaps": [
+      "REQUIREMENT_COMPLIANCE_NOT_ASSESSED",
+      "KNOWLEDGE_COVERAGE_INCOMPLETE"
+    ],
+    "warnings": [
+      "lexical_retrieval_not_semantic_proof",
+      "no_match_does_not_mean_unsupported",
+      "coverage_gaps_do_not_mean_unsupported",
+      "source_text_is_untrusted_data",
+      "semantic_index_unavailable"
+    ],
+    "formal_compliance_decision": null,
+    "support_status": "not_assessed",
+    "truncated": false,
+    "duration_ms": null
+  },
+  "comparison": {
+    "p1_candidates": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "p2_candidates": [
+      "cap-0c100c2b0fb34c6ad1f4e4b0ad9ad0070d92ae2be98069a6798af10cfbd189e5",
+      "cap-2f689a1e36ce3f0cbb5ad56b4c141a307f4d26781f5ee4018de53d066ae00672",
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "restored_candidates": [
+      "cap-f250d060c9ed1b8de3f29122973a0c863e980fec2db261ceb23dd26e52c34555"
+    ],
+    "p1_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90",
+    "p2_hash": "2ba20577968bff3844d8cce6eabb017defe93769307b17096d2ac3cd966a3bfd",
+    "restored_hash": "877338d1623d38d6e913b19634f57dee69183e28c5afa9069028612b501d0f90"
+  },
+  "passed": true
+}

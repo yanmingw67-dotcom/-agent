@@ -1,0 +1,27 @@
+sssssssssssssssssssssssssss............................................. [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:396: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:336: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:315: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:318: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:393: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:321: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:357: 需显式真实PostgreSQL测试环境
+SKIPPED [3] tests/infrastructure/test_p14_r1_postgres.py:399: 需显式真实PostgreSQL测试环境
+SKIPPED [1] tests/infrastructure/test_p15_postgres.py:20: 需显式真实PostgreSQL测试环境
+SKIPPED [1] tests/infrastructure/test_p15_postgres.py:53: 需显式真实PostgreSQL测试环境
+SKIPPED [1] tests/infrastructure/test_p15_postgres.py:114: 需显式真实PostgreSQL测试环境
+233 passed, 27 skipped, 2 warnings in 38.35s

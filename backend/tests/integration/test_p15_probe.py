@@ -153,17 +153,44 @@ def test_cross_product_query_has_no_shared_candidates_or_evidence(channels):
 
 
 @pytest.mark.parametrize("decision", ["modify", "return", "reject", "accept"])
-def test_new_revision_never_exposes_old_approval_or_unpublished_content(channels, decision):
-    api, reader, cid, _, claims, _, body, revision, _ = prepared(channels)
+def test_unpublished_review_does_not_change_frozen_publication(channels, decision):
+    api, reader, cid, _, claims, _, body, revision, publication = prepared(channels)
     update = copy.deepcopy(body)
     update["action"] = decision
     update["expected_revision"] = revision["number"]
-    accept(api, claims[0], update)
-    data = query(reader, cid).json()
-    assert data["candidates"] == []
-    assert any(g["code"] == "NEWER_REVIEW_NOT_PUBLISHED" for g in data["unverified_gaps"])
+    newer = accept(api, claims[0], update)
+    response = query(reader, cid)
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["publication_id"] == publication["publication_id"]
+    assert data["publication_hash"] == publication["payload_hash"]
+    assert [c["capability_id"] for c in data["candidates"]] == [claims[0]]
+    assert [c["revision_id"] for c in data["candidates"]] == [revision["id"]]
+    assert data["candidates"][0]["content"] == body["content"]
+    assert newer["id"] not in response.text
+    assert not any(g["code"] == "NEWER_REVIEW_NOT_PUBLISHED" for g in data["unverified_gaps"])
     frozen = api.get("/api/v1/capabilities", headers=READ, params={"category_id": cid})
     assert frozen.status_code == 200
+    assert [c["revision_id"] for c in frozen.json()["capabilities"]] == [revision["id"]]
+
+
+def test_new_publication_must_use_latest_accepted_revision(channels):
+    api, reader, cid, sid, claims, evidence, _, revision, first = prepared(channels)
+    body = request(evidence["core/i_preview.py"], "第二审核版本")
+    body["expected_revision"] = revision["number"]
+    newer = accept(api, claims[0], body)
+    stale = publish(api, sid, [revision["id"]], first["publication_id"])
+    assert stale.status_code == 422, stale.text
+    assert "PUBLICATION_REVIEW_REQUIRED" in stale.text
+    frozen = query(reader, cid).json()
+    assert frozen["publication_id"] == first["publication_id"]
+    assert frozen["candidates"][0]["revision_id"] == revision["id"]
+    second = publish(api, sid, [newer["id"]], first["publication_id"])
+    assert second.status_code == 200, second.text
+    switched = query(reader, cid).json()
+    assert switched["publication_id"] == second.json()["publication_id"]
+    assert switched["candidates"][0]["revision_id"] == newer["id"]
+    assert switched["candidates"][0]["content"]["name"] == "第二审核版本"
 
 
 def test_readonly_transaction_denies_writes_and_restores_pool(environment):

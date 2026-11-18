@@ -74,6 +74,24 @@ class ProbeRelation(BaseModel):
     details: dict
 
 
+class ProbeCoverageSummary(BaseModel):
+    """普通读取契约：只保留覆盖计数和缺口类型，不含内部明细。"""
+
+    model_config = ConfigDict(extra="forbid")
+    coverage_incomplete: bool
+    knowledge_build_complete: bool
+    semantic_coverage: str
+    source_file_count: int = Field(ge=0)
+    uninvestigated_file_count: int = Field(ge=0)
+    unexplained_entrypoint_count: int = Field(ge=0)
+    pending_investigation_count: int = Field(ge=0)
+    deferred_investigation_count: int = Field(ge=0)
+    unverified_assertion_count: int = Field(ge=0)
+    unverified_document_segment_count: int = Field(ge=0)
+    documents_truncated: bool
+    gap_types: list[str]
+
+
 class ProbeResponse(BaseModel):
     status: Literal["candidate_retrieval", "no_match", "knowledge_empty", "partial"]
     category_id: str
@@ -83,7 +101,7 @@ class ProbeResponse(BaseModel):
     candidates: list[ProbeCapability]
     relations: list[ProbeRelation]
     evidence: list[ProbeEvidence]
-    coverage: dict
+    coverage: ProbeCoverageSummary
     unverified_gaps: list[ProbeGap]
     warnings: list[str]
     truncated: bool = False

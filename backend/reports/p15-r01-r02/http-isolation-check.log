@@ -1,0 +1,65 @@
+{
+  "category_id": "76d40f66-1c3e-487d-9a67-47d84da8fa69",
+  "snapshot_id": "d672efe9-5dec-44f6-8fb2-d305c3b015db",
+  "read_probe": {
+    "status": 200,
+    "coverage_keys": [
+      "coverage_incomplete",
+      "deferred_investigation_count",
+      "documents_truncated",
+      "gap_types",
+      "knowledge_build_complete",
+      "pending_investigation_count",
+      "semantic_coverage",
+      "source_file_count",
+      "unexplained_entrypoint_count",
+      "uninvestigated_file_count",
+      "unverified_assertion_count",
+      "unverified_document_segment_count"
+    ],
+    "gap_types": [
+      "COVERAGE_INCOMPLETE",
+      "SEMANTIC_COVERAGE_UNKNOWN",
+      "UNINVESTIGATED_FILES",
+      "UNEXPLAINED_ENTRYPOINTS",
+      "PENDING_INVESTIGATION",
+      "DEFERRED_INVESTIGATION",
+      "UNVERIFIED_ASSERTIONS",
+      "UNVERIFIED_DOCUMENT_SEGMENTS"
+    ],
+    "candidate_count": 1
+  },
+  "admin_probe": {
+    "status": 200,
+    "coverage_keys": [
+      "coverage_incomplete",
+      "deferred_investigation_count",
+      "documents_truncated",
+      "gap_types",
+      "knowledge_build_complete",
+      "pending_investigation_count",
+      "semantic_coverage",
+      "source_file_count",
+      "unexplained_entrypoint_count",
+      "uninvestigated_file_count",
+      "unverified_assertion_count",
+      "unverified_document_segment_count"
+    ]
+  },
+  "read_capabilities": {
+    "status": 200,
+    "coverage_is_summary": true
+  },
+  "admin_capabilities": {
+    "status": 200,
+    "coverage_has_detail": true
+  },
+  "admin_snapshot_coverage": {
+    "status": 200,
+    "coverage_has_detail": true
+  },
+  "read_snapshot_coverage": {
+    "status": 403,
+    "forbidden": true
+  }
+}

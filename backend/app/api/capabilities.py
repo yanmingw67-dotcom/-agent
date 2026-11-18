@@ -10,7 +10,7 @@ from app.db.knowledge_models import CapabilityClaim
 from app.db.review_models import PublicationSwitch, ReviewEvent
 from app.db.session import get_db
 from app.knowledge import review as service
-from app.knowledge.coverage import coverage
+from app.knowledge.coverage import coverage, coverage_summary
 from app.knowledge.evidence_registry import register
 from app.knowledge.publisher import current, publish, rollback
 from app.knowledge.quality import classify, context, gate, latest
@@ -202,11 +202,12 @@ def capabilities(
     if not category_id:
         raise AppError(404, "CATEGORY_REQUIRED", "请选择产品品类")
     row = current(db, category_id)
+    published_coverage = row.payload_json["coverage"]
     return {
         "snapshot_id": row.snapshot_id,
         "capabilities": row.payload_json["capabilities"],
         "relations": row.payload_json["relations"],
-        "coverage": row.payload_json["coverage"],
+        "coverage": published_coverage if role == "admin" else coverage_summary(published_coverage),
         "formal_compliance_decision": None,
     }
 
