@@ -1,0 +1,218 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 2 items
+
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 50%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres FAILED [100%]
+
+=================================== FAILURES ===================================
+_ P16PostgresTests.test_staging_derivation_update_conflict_publish_and_rollback_on_postgres _
+
+self = <test_p16_postgres.P16PostgresTests testMethod=test_staging_derivation_update_conflict_publish_and_rollback_on_postgres>
+
+    def test_staging_derivation_update_conflict_publish_and_rollback_on_postgres(self):
+        from fastapi.testclient import TestClient
+    
+        from app.main import create_app
+        from tests import p16_assets
+        from tests.conftest import ADMIN
+        from tests.integration.test_p16_discovery import (
+            discover,
+            document_review,
+            draft_claim,
+            index_document,
+        )
+        from tests.integration.test_p16_staging import build, derive, document, set_active, setup
+    
+        with TestClient(create_app()) as client:
+>           cid, sid = setup(client)
+
+tests/infrastructure/test_p16_postgres.py:274: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/integration/test_p16_staging.py:23: in setup
+    return indexed(
+tests/integration/test_p12_index_retrieval.py:24: in indexed
+    cid = category(client, code)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x1144dde80>
+code = 'p16s-f27fb06b'
+
+    def category(client, code="waf"):
+        response = client.post(
+            "/api/v1/categories", headers=ADMIN, json={"code": code, "name": "测试产品"}
+        )
+>       assert response.status_code == 201, response.text
+E       AssertionError: {"error_code":"DATABASE_UNAVAILABLE","message":"数据库暂时不可用","correlation_id":"00d58791-900a-486f-91b8-ade40804d2d6"}
+E       assert 503 == 201
+E        +  where 503 = <Response [503 Service Unavailable]>.status_code
+
+tests/integration/test_import_api.py:19: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    knowledge.audit:logging.py:46 {"event": "database_error", "correlation_id": "00d58791-900a-486f-91b8-ade40804d2d6", "exception_type": "ProgrammingError", "driver_exception_type": "UndefinedTable", "sqlstate": "42P01", "constraint_name": null, "table_name": null, "column_name": null, "function_name": null}
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres
+==================== 1 failed, 1 passed, 1 warning in 0.81s ====================
+
+===== P1.6 R03 真实 PostgreSQL 专项复跑（成功记录） =====
+2026-11-18 18:01:15 CST
+容器: p16-pg-acceptance (postgres:16.9-bookworm), 端口 55432
+命令: DATABASE_URL=... P14_RUN_POSTGRES=1 P16_RUN_POSTGRES=1 uv run pytest -q -vv tests/infrastructure/test_p14_r1_postgres.py tests/infrastructure/test_p16_postgres.py
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 30%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 40%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 50%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 60%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 70%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 80%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 90%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 1 warning in 3.90s =========================
+
+===== P1.6 R03 真实 PostgreSQL 专项（round 2 最终） =====
+2026-11-18 18:05:24 CST
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 30%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 40%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 50%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 60%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 70%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 80%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 90%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 1 warning in 3.60s =========================
+
+===== P1.6 R03 真实 PostgreSQL 专项（round 2 最终复跑） =====
+2026-11-18 18:08:05 CST
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 30%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 40%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 50%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 60%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 70%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 80%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 90%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 1 warning in 4.47s =========================
+
+===== P1.6 R03 真实 PostgreSQL 专项（round 2 最终代码） =====
+2026-11-18 18:12:43 CST
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 30%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 40%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 50%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 60%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 70%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 80%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 90%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 1 warning in 3.61s =========================
+
+===== P1.6 R03 真实 PostgreSQL 专项（最终代码复跑） =====
+2026-11-18 18:15:16 CST
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 10 items
+
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_commit_time_constraint_failure_rolls_back_everything PASSED [ 10%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_publish_refreshes_pointer_and_rejects_stale_expected PASSED [ 20%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_source_review_prevents_merge PASSED [ 30%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_concurrent_target_review_prevents_merge PASSED [ 40%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_failure_after_pointer_update_rolls_back_everything PASSED [ 50%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_identity_map_refresh_rejects_changed_snapshot PASSED [ 60%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_publish_two_snapshots_and_rollback PASSED [ 70%]
+tests/infrastructure/test_p14_r1_postgres.py::PostgreSQLRemediationTests::test_stale_identity_map_cannot_rollback_new_publication PASSED [ 80%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_document_publish_and_rollback_on_postgres PASSED [ 90%]
+tests/infrastructure/test_p16_postgres.py::P16PostgresTests::test_staging_derivation_update_conflict_publish_and_rollback_on_postgres PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 10 passed, 1 warning in 3.13s =========================

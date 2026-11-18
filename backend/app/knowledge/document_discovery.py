@@ -6,6 +6,7 @@
 - 不批准、不发布，不把证明材料/规划/商务内容当作当前能力。
 """
 
+import asyncio
 import hashlib
 import re
 import time
@@ -15,7 +16,7 @@ from sqlalchemy import select
 
 from app.core.config import get_settings
 from app.core.security import AppError
-from app.db.index_models import Document, Module
+from app.db.index_models import Document, DocumentSegment, Module
 from app.db.knowledge_models import (
     CapabilityClaim,
     ClaimEvidenceLink,
@@ -25,6 +26,11 @@ from app.db.knowledge_models import (
 )
 from app.db.models import AuditEvent, KnowledgeJob, Snapshot, now
 from app.db.session import session_factory
+from app.knowledge.classification import classification as trusted_classification
+from app.knowledge.document_semantics import (
+    SemanticUnit,
+    extract_semantics,
+)
 from app.knowledge.document_structure import ALLOWED, build_units, load_documents
 from app.knowledge.evidence_registry import register
 from app.knowledge.schemas import EvidenceRequest
@@ -62,9 +68,49 @@ class Candidate:
     category: str
     claim_type: str
     evidence_ids: list[str]
+    anchors: list[dict] | None = None
+    semantic: dict | None = None
+
+    def evidence_segment_ids(self):
+        if self.anchors:
+            return [item["segment_id"] for item in self.anchors][:10]
+        return list(self.unit.segment_ids)[:10]
 
     def draft(self):
         unit = self.unit
+        if self.semantic:
+            data = {
+                **self.semantic,
+                "key": self.local_key,
+                "name": self.name[:1000],
+                "category": self.category[:1000],
+                "evidence_ids": self.evidence_ids,
+                "unresolved_questions": list(
+                    dict.fromkeys(
+                        self.semantic.get("unresolved_questions", [])
+                        + [
+                            "模型仅提取候选，未批准、未发布；须管理员逐条核对文档语义",
+                            "底层实现机制需由源码或其他受控来源单独核验",
+                        ]
+                    )
+                )[:30],
+                "status": "evidence_found",
+                "source_channel": "document",
+                "claim_type": self.claim_type,
+                "discovery_unit": {
+                    "key": unit.key,
+                    "kind": "semantic",
+                    "locator": unit.locator,
+                    "classification": unit.classification,
+                    "classification_reasons": unit.reasons,
+                    "headers": getattr(unit, "headers", {}),
+                    "merged_context": getattr(unit, "merged_context", {}),
+                    "segment_ids": self.evidence_segment_ids(),
+                    "document_id": unit.document_id,
+                    "filename": unit.filename,
+                },
+            }
+            return data
         return {
             "key": self.local_key,
             "name": self.name[:1000],
@@ -99,7 +145,7 @@ class Candidate:
         }
 
     def origin(self, run_id):
-        return {
+        origin = {
             "source_channel": "document",
             "discovery_run_id": run_id,
             "document_id": self.document.id,
@@ -110,6 +156,18 @@ class Candidate:
             "classification": self.unit.classification,
             "classification_reasons": self.unit.reasons,
         }
+        if self.semantic:
+            origin["extraction"] = {
+                "model_mode": self.semantic.get("model_mode"),
+                "anchors": [
+                    {
+                        "segment_id": anchor["segment_id"],
+                        "locator": anchor["locator"],
+                    }
+                    for anchor in self.anchors or []
+                ],
+            }
+        return origin
 
 
 def normalized(text):
@@ -152,24 +210,113 @@ def scope_context(run):
     )
 
 
-def model_state(run, snapshot, mode):
+def semantic_claim_id(snapshot_id, document_id, segment_ids, name):
+    raw = "|".join(
+        [snapshot_id, document_id, ",".join(sorted(segment_ids)), normalized(name)]
+    ).encode()
+    return "claim-doc-" + hashlib.sha256(raw).hexdigest()[:28]
+
+
+@dataclass
+class Prepared:
+    candidates: list
+    metrics: dict
+    coverage: dict
+    gaps: list
+    units: list
+    documents: dict
+    semantic_units: list
+
+
+def model_state(run, snapshot, mode, classification, model=None):
     settings = get_settings()
     if mode == "structural":
         return "NOT_USED", None
+    allowed = (classification == "synthetic_public" and settings.builder_allow_synthetic) or (
+        classification != "synthetic_public" and settings.builder_allow_enterprise
+    )
+    if not allowed:
+        return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_AUTHORIZED"
+    if model is not None:
+        label = (
+            "TEST_FUNCTION_MODEL" if type(model).__name__ == "FunctionModel" else "INJECTED_MODEL"
+        )
+        return label, None
     configured = bool(
         settings.builder_model
         and settings.builder_base_url
         and settings.builder_api_key.get_secret_value()
     )
-    allowed = (
-        snapshot.data_classification == "synthetic_public" or settings.builder_allow_enterprise
-    )
     if not configured:
         return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_CONFIGURED"
-    if not allowed:
-        return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_AUTHORIZED"
-    # 真实模型路径未获授权/未接入时不得静默伪装；由调用方显式注入测试模型。
+    # 真实端点只有在校验分类与显式授权后才会被 configured_model 构造并调用。
     return "NOT_INVOKED", "DOCUMENT_DISCOVERY_MODEL_NOT_INVOKED"
+
+
+def semantic_unit(unit):
+    return SemanticUnit(
+        key=unit.key,
+        document_id=unit.document_id,
+        filename=unit.filename,
+        segment_ids=list(unit.segment_ids),
+        locator=dict(unit.locator),
+        text=unit.text,
+        classification=unit.classification,
+        section=getattr(unit, "section", ""),
+        sheet=getattr(unit, "sheet", None),
+        headers=getattr(unit, "headers", {}),
+        merged_context=getattr(unit, "merged_context", {}),
+        reasons=list(getattr(unit, "reasons", [])),
+    )
+
+
+def candidate_from_semantic(item, run, documents):
+    unit = item.unit
+    document = documents[unit.document_id]
+    claim_type = CLASSIFICATION_TO_CLAIM.get(item.claim_type, item.claim_type)
+    anchors = list(item.anchors)
+    claim_id = semantic_claim_id(
+        run.snapshot_id, document.id, [a["segment_id"] for a in anchors], item.name
+    )
+    payload = {
+        "action": item.action[:1000],
+        "target": item.target[:1000],
+        "business_goal": item.business_goal[:1000],
+        "implementation_mechanism": item.implementation_mechanism[:3000],
+        "supported_scope": item.supported_scope[:6],
+        "conditions": item.conditions[:6],
+        "limitations": item.limitations[:6],
+        "model_mode": item.model_mode,
+        "anchors": anchors,
+        "quote": item.quote[:1000],
+    }
+    return Candidate(
+        claim_id=claim_id,
+        local_key=local_key_for(f"{unit.key}-semantic-{claim_id[-12:]}"),
+        document=document,
+        unit=unit,
+        name=item.name,
+        category=(unit.sheet or unit.section or "技术文档").strip()[:200],
+        claim_type=claim_type,
+        evidence_ids=[],
+        anchors=anchors,
+        semantic=payload,
+    )
+
+
+def merge_candidates(structural, semantic, limit):
+    merged = list(structural)
+    by_name = {normalized(item.name): index for index, item in enumerate(merged)}
+    duplicates = 0
+    for candidate in semantic:
+        key = normalized(candidate.name)
+        if key and key in by_name:
+            merged[by_name[key]] = candidate
+            duplicates += 1
+        else:
+            by_name[key] = len(merged)
+            merged.append(candidate)
+    return merged[:limit], duplicates
 
 
 def prepare_candidates(db, run, limit):
@@ -188,6 +335,7 @@ def prepare_candidates(db, run, limit):
     seen = {}
     duplicates = 0
     skipped = 0
+    eligible_units = []
     for unit in units:
         document = documents.get(unit.document_id)
         if document is None:
@@ -203,9 +351,12 @@ def prepare_candidates(db, run, limit):
             duplicates += 1
             continue
         seen[key] = unit.key
+        eligible_units.append(unit)
+    for unit in eligible_units:
         if len(candidates) >= limit:
             gaps.append({"code": "CANDIDATE_BUDGET_EXHAUSTED", "limit": limit})
             break
+        document = documents[unit.document_id]
         candidates.append(
             Candidate(
                 claim_id=claim_id_for(run.snapshot_id, document.id, unit.key),
@@ -250,7 +401,7 @@ def prepare_candidates(db, run, limit):
         "documents_total": budget["documents_total"],
         "documents_considered": budget["documents_considered"],
         "units_total": len(units),
-        "units_eligible": sum(1 for u in units if u.eligible),
+        "units_eligible": len(eligible_units),
         "units_skipped": skipped,
         "duplicates_suppressed": duplicates,
         "candidates": len(candidates),
@@ -269,7 +420,15 @@ def prepare_candidates(db, run, limit):
         "ocr_gap_count": sum(1 for g in gaps if g.get("ocr_required")),
         "unclassified_units": sum(1 for u in units if u.classification == "unclassified"),
     }
-    return candidates, metrics, coverage, gaps
+    return Prepared(
+        candidates=candidates,
+        metrics=metrics,
+        coverage=coverage,
+        gaps=gaps,
+        units=units,
+        documents=documents,
+        semantic_units=[semantic_unit(unit) for unit in eligible_units],
+    )
 
 
 def ensure_document_module(db, run, document):
@@ -311,9 +470,8 @@ def persist_candidates(db, run, candidates):
     by_document = {}
     for candidate in candidates:
         evidence_ids = []
-        for segment_id in candidate.unit.segment_ids[:10]:
-            from app.db.index_models import DocumentSegment
-
+        anchors = {item["segment_id"]: item.get("quote", "") for item in candidate.anchors or []}
+        for segment_id in candidate.evidence_segment_ids():
             segment = db.get(DocumentSegment, segment_id)
             if not segment or segment.sensitive:
                 continue
@@ -325,7 +483,7 @@ def persist_candidates(db, run, candidates):
                         kind="document",
                         segment_id=segment.id,
                         expected_sha256=segment.text_hash,
-                        supported_statement=candidate.unit.text[:1000],
+                        supported_statement=(anchors.get(segment.id) or candidate.unit.text)[:1000],
                     ),
                 )
             except AppError:
@@ -417,17 +575,96 @@ def run_document_discovery(job_id, token, model=None):
         snapshot = db.get(Snapshot, run.snapshot_id)
         run.status, run.started_at = "running", now()
         mode = run.mode
-    model_mode, model_error = model_state(run, snapshot, mode)
-    if mode == "model" and model is None:
-        record_failure(run.id, model_error or "DOCUMENT_DISCOVERY_MODEL_UNAVAILABLE", job_id)
+        run_id = run.id
+    with session_factory()() as db:
+        resource_classification = trusted_classification(db, run.snapshot_id)
+    model_mode, model_error = model_state(run, snapshot, mode, resource_classification, model)
+    # 未授权时即使调用方注入了测试模型也不得越过外发授权检查。
+    actual_model = None if model_error else model
+    if actual_model is None and not model_error and mode in {"model", "hybrid"}:
+        try:
+            from app.agents.runtime import configured_model
+
+            actual_model = configured_model(resource_classification)
+            model_mode = "REAL"
+            model_error = None
+        except AppError as exc:
+            model_error = exc.error_code
+    if mode == "model" and actual_model is None:
+        record_failure(
+            run.id,
+            model_error or "DOCUMENT_DISCOVERY_MODEL_UNAVAILABLE",
+            job_id,
+            {"model_mode": model_mode},
+        )
         return
     with session_factory()() as db:
-        candidates, metrics, coverage, gaps = prepare_candidates(
-            db, run, settings.document_discovery_max_candidates
-        )
+        prepared = prepare_candidates(db, run, settings.document_discovery_max_candidates)
+    candidates = prepared.candidates
+    metrics = prepared.metrics
+    coverage = prepared.coverage
+    gaps = prepared.gaps
     if model_error:
         coverage["gaps"] = list(coverage["gaps"]) + [{"code": model_error}]
         coverage["gaps_truncated"] = len(coverage["gaps"]) > 200
+    if actual_model is not None and mode in {"model", "hybrid"}:
+        runner = asyncio.Runner()
+        try:
+            extraction = runner.run(
+                extract_semantics(
+                    prepared.semantic_units,
+                    actual_model,
+                    run.id,
+                    job_id,
+                    injected=model is not None,
+                )
+            )
+        except Exception as exc:  # noqa: BLE001 - 语义层错误必须可审计
+            extraction = None
+            model_error = "DOCUMENT_DISCOVERY_MODEL_ERROR"
+            gaps.append(
+                {
+                    "code": model_error,
+                    "exception_type": type(exc).__name__,
+                }
+            )
+        finally:
+            runner.close()
+        if extraction is not None:
+            semantic_candidates = [
+                candidate_from_semantic(item, run, prepared.documents)
+                for item in extraction.candidates
+            ]
+            candidates, replaced = merge_candidates(
+                candidates,
+                semantic_candidates,
+                settings.document_discovery_max_candidates,
+            )
+            metrics["semantic"] = extraction.metrics
+            metrics["semantic_merged"] = replaced
+            metrics["semantic_candidates"] = len(semantic_candidates)
+            model_mode = extraction.model_mode
+            gaps.extend(extraction.gaps[:200])
+            model_failures = [
+                gap
+                for gap in extraction.gaps
+                if gap.get("code")
+                in {
+                    "DOCUMENT_DISCOVERY_MODEL_ERROR",
+                    "DOCUMENT_DISCOVERY_MODEL_BUDGET_EXCEEDED",
+                    "DOCUMENT_DISCOVERY_CONTEXT_EXCEEDED",
+                }
+            ]
+            if model_failures:
+                model_error = model_failures[0]["code"]
+            coverage["gaps"] = list(coverage["gaps"]) + extraction.gaps[:200]
+            coverage["gaps_truncated"] = len(coverage["gaps"]) > 200
+    if mode == "model" and model_error:
+        # 模型模式失败不得落下纯结构候选，避免把降级结果误当模型能力。
+        record_failure(run.id, model_error, job_id, {"coverage": coverage, "metrics": metrics})
+        return
+    metrics["candidates"] = len(candidates)
+    metrics["model_mode"] = model_mode
     status = "partial" if coverage["gaps"] else "succeeded"
     error = None
     created = {"candidates": 0, "evidence": 0, "existing": 0, "conflicts": 0}
@@ -456,13 +693,7 @@ def run_document_discovery(job_id, token, model=None):
                 }
                 run.coverage_json = coverage
                 run.finished_at = now()
-                if mode == "model" and model_error:
-                    run.status, run.error_code = "failed", model_error
-                job.status = (
-                    "failed"
-                    if run.status == "failed"
-                    else ("partial" if run.status == "partial" else "succeeded")
-                )
+                job.status = "partial" if run.status == "partial" else "succeeded"
                 job.stage = "documents_discovered"
                 job.error_code = run.error_code
                 job.metrics_json = {
@@ -484,10 +715,11 @@ def run_document_discovery(job_id, token, model=None):
                         },
                     )
                 )
-        except Exception:
+        except Exception as exc:
             error = "DOCUMENT_DISCOVERY_INTERNAL_ERROR"
+            error_detail = {"exception_type": type(exc).__name__}
     if error:
-        record_failure(run.id, error, job_id)
+        record_failure(run_id, error, job_id, error_detail)
         return
     if not candidates:
         with session_factory().begin() as db:
@@ -498,7 +730,7 @@ def run_document_discovery(job_id, token, model=None):
             )
             job = db.scalar(select(KnowledgeJob).where(KnowledgeJob.id == job_id).with_for_update())
             if job and job.dispatch_token == token and job.status == "running":
-                run.status = "partial" if coverage["gaps"] else "succeeded"
+                run.status = status
                 run.metrics_json = {**metrics, "model_mode": model_mode, "mode": mode}
                 run.coverage_json = coverage
                 run.finished_at = now()

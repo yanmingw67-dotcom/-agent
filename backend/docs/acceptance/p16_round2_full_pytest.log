@@ -1,0 +1,130 @@
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 97%]
+........                                                                 [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+267 passed, 29 skipped, 2 warnings in 38.71s
+
+===== P1.6 R03 全量 pytest（round 2 最终） =====
+2026-11-18 18:04:40 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+.........                                                                [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+268 passed, 29 skipped, 2 warnings in 38.80s
+
+===== P1.6 R03 全量 pytest（round 2 最终复跑） =====
+2026-11-18 18:06:52 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+.........                                                                [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+268 passed, 29 skipped, 2 warnings in 38.49s
+
+===== P1.6 R03 全量 pytest（round 2 最终提交前） =====
+2026-11-18 18:09:38 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+.........                                                                [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+268 passed, 29 skipped, 2 warnings in 44.35s
+
+===== P1.6 R03 全量 pytest（round 2 最终） =====
+2026-11-18 18:11:46 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+..........                                                               [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+269 passed, 29 skipped, 2 warnings in 41.49s
+
+===== P1.6 R03 全量 pytest（最终提交） =====
+2026-11-18 18:14:29 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+...........                                                              [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+270 passed, 29 skipped, 2 warnings in 38.31s
+
+===== P1.6 R03 全量 pytest（最终代码） =====
+2026-11-18 18:15:57 CST
+sssssssssssssssssssssssssssss........................................... [ 24%]
+........................................................................ [ 48%]
+........................................................................ [ 72%]
+........................................................................ [ 96%]
+...........                                                              [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+270 passed, 29 skipped, 2 warnings in 38.38s

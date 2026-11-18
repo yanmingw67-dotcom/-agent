@@ -36,7 +36,15 @@ class P16PostgresTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.original_env = {
-            key: os.environ.get(key) for key in ["DATABASE_URL", "SOURCE_ROOT", "ARCHIVE_ROOT"]
+            key: os.environ.get(key)
+            for key in [
+                "DATABASE_URL",
+                "SOURCE_ROOT",
+                "INGESTION_ROOT",
+                "ARCHIVE_ROOT",
+                "ADMIN_TOKEN",
+                "READ_TOKEN",
+            ]
         }
         base = get_settings().database_url
         assert make_url(base).get_backend_name() == "postgresql"
@@ -48,15 +56,25 @@ class P16PostgresTests(unittest.TestCase):
         url = make_url(base).update_query_dict({"options": f"-csearch_path={cls.schema}"})
         os.environ["DATABASE_URL"] = url.render_as_string(hide_password=False)
         os.environ["SOURCE_ROOT"] = cls.directory.name
+        os.environ["INGESTION_ROOT"] = cls.directory.name
         os.environ["ARCHIVE_ROOT"] = str(Path(cls.directory.name) / "archives")
+        os.environ["ADMIN_TOKEN"] = "a" * 48
+        os.environ["READ_TOKEN"] = "r" * 48
         get_settings.cache_clear()
         command.upgrade(Config("alembic.ini"), "head")
+        from app.db.session import get_engine
+
+        get_engine.cache_clear()
         cls.engine = create_engine(url)
         cls.sessions = sessionmaker(cls.engine, expire_on_commit=False)
 
     @classmethod
     def tearDownClass(cls):
         cls.engine.dispose()
+        from app.db.session import get_engine
+
+        get_engine().dispose()
+        get_engine.cache_clear()
         assert cls.schema.startswith("p16_test_") and len(cls.schema) == 41
         with cls.admin_engine.begin() as db:
             db.execute(text(f'DROP SCHEMA "{cls.schema}" CASCADE'))
@@ -239,6 +257,164 @@ class P16PostgresTests(unittest.TestCase):
             self.assertEqual(restored.payload_json, first.payload_json)
             self.assertEqual(restored.payload_hash, first.payload_hash)
         self.assertEqual(self.pointers(cid), (first.id, first_sid))
+
+    def test_staging_derivation_update_conflict_publish_and_rollback_on_postgres(self):
+        from fastapi.testclient import TestClient
+        from sqlalchemy import event
+
+        from app.db.session import get_engine
+        from app.main import create_app
+        from tests import p16_assets
+        from tests.conftest import ADMIN
+        from tests.integration.test_p16_discovery import (
+            discover,
+            document_review,
+            draft_claim,
+            index_document,
+        )
+        from tests.integration.test_p16_staging import build, derive, document, setup
+
+        engine = get_engine()
+
+        @event.listens_for(engine, "connect")
+        def _search_path(dbapi_connection, _record):
+            with dbapi_connection.cursor() as cursor:
+                cursor.execute(f'SET search_path TO "{self.schema}"')
+
+        with TestClient(create_app()) as client:
+            cid, sid = setup(client)
+            index_document(
+                document(
+                    client,
+                    cid,
+                    sid,
+                    "manual.docx",
+                    p16_assets.docx_manual(),
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+            )
+            index_document(
+                document(
+                    client,
+                    cid,
+                    sid,
+                    "matrix.xlsx",
+                    p16_assets.xlsx_capabilities(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                )
+            )
+            discover(client, sid)
+            with self.sessions() as db:
+                conflicts = list(
+                    db.scalars(
+                        select(review_models.ConflictFinding).where(
+                            review_models.ConflictFinding.snapshot_id == sid
+                        )
+                    )
+                )
+            self.assertTrue(
+                any(item.conflict_type == "support_exclusion_conflict" for item in conflicts)
+            )
+            conflicted = draft_claim(sid, "规则同步")
+            blocked = client.post(
+                f"/api/v1/capabilities/{conflicted.id}/review",
+                headers=ADMIN,
+                json=document_review(conflicted, name="规则同步"),
+            )
+            self.assertEqual(blocked.status_code, 422, blocked.text)
+            self.assertEqual(blocked.json()["error_code"], "UNRESOLVED_CONFLICT")
+
+            claim = draft_claim(sid, "多租户隔离")
+            reviewed = client.post(
+                f"/api/v1/capabilities/{claim.id}/review",
+                headers=ADMIN,
+                json=document_review(claim, name="多租户隔离"),
+            )
+            self.assertEqual(reviewed.status_code, 200, reviewed.text)
+            first = client.post(
+                f"/api/v1/snapshots/{sid}/publish",
+                headers=ADMIN,
+                json={
+                    "revision_ids": [reviewed.json()["id"]],
+                    "expected_active_publication_id": None,
+                    "acknowledge_coverage_gaps": True,
+                    "comment": "真实PG发布文档单源能力",
+                },
+            )
+            self.assertEqual(first.status_code, 200, first.text)
+
+            derived = derive(client, cid)
+            new_sid = derived["snapshot_id"]
+            self.assertEqual(derived["derived_from_snapshot_id"], sid)
+            build(client, new_sid)
+            with self.sessions() as db:
+                new_docx = db.scalar(
+                    select(Document).where(
+                        Document.snapshot_id == new_sid, Document.filename == "manual.docx"
+                    )
+                )
+                old_docx = db.scalar(
+                    select(Document).where(
+                        Document.snapshot_id == sid, Document.filename == "manual.docx"
+                    )
+                )
+                old_key, old_sha = old_docx.storage_key, old_docx.sha256
+            old_bytes = (get_settings().document_store / old_key).read_bytes()
+            replaced = client.post(
+                f"/api/v1/snapshots/{new_sid}/documents/{new_docx.id}/replace",
+                headers=ADMIN,
+                files={
+                    "file": (
+                        "manual.docx",
+                        p16_assets.docx_manual(revision="v2"),
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    )
+                },
+            )
+            self.assertEqual(replaced.status_code, 202, replaced.text)
+            with self.sessions.begin() as db:
+                db.get(KnowledgeJob, replaced.json()["job_id"]).dispatch_token = "p16-pg-replace"
+            from app.ingestion.indexer import run_index
+
+            run_index(replaced.json()["job_id"], "p16-pg-replace")
+            with self.sessions() as db:
+                self.assertEqual(db.get(Document, old_docx.id).sha256, old_sha)
+            self.assertEqual((get_settings().document_store / old_key).read_bytes(), old_bytes)
+
+            discover(client, new_sid)
+            new_claim = draft_claim(new_sid, "当前版本支持策略模板导入，模板由管理员维护。")
+            self.assertIsNotNone(new_claim)
+            new_reviewed = client.post(
+                f"/api/v1/capabilities/{new_claim.id}/review",
+                headers=ADMIN,
+                json=document_review(
+                    new_claim, name="当前版本支持策略模板导入，模板由管理员维护。"
+                ),
+            )
+            self.assertEqual(new_reviewed.status_code, 200, new_reviewed.text)
+            second = client.post(
+                f"/api/v1/snapshots/{new_sid}/publish",
+                headers=ADMIN,
+                json={
+                    "revision_ids": [new_reviewed.json()["id"]],
+                    "expected_active_publication_id": first.json()["publication_id"],
+                    "acknowledge_coverage_gaps": True,
+                    "comment": "真实PG发布暂存文档更新",
+                },
+            )
+            self.assertEqual(second.status_code, 200, second.text)
+            self.assertEqual(self.pointers(cid), (second.json()["publication_id"], new_sid))
+            rolled = client.post(
+                f"/api/v1/categories/{cid}/rollback",
+                headers=ADMIN,
+                json={
+                    "publication_id": first.json()["publication_id"],
+                    "expected_active_publication_id": second.json()["publication_id"],
+                    "comment": "真实PG回滚暂存更新",
+                },
+            )
+            self.assertEqual(rolled.status_code, 200, rolled.text)
+            self.assertEqual(self.pointers(cid), (first.json()["publication_id"], sid))
 
 
 if __name__ == "__main__":

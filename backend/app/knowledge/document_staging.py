@@ -154,19 +154,18 @@ def derive_staging_snapshot(db, category_id, actor, correlation_id):
         raise AppError(409, "DERIVATION_ARCHIVE_MISSING", "受控源码归档缺失")
     if hash_file(archive) != source.source_sha256:
         raise AppError(409, "DERIVATION_SOURCE_HASH_MISMATCH", "受控源码归档哈希改变")
+    archive_key = f"{uuid4()}.zip"
     target = Snapshot(
         category_id=category.id,
         source_sha256=source.source_sha256,
         status="extracted",
-        archive_key="",
+        archive_key=archive_key,
         data_classification=source.data_classification,
         derived_from_snapshot_id=source.id,
         derivation_type="document_update",
     )
     db.add(target)
     db.flush()
-    archive_key = f"{uuid4()}.zip"
-    target.archive_key = archive_key
     reserve(settings, archive_key, archive.stat().st_size)
     copied_archive = settings.archive_root / archive_key
     try:
