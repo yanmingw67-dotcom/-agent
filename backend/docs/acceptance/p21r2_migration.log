@@ -1,0 +1,5 @@
+$ DATABASE_URL=sqlite:////tmp/p21r2_migration.db uv run alembic upgrade head
+$ DATABASE_URL=sqlite:////tmp/p21r2_migration.db uv run alembic downgrade 0008
+$ DATABASE_URL=sqlite:////tmp/p21r2_migration.db uv run alembic upgrade head
+$ sqlite3 /tmp/p21r2_migration.db 'select version_num from alembic_version'
+0009

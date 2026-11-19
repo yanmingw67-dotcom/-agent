@@ -27,6 +27,33 @@ PROOF = re.compile(
 PROOF_EXPORT = re.compile(
     r"支持.{0,12}(?:导出|生成|查看|管理).{0,12}(?:PDF|Excel|Word|日志|报告|截图)", re.I
 )
+_PROOF_CLAUSE = re.compile(
+    r"(?:(?:[，,；;。]|\n)\s*)?"
+    r"(?:并且?|且|同时|另外|以及)?\s*"
+    r"(?:(?:须|需|应(?:当)?|要求)\s*)?"
+    r"(?:提供|提交|出具|附上|加盖|附)\s*"
+    r"[^，。；;\n]{0,80}?"
+    r"(?:检测报告|测试报告|证明材料|功能截图|截图|证书|承诺函|授权函)"
+    r"[^，。；;\n]*"
+    r"|(?:证明材料要求|功能截图要求|检测报告要求|资质证书要求)",
+    re.I,
+)
+_EXPORT_FUNCTION = re.compile(
+    r"(?:支持|具备|提供|实现|能够|可以).{0,20}(?:导出|生成|查看|管理)"
+    r".{0,20}(?:PDF|Excel|Word|日志|报表|报告|截图)"
+    r"|(?:支持|具备|提供|实现|能够|可以).{0,20}(?:PDF|Excel|Word|日志|报表|报告|截图)"
+    r".{0,20}(?:导出|生成|查看|管理)",
+    re.I,
+)
+_TECH_ACTION = re.compile(
+    r"支持|具备|实现|能够|可以|采用|集成|兼容|覆盖|检测|阻断|防护|审计|隔离"
+    r"|部署|接入|解析|管理|导出|告警|联动|认证|鉴权|加密|同步|记录"
+    r"|不低于|不高于|不少于|不超过|至少|至多|阈值|吞吐|并发|时延|容量|≥|≤|>|<",
+    re.I,
+)
+_UNCERTAIN_MATERIAL = re.compile(
+    r"相关材料|附件|资料|佐证|证明材料|功能截图|检测报告|截图|报告", re.I
+)
 COMMERCIAL = re.compile(
     r"(?:提供|承诺|响应|实行|包含).{0,24}(?:售后|质保|保修|培训|服务)"
     r"|售后服务(?:条款|要求|承诺|响应)|原厂技术支持|原厂服务|报价|折扣|付款"
@@ -155,13 +182,42 @@ def _noise_reason(text: str, section: str) -> tuple[str, str] | None:
         return "non_technical_section", f"章节不属于技术参数范围：{section[:80]}"
     if PREAMBLE.search(value) and not CAPABILITY.search(value):
         return "preamble_or_instruction", "编制说明、填写指南或注意事项"
-    if PROOF.search(value) and not PROOF_EXPORT.search(value):
+    if PROOF.search(value) and not PROOF_EXPORT.search(value) and not _TECH_ACTION.search(value):
         return "proof_material", "证明材料、截图、检测报告或证书要求"
     if COMMERCIAL.search(value):
         return "commercial_terms", "售后服务、质保、培训、报价或付款条款"
     if COMPETITOR.search(value):
         return "competitor_content", "友商或竞品对比内容"
     return None
+
+
+def _strip_proof(value: str):
+    """只移除明确的证明材料子句，保留同一参数中的技术条件和原文位置。"""
+    text = value or ""
+    removed = []
+    parts = []
+    cursor = 0
+    for match in _PROOF_CLAUSE.finditer(text):
+        fragment = match.group(0)
+        if _EXPORT_FUNCTION.search(fragment) or PROOF_EXPORT.search(fragment):
+            continue
+        start, end = match.span()
+        removed.append({"text": fragment, "start": start, "end": end})
+        parts.append(text[cursor:start])
+        cursor = end
+    parts.append(text[cursor:])
+    cleaned = "".join(parts)
+    cleaned = re.sub(r"[ \t]+\n", "\n", cleaned)
+    cleaned = re.sub(r"\n[ \t]+", "\n", cleaned)
+    cleaned = re.sub(r"[ \t]{2,}", " ", cleaned)
+    cleaned = cleaned.strip(" \t\r\n，,；;")
+    return cleaned, removed
+
+
+def _proof_needs_review(cleaned: str, removed: list[dict]):
+    if not removed or not cleaned:
+        return False
+    return bool(_UNCERTAIN_MATERIAL.search(cleaned) or not _TECH_ACTION.search(cleaned))
 
 
 def _name_from_text(text: str, number: str | None = None) -> str:
@@ -257,6 +313,17 @@ _OR_SPLIT = re.compile(r"\s*(?:或者|或)\s*")
 _AND_SPLIT = re.compile(r"\s*(?:并且|而且|以及|和|及|、|且|[；;，,])\s*")
 _TRIM = " \t\n\r；;，,。"
 LOGIC_AMBIGUITY = "logic_ambiguity"
+_ENUM_REQUIRED = re.compile(
+    r"(?:全部|所有|均|逐项|每项|各项|都要|必须|须|应(?:当)?)"
+    r".{0,16}(?:具备|满足|支持|响应|提供|包括|符合|执行)"
+    r"|(?:以上|上述|所有|全部).{0,8}(?:全部|均|均须|均需|都要)",
+    re.I,
+)
+_ENUM_EXAMPLE = re.compile(r"例如|举例|示例|譬如|(?<!同)等(?:[。；;]|$)", re.I)
+_ENUM_QUALIFIER_ONLY = re.compile(
+    r"^(?:以上|上述|所有|全部|各项|项|均|都|均须|均需|必须|须|需|应|应当|具备|满足|支持|提供|包括|符合|响应|执行|为|是|的|且|并|同时|以及|另外|[，,；;、\s])+$",
+    re.I,
+)
 
 
 def _trim_span(text: str, start: int, end: int):
@@ -314,6 +381,14 @@ def _wrapped(text: str):
     return value[1:-1], start + 1, start + len(value) - 1
 
 
+def _enum_mode(value: str):
+    if _ENUM_REQUIRED.search(value):
+        return "required"
+    if _ENUM_EXAMPLE.search(value):
+        return "example"
+    return "uncertain"
+
+
 def _mandatory(value: str, open_enum: bool = False):
     if open_enum:
         return False
@@ -331,6 +406,7 @@ def _leaf_node(
     relation: str,
     explicit: bool = False,
     open_enum: bool = False,
+    open_enum_mode: str = "uncertain",
     logic_ambiguity: str | None = None,
     minimum=None,
 ):
@@ -363,13 +439,21 @@ def _leaf_node(
         requirement_type, relation_code = "alternative", relation
     else:
         requirement_type, relation_code = "capability", relation
+    mandatory = _mandatory(value, open_enum)
+    if open_enum:
+        mandatory = open_enum_mode == "required"
     requirement = {
         "requirement_id": uuid.uuid4().hex,
         "original_text": value,
         "requirement_type": requirement_type,
         "logical_relation": relation_code,
         "logical_group_id": group_id,
-        "is_mandatory": _mandatory(value, open_enum),
+        "is_mandatory": mandatory,
+        "mandatory_status": (
+            open_enum_mode if open_enum else ("required" if mandatory else "optional")
+        ),
+        "open_enumeration_mode": open_enum_mode if open_enum else None,
+        "example_relation": bool(open_enum and open_enum_mode == "example"),
         "threshold": threshold,
         "threshold_operator": threshold_operator,
         "unit": unit,
@@ -419,11 +503,18 @@ def _parse_logic(
     *,
     explicit: bool = False,
     open_enum: bool = False,
+    open_enum_mode: str = "uncertain",
     relation: str = "AND",
 ):
     value, start, end = _trim_span(text, 0, len(text))
     if not value:
         return None
+    if _OPEN_ENUMERATION.search(value):
+        open_enum = True
+        detected_mode = _enum_mode(value)
+        # 父级已判定“全部必要/示例”时，子片段不能因缺少限定词退回不确定。
+        if detected_mode != "uncertain" or open_enum_mode == "uncertain":
+            open_enum_mode = detected_mode
     if value.count("(") + value.count("（") != value.count(")") + value.count("）"):
         return _leaf_node(
             value,
@@ -432,6 +523,8 @@ def _parse_logic(
             group_id=group_id,
             relation="UNKNOWN",
             explicit=explicit,
+            open_enum=open_enum,
+            open_enum_mode=open_enum_mode,
             logic_ambiguity="unbalanced_parentheses",
         )
 
@@ -447,6 +540,7 @@ def _parse_logic(
                     group_id,
                     explicit=True,
                     open_enum=open_enum,
+                    open_enum_mode=open_enum_mode,
                 )
             )
         return _compose(parts, "AND", base + start, base + end, group_id)
@@ -463,6 +557,7 @@ def _parse_logic(
                 relation="AT_LEAST",
                 explicit=explicit,
                 open_enum=open_enum,
+                open_enum_mode=open_enum_mode,
                 minimum=minimum,
             )
 
@@ -475,19 +570,21 @@ def _parse_logic(
             group_id,
             explicit=explicit,
             open_enum=open_enum,
+            open_enum_mode=open_enum_mode,
             relation=relation,
         )
         if parsed and parsed["requirements"]:
             first = parsed["requirements"][0]
             rest_start = base + start + len(prefix_text)
+            leading = len(rest) - len(rest.lstrip())
+            content_start = rest_start + leading
             # 前缀只能贴到连续原文上；括号内的子要求不能拼成不存在的原文。
-            if first["source_span"]["start"] == rest_start:
-                first["original_text"] = prefix_text + first["original_text"]
+            if first["source_span"]["start"] == content_start:
+                first["original_text"] = value[: first["source_span"]["end"] - base]
                 first["source_span"]["start"] = base + start
             parsed["node"]["source_span"]["start"] = base + start
             return parsed
 
-    open_enum = open_enum or bool(_OPEN_ENUMERATION.search(value))
     or_parts = _split_top(value, _OR_SPLIT)
     if len(or_parts) >= 2 and all(len(part[0].strip(" ，,。；;")) >= 1 for part in or_parts):
         parts = [
@@ -496,9 +593,11 @@ def _parse_logic(
                 base + part_start,
                 group_id,
                 open_enum=open_enum,
+                open_enum_mode=open_enum_mode,
                 relation="OR",
             )
             for part, part_start, _ in or_parts
+            if not (open_enum and _ENUM_QUALIFIER_ONLY.match(part[0].strip(" ，,。；;")))
         ]
         return _compose(
             parts,
@@ -516,9 +615,11 @@ def _parse_logic(
                 base + part_start,
                 group_id,
                 open_enum=open_enum,
+                open_enum_mode=open_enum_mode,
                 relation="AND",
             )
             for part, part_start, _ in and_parts
+            if not (open_enum and _ENUM_QUALIFIER_ONLY.match(part[0].strip(" ，,。；;")))
         ]
         return _compose(
             parts,
@@ -537,6 +638,7 @@ def _parse_logic(
             group_id,
             explicit=explicit,
             open_enum=open_enum,
+            open_enum_mode=open_enum_mode,
         )
         if parsed:
             parsed["node"]["source_span"] = {"start": base + start, "end": base + end}
@@ -550,6 +652,7 @@ def _parse_logic(
         relation=relation,
         explicit=explicit,
         open_enum=open_enum,
+        open_enum_mode=open_enum_mode,
     )
 
 
@@ -599,6 +702,32 @@ def _shift_spans(node: dict, offset: int):
         _shift_spans(child, offset)
 
 
+def _merge_continuation(previous: Candidate, candidate: Candidate, separator: str = "\n"):
+    """并入续行时保留已校验锚点，只平移新增子要求。"""
+    offset = len(previous.original_text) + len(separator)
+    previous.original_text = previous.original_text + separator + candidate.original_text
+    previous.normalized_text = normalize(previous.original_text)
+    _shift_spans(candidate.logic_tree, offset)
+    previous.atomic_requirements.extend(candidate.atomic_requirements)
+    if not previous.logic_tree:
+        previous.logic_tree = candidate.logic_tree
+    else:
+        previous.logic_tree = {
+            "kind": "node",
+            "node_id": uuid.uuid4().hex,
+            "relation": "AND",
+            "logical_relation": "AND",
+            "logical_group_id": previous.logic_tree.get("logical_group_id")
+            or candidate.logic_tree.get("logical_group_id"),
+            "source_span": {"start": 0, "end": len(previous.original_text)},
+            "children": [previous.logic_tree, candidate.logic_tree],
+        }
+    for requirement in previous.atomic_requirements:
+        requirement["depth"] = requirement.get("depth", 0) + 1
+    previous.review_required = previous.review_required or candidate.review_required
+    return previous
+
+
 def _candidate_from_text(
     text: str,
     locator: dict,
@@ -609,19 +738,34 @@ def _candidate_from_text(
     confidence: str = "high",
     review_required: bool = False,
     extra_locators: list[dict] | None = None,
+    requirement_body: str | None = None,
+    requirement_offset: int | None = None,
 ):
-    clean = normalize(text)
-    name = _name_from_text(text, number)
-    body = _strip_number(text)[1] if number else text
+    anchor = (text or "").strip()
+    clean = normalize(anchor)
+    name = _name_from_text(anchor, number)
+    if requirement_body is not None:
+        body = requirement_body.strip()
+        offset = requirement_offset if requirement_offset is not None else anchor.find(body)
+    elif number:
+        body = _strip_number(anchor)[1]
+        offset = anchor.find(body) if body else 0
+    else:
+        body = anchor
+        offset = 0
+    # 绝不为通过测试而虚构偏移：锚点必须逐字落在参数原文上，否则退回整体解析。
+    if body and (offset < 0 or anchor[offset : offset + len(body)] != body):
+        body, offset = anchor, 0
     requirements, tree = build_requirements(body)
-    offset = text.find(body) if number else 0
     if offset > 0:
         # 叶节点的 span 与 requirement 共用同一对象，只遍历树即可避免重复偏移。
         _shift_spans(tree, offset)
+    if any(item.get("open_enumeration_mode") == "uncertain" for item in requirements):
+        review_required = True
     return Candidate(
         parameter_name=name,
         original_number=number,
-        original_text=text.strip(),
+        original_text=anchor,
         normalized_text=clean,
         source_locator=locator,
         section=section,
@@ -646,23 +790,26 @@ def _table_candidate(region: Region):
         )
     name = _table_cell(cells, roles, "name")
     sequence = _table_cell(cells, roles, "seq")
+    technical, removed = _strip_proof(technical)
     if not technical:
-        return None, name, sequence
-    original = "\n".join(value for value in [f"{sequence} {name}".strip(), technical] if value)
+        return None, name, sequence, removed
+    prefix = f"{sequence} {name}".strip()
+    original = "\n".join(value for value in [prefix, technical] if value)
     locator = {**region.locator, "kind": "table", "section": region.section}
     candidate = _candidate_from_text(
-        technical,
+        original,
         locator,
         section=region.section,
         number=sequence or None,
         confidence="high",
+        review_required=_proof_needs_review(technical, removed),
+        requirement_body=technical,
+        requirement_offset=len(prefix) + 1 if prefix else 0,
     )
     candidate.parameter_name = _table_name(cells, roles, technical)
-    candidate.original_text = original
-    candidate.normalized_text = normalize(original)
     if name:
         candidate.extra_locators = [{"name": name, "locator": region.locator}]
-    return candidate, name, sequence
+    return candidate, name, sequence, removed
 
 
 def _filtered(region, code, reason):
@@ -798,19 +945,38 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
                         "证明材料/商务/备注列不进入技术条件",
                     )
                 )
-            candidate, name, sequence = _table_candidate(region)
-            if candidate is None:
+            candidate, name, sequence, removed = _table_candidate(region)
+            for fragment in removed:
                 coverage.append(
-                    _filtered(region, "non_technical_table_row", "表格行没有技术参数正文")
+                    CoverageRecord(
+                        "filtered",
+                        f"{region.kind}_proof_clause",
+                        fragment["text"],
+                        {
+                            **region.locator,
+                            "filtered_column": True,
+                            "filtered_span": {
+                                "start": fragment["start"],
+                                "end": fragment["end"],
+                            },
+                        },
+                        "proof_material",
+                        "已将证明材料子句从技术参数中分离，原文位置保留",
+                        "medium",
+                    )
                 )
+            if candidate is None:
+                code = "proof_material" if removed else "non_technical_table_row"
+                reason = (
+                    "表格技术单元格只有证明材料，未生成技术参数"
+                    if removed
+                    else "表格行没有技术参数正文"
+                )
+                coverage.append(_filtered(region, code, reason))
                 continue
             if not sequence and not name and candidates:
                 previous = candidates[-1]
-                previous.original_text = previous.original_text + "\n" + candidate.original_text
-                previous.normalized_text = normalize(previous.original_text)
-                previous.atomic_requirements, previous.logic_tree = build_requirements(
-                    previous.original_text
-                )
+                _merge_continuation(previous, candidate)
                 previous.extra_locators.append({"locator": region.locator, "continued": True})
                 coverage.append(
                     CoverageRecord(
@@ -854,6 +1020,31 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
         if not text:
             coverage.append(_filtered(region, "empty_region", "空白区域"))
             continue
+        cleaned, removed = _strip_proof(text)
+        mixed_review = _proof_needs_review(cleaned, removed)
+        if removed:
+            for fragment in removed:
+                coverage.append(
+                    CoverageRecord(
+                        "filtered",
+                        f"{region.kind}_proof_clause",
+                        fragment["text"],
+                        {
+                            **region.locator,
+                            "filtered_span": {
+                                "start": fragment["start"],
+                                "end": fragment["end"],
+                            },
+                        },
+                        "proof_material",
+                        "已将证明材料子句从技术条件中分离，原文位置保留",
+                        "medium",
+                    )
+                )
+            if not cleaned or not _TECH_ACTION.search(cleaned):
+                # 纯证明材料行不生成技术参数；不清空上一条参数的内容。
+                continue
+            text = cleaned
         noise = _noise_reason(text, region.section or current_section)
         if noise:
             flush()
@@ -874,7 +1065,7 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
                 "locator": region.locator,
                 "method": "structural_numbered",
                 "confidence": "high",
-                "review_required": False,
+                "review_required": mixed_review,
             }
             current_lines = [text]
             current_locators = [region.locator]
@@ -888,7 +1079,7 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
                 "locator": region.locator,
                 "method": "structural_bullet",
                 "confidence": "medium",
-                "review_required": False,
+                "review_required": mixed_review,
             }
             current_lines = [text]
             current_locators = [region.locator]
@@ -897,10 +1088,12 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
             if SUBCLAUSE.search(text) or re.match(r"^\s*(?:其中|包括|并|且|同时|此外|以及)", text):
                 current_lines.append(text)
                 current_locators.append(region.locator)
+                current["review_required"] = current["review_required"] or mixed_review
                 continue
             if current["method"] == "structural_numbered" or not re.search(r"[。；;！？!?]$", text):
                 current_lines.append(text)
                 current_locators.append(region.locator)
+                current["review_required"] = current["review_required"] or mixed_review
                 continue
         flush()
         current_section = region.section or current_section

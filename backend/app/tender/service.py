@@ -551,6 +551,8 @@ def _write_requirements(db: Session, job_id: str, parameter: TenderParameter, te
     requirements, tree = build_requirements(text)
     parameter.atomic_requirements = requirements
     parameter.logic_tree = tree
+    if any(item.get("open_enumeration_mode") == "uncertain" for item in requirements):
+        parameter.review_required = True
     db.execute(
         delete(TenderAtomicRequirement).where(TenderAtomicRequirement.parameter_id == parameter.id)
     )
