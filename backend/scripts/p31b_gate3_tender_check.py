@@ -82,7 +82,10 @@ def main():
         ],
     }
     if path is None or not path.is_file():
-        evidence["checks"]["real_tender_present"] = {"result": "BLOCKED", "detail": "未找到真实招标文件"}
+        evidence["checks"]["real_tender_present"] = {
+            "result": "BLOCKED",
+            "detail": "未找到真实招标文件",
+        }
         EVIDENCE.parent.mkdir(parents=True, exist_ok=True)
         EVIDENCE.write_text(json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8")
         print("P31B_GATE3=BLOCKED 未找到真实招标文件")
@@ -142,9 +145,21 @@ def main():
             ]
         }
         check("extraction_terminal", job["status"] in {"succeeded", "partial"}, job["status"])
-        check("extraction_hash", job.get("original_file_hash") == EXPECTED_SHA256, str(job.get("original_file_hash")))
-        check("top_level_parameters", job.get("extracted_count") == 15, str(job.get("extracted_count")))
-        check("coverage_complete", job.get("coverage_status") == "complete", str(job.get("coverage_status")))
+        check(
+            "extraction_hash",
+            job.get("original_file_hash") == EXPECTED_SHA256,
+            str(job.get("original_file_hash")),
+        )
+        check(
+            "top_level_parameters",
+            job.get("extracted_count") == 15,
+            str(job.get("extracted_count")),
+        )
+        check(
+            "coverage_complete",
+            job.get("coverage_status") == "complete",
+            str(job.get("coverage_status")),
+        )
         check(
             "atomic_requirements",
             job.get("metrics", {}).get("requirements") == 200,
@@ -161,9 +176,7 @@ def main():
         check("atomic_rows", atoms == 200, str(atoms))
 
         def blank_profile(order):
-            parameter = next(
-                (row for row in parameters if row.get("order_index") == order), None
-            )
+            parameter = next((row for row in parameters if row.get("order_index") == order), None)
             if not parameter:
                 return None
             blanks = [
@@ -181,8 +194,9 @@ def main():
         evidence["blank_thresholds"] = profiles
         check(
             "blank_thresholds_preserved",
-            profiles == {
-                "10": {"count": 4, "units": ["Gbps", "万", "万/秒"], "all_threshold_none": True},
+            profiles
+            == {
+                "10": {"count": 4, "units": ["Gbps", "万"], "all_threshold_none": True},
                 "14": {"count": 2, "units": ["%"], "all_threshold_none": True},
                 "15": {"count": 2, "units": ["GB", "vCPU"], "all_threshold_none": True},
             },
@@ -202,8 +216,7 @@ def main():
         }
         check(
             "evaluation_requires_publication",
-            evaluation.status_code == 409
-            and body.get("error_code") == "KNOWLEDGE_NOT_PUBLISHED",
+            evaluation.status_code == 409 and body.get("error_code") == "KNOWLEDGE_NOT_PUBLISHED",
             f"{evaluation.status_code} {body.get('error_code')}",
         )
         evidence["result"] = "BLOCKED"

@@ -1,0 +1,113 @@
+{
+  "gate": "P3.1-B Gate 2",
+  "mode": "REAL_INPUT_AND_AUTHORIZATION_CHECK",
+  "build_commit": "6b8772b",
+  "result": "BLOCKED",
+  "checks": {
+    "api_ready": {
+      "result": "PASS",
+      "detail": "200"
+    },
+    "model_configured": {
+      "result": "BLOCKED",
+      "detail": "model_configured=False"
+    },
+    "enterprise_authorization": {
+      "result": "BLOCKED",
+      "detail": "model_configured=False allow_enterprise=False"
+    },
+    "synthetic_egress_disabled": {
+      "result": "PASS",
+      "detail": "allow_synthetic=False"
+    },
+    "frontend_cannot_override_authorization": {
+      "result": "PASS",
+      "detail": "frontend_can_override=False"
+    },
+    "container_synthetic_egress_disabled": {
+      "result": "PASS",
+      "detail": "BUILDER_ALLOW_SYNTHETIC=false"
+    },
+    "real_source_indexed": {
+      "result": "BLOCKED",
+      "detail": "count=0"
+    },
+    "real_document_parsed": {
+      "result": "BLOCKED",
+      "detail": "count=0"
+    },
+    "semantic_discovery_succeeded": {
+      "result": "BLOCKED",
+      "detail": "count=0"
+    },
+    "real_publication_present": {
+      "result": "BLOCKED",
+      "detail": "count=0"
+    },
+    "gate2_overall": {
+      "result": "BLOCKED",
+      "detail": "真实输入、模型授权、审核发布必须全部就绪"
+    }
+  },
+  "missing_inputs": [
+    "未由管理员上传真实 WAF 源码 ZIP 并完成索引",
+    "未由管理员上传正式技术文档并完成解析",
+    "服务器侧模型未配置",
+    "尚无包含能力的真实知识发布物"
+  ],
+  "blockers": [
+    "真实知识构建需要真实源码与正式文档，不能以合成样例替代。",
+    "模型未配置或企业外发授权未完成时，模型步骤必须保持 BLOCKED。",
+    "没有真实发布物时不能进入审核发布验收，也不能宣称知识库已就绪。"
+  ],
+  "observed": {
+    "categories": 7,
+    "real_source_snapshots": [],
+    "real_documents": [],
+    "publications": [],
+    "semantic_discoveries": [],
+    "model_authorization": {
+      "server_side_authorization_required": true,
+      "frontend_can_override": false,
+      "builder": {
+        "model_configured": false,
+        "allow_synthetic": false,
+        "allow_enterprise": false,
+        "document_discovery_mode": "structural",
+        "status": "UNAVAILABLE"
+      },
+      "tender": {
+        "model_mode": "structural",
+        "queue_enabled": true
+      },
+      "evaluation": {
+        "model_mode": "structural",
+        "queue_enabled": true
+      }
+    }
+  },
+  "model_authorization": {
+    "server_side_authorization_required": true,
+    "frontend_can_override": false,
+    "builder": {
+      "model_configured": false,
+      "allow_synthetic": false,
+      "allow_enterprise": false,
+      "document_discovery_mode": "structural",
+      "status": "UNAVAILABLE"
+    },
+    "tender": {
+      "model_mode": "structural",
+      "queue_enabled": true
+    },
+    "evaluation": {
+      "model_mode": "structural",
+      "queue_enabled": true
+    }
+  },
+  "container_environment": {
+    "BUILDER_ALLOW_ENTERPRISE": "false",
+    "BUILDER_ALLOW_SYNTHETIC": "false",
+    "BUILDER_MODEL_SET": false
+  }
+}

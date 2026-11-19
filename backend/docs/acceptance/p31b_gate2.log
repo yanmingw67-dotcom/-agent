@@ -1,0 +1,16 @@
+PASS api_ready 200
+BLOCKED model_configured model_configured=False
+BLOCKED enterprise_authorization model_configured=False allow_enterprise=False
+PASS synthetic_egress_disabled allow_synthetic=False
+PASS frontend_cannot_override_authorization frontend_can_override=False
+PASS container_synthetic_egress_disabled BUILDER_ALLOW_SYNTHETIC=false
+BLOCKED real_source_indexed count=0
+BLOCKED real_document_parsed count=0
+BLOCKED semantic_discovery_succeeded count=0
+BLOCKED real_publication_present count=0
+BLOCKED missing_input 未由管理员上传真实 WAF 源码 ZIP 并完成索引
+BLOCKED missing_input 未由管理员上传正式技术文档并完成解析
+BLOCKED missing_input 服务器侧模型未配置
+BLOCKED missing_input 尚无包含能力的真实知识发布物
+BLOCKED gate2_overall 真实输入、模型授权、审核发布必须全部就绪
+P31B_GATE2=BLOCKED evidence=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docs/acceptance/p31b_gate2_evidence.json

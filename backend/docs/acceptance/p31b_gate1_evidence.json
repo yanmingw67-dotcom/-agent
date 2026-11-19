@@ -1,0 +1,141 @@
+{
+  "gate": "P3.1-B Gate 1",
+  "mode": "REAL_COMPOSE_SYNTHETIC_SAMPLE",
+  "project": "product-knowledge-p31b",
+  "build_commit": "6b8772b",
+  "checks": {
+    "api_ready": {
+      "result": "PASS",
+      "detail": "200"
+    },
+    "unauthorized_denied": {
+      "result": "PASS",
+      "detail": "401"
+    },
+    "synthetic_docx_present": {
+      "result": "PASS",
+      "detail": "demo_waf_manual.docx 36803B"
+    },
+    "job_queued_without_worker": {
+      "result": "PASS",
+      "detail": "queued"
+    },
+    "source_import_succeeded": {
+      "result": "PASS",
+      "detail": "succeeded"
+    },
+    "source_import_counts": {
+      "result": "PASS",
+      "detail": "{\"duration_ms\": 92, \"model_requests\": 0, \"tool_calls\": 0, \"tokens\": 0, \"model_cost\": 0, \"model_mode\": \"NOT_USED\", \"index_status\": \"NOT_IMPLEMENTED\", \"file_count\": 4, \"excluded_count\": 2, \"total_bytes\": 882, \"sensitive_files\": 0}"
+    },
+    "source_index_succeeded": {
+      "result": "PASS",
+      "detail": "succeeded"
+    },
+    "source_snapshot_indexed": {
+      "result": "PASS",
+      "detail": "indexed"
+    },
+    "derived_staging_created": {
+      "result": "PASS",
+      "detail": "{\"snapshot_id\": \"e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0\", \"derived_from_snapshot_id\": \"9e3937ad-9d44-4fe0-8537-cd865561dd0a\", \"derivation_type\": \"document_update\", \"documents_copied\": 0, \"status\": \"extracted\", \"index_status\": \"not_indexed\"}"
+    },
+    "document_index_succeeded": {
+      "result": "PASS",
+      "detail": "succeeded"
+    },
+    "document_present": {
+      "result": "PASS",
+      "detail": "documents=1"
+    },
+    "document_parsed": {
+      "result": "PASS",
+      "detail": "parse_status=parsed segments=6"
+    },
+    "document_discovery_succeeded": {
+      "result": "PASS",
+      "detail": "{\"job\": \"succeeded\", \"run\": \"succeeded\", \"mode\": \"structural\", \"metrics\": {\"documents_total\": 1, \"documents_considered\": 1, \"units_total\": 4, \"units_eligible\": 1, \"units_skipped\": 3, \"duplicates_suppressed\": 0, \"candidates\": 1, \"budget\": {\"max_documents\": 20, \"max_units\": 240, \"max_candidates\": 40}, \"documents\": [{\"document_id\": \"a2b7132a-ce55-4994-8314-7609629a6267\", \"filename\": \"demo_waf_manual.docx\", \"parse_status\": \"parsed\", \"units\": 4, \"eligible_units\": 1, \"gaps\": []}], \"model_mode\": \"NOT_USED\", \"evidence\": 1, \"existing\": 0, \"conflicts\": 0, \"mode\": \"structural\", \"truncated\": false}}"
+    },
+    "document_candidates_nonempty": {
+      "result": "PASS",
+      "detail": "candidates=1"
+    },
+    "restart_recovery": {
+      "result": "PASS",
+      "detail": "{\"documents\": 1, \"segments\": 6, \"candidates\": 1, \"job_status\": \"succeeded\", \"index_status\": \"indexed\"}"
+    },
+    "failure_reason_visible": {
+      "result": "PASS",
+      "detail": "error=UNSAFE_PATH attempt=1"
+    },
+    "retry_accepted": {
+      "result": "PASS",
+      "detail": "202"
+    },
+    "retry_safe_same_failure": {
+      "result": "PASS",
+      "detail": "error=UNSAFE_PATH attempt=2"
+    },
+    "successful_job_retry_rejected": {
+      "result": "PASS",
+      "detail": "409"
+    },
+    "read_token_cannot_upload": {
+      "result": "PASS",
+      "detail": "403"
+    },
+    "admin_ui_served": {
+      "result": "PASS",
+      "detail": "200"
+    }
+  },
+  "stages": {
+    "source_import_ms": 4560,
+    "source_index_ms": 2244,
+    "document_index_ms": 1945,
+    "document_segments": 6,
+    "document_discovery_ms": 2542,
+    "document_candidates": 1,
+    "restart_before": {
+      "documents": 1,
+      "segments": 6,
+      "candidates": 1,
+      "job_status": "succeeded",
+      "index_status": "indexed"
+    },
+    "restart_after": {
+      "documents": 1,
+      "segments": 6,
+      "candidates": 1,
+      "job_status": "succeeded",
+      "index_status": "indexed"
+    }
+  },
+  "jobs": {
+    "source_import": "1ce90979-a931-4a76-bfea-1a02c386d226",
+    "source_import_detail": {
+      "status": "succeeded",
+      "attempt": 1,
+      "metrics": {
+        "duration_ms": 92,
+        "model_requests": 0,
+        "tool_calls": 0,
+        "tokens": 0,
+        "model_cost": 0,
+        "model_mode": "NOT_USED",
+        "index_status": "NOT_IMPLEMENTED",
+        "file_count": 4,
+        "excluded_count": 2,
+        "total_bytes": 882,
+        "sensitive_files": 0
+      }
+    },
+    "source_index": "3ee966b5-6459-44db-9504-c72179ac6213",
+    "staging_snapshot": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+    "document_index": "5297c87e-3771-49a6-ac41-cf9a3d8898ee",
+    "staging_index": "51427515-59f0-405d-8f9f-18e9fdd561cf",
+    "document_discovery": "207cba68-a854-4f5e-9927-0755c0a7c204"
+  },
+  "result": "PASS",
+  "failed_checks": []
+}

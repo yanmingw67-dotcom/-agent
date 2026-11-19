@@ -86,9 +86,11 @@ def main():
     print("== Compose 服务 ==")
     try:
         raw = compose("ps", "--format", "json")
-        rows = json.loads(raw) if raw.startswith("[") else [
-            json.loads(line) for line in raw.splitlines() if line.strip().startswith("{")
-        ]
+        rows = (
+            json.loads(raw)
+            if raw.startswith("[")
+            else [json.loads(line) for line in raw.splitlines() if line.strip().startswith("{")]
+        )
     except Exception as exc:
         rows = []
         record("compose_ps", False, str(exc))
@@ -96,10 +98,7 @@ def main():
     for row in rows:
         service = row.get("Service") or row.get("Name", "")
         by_service[service] = row
-        print(
-            f"{service:12} state={row.get('State',''):10} "
-            f"health={row.get('Health','') or '-'}"
-        )
+        print(f"{service:12} state={row.get('State', ''):10} health={row.get('Health', '') or '-'}")
     required = {
         "api",
         "worker",
@@ -136,8 +135,16 @@ def main():
     try:
         head = compose("exec", "-T", "api", "alembic", "heads").split()[0]
         version = compose(
-            "exec", "-T", "postgres", "psql", "-U", "knowledge", "-d", "knowledge_p31b",
-            "-Atc", "select version_num from alembic_version",
+            "exec",
+            "-T",
+            "postgres",
+            "psql",
+            "-U",
+            "knowledge",
+            "-d",
+            "knowledge_p31b",
+            "-Atc",
+            "select version_num from alembic_version",
         )
         print(f"alembic_head={head} database_version={version}")
         record("migration_current", head == version, f"head={head} db={version}")
@@ -174,9 +181,7 @@ def main():
         "taskworker": "/tmp/knowledge-taskworker-heartbeat",
     }.items():
         try:
-            value = compose(
-                "exec", "-T", service, "python", "-c", heartbeat_code.format(path=path)
-            )
+            value = compose("exec", "-T", service, "python", "-c", heartbeat_code.format(path=path))
             age = float(value) if value != "missing" else 999999
             print(f"{service:12} age_seconds={value}")
             record(f"heartbeat_{service}", age < 120, str(value))

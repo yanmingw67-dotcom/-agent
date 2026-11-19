@@ -1,0 +1,13 @@
+PASS real_tender_hash 94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+tender job ff5dc2ff-c962-45f6-aa1c-cde95f3f4cc3 queued coverage=pending error=None
+tender job ff5dc2ff-c962-45f6-aa1c-cde95f3f4cc3 succeeded coverage=complete error=None
+PASS extraction_terminal succeeded
+PASS extraction_hash 94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+PASS top_level_parameters 15
+PASS coverage_complete complete
+PASS atomic_requirements 200
+PASS numbered_subclauses 46
+PASS atomic_rows 200
+PASS blank_thresholds_preserved {"10": {"count": 4, "units": ["Gbps", "万"], "all_threshold_none": true}, "14": {"count": 2, "units": ["%"], "all_threshold_none": true}, "15": {"count": 2, "units": ["GB", "vCPU"], "all_threshold_none": true}}
+PASS evaluation_requires_publication 409 KNOWLEDGE_NOT_PUBLISHED
+P31B_GATE3=BLOCKED structural_failed=[] evidence=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docs/acceptance/p31b_gate3_evidence.json

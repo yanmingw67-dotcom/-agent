@@ -1,0 +1,36 @@
+PASS api_ready 200
+PASS unauthorized_denied 401
+PASS synthetic_docx_present demo_waf_manual.docx 36803B
+PASS job_queued_without_worker queued
+job 1ce90979-a931-4a76-bfea-1a02c386d226 source_import queued stage=uploaded attempt=1 error=None
+job 1ce90979-a931-4a76-bfea-1a02c386d226 source_import succeeded stage=extracted attempt=1 error=None
+PASS source_import_succeeded succeeded
+PASS source_import_counts {"duration_ms": 92, "model_requests": 0, "tool_calls": 0, "tokens": 0, "model_cost": 0, "model_mode": "NOT_USED", "index_status": "NOT_IMPLEMENTED", "file_count": 4, "excluded_count": 2, "total_bytes": 882, "sensitive_files": 0}
+job 3ee966b5-6459-44db-9504-c72179ac6213 source_index queued stage=extracted attempt=1 error=None
+job 3ee966b5-6459-44db-9504-c72179ac6213 source_index succeeded stage=indexed attempt=1 error=None
+PASS source_index_succeeded succeeded
+PASS source_snapshot_indexed indexed
+PASS derived_staging_created {"snapshot_id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0", "derived_from_snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a", "derivation_type": "document_update", "documents_copied": 0, "status": "extracted", "index_status": "not_indexed"}
+job 5297c87e-3771-49a6-ac41-cf9a3d8898ee document_index queued stage=extracted attempt=1 error=None
+job 5297c87e-3771-49a6-ac41-cf9a3d8898ee document_index succeeded stage=indexed attempt=1 error=None
+PASS document_index_succeeded succeeded
+PASS document_present documents=1
+PASS document_parsed parse_status=parsed segments=6
+job 51427515-59f0-405d-8f9f-18e9fdd561cf source_index queued stage=extracted attempt=1 error=None
+job 51427515-59f0-405d-8f9f-18e9fdd561cf source_index succeeded stage=indexed attempt=1 error=None
+job 207cba68-a854-4f5e-9927-0755c0a7c204 document_discovery queued stage=documents_queued attempt=1 error=None
+job 207cba68-a854-4f5e-9927-0755c0a7c204 document_discovery succeeded stage=documents_discovered attempt=1 error=None
+PASS document_discovery_succeeded {"job": "succeeded", "run": "succeeded", "mode": "structural", "metrics": {"documents_total": 1, "documents_considered": 1, "units_total": 4, "units_eligible": 1, "units_skipped": 3, "duplicates_suppressed": 0, "candidates": 1, "budget": {"max_documents": 20, "max_units": 240, "max_candidates": 40}, "documents": [{"document_id": "a2b7132a-ce55-4994-8314-7609629a6267", "filename": "demo_waf_manual.docx", "parse_status": "parsed", "units": 4, "eligible_units": 1, "gaps": []}], "model_mode": "NOT_USED", "evidence": 1, "existing": 0, "conflicts": 0, "mode": "structural", "truncated": false}}
+PASS document_candidates_nonempty candidates=1
+PASS restart_recovery {"documents": 1, "segments": 6, "candidates": 1, "job_status": "succeeded", "index_status": "indexed"}
+job b3b20d78-74ff-4556-a6e8-432189e1301c source_import queued stage=uploaded attempt=1 error=None
+job b3b20d78-74ff-4556-a6e8-432189e1301c source_import failed stage=failed attempt=1 error=UNSAFE_PATH
+PASS failure_reason_visible error=UNSAFE_PATH attempt=1
+PASS retry_accepted 202
+job b3b20d78-74ff-4556-a6e8-432189e1301c source_import queued stage=uploaded attempt=2 error=None
+job b3b20d78-74ff-4556-a6e8-432189e1301c source_import failed stage=failed attempt=2 error=UNSAFE_PATH
+PASS retry_safe_same_failure error=UNSAFE_PATH attempt=2
+PASS successful_job_retry_rejected 409
+PASS read_token_cannot_upload 403
+PASS admin_ui_served 200
+P31B_GATE1=PASS evidence=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docs/acceptance/p31b_gate1_evidence.json

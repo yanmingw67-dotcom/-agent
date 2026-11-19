@@ -1,0 +1,300 @@
+已存在 .env.p31b，未覆盖
+[p31b] 构建后端镜像 product-knowledge:p31b-6b8772b
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 777B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 124B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#4 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 13.68kB 0.0s done
+#5 DONE 0.0s
+
+#6 [4/9] WORKDIR /app
+#6 CACHED
+
+#7 [3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#7 CACHED
+
+#8 [5/9] COPY pyproject.toml uv.lock ./
+#8 CACHED
+
+#9 [6/9] RUN uv sync --frozen --no-dev
+#9 CACHED
+
+#10 [7/9] COPY --chown=app:app app ./app
+#10 CACHED
+
+#11 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [8/9] COPY --chown=app:app alembic.ini ./
+#12 CACHED
+
+#13 [9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control /data/tender /data/exports && chown -R app:app /data
+#13 DONE 0.2s
+
+#14 exporting to image
+#14 exporting layers 0.0s done
+#14 exporting manifest sha256:9a6cb08ba90f7aa892063ba83ac60ead139d2bb20e6529f53f763b8afaae615f done
+#14 exporting config sha256:b75a1d32bd4af9e89adbba62ca4bd7efea1c011960b60de28b5d20a8ffaa483a done
+#14 exporting attestation manifest sha256:53c9ffe54c1662b2424c01aafa07c1d80e857d11c709f6d2b568d49da16e6022 0.0s done
+#14 exporting manifest list sha256:7dcd496a4c724839c4633810055b6220f35134fcd7762eb2fa80071ae8c42571 done
+#14 naming to docker.io/library/product-knowledge:p31b-6b8772b done
+#14 unpacking to docker.io/library/product-knowledge:p31b-6b8772b 0.0s done
+#14 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/kh3ax9xyuj7my0bgudflqa2hb
+[p31b] 构建前端镜像 product-knowledge-p31b-frontend:6b8772b
+ Image product-knowledge-p31b-frontend:6b8772b Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.18kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 342B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/nginx:1.27-alpine
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/node:24-alpine
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 77B done
+#5 DONE 0.0s
+
+#6 [build 1/6] FROM docker.io/library/node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8
+#6 resolve docker.io/library/node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 0.0s done
+#6 DONE 0.0s
+
+#7 [stage-1 1/3] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#7 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 1.43kB done
+#8 DONE 0.0s
+
+#9 [build 4/6] RUN npm ci
+#9 CACHED
+
+#10 [build 5/6] COPY . .
+#10 CACHED
+
+#11 [build 6/6] RUN npm run build
+#11 CACHED
+
+#12 [build 2/6] WORKDIR /app
+#12 CACHED
+
+#13 [stage-1 2/3] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#13 CACHED
+
+#14 [build 3/6] COPY package.json package-lock.json ./
+#14 CACHED
+
+#15 [stage-1 3/3] COPY --from=build /app/dist /usr/share/nginx/html
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:2c68f149655a582954985cecfc7ba9068f41f1cb0384918f088f0b00992cbc86 done
+#16 exporting config sha256:401c8dc8a76a5d5c52a7e594244cbb8bf496c67b835143bc4fc565e70d4886ba done
+#16 exporting attestation manifest sha256:29c3df5932b1a671d53ee56e9832e1afcde23b219af53713955f0c9a8c90fd03 0.0s done
+#16 exporting manifest list sha256:23058c4450c0753f887d1c2cc82baf68100956ec1f18283362238967f1f7a9b6 done
+#16 naming to docker.io/library/product-knowledge-p31b-frontend:6b8772b
+#16 naming to docker.io/library/product-knowledge-p31b-frontend:6b8772b done
+#16 unpacking to docker.io/library/product-knowledge-p31b-frontend:6b8772b done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image product-knowledge-p31b-frontend:6b8772b Built 
+ Container product-knowledge-p31b-builder-1 Stopping 
+ Container product-knowledge-p31b-frontend-1 Stopping 
+ Container product-knowledge-p31b-indexer-1 Stopping 
+ Container product-knowledge-p31b-retrieval-1 Stopping 
+ Container product-knowledge-p31b-taskworker-1 Stopping 
+ Container product-knowledge-p31b-worker-1 Stopping 
+ Container product-knowledge-p31b-frontend-1 Stopped 
+ Container product-knowledge-p31b-frontend-1 Removing 
+ Container product-knowledge-p31b-frontend-1 Removed 
+ Container product-knowledge-p31b-taskworker-1 Stopped 
+ Container product-knowledge-p31b-taskworker-1 Removing 
+ Container product-knowledge-p31b-taskworker-1 Removed 
+ Container product-knowledge-p31b-indexer-1 Stopped 
+ Container product-knowledge-p31b-indexer-1 Removing 
+ Container product-knowledge-p31b-indexer-1 Removed 
+ Container product-knowledge-p31b-builder-1 Stopped 
+ Container product-knowledge-p31b-builder-1 Removing 
+ Container product-knowledge-p31b-builder-1 Removed 
+ Container product-knowledge-p31b-retrieval-1 Stopped 
+ Container product-knowledge-p31b-retrieval-1 Removing 
+ Container product-knowledge-p31b-retrieval-1 Removed 
+ Container product-knowledge-p31b-worker-1 Stopped 
+ Container product-knowledge-p31b-worker-1 Removing 
+ Container product-knowledge-p31b-worker-1 Removed 
+ Container product-knowledge-p31b-api-1 Stopping 
+ Container product-knowledge-p31b-api-1 Stopped 
+ Container product-knowledge-p31b-api-1 Removing 
+ Container product-knowledge-p31b-api-1 Removed 
+ Container product-knowledge-p31b-postgres-1 Stopping 
+ Container product-knowledge-p31b-redis-1 Stopping 
+ Container product-knowledge-p31b-postgres-1 Stopped 
+ Container product-knowledge-p31b-postgres-1 Removing 
+ Container product-knowledge-p31b-postgres-1 Removed 
+ Container product-knowledge-p31b-redis-1 Stopped 
+ Container product-knowledge-p31b-redis-1 Removing 
+ Container product-knowledge-p31b-redis-1 Removed 
+ Volume product-knowledge-p31b_ingestion Removing 
+ Volume product-knowledge-p31b_redis_data Removing 
+ Volume product-knowledge-p31b_postgres_data Removing 
+ Volume product-knowledge-p31b_exports Removing 
+ Volume product-knowledge-p31b_archives Removing 
+ Volume product-knowledge-p31b_control Removing 
+ Volume product-knowledge-p31b_documents Removing 
+ Volume product-knowledge-p31b_tender Removing 
+ Network product-knowledge-p31b_default Removing 
+ Volume product-knowledge-p31b_redis_data Removed 
+ Volume product-knowledge-p31b_archives Removed 
+ Volume product-knowledge-p31b_exports Removed 
+ Volume product-knowledge-p31b_control Removed 
+ Volume product-knowledge-p31b_documents Removed 
+ Volume product-knowledge-p31b_postgres_data Removed 
+ Volume product-knowledge-p31b_tender Removed 
+ Volume product-knowledge-p31b_ingestion Removed 
+ Network product-knowledge-p31b_default Removed 
+已存在 .env.p31b，未覆盖
+ Network product-knowledge-p31b_default Creating 
+ Network product-knowledge-p31b_default Created 
+ Volume product-knowledge-p31b_ingestion Creating 
+ Volume product-knowledge-p31b_ingestion Created 
+ Volume product-knowledge-p31b_documents Creating 
+ Volume product-knowledge-p31b_documents Created 
+ Volume product-knowledge-p31b_tender Creating 
+ Volume product-knowledge-p31b_tender Created 
+ Volume product-knowledge-p31b_exports Creating 
+ Volume product-knowledge-p31b_exports Created 
+ Volume product-knowledge-p31b_control Creating 
+ Volume product-knowledge-p31b_control Created 
+ Volume product-knowledge-p31b_postgres_data Creating 
+ Volume product-knowledge-p31b_postgres_data Created 
+ Volume product-knowledge-p31b_redis_data Creating 
+ Volume product-knowledge-p31b_redis_data Created 
+ Volume product-knowledge-p31b_archives Creating 
+ Volume product-knowledge-p31b_archives Created 
+ Container product-knowledge-p31b-redis-1 Creating 
+ Container product-knowledge-p31b-postgres-1 Creating 
+ Container product-knowledge-p31b-redis-1 Created 
+ Container product-knowledge-p31b-postgres-1 Created 
+ Container product-knowledge-p31b-api-1 Creating 
+ Container product-knowledge-p31b-api-1 Created 
+ Container product-knowledge-p31b-worker-1 Creating 
+ Container product-knowledge-p31b-frontend-1 Creating 
+ Container product-knowledge-p31b-taskworker-1 Creating 
+ Container product-knowledge-p31b-indexer-1 Creating 
+ Container product-knowledge-p31b-retrieval-1 Creating 
+ Container product-knowledge-p31b-builder-1 Creating 
+ Container product-knowledge-p31b-frontend-1 Created 
+ Container product-knowledge-p31b-worker-1 Created 
+ Container product-knowledge-p31b-indexer-1 Created 
+ Container product-knowledge-p31b-retrieval-1 Created 
+ Container product-knowledge-p31b-taskworker-1 Created 
+ Container product-knowledge-p31b-builder-1 Created 
+ Container product-knowledge-p31b-redis-1 Starting 
+ Container product-knowledge-p31b-postgres-1 Starting 
+ Container product-knowledge-p31b-postgres-1 Started 
+ Container product-knowledge-p31b-redis-1 Started 
+ Container product-knowledge-p31b-postgres-1 Waiting 
+ Container product-knowledge-p31b-redis-1 Waiting 
+ Container product-knowledge-p31b-redis-1 Healthy 
+ Container product-knowledge-p31b-postgres-1 Healthy 
+ Container product-knowledge-p31b-api-1 Starting 
+ Container product-knowledge-p31b-api-1 Started 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-taskworker-1 Starting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-indexer-1 Starting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-builder-1 Starting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-retrieval-1 Starting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-worker-1 Starting 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-frontend-1 Starting 
+ Container product-knowledge-p31b-retrieval-1 Started 
+ Container product-knowledge-p31b-worker-1 Started 
+ Container product-knowledge-p31b-indexer-1 Started 
+ Container product-knowledge-p31b-frontend-1 Started 
+ Container product-knowledge-p31b-taskworker-1 Started 
+ Container product-knowledge-p31b-builder-1 Started 
+ Container product-knowledge-p31b-worker-1 Waiting 
+ Container product-knowledge-p31b-taskworker-1 Waiting 
+ Container product-knowledge-p31b-redis-1 Waiting 
+ Container product-knowledge-p31b-indexer-1 Waiting 
+ Container product-knowledge-p31b-retrieval-1 Waiting 
+ Container product-knowledge-p31b-postgres-1 Waiting 
+ Container product-knowledge-p31b-api-1 Waiting 
+ Container product-knowledge-p31b-builder-1 Waiting 
+ Container product-knowledge-p31b-frontend-1 Waiting 
+ Container product-knowledge-p31b-postgres-1 Healthy 
+ Container product-knowledge-p31b-api-1 Healthy 
+ Container product-knowledge-p31b-redis-1 Healthy 
+ Container product-knowledge-p31b-indexer-1 Healthy 
+ Container product-knowledge-p31b-builder-1 Healthy 
+ Container product-knowledge-p31b-retrieval-1 Healthy 
+ Container product-knowledge-p31b-taskworker-1 Healthy 
+ Container product-knowledge-p31b-worker-1 Healthy 
+ Container product-knowledge-p31b-frontend-1 Healthy 
+== Compose 服务 ==
+api          state=running    health=healthy
+builder      state=running    health=healthy
+frontend     state=running    health=healthy
+indexer      state=running    health=healthy
+postgres     state=running    health=healthy
+redis        state=running    health=healthy
+retrieval    state=running    health=healthy
+taskworker   state=running    health=healthy
+worker       state=running    health=healthy
+== HTTP 健康 ==
+api_live           200
+api_ready          200
+retrieval_ready    200
+frontend           200
+== 数据库迁移 ==
+alembic_head=0012 database_version=0012
+== 容器存储路径 ==
+api          {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+worker       {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+indexer      {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+builder      {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+retrieval    {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+taskworker   {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+== worker 心跳 ==
+worker       age_seconds=0.6
+indexer      age_seconds=1.2
+builder      age_seconds=1.0
+taskworker   age_seconds=4.7
+== 汇总 ==
+checks=17 failed=0
+P31B_ENV_STATUS=PASS

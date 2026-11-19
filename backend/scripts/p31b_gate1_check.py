@@ -7,7 +7,6 @@
 import io
 import json
 import os
-import stat
 import subprocess
 import time
 import zipfile
@@ -47,8 +46,15 @@ def compose(*args, timeout=600):
     environment["P31B_IMAGE_TAG"] = tag()
     result = subprocess.run(
         [
-            "docker", "compose", "--project-name", PROJECT,
-            "--env-file", ".env.p31b", "-f", "docker-compose.p31b.yml", *args,
+            "docker",
+            "compose",
+            "--project-name",
+            PROJECT,
+            "--env-file",
+            ".env.p31b",
+            "-f",
+            "docker-compose.p31b.yml",
+            *args,
         ],
         cwd=ROOT,
         capture_output=True,
@@ -77,8 +83,10 @@ def wait_job(client, admin, job_id, timeout=180, expected=None):
         response.raise_for_status()
         job = response.json()
         if job["status"] != last:
-            print(f"job {job_id} {job['job_type']} {job['status']} stage={job['stage']} "
-                  f"attempt={job['attempt']} error={job['error_code']}")
+            print(
+                f"job {job_id} {job['job_type']} {job['status']} stage={job['stage']} "
+                f"attempt={job['attempt']} error={job['error_code']}"
+            )
             last = job["status"]
         if job["status"] in {"succeeded", "partial", "failed"}:
             if expected and job["status"] != expected:
@@ -144,7 +152,11 @@ def main():
         check("api_ready", ready.status_code == 200, str(ready.status_code))
         check("unauthorized_denied", client.get("/api/v1/categories").status_code == 401, "401")
         docx_bytes = DOCX.read_bytes()
-        check("synthetic_docx_present", DOCX.is_file() and len(docx_bytes) > 0, f"{DOCX.name} {len(docx_bytes)}B")
+        check(
+            "synthetic_docx_present",
+            DOCX.is_file() and len(docx_bytes) > 0,
+            f"{DOCX.name} {len(docx_bytes)}B",
+        )
 
         # 1. 队列在 worker 停止时入队，证明任务确实经过 Redis/RQ，而不是 API 内同步执行。
         category_id = create_category(client, admin, "gate1-main")
@@ -189,9 +201,7 @@ def main():
         evidence["stages"]["source_index_ms"] = round((time.monotonic() - started) * 1000)
         check("source_index_succeeded", indexed["status"] == "succeeded", indexed["status"])
         source_ws = workspace(client, admin, category_id, source_snapshot)
-        snapshot_row = next(
-            row for row in source_ws["snapshots"] if row["id"] == source_snapshot
-        )
+        snapshot_row = next(row for row in source_ws["snapshots"] if row["id"] == source_snapshot)
         check(
             "source_snapshot_indexed",
             snapshot_row.get("index_status") == "indexed",
@@ -252,16 +262,12 @@ def main():
         evidence["jobs"]["staging_index"] = staging_index_job["job_id"]
         wait_job(client, admin, staging_index_job["job_id"], expected="succeeded")
         started = time.monotonic()
-        response = client.post(
-            f"/api/v1/snapshots/{staging_id}/discover-documents", headers=admin
-        )
+        response = client.post(f"/api/v1/snapshots/{staging_id}/discover-documents", headers=admin)
         assert response.status_code == 202, response.text
         discovery = response.json()
         evidence["jobs"]["document_discovery"] = discovery["job_id"]
         discovered = wait_job(client, admin, discovery["job_id"], expected="succeeded")
-        evidence["stages"]["document_discovery_ms"] = round(
-            (time.monotonic() - started) * 1000
-        )
+        evidence["stages"]["document_discovery_ms"] = round((time.monotonic() - started) * 1000)
         candidates = candidate_count(client, admin, category_id, staging_id)
         ws = workspace(client, admin, category_id, staging_id)
         check(
@@ -292,9 +298,7 @@ def main():
         compose("restart", timeout=900)
         compose("up", "-d", "--wait", "--wait-timeout", "240")
         after_ws = workspace(client, admin, category_id, staging_id)
-        after_job = client.get(
-            f"/api/v1/jobs/{discovery['job_id']}", headers=admin
-        ).json()
+        after_job = client.get(f"/api/v1/jobs/{discovery['job_id']}", headers=admin).json()
         after_candidates = candidate_count(client, admin, category_id, staging_id)
         after = {
             "documents": len(after_ws["documents"]),
@@ -332,7 +336,9 @@ def main():
             f"error={second['error_code']} attempt={second['attempt']}",
         )
         rejected = client.post(f"/api/v1/jobs/{accepted['job_id']}/retry", headers=admin)
-        check("successful_job_retry_rejected", rejected.status_code == 409, str(rejected.status_code))
+        check(
+            "successful_job_retry_rejected", rejected.status_code == 409, str(rejected.status_code)
+        )
 
         # 8. 授权边界与管理员页面可用性。
         check(
@@ -346,7 +352,11 @@ def main():
             "403",
         )
         ui = httpx.get(f"http://127.0.0.1:{env.get('P31B_UI_PORT', '18180')}/", timeout=10)
-        check("admin_ui_served", ui.status_code == 200 and b"<div id=\"root\"" in ui.content, str(ui.status_code))
+        check(
+            "admin_ui_served",
+            ui.status_code == 200 and b'<div id="root"' in ui.content,
+            str(ui.status_code),
+        )
 
         evidence["result"] = "PASS" if not failures else "FAIL"
         evidence["failed_checks"] = failures

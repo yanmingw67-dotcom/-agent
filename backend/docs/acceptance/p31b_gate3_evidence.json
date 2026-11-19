@@ -1,0 +1,110 @@
+{
+  "gate": "P3.1-B Gate 3",
+  "mode": "REAL_TENDER_STRUCTURAL_ONLY",
+  "build_commit": "6b8772b",
+  "result": "BLOCKED",
+  "checks": {
+    "real_tender_hash": {
+      "result": "PASS",
+      "detail": "94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c"
+    },
+    "extraction_terminal": {
+      "result": "PASS",
+      "detail": "succeeded"
+    },
+    "extraction_hash": {
+      "result": "PASS",
+      "detail": "94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c"
+    },
+    "top_level_parameters": {
+      "result": "PASS",
+      "detail": "15"
+    },
+    "coverage_complete": {
+      "result": "PASS",
+      "detail": "complete"
+    },
+    "atomic_requirements": {
+      "result": "PASS",
+      "detail": "200"
+    },
+    "numbered_subclauses": {
+      "result": "PASS",
+      "detail": "46"
+    },
+    "atomic_rows": {
+      "result": "PASS",
+      "detail": "200"
+    },
+    "blank_thresholds_preserved": {
+      "result": "PASS",
+      "detail": "{\"10\": {\"count\": 4, \"units\": [\"Gbps\", \"万\"], \"all_threshold_none\": true}, \"14\": {\"count\": 2, \"units\": [\"%\"], \"all_threshold_none\": true}, \"15\": {\"count\": 2, \"units\": [\"GB\", \"vCPU\"], \"all_threshold_none\": true}}"
+    },
+    "evaluation_requires_publication": {
+      "result": "PASS",
+      "detail": "409 KNOWLEDGE_NOT_PUBLISHED"
+    }
+  },
+  "limitations": [
+    "未完成 Gate 2 真实知识发布，评估入口必须拒绝。",
+    "本次没有产生真实产品的 All/Some/None 符合性结论。",
+    "不得把本文件的参数提取结果表述为生产泛化准确率。"
+  ],
+  "tender_file": {
+    "filename": "1-WAF招标技术参数表.docx",
+    "size": 43817,
+    "sha256": "94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c"
+  },
+  "job_id": "ff5dc2ff-c962-45f6-aa1c-cde95f3f4cc3",
+  "job": {
+    "status": "succeeded",
+    "input_type": "docx",
+    "original_filename": "1-WAF招标技术参数表.docx",
+    "original_file_hash": "94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c",
+    "extracted_count": 15,
+    "skipped_count": 33,
+    "ambiguous_count": 0,
+    "coverage_status": "complete",
+    "coverage_incomplete": false,
+    "error_code": null,
+    "metrics": {
+      "elapsed_ms": 214,
+      "requirements": 200,
+      "regions": 31
+    }
+  },
+  "blank_thresholds": {
+    "10": {
+      "count": 4,
+      "units": [
+        "Gbps",
+        "万"
+      ],
+      "all_threshold_none": true
+    },
+    "14": {
+      "count": 2,
+      "units": [
+        "%"
+      ],
+      "all_threshold_none": true
+    },
+    "15": {
+      "count": 2,
+      "units": [
+        "GB",
+        "vCPU"
+      ],
+      "all_threshold_none": true
+    }
+  },
+  "evaluation_attempt": {
+    "status_code": 409,
+    "error_code": "KNOWLEDGE_NOT_PUBLISHED",
+    "message": "没有通过P1.4审核的当前生效知识库"
+  },
+  "blockers": [
+    "当前品类没有真实发布知识库，评估按设计返回 KNOWLEDGE_NOT_PUBLISHED。",
+    "Gate 2 未完成，不能生成真实产品符合性结论或 Word/Excel 评估导出。"
+  ]
+}

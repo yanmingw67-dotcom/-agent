@@ -1,0 +1,57 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 750B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 124B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#4 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.55MB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#7 CACHED
+
+#8 [4/9] WORKDIR /app
+#8 CACHED
+
+#9 [5/9] COPY pyproject.toml uv.lock ./
+#9 CACHED
+
+#10 [6/9] RUN uv sync --frozen --no-dev
+#10 CACHED
+
+#11 [7/9] COPY --chown=app:app app ./app
+#11 DONE 0.1s
+
+#12 [8/9] COPY --chown=app:app alembic.ini ./
+#12 DONE 0.0s
+
+#13 [9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+#13 DONE 0.2s
+
+#14 exporting to image
+#14 exporting layers 0.1s done
+#14 exporting manifest sha256:df9384fb55412f9b69aa0c68041f3425891f80a5aa9daec16150506ad9b9a6de done
+#14 exporting config sha256:ed0214b65dee76bef4b533b29827a476580fe8186d364b87c602d7816339638e 0.0s done
+#14 exporting attestation manifest sha256:4015810e6ce182c7b42c068ce45ccdebc07bfc112def8fc738b42f8a71254e97 0.0s done
+#14 exporting manifest list sha256:d25075626ccf1bd6135961de04d699d1e4338ca53265e544f235da6597af7616 done
+#14 naming to docker.io/library/product-knowledge:p31b-9f84bca done
+#14 unpacking to docker.io/library/product-knowledge:p31b-9f84bca 0.1s done
+#14 DONE 0.3s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/7gbfps4108qp5glbbossh6h9w
+BUILD_EXIT=0

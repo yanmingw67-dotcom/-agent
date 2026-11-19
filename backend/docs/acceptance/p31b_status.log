@@ -1,0 +1,33 @@
+已存在 .env.p31b，未覆盖
+== Compose 服务 ==
+api          state=running    health=healthy
+builder      state=running    health=healthy
+frontend     state=running    health=healthy
+indexer      state=running    health=healthy
+postgres     state=running    health=healthy
+redis        state=running    health=healthy
+retrieval    state=running    health=healthy
+taskworker   state=running    health=healthy
+worker       state=running    health=healthy
+== HTTP 健康 ==
+api_live           200
+api_ready          200
+retrieval_ready    200
+frontend           200
+== 数据库迁移 ==
+alembic_head=0012 database_version=0012
+== 容器存储路径 ==
+api          {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+worker       {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+indexer      {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+builder      {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+retrieval    {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+taskworker   {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
+== worker 心跳 ==
+worker       age_seconds=1.7
+indexer      age_seconds=0.6
+builder      age_seconds=1.2
+taskworker   age_seconds=4.1
+== 汇总 ==
+checks=17 failed=0
+P31B_ENV_STATUS=PASS
