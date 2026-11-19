@@ -1,0 +1,24 @@
+D04 修复前证据（实际运行 app.tender.rules.extract）
+CASE cpu_mem candidates 1 coverage complete
+  atoms 2 tree AND
+    '软件版单实例资源占用不高于 ______vCPU / ______GB 内存（按规格填写）' threshold= None unit= vCPU ambiguity= blank_threshold span= {'start': 2, 'end': 47}
+    '支持横向弹性扩容' threshold= None unit= None ambiguity= None span= {'start': 48, 'end': 56}
+CASE three_blank candidates 1 coverage complete
+  atoms 3 tree AND
+    'CPU 占用不超过 ______vCPU' threshold= None unit= vCPU ambiguity= blank_threshold span= {'start': 2, 'end': 22}
+    '内存占用不超过 ______GB' threshold= None unit= GB ambiguity= blank_threshold span= {'start': 23, 'end': 39}
+    '磁盘占用不超过 ______TB' threshold= None unit= TB ambiguity= blank_threshold span= {'start': 40, 'end': 56}
+CASE mixed candidates 1 coverage complete
+  atoms 2 tree AND
+    '网络层吞吐不低于 10Gbps' threshold= 10 unit= Gbps ambiguity= None span= {'start': 2, 'end': 17}
+    '应用层时延不超过 ______ms' threshold= None unit= ms ambiguity= blank_threshold span= {'start': 18, 'end': 35}
+CASE same_unit candidates 1 coverage complete
+  atoms 2 tree AND
+    '误报率不高于 ______%' threshold= None unit= % ambiguity= blank_threshold span= {'start': 2, 'end': 16}
+    '漏报率不高于 ______%' threshold= None unit= % ambiguity= blank_threshold span= {'start': 17, 'end': 31}
+CASE two_bounds candidates 1 coverage complete
+  atoms 1 tree LEAF
+    '并发连接数不少于 10000 个且不超过 20000 个' threshold= 10000 unit= 个 ambiguity= None span= {'start': 2, 'end': 30}
+CASE paren candidates 1 coverage complete
+  atoms 1 tree LEAF
+    '支持容器化部署（CPU 占用不超过 ______vCPU，内存占用不超过 ______GB）' threshold= None unit= vCPU ambiguity= blank_threshold span= {'start': 2, 'end': 48}

@@ -14,6 +14,7 @@ from app.db.models import Category
 from app.db.tender_models import TenderExtractionJob, TenderParameter
 from app.db.workbench_models import EvaluationReview
 from app.evaluation.service import _parameter_payload, job_json
+from app.tender.service import effective_job_state
 from app.workbench.context import enrich_evidence, pinned_capabilities
 from app.workbench.reviews import (
     STATUS_LABELS,
@@ -41,16 +42,18 @@ def _extraction_summary(db: Session, job: EvaluationJob):
             TenderParameter.review_required.is_(True),
         )
     )
+    state = effective_job_state(extraction)
     return (
         {
             "extraction_job_id": extraction.id,
-            "status": extraction.status,
-            "coverage_status": extraction.coverage_status,
+            "status": state["status"],
+            "coverage_status": state["coverage_status"],
             "extracted_count": extraction.extracted_count,
             "skipped_count": extraction.skipped_count,
             "ambiguous_count": extraction.ambiguous_count,
             "review_required_count": review_required or 0,
-            "error_code": extraction.error_code,
+            "error_code": state["error_code"],
+            "error_message": state["error_message"],
         },
         review_required or 0,
     )
@@ -59,6 +62,14 @@ def _extraction_summary(db: Session, job: EvaluationJob):
 def _warnings(job: EvaluationJob, extraction: dict | None, review_required: int, failed: int):
     warnings = []
     if extraction:
+        if extraction["status"] == "failed":
+            warnings.append(
+                {
+                    "code": "EXTRACTION_FAILED",
+                    "message": extraction.get("error_message")
+                    or f"招标文件提取失败（{extraction.get('error_code') or '未知错误'}）。",
+                }
+            )
         if extraction["coverage_status"] != "complete":
             warnings.append(
                 {

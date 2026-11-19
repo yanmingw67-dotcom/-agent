@@ -264,6 +264,8 @@ export interface ExtractionJob {
   coverage: Record<string, unknown> | null
   metrics: Record<string, unknown> | null
   error_code: string | null
+  error_message?: string | null
+  state_warnings?: string[]
   review_required: boolean
   parameters: TenderParameter[]
   created_at: string | null

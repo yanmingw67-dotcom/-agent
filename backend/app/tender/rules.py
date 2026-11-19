@@ -6,6 +6,7 @@
 
 import re
 import uuid
+from collections import Counter
 from dataclasses import dataclass, field
 
 from app.tender.structure import ParsedDocument, Region
@@ -104,6 +105,9 @@ THRESHOLD = re.compile(
     r"(Gbps|Mbps|MB|GB|TB|QPS|TPS|ms|毫秒|秒|分钟|小时|天|个月|年|条|个|种|路|台|套|次|%|vCPU|核|万)?",
     re.I,
 )
+_UNIT = r"(Gbps|Mbps|MB|GB|TB|QPS|TPS|ms|毫秒|秒|分钟|小时|天|个月|年|条|个|种|路|台|套|次|%|vCPU|核|万)"
+BLANK_QUANTITY = re.compile(r"([_＿]{2,})\s*" + _UNIT, re.I)
+_QUANTITY_SEPARATOR = re.compile(r"\s*(?:/|／|、|，|,|；|;|且|并且|同时|以及)\s*")
 
 
 @dataclass
@@ -144,6 +148,8 @@ class ExtractionResult:
     skipped_count: int
     ambiguous_count: int
     coverage_status: str
+    failure_code: str | None = None
+    failure_reason: str | None = None
 
 
 def normalize(value: str) -> str:
@@ -255,11 +261,82 @@ def _conditions(text):
 def _threshold(text):
     match = THRESHOLD.search(text)
     if not match:
+        blank = BLANK_QUANTITY.search(text)
+        if blank:
+            return None, blank.group(2), "blank_threshold"
         return None, None, None
     operator, value, unit = match.groups()
     if not value or set(value) <= {"_", "＿"}:
         return None, unit, "blank_threshold"
     return value, unit, None
+
+
+def _quantities(text: str):
+    """返回文本中每个独立数值约束（含无运算符的第二个空白阈值）。"""
+    found = []
+    for match in THRESHOLD.finditer(text):
+        operator, value, unit = match.groups()
+        if not value and not unit:
+            continue
+        found.append({"start": match.start(), "end": match.end(), "operator": operator or None})
+    for match in BLANK_QUANTITY.finditer(text):
+        if any(match.start() < item["end"] and match.end() > item["start"] for item in found):
+            continue
+        found.append({"start": match.start(), "end": match.end(), "operator": None})
+    found.sort(key=lambda item: (item["start"], item["end"]))
+    return found
+
+
+def _trim_quantified_segment(value: str, start: int, end: int):
+    """去掉片段边缘空白、标点和片段内不成对的括号，保持连续原文。"""
+    while start < end and value[start] in _TRIM:
+        start += 1
+    while end > start and value[end - 1] in _TRIM:
+        end -= 1
+    while end > start and value[end - 1] in ")）":
+        fragment = value[start:end]
+        if fragment.count(")") + fragment.count("）") <= fragment.count("(") + fragment.count("（"):
+            break
+        end -= 1
+        while end > start and value[end - 1] in _TRIM:
+            end -= 1
+    while start < end and value[start] in "(（":
+        fragment = value[start:end]
+        if fragment.count("(") + fragment.count("（") <= fragment.count(")") + fragment.count("）"):
+            break
+        start += 1
+        while start < end and value[start] in _TRIM:
+            start += 1
+    return value[start:end], start, end
+
+
+def _quantified_parts(value: str):
+    """把一条原子要求中的多个量化约束拆成 AND 子叶；不可安全拆分时返回 None。"""
+    quantities = _quantities(value)
+    if len(quantities) < 2:
+        return None
+    cuts = []
+    for previous, following in zip(quantities, quantities[1:], strict=False):
+        separator = None
+        for match in _QUANTITY_SEPARATOR.finditer(value, previous["end"], following["start"]):
+            separator = match
+        if separator is None:
+            return None
+        cuts.append((separator.start(), separator.end()))
+    parts = []
+    cursor = 0
+    last_operator = None
+    for index, quantity in enumerate(quantities):
+        end = cuts[index][0] if index < len(cuts) else len(value)
+        segment, start, end = _trim_quantified_segment(value, cursor, end)
+        if not segment:
+            return None
+        operator = quantity.get("operator") or last_operator
+        if quantity.get("operator"):
+            last_operator = quantity["operator"]
+        parts.append((segment, start, end, operator))
+        cursor = cuts[index][1] if index < len(cuts) else len(value)
+    return parts
 
 
 def _ordered_atoms(text: str, base: int = 0):
@@ -414,6 +491,7 @@ def _leaf_node(
     open_enum_mode: str = "uncertain",
     logic_ambiguity: str | None = None,
     minimum=None,
+    operator: str | None = None,
 ):
     raw_start = start
     value, local_start, local_end = _trim_span(value, 0, len(value))
@@ -422,7 +500,7 @@ def _leaf_node(
     start, end = raw_start + local_start, raw_start + local_end
     threshold, unit, threshold_ambiguity = _threshold(value)
     operator_match = THRESHOLD.search(value)
-    threshold_operator = operator_match.group(1) if operator_match else None
+    threshold_operator = operator_match.group(1) if operator_match else operator
     if minimum:
         threshold = minimum.group(1)
         unit = minimum.group(2)
@@ -510,6 +588,7 @@ def _parse_logic(
     open_enum: bool = False,
     open_enum_mode: str = "uncertain",
     relation: str = "AND",
+    inherited_operator: str | None = None,
 ):
     value, start, end = _trim_span(text, 0, len(text))
     if not value:
@@ -553,7 +632,12 @@ def _parse_logic(
     minimum = _MINIMUM.search(value)
     if minimum:
         before_minimum = value[: minimum.start()]
-        if not re.search(r"或者|或|并且|而且|以及|和|及|且|[；;，,]", before_minimum):
+        minimum_is_count = minimum.group(2) in {"种", "项", "路"} or bool(
+            re.search(r"支持|具备|提供|包含|覆盖", before_minimum)
+        )
+        if minimum_is_count and not re.search(
+            r"或者|或|并且|而且|以及|和|及|且|[；;，,]", before_minimum
+        ):
             return _leaf_node(
                 value,
                 base + start,
@@ -564,6 +648,7 @@ def _parse_logic(
                 open_enum=open_enum,
                 open_enum_mode=open_enum_mode,
                 minimum=minimum,
+                operator=inherited_operator,
             )
 
     prefix = _CAPABILITY_PREFIX.match(value)
@@ -577,6 +662,7 @@ def _parse_logic(
             open_enum=open_enum,
             open_enum_mode=open_enum_mode,
             relation=relation,
+            inherited_operator=inherited_operator,
         )
         if parsed and parsed["requirements"]:
             first = parsed["requirements"][0]
@@ -600,6 +686,7 @@ def _parse_logic(
                 open_enum=open_enum,
                 open_enum_mode=open_enum_mode,
                 relation="OR",
+                inherited_operator=inherited_operator,
             )
             for part, part_start, _ in or_parts
             if not (open_enum and _ENUM_QUALIFIER_ONLY.match(part[0].strip(" ，,。；;")))
@@ -622,6 +709,7 @@ def _parse_logic(
                 open_enum=open_enum,
                 open_enum_mode=open_enum_mode,
                 relation="AND",
+                inherited_operator=inherited_operator,
             )
             for part, part_start, _ in and_parts
             if not (open_enum and _ENUM_QUALIFIER_ONLY.match(part[0].strip(" ，,。；;")))
@@ -644,10 +732,38 @@ def _parse_logic(
             explicit=explicit,
             open_enum=open_enum,
             open_enum_mode=open_enum_mode,
+            inherited_operator=inherited_operator,
         )
         if parsed:
             parsed["node"]["source_span"] = {"start": base + start, "end": base + end}
             return parsed
+
+    quantified = _quantified_parts(value)
+    if quantified:
+        parts = []
+        for segment, segment_start, _segment_end, segment_operator in quantified:
+            parts.append(
+                _parse_logic(
+                    segment,
+                    base + start + segment_start,
+                    group_id,
+                    explicit=explicit,
+                    open_enum=open_enum,
+                    open_enum_mode=open_enum_mode,
+                    relation=relation,
+                    inherited_operator=segment_operator,
+                )
+            )
+        if all(parts):
+            return _compose(
+                parts,
+                # 同一条原子要求内的多个量化约束是并列的硬条件，不能因外层是 OR
+                # 就把它们降级为“任一满足”。每个片段内部的 OR 仍由递归解析处理。
+                "AND",
+                base + start,
+                base + end,
+                group_id,
+            )
 
     return _leaf_node(
         value,
@@ -658,6 +774,7 @@ def _parse_logic(
         explicit=explicit,
         open_enum=open_enum,
         open_enum_mode=open_enum_mode,
+        operator=inherited_operator,
     )
 
 
@@ -1129,7 +1246,28 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
     skipped = sum(1 for item in coverage if item.disposition == "filtered")
     ambiguous = sum(1 for item in coverage if item.disposition == "ambiguous")
     gaps = [item for item in coverage if item.disposition == "parse_gap"]
-    complete = not gaps and ambiguous == 0
+    complete = bool(candidates) and not gaps and ambiguous == 0
+    filtered_reasons = Counter(
+        item.reason_code or "UNKNOWN" for item in coverage if item.disposition == "filtered"
+    )
+    ambiguous_reasons = Counter(
+        item.reason_code or "UNKNOWN" for item in coverage if item.disposition == "ambiguous"
+    )
+    failure_code = None
+    failure_reason = None
+    if not candidates:
+        failure_code = "NO_TECHNICAL_PARAMETERS"
+        filtered_detail = (
+            "、".join(f"{code}={count}" for code, count in sorted(filtered_reasons.items())) or "无"
+        )
+        ambiguous_detail = (
+            "、".join(f"{code}={count}" for code, count in sorted(ambiguous_reasons.items()))
+            or "无"
+        )
+        failure_reason = (
+            f"未生成有效顶层技术参数：过滤 {skipped} 个区域（{filtered_detail}），"
+            f"歧义 {ambiguous} 个区域（{ambiguous_detail}），解析缺口 {len(gaps)} 处"
+        )
     details = {
         "source_type": parsed.source_type,
         "details": parsed.details,
@@ -1139,6 +1277,10 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
         "ambiguous": ambiguous,
         "parse_gaps": len(gaps),
         "coverage_status": "complete" if complete else "incomplete",
+        "filtered_reason_counts": dict(sorted(filtered_reasons.items())),
+        "ambiguous_reason_counts": dict(sorted(ambiguous_reasons.items())),
+        "failure_code": failure_code,
+        "failure_reason": failure_reason,
     }
     return ExtractionResult(
         candidates=candidates,
@@ -1148,4 +1290,6 @@ def extract(parsed: ParsedDocument, *, max_parameters: int = 1000) -> Extraction
         skipped_count=skipped,
         ambiguous_count=ambiguous,
         coverage_status="complete" if complete else "incomplete",
+        failure_code=failure_code,
+        failure_reason=failure_reason,
     )

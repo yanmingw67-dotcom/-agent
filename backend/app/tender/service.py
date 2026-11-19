@@ -43,6 +43,67 @@ MIMES = {
 }
 TERMINAL = {"succeeded", "partial", "failed", "cancelled"}
 
+_FAILURE_REASONS = {
+    "FILE_NOT_FOUND": "招标文件不存在或已被清理，请重新上传",
+    "TEXT_LIMIT": "招标文件正文超过处理限额，请拆分后重新上传",
+    "UNSAFE_OFFICE_CONTENT": "Office 文档包含不安全内容，已失败关闭",
+    "INVALID_OFFICE_CONTAINER": "Office 文档结构无法解析，请确认文件未损坏",
+    "UNSAFE_PDF_CONTENT": "PDF 文档包含不安全内容，已失败关闭",
+    "INVALID_PDF": "PDF 文档无法解析，请确认文件未损坏",
+    "PAGE_LIMIT": "PDF 页数超过处理限额，请拆分后重新上传",
+    "SHEET_COUNT_LIMIT": "Excel 工作表数量超过处理限额，请拆分后重新上传",
+    "SHEET_ROW_LIMIT": "Excel 行数超过处理限额，请拆分后重新上传",
+    "SHEET_COLUMN_LIMIT": "Excel 列数超过处理限额，请拆分后重新上传",
+    "UNSUPPORTED_DOCUMENT": "文件格式不在招标文件解析范围内",
+    "NO_TECHNICAL_PARAMETERS": "未生成有效顶层技术参数，任务按失败关闭",
+    "TENDER_INTERNAL_ERROR": "提取过程中发生未处理异常，任务已失败关闭",
+}
+
+
+def failure_reason(code: str | None) -> str | None:
+    if not code:
+        return None
+    return _FAILURE_REASONS.get(code, f"提取任务失败：{code}")
+
+
+def effective_job_state(job: TenderExtractionJob):
+    """统一历史与新任务的失败/覆盖状态，避免 failed + complete 出现在 API。"""
+    status = job.status
+    coverage_status = job.coverage_status or "incomplete"
+    error_code = job.error_code
+    warnings = []
+    if status == "failed" and coverage_status == "complete":
+        coverage_status = "incomplete"
+        warnings.append("FAILED_JOB_COVERAGE_COMPLETE")
+    if status == "succeeded" and int(job.extracted_count or 0) <= 0:
+        status = "failed"
+        coverage_status = "incomplete"
+        error_code = error_code or "NO_TECHNICAL_PARAMETERS"
+        warnings.append("SUCCEEDED_WITHOUT_PARAMETERS")
+    if status == "succeeded" and coverage_status != "complete":
+        status = "partial"
+        warnings.append("SUCCEEDED_WITH_INCOMPLETE_COVERAGE")
+    if status == "failed":
+        coverage_status = "incomplete"
+        error_code = error_code or "NO_TECHNICAL_PARAMETERS"
+    coverage = dict(job.coverage_json or {})
+    previous_coverage = coverage.get("coverage_status")
+    if previous_coverage != coverage_status:
+        if previous_coverage is not None:
+            coverage.setdefault("original_coverage_status", previous_coverage)
+        coverage["coverage_status"] = coverage_status
+    if status == "failed":
+        coverage.setdefault("failure_code", error_code)
+        coverage.setdefault("failure_reason", failure_reason(error_code))
+    return {
+        "status": status,
+        "coverage_status": coverage_status,
+        "coverage": coverage,
+        "error_code": error_code,
+        "error_message": failure_reason(error_code),
+        "state_warnings": warnings,
+    }
+
 
 def validate_filename(upload: UploadFile, settings: Settings):
     filename = upload.filename or ""
@@ -253,7 +314,12 @@ def _mark_failed(job_id: str, code: str):
         job.status = "failed"
         job.error_code = code[:64]
         job.coverage_status = "incomplete"
-        job.coverage_json = {"coverage_status": "incomplete", "error_code": code[:64]}
+        job.coverage_json = {
+            "coverage_status": "incomplete",
+            "error_code": code[:64],
+            "failure_code": code[:64],
+            "failure_reason": failure_reason(code[:64]),
+        }
         job.finished_at = now()
 
 
@@ -327,20 +393,34 @@ def _replace_results(db: Session, job: TenderExtractionJob, result, elapsed_ms: 
     job.extracted_count = len(result.candidates)
     job.skipped_count = result.skipped_count
     job.ambiguous_count = result.ambiguous_count
-    job.coverage_status = result.coverage_status
-    job.coverage_json = result.details
+    coverage_status = result.coverage_status
+    coverage_json = dict(result.details)
+    error_code = None
+    if not result.candidates:
+        coverage_status = "incomplete"
+        error_code = getattr(result, "failure_code", None) or "NO_TECHNICAL_PARAMETERS"
+        coverage_json.update(
+            {
+                "coverage_status": "incomplete",
+                "failure_code": error_code,
+                "failure_reason": getattr(result, "failure_reason", None)
+                or failure_reason(error_code),
+            }
+        )
+    job.coverage_status = coverage_status
+    job.coverage_json = coverage_json
     job.metrics_json = {
         "elapsed_ms": elapsed_ms,
         "requirements": requirement_count,
         "regions": result.details.get("regions", 0),
     }
-    if result.candidates and result.coverage_status == "complete":
+    if result.candidates and coverage_status == "complete":
         job.status = "succeeded"
-    elif result.coverage_status == "incomplete":
+    elif result.candidates:
         job.status = "partial"
     else:
         job.status = "failed"
-        job.error_code = "NO_TECHNICAL_PARAMETERS"
+        job.error_code = error_code
     job.finished_at = now()
 
 
@@ -453,9 +533,10 @@ def job_json(db: Session, job: TenderExtractionJob, *, include_parameters: bool 
             .order_by(TenderParameter.order_index)
         ).all()
         parameters = [parameter_json(parameter) for parameter in rows]
+    state = effective_job_state(job)
     return {
         "job_id": job.id,
-        "status": job.status,
+        "status": state["status"],
         "input_type": job.input_type,
         "category_id": job.category_id,
         "original_filename": job.original_filename,
@@ -463,13 +544,16 @@ def job_json(db: Session, job: TenderExtractionJob, *, include_parameters: bool 
         "extracted_count": job.extracted_count,
         "skipped_count": job.skipped_count,
         "ambiguous_count": job.ambiguous_count,
-        "coverage_status": job.coverage_status,
-        "coverage_incomplete": job.coverage_status != "complete",
-        "coverage": job.coverage_json,
+        "coverage_status": state["coverage_status"],
+        "coverage_incomplete": state["coverage_status"] != "complete",
+        "coverage": state["coverage"],
         "metrics": job.metrics_json,
-        "error_code": job.error_code,
+        "error_code": state["error_code"],
+        "error_message": state["error_message"],
+        "state_warnings": state["state_warnings"],
         "review_required": (
-            job.coverage_status != "complete"
+            state["coverage_status"] != "complete"
+            or state["status"] == "failed"
             or any(parameter["review_required"] for parameter in parameters)
         ),
         "parameters": parameters,
@@ -968,6 +1052,13 @@ def retry_job(db: Session, job_id: str, principal_id: str):
     job.started_at = None
     job.finished_at = None
     job.error_code = None
+    previous_attempt = (job.coverage_json or {}).get("attempt")
+    job.coverage_status = "incomplete"
+    job.coverage_json = {
+        "coverage_status": "incomplete",
+        "retry_pending": True,
+        "previous_attempt": previous_attempt or job.attempt - 1,
+    }
     db.commit()
     return job
 

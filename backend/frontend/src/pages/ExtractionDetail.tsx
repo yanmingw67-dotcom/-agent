@@ -13,6 +13,10 @@ type DialogState = {
   mergeIds?: string[]
 }
 
+function stringValue(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
 export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
   useDocumentTitle('确认提取结果')
   const [job, setJob] = useState<ExtractionJob | null>(null)
@@ -67,7 +71,7 @@ export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
   }
 
   async function startEvaluation() {
-    if (!job || !checked) return
+    if (!job || !checked || !canEvaluate) return
     setStarting(true)
     setNotice('')
     try {
@@ -122,6 +126,8 @@ export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
   const reviewRequired = job.parameters.filter((item) => item.review_required).length
   const corrected = job.parameters.filter((item) => item.status === 'corrected').length
   const mergeParameters = job.parameters.filter((item) => selected.includes(item.id))
+  const failureReason = job.error_message || stringValue(job.coverage?.failure_reason)
+  const canEvaluate = !working && job.status !== 'failed' && job.parameters.length > 0
 
   return (
     <div className="page page-wide">
@@ -152,7 +158,8 @@ export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
       )}
       {job.status === 'failed' && (
         <Alert tone="danger" title="提取失败">
-          错误码 {job.error_code || '未知'}。请检查文件格式与内容后重新提交。
+          {failureReason || '提取任务已失败关闭，没有可评估的有效参数。'}
+          （错误码 {job.error_code || '未知'}）请检查文件格式与内容后重新提交。
         </Alert>
       )}
       {job.coverage_incomplete && (
@@ -339,7 +346,7 @@ export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
               type="checkbox"
               checked={checked}
               onChange={(event) => setChecked(event.target.checked)}
-              disabled={working || job.status === 'failed'}
+              disabled={!canEvaluate}
             />
             <span>我已核对提取参数与原子要求（含人工修正），确认启动评估</span>
           </label>
@@ -347,7 +354,7 @@ export function ExtractionDetail({ api, id }: { api: ApiClient; id: string }) {
         <button
           type="button"
           className="button button-primary"
-          disabled={!checked || starting || working || job.status === 'failed'}
+          disabled={!checked || starting || !canEvaluate}
           onClick={() => void startEvaluation()}
         >
           {starting ? <Spinner label="正在启动…" /> : '确认提取并启动评估'}

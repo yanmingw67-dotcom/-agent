@@ -207,6 +207,12 @@ def create_job(
         raise AppError(409, "EVALUATION_EXTRACTION_NOT_READY", "招标提取任务尚未完成")
     if extraction.status == "failed":
         raise AppError(409, "EVALUATION_EXTRACTION_FAILED", "失败的提取任务不能评估")
+    if int(extraction.extracted_count or 0) <= 0:
+        raise AppError(
+            409,
+            "EVALUATION_NO_VALID_PARAMETERS",
+            "提取任务没有有效顶层参数，不能进入评估",
+        )
     settings = get_settings()
     active = (
         db.scalar(
