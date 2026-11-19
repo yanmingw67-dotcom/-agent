@@ -1,0 +1,258 @@
+# P3.1-A 管理员 API 验收（令牌已脱敏，仅保存响应）
+
+$ GET /api/v1/auth/me
+{
+    "user_id": "admin",
+    "role": "admin",
+    "source": "admin_token",
+    "is_admin": true,
+    "auth_mode": "static_token",
+    "sso_ready": false
+}
+
+$ GET /api/v1/admin/overview
+{
+  "summary": {
+    "category_count": 1,
+    "ready_category_count": 1,
+    "pending_review_count": 6,
+    "failed_job_count": 1,
+    "unpublished_snapshot_count": 1,
+    "publication_count": 1
+  },
+  "limits": {
+    "document_types": [
+      ".docx",
+      ".pdf",
+      ".xlsx"
+    ],
+    "document_only_build_supported": false,
+    "document_only_note": "当前建库必须先有已索引受控源码；系统不会伪造源码快照。"
+  },
+  "model_authorization": {
+    "server_side_authorization_required": true,
+    "frontend_can_override": false,
+    "builder": {
+      "model_configured": true,
+      "allow_synthetic": true,
+      "allow_enterprise": false,
+      "document_discovery_mode": "structural",
+      "status": "NOT_INVOKED"
+    },
+    "tender": {
+      "model_mode": "structural",
+      "queue_enabled": false
+    },
+    "evaluation": {
+      "model_mode": "structural",
+      "queue_enabled": false
+    }
+  },
+  "categories": [
+    {
+      "code": "waf_p31",
+      "knowledge_ready": true,
+      "active_publication_id": "7799e029-8a98-4fdb-bb0b-0ac3d5a2346a",
+      "published_capability_count": 1
+    }
+  ]
+}
+
+$ GET /api/v1/admin/categories/7a0ac606-...
+{
+  "working_snapshot": {
+    "id": "2184500a-1059-4830-845f-facb8f819ec2",
+    "category_id": "7a0ac606-ff5a-42cc-a824-d45aa1044467",
+    "status": "published",
+    "index_status": "indexed",
+    "source_sha256": "57b872898a7e3b06b6911786595b78b8e48c339080c51f05162a7db35644e67c",
+    "derived_from_snapshot_id": "929e11e9-7ca4-4625-8c6a-e445135a4ad2",
+    "derivation_type": "document_update",
+    "data_classification": "enterprise",
+    "created_at": "2026-11-19T15:12:18.986032+00:00"
+  },
+  "documents": [
+    {
+      "id": "5bb1b972-5075-4ea0-aa41-99c3a1e4721e",
+      "snapshot_id": "2184500a-1059-4830-845f-facb8f819ec2",
+      "category_id": "7a0ac606-ff5a-42cc-a824-d45aa1044467",
+      "filename": "p31a_manual_v1.docx",
+      "sha256": "97836f5481ccd7a292795b0b8e4d0c615c6009012e348aa16824e3f20a1db67b",
+      "size": 37516,
+      "parse_status": "parsed",
+      "error_code": null,
+      "parser_version": "p12-2",
+      "parse_details": {},
+      "origin": {},
+      "segment_count": 39
+    }
+  ],
+  "review": {
+    "total": 7,
+    "accepted": 1,
+    "unreviewed": 6,
+    "rejected": 0,
+    "returned": 0,
+    "modified": 0,
+    "merged": 0,
+    "pending": 6
+  },
+  "active_publication": {
+    "publication_id": "7799e029-8a98-4fdb-bb0b-0ac3d5a2346a",
+    "snapshot_id": "2184500a-1059-4830-845f-facb8f819ec2",
+    "payload_hash": "488081a30416b1aaaceb956c206c795e1b2b8a82579ca1f53ce3c3ab2207fa0e",
+    "capability_count": 1,
+    "published_at": "2026-11-19T15:17:03.926008+00:00",
+    "published_by": "admin"
+  },
+  "capabilities": {
+    "can_derive_documents": true,
+    "source_required": true,
+    "derive_blocker": null
+  },
+  "document_discovery": {
+    "run_id": "4c4b9b79-8d83-484a-80aa-98c69e62915d",
+    "status": "succeeded",
+    "mode": "structural",
+    "error_code": null,
+    "metrics": {
+      "documents_total": 1,
+      "documents_considered": 1,
+      "units_total": 15,
+      "units_eligible": 7,
+      "units_skipped": 8,
+      "duplicates_suppressed": 0,
+      "candidates": 7,
+      "budget": {
+        "max_documents": 20,
+        "max_units": 240,
+        "max_candidates": 40
+      },
+      "documents": [
+        {
+          "document_id": "5bb1b972-5075-4ea0-aa41-99c3a1e4721e",
+          "filename": "p31a_manual_v1.docx",
+          "parse_status": "parsed",
+          "units": 15,
+          "eligible_units": 7,
+          "gaps": []
+        }
+      ],
+      "model_mode": "NOT_USED",
+      "evidence": 27,
+      "existing": 0,
+      "conflicts": 1,
+      "mode": "structural",
+      "truncated": false
+    }
+  }
+}
+
+$ GET /api/v1/admin/snapshots/2184500a-.../review-queue
+{
+  "summary": {
+    "total": 7,
+    "accepted": 1,
+    "unreviewed": 6,
+    "rejected": 0,
+    "returned": 0,
+    "modified": 0,
+    "merged": 0,
+    "pending": 6
+  },
+  "accepted_revision_ids": [
+    "d208d3a1-e041-4301-b12e-79b6fb9c2d35"
+  ],
+  "items": [
+    {
+      "claim_id": "claim-doc-18f1f25f83779d724850e2d44174",
+      "name": "当前版本支持透明桥、透明代理、反向代理和旁路镜像四种部署接入模式。",
+      "decision": "accept",
+      "assertions_count": 7
+    },
+    {
+      "claim_id": "claim-doc-846f9ce5ae6c3228cb3aafd5e375",
+      "name": "多租户隔离",
+      "decision": null,
+      "assertions_count": null
+    },
+    {
+      "claim_id": "claim-doc-873ccd66aa7c5d5f59860dea7a96",
+      "name": "支持多租户策略隔离，租户间策略配置相互独立。",
+      "decision": null,
+      "assertions_count": null
+    },
+    {
+      "claim_id": "claim-doc-99bdc4b1f45b1c590abdcca21fed",
+      "name": "规则同步",
+      "decision": null,
+      "assertions_count": null
+    },
+    {
+      "claim_id": "claim-doc-c44d30861812aa81e890a778fa02",
+      "name": "高可用部署",
+      "decision": null,
+      "assertions_count": null
+    },
+    {
+      "claim_id": "claim-doc-cdff277ae8504ec69359d4964437",
+      "name": "多模式部署",
+      "decision": null,
+      "assertions_count": null
+    },
+    {
+      "claim_id": "claim-doc-f2afb92d3a5a1455a23ff4f664ae",
+      "name": "规则同步",
+      "decision": null,
+      "assertions_count": null
+    }
+  ]
+}
+
+$ GET /api/v1/admin/snapshots/2184500a-.../release-check
+{
+  "publishable": false,
+  "accepted_revision_ids": [
+    "d208d3a1-e041-4301-b12e-79b6fb9c2d35"
+  ],
+  "blocking": [
+    {
+      "claim_id": null,
+      "revision_id": null,
+      "errors": [
+        "NO_UNPUBLISHED_ACCEPTED_REVISION"
+      ]
+    }
+  ]
+}
+
+$ GET /api/v1/categories/7a0ac606-.../publications
+[
+    {
+        "publication_id": "7799e029-8a98-4fdb-bb0b-0ac3d5a2346a",
+        "previous_publication_id": null,
+        "action": "publish",
+        "actor": "admin",
+        "comment": "P3.1-A \u7ba1\u7406\u5458\u5de5\u4f5c\u53f0\u7aef\u5230\u7aef\u53d1\u5e03\uff1a\u4ec5\u5305\u542b 1 \u6761\u5df2\u4eba\u5de5\u63a5\u53d7\u4fee\u8ba2\uff0c\u4fdd\u7559\u8986\u76d6\u7f3a\u53e3\u3002"
+    },
+    {
+        "publication_id": "7799e029-8a98-4fdb-bb0b-0ac3d5a2346a",
+        "previous_publication_id": "7799e029-8a98-4fdb-bb0b-0ac3d5a2346a",
+        "action": "rollback",
+        "actor": "admin",
+        "comment": "P3.1-A \u6d4f\u89c8\u5668\u7aef\u56de\u6eda\u9a8c\u8bc1\uff1a\u76ee\u6807\u4e3a\u5f53\u524d\u53d1\u5e03\uff0c\u9a8c\u8bc1\u6307\u9488\u5207\u6362\u4e0e\u5ba1\u8ba1"
+    }
+]
+
+$ GET /api/v1/admin/audit?category_id=...&limit=50 (actions only)
+[
+  "publication.rollback",
+  "publication.publish",
+  "index.build",
+  "document.upload",
+  "documents.staging_snapshot.derived",
+  "index.build",
+  "index.build",
+  "source.upload",
+  "category.create"
+]

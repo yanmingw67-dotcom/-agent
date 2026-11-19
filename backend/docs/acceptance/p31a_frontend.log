@@ -1,0 +1,22 @@
+$ npm run typecheck
+
+> tender-parameter-workbench@0.1.0 typecheck
+> tsc -b --pretty false
+
+EXIT=0
+
+$ npm run build
+
+> tender-parameter-workbench@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.6 building for production...
+transforming...
+✓ 46 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:   0.33 kB
+dist/assets/index-DMZRJlxW.css   47.29 kB │ gzip:   9.05 kB
+dist/assets/index-BGj03iZd.js   370.55 kB │ gzip: 107.26 kB
+✓ built in 728ms
+EXIT=0

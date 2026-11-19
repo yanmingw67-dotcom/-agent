@@ -1,0 +1,70 @@
+# P3.1-A 浏览器端管理员工作台验收日志
+
+- 日期：2026-11-19
+- 前端：http://127.0.0.1:15173/（React 19 + TypeScript + Vite，开发服务器）
+- 后端：http://127.0.0.1:18080（验收容器 p31-acceptance-api）
+- 登录身份：admin（静态管理员令牌，浏览器 localStorage，不写入本日志）
+- 品类：waf_p31 / 7a0ac606-ff5a-42cc-a824-d45aa1044467（Web应用防火墙（WAF））
+- 合成源码快照：929e11e9-7ca4-4625-8c6a-e445135a4ad2
+- 文档暂存快照：2184500a-1059-4830-845f-facb8f819ec2
+- 发布：7799e029-8a98-4fdb-bb0b-0ac3d5a2346a
+- 截图：
+  - p31a_review_accepted.jpg：审核队列显示 7 个候选、已接受 1、断言 7
+  - p31a_published.jpg：发布前检查“已发布”，生效发布 7799e029、清单哈希 488081a3…
+  - p31a_audit.jpg：审计日志显示 publication.rollback、publication.publish、index.build、document.upload 等
+
+## 步骤与页面观察
+
+1. 管理员会话
+   - 打开管理员概览，页面显示“当前登录 …（管理员令牌已脱敏）”“评估边界：发布必须复用审核与发布服务，前端不能直接切换生效指针”。
+   - 概览接口返回 role=admin、is_admin=true、frontend_can_override=false、document_only_build_supported=false。
+
+2. 受控源码上传与索引
+   - 在工作区上传合成源码 ZIP（tests/fixtures/p13_autonomous/source.zip，9,928 字节），生成快照 929e11e9-7…。
+   - 首次 source_index 失败，错误码 INDEX_INTERNAL_ERROR；原因是验收容器的 SOURCE_ROOT=/p31data/sources 与实际 INGESTION_ROOT=/p31data/ingestion 不一致。验收环境修正为软链后再建索引成功（extracted/indexed）。
+   - 该问题属于验收容器配置，不是本轮代码回归；容器重建会丢失该软链。
+
+3. 文档暂存与上传
+   - 点击“派生文档暂存快照”，生成 2184500a-105…（document_update，复制 0 份文档，未修改已发布快照）。
+   - 由合成测试资料生成 p31a_manual_v1.docx（37,516 字节），通过页面上传。
+   - 上传返回 202，页面提示“文档已上传并进入解析队列”；解析完成后文档为 parsed、39 个分段。
+   - 说明：文档列表只在面板挂载时加载；本轮已补充“刷新文档”按钮，用户无需切换标签页即可更新解析状态。
+   - 后端仍允许 .md/.txt 作为内部文档类型；管理员前端只放行 DOCX/PDF/XLSX，本页面的文件选择器同样只接受这三类。
+
+4. 文档发现与审核
+   - 重建暂存快照索引成功（extracted/indexed）。
+   - 通过页面会话调用 POST /api/v1/snapshots/2184500a-…/discover-documents，mode=structural，run=4c4b9b79-8d83-484a-80aa-98c69e62915d，生成 7 个候选。
+   - 打开第一个候选“当前版本支持透明桥、透明代理、反向代理和旁路镜像四种部署接入模式。”：
+     - 逐字段填写/确认 name、action、target、business_goal、implementation_mechanism、supported_scope、limitations；
+     - 在 EvidenceFinder 中切换“技术文档段落”，检索“部署”，登记证据（文档段落，服务端重新读取并校验哈希）；
+     - 7 个字段均选择该文档证据、语义结论“证据支持”、填写人工核对说明，并勾选“已核对文档引文范围”；
+     - 可用性依据选择“文档明示”，勾选“产品范围内”与“已人工阅读全部证据与描述”；
+     - 填写审核意见。
+   - 点击“校验门槛”，页面显示“服务端门槛已通过，仍需人工确认后才能接受”；点击“接受并生成修订”成功。
+   - 审核队列变为：候选总数 7、已接受 1、待审核 6；该候选显示“已接受 修订 1 断言 7”。
+
+5. 发布前检查与发布
+   - 打开“发布与回滚”，服务端 release-check 返回可发布、已接受修订 1、阻断项 0。
+   - 勾选“我已核对覆盖缺口与发布范围…”，填写发布说明，点击“发布当前审核清单”，确认浏览器原生确认框。
+   - 发布成功：publication 7799e029-8a98-4fdb-bb0b-0ac3d5a2346a，payload_hash 488081a30416b1aaaceb956c206c795e1b2b8a82579ca1f53ce3c3ab2207fa0e。
+   - 再次检查：publishable=false，阻断项 NO_UNPUBLISHED_ACCEPTED_REVISION，已发布能力在清单中标记“已在清单”，前端不提供绕过按钮。
+
+6. 回滚与审计
+   - 当前只有一个发布记录，UI 按设计禁用“选为回滚目标”（不能选择当前生效发布）。
+   - 通过同一浏览器会话调用 POST /api/v1/categories/{id}/rollback，目标为当前发布，返回 200；发布切换审计为 action=rollback。
+   - 审计日志页可见（新到旧）：
+     - publication.rollback（publication_id 7799e029…）
+     - publication.publish（payload_hash 488081a3…）
+     - index.build（2184500a…）
+     - document.upload（5bb1b972-…）
+     - documents.staging_snapshot.derived（2184500a…，derived_from=929e11e9…，documents_copied=0）
+     - index.build（929e11e9…）
+     - source.upload（929e11e9…，sha256 57b87289…，upload_bytes 9928）
+   - 回滚不修改历史任务固定引用；本次仅切换生效指针并记录审计。
+
+## 边界与未覆盖事项
+
+- 未上传任何真实产品资料；所有文档与源码均为本轮合成测试资产。
+- 未调用外部模型：文档发现为 structural 模式，候选仍须人工逐字段审核后才能发布。
+- “仅有正式技术文档、没有源码”的品类当前不能建库；系统不会伪造源码快照，该限制由概览接口 limits.document_only_build_supported=false 明确返回。
+- 本轮未进入 P3.2/P3.3，也未验证真实 WAF 产品能力。

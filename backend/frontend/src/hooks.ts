@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-export type Route = { name: string; id?: string }
+export type Route = { name: string; id?: string; tab?: string }
 
 export function parseRoute(hash: string): Route {
   const path = hash.replace(/^#/, '') || '/tasks'
@@ -11,6 +11,13 @@ export function parseRoute(hash: string): Route {
   if (parts[0] === 'results' && parts[1]) return { name: 'result', id: parts[1] }
   if (parts[0] === 'extractions' && parts[1]) return { name: 'extraction', id: parts[1] }
   if (parts[0] === 'evaluations' && parts[1]) return { name: 'evaluation', id: parts[1] }
+  if (parts[0] === 'admin') {
+    if (parts[1] === 'categories' && parts[2]) {
+      return { name: 'admin-category', id: parts[2], tab: parts[3] }
+    }
+    if (parts[1] === 'categories') return { name: 'admin-categories' }
+    return { name: 'admin' }
+  }
   return { name: 'tasks' }
 }
 

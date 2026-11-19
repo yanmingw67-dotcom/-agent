@@ -312,3 +312,276 @@ export interface ReviewPayload {
   adjust_reason?: string
   requires_reevaluation?: boolean
 }
+
+export interface Identity {
+  user_id: string
+  role: 'admin' | 'reader' | 'principal' | string
+  source: string
+  is_admin: boolean
+  auth_mode: string
+  sso_ready: boolean
+}
+
+export interface AdminSnapshot {
+  id: string
+  category_id: string
+  status: string
+  index_status: string
+  source_sha256: string | null
+  derived_from_snapshot_id: string | null
+  derivation_type: string | null
+  data_classification: string | null
+  created_at: string | null
+}
+
+export interface AdminJob {
+  id: string
+  category_id: string
+  category_name: string | null
+  snapshot_id: string | null
+  job_type: string
+  stage: string
+  status: TaskStatus | string
+  error_code: string | null
+  attempt: number
+  metrics: Record<string, unknown>
+  created_at: string | null
+  started_at: string | null
+  finished_at: string | null
+}
+
+export interface AdminDocument {
+  id: string
+  snapshot_id: string
+  category_id: string
+  filename: string
+  sha256: string
+  size: number
+  parse_status: string
+  error_code: string | null
+  parser_version: string | null
+  parse_details: Record<string, unknown>
+  origin: Record<string, unknown>
+  segment_count: number
+}
+
+export interface AdminReviewSummary {
+  total: number
+  accepted: number
+  unreviewed: number
+  rejected: number
+  returned: number
+  modified: number
+  merged: number
+  pending: number
+}
+
+export interface AdminCategoryOverview {
+  id: string
+  code: string
+  name: string
+  knowledge_ready: boolean
+  active_snapshot_id: string | null
+  active_publication_id: string | null
+  latest_snapshot: AdminSnapshot | null
+  latest_job: AdminJob | null
+  document_count: number
+  pending_review_count: number
+  published_capability_count: number
+  published_at: string | null
+  created_at: string | null
+}
+
+export interface AdminOverview {
+  summary: {
+    category_count: number
+    ready_category_count: number
+    pending_review_count: number
+    failed_job_count: number
+    unpublished_snapshot_count: number
+    publication_count: number
+  }
+  categories: AdminCategoryOverview[]
+  recent_jobs: AdminJob[]
+  recent_publications: Array<{
+    publication_id: string
+    category_id: string
+    category_name: string | null
+    snapshot_id: string
+    capability_count: number
+    published_by: string
+    created_at: string | null
+  }>
+  model_authorization: ModelAuthorization
+  limits: {
+    document_types: string[]
+    document_only_build_supported: boolean
+    document_only_note: string
+  }
+}
+
+export interface ModelAuthorization {
+  server_side_authorization_required: boolean
+  frontend_can_override: boolean
+  builder: {
+    model_configured: boolean
+    allow_synthetic: boolean
+    allow_enterprise: boolean
+    document_discovery_mode: string
+    status: string
+  }
+  tender: { model_mode: string; queue_enabled: boolean }
+  evaluation: { model_mode: string; queue_enabled: boolean }
+}
+
+export interface AdminWorkspace {
+  category: {
+    id: string
+    code: string
+    name: string
+    knowledge_ready: boolean
+    active_snapshot_id: string | null
+    active_publication_id: string | null
+  }
+  working_snapshot: AdminSnapshot | null
+  snapshots: AdminSnapshot[]
+  jobs: AdminJob[]
+  documents: AdminDocument[]
+  active_publication: {
+    publication_id: string
+    snapshot_id: string
+    payload_hash: string
+    capability_count: number
+    published_at: string | null
+    published_by: string
+  } | null
+  review: AdminReviewSummary
+  document_discovery: {
+    run_id: string
+    status: string
+    mode: string
+    error_code: string | null
+    metrics: Record<string, unknown>
+  } | null
+  model_authorization: ModelAuthorization
+  capabilities: {
+    can_derive_documents: boolean
+    source_required: boolean
+    derive_blocker: string | null
+  }
+}
+
+export interface AdminReviewClaim {
+  claim_id: string
+  name: string
+  status: string
+  origin: Record<string, unknown>
+  draft: ReviewedContent
+  latest_revision: {
+    id: string
+    number: number
+    decision: string
+    declaration_type: string
+    content: ReviewedContent
+    assertions_count: number
+    gate: { errors?: string[]; dependency_gaps?: Array<Record<string, unknown>> }
+    availability_basis: string | null
+    product_scope_confirmed: boolean
+    proof_kind: string | null
+  } | null
+}
+
+export interface ReviewedContent {
+  name: string
+  action: string
+  target: string
+  business_goal: string
+  implementation_mechanism: string
+  supported_scope: string[]
+  conditions: string[]
+  limitations: string[]
+  [key: string]: string | string[]
+}
+
+export interface AdminReviewQueue {
+  snapshot_id: string
+  snapshot: AdminSnapshot
+  summary: AdminReviewSummary
+  accepted_revision_ids: string[]
+  truncated: boolean
+  next_cursor: number | null
+  items: AdminReviewClaim[]
+}
+
+export interface AdminReleaseCheck {
+  snapshot_id: string
+  category_id: string
+  expected_active_publication_id: string | null
+  accepted_revision_ids: string[]
+  items: Array<{
+    claim_id: string
+    revision_id: string
+    name: string
+    decision: string
+    declaration_type: string
+    gate_errors: string[]
+    blockers: string[]
+    published: boolean
+  }>
+  blocking: Array<{
+    claim_id: string | null
+    revision_id: string | null
+    name?: string
+    errors: string[]
+  }>
+  publishable: boolean
+  coverage: Record<string, unknown>
+  coverage_acknowledgement_required: boolean
+  relations_available: boolean
+}
+
+export interface EvidenceReceipt {
+  evidence_id: string
+  snapshot_id: string
+  source_ref: Record<string, string>
+  locator: Record<string, string | number>
+  quote_hash: string
+  warnings: string[]
+}
+
+export interface RetrievalItem {
+  id: string | null
+  file_id: string | null
+  symbol_id: string | null
+  document_id: string | null
+  path: string | null
+  name: string | null
+  kind: string | null
+  sha256: string | null
+  start_line: number | null
+  end_line: number | null
+  snippet: string | null
+  locator: Record<string, string | number>
+  status: string | null
+}
+
+export interface RetrievalEnvelope {
+  snapshot_id: string
+  tool: string
+  results: RetrievalItem[]
+  truncated: boolean
+  coverage_incomplete: boolean
+  warnings: string[]
+}
+
+export interface ReviewAssertionPayload {
+  field: string
+  text: string
+  evidence_ids: string[]
+  semantic_decision: 'supported' | 'unverified' | 'contradicted'
+  rationale: string
+  dependencies: Array<{ file_id: string; symbol_id: string; evidence_ids: string[] }>
+  implementation_evidence_ids: string[]
+  proof_basis: 'source' | 'document' | 'mixed' | null
+  document_scope_confirmed: boolean
+}

@@ -1,10 +1,18 @@
 import type {
+  AdminCategoryOverview,
+  AdminJob,
+  AdminOverview,
+  AdminReleaseCheck,
+  AdminReviewQueue,
+  AdminWorkspace,
   Category,
   CorrectionRecord,
   EvaluationJob,
   ExportFormat,
   ExportJob,
   ExtractionJob,
+  Identity,
+  RetrievalEnvelope,
   ReviewPayload,
   ReviewResponse,
   ResultsPayload,
@@ -89,6 +97,235 @@ export class ApiClient {
 
   listCategories(): Promise<Category[]> {
     return this.request<Category[]>('/api/v1/categories')
+  }
+
+  me(): Promise<Identity> {
+    return this.request<Identity>('/api/v1/auth/me')
+  }
+
+  adminOverview(): Promise<AdminOverview> {
+    return this.request<AdminOverview>('/api/v1/admin/overview')
+  }
+
+  adminCategories(): Promise<{ items: AdminCategoryOverview[] }> {
+    return this.request('/api/v1/admin/categories')
+  }
+
+  adminWorkspace(categoryId: string, snapshotId?: string): Promise<AdminWorkspace> {
+    const query = snapshotId ? `?snapshot_id=${encodeURIComponent(snapshotId)}` : ''
+    return this.request<AdminWorkspace>(`/api/v1/admin/categories/${categoryId}${query}`)
+  }
+
+  adminJobs(params: { categoryId?: string; status?: string; limit?: number } = {}): Promise<{
+    total: number
+    items: AdminJob[]
+  }> {
+    const query = new URLSearchParams()
+    if (params.categoryId) query.set('category_id', params.categoryId)
+    if (params.status) query.set('status', params.status)
+    query.set('limit', String(params.limit ?? 30))
+    return this.request(`/api/v1/admin/jobs?${query.toString()}`)
+  }
+
+  createCategory(payload: { code: string; name: string }): Promise<Category> {
+    return this.request<Category>('/api/v1/categories', { method: 'POST', body: payload })
+  }
+
+  uploadSource(categoryId: string, file: File): Promise<{ snapshot_id: string; job_id: string }> {
+    const form = new FormData()
+    form.set('file', file)
+    return this.request(`/api/v1/categories/${categoryId}/source`, { method: 'POST', form })
+  }
+
+  buildSnapshot(snapshotId: string): Promise<{ snapshot_id: string; job_id: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/build`, { method: 'POST' })
+  }
+
+  deriveDocumentStaging(
+    categoryId: string,
+  ): Promise<{ snapshot_id: string; derived_from_snapshot_id: string; documents_copied: number }> {
+    return this.request(`/api/v1/categories/${categoryId}/document-staging-snapshots`, {
+      method: 'POST',
+    })
+  }
+
+  uploadAdminDocument(
+    categoryId: string,
+    snapshotId: string,
+    file: File,
+  ): Promise<{ document_id: string; job_id: string; snapshot_id: string }> {
+    const form = new FormData()
+    form.set('snapshot_id', snapshotId)
+    form.set('file', file)
+    return this.request(`/api/v1/categories/${categoryId}/documents`, {
+      method: 'POST',
+      form,
+    })
+  }
+
+  replaceAdminDocument(
+    snapshotId: string,
+    documentId: string,
+    file: File,
+  ): Promise<{ document_id: string; job_id: string }> {
+    const form = new FormData()
+    form.set('file', file)
+    return this.request(`/api/v1/snapshots/${snapshotId}/documents/${documentId}/replace`, {
+      method: 'POST',
+      form,
+    })
+  }
+
+  deleteAdminDocument(
+    snapshotId: string,
+    documentId: string,
+  ): Promise<{ document_id: string; status: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/documents/${documentId}`, {
+      method: 'DELETE',
+    })
+  }
+
+  reparseAdminDocument(
+    snapshotId: string,
+    documentId: string,
+  ): Promise<{ document_id: string; job_id: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/documents/${documentId}/reparse`, {
+      method: 'POST',
+    })
+  }
+
+  discoverDocuments(snapshotId: string): Promise<{ job_id: string; run_id: string; mode: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/discover-documents`, { method: 'POST' })
+  }
+
+  investigate(
+    snapshotId: string,
+    payload: {
+      module_ids: string[]
+      data_classification: 'synthetic_public' | 'enterprise'
+      investigation_mode: 'bounded' | 'explore' | 'autonomous'
+      capability_limit: number
+      include_equivalence: boolean
+    },
+  ): Promise<{ job_id: string; module_count: number }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/investigate`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  retrieval(
+    categoryId: string,
+    snapshotId: string,
+    payload: Record<string, unknown>,
+  ): Promise<RetrievalEnvelope> {
+    return this.request(
+      `/api/v1/retrieval/${categoryId}?snapshot_id=${encodeURIComponent(snapshotId)}`,
+      { method: 'POST', body: payload },
+    )
+  }
+
+  registerEvidence(
+    snapshotId: string,
+    payload: {
+      kind: 'source' | 'document'
+      file_id?: string
+      segment_id?: string
+      start_line?: number
+      end_line?: number
+      expected_sha256: string
+      supported_statement: string
+    },
+  ): Promise<{ evidence_id: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/review-evidence`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  adminReviewQueue(snapshotId: string, limit = 100): Promise<AdminReviewQueue> {
+    return this.request(`/api/v1/admin/snapshots/${snapshotId}/review-queue?limit=${limit}`)
+  }
+
+  adminClaim(claimId: string): Promise<{
+    id: string
+    snapshot_id: string
+    original_model_output: Record<string, unknown>
+    machine_declaration_type: string
+    latest_revision: Record<string, unknown> | null
+    review_events: Array<Record<string, unknown>>
+  }> {
+    return this.request(`/api/v1/admin/capabilities/${claimId}`)
+  }
+
+  validateReview(claimId: string, payload: Record<string, unknown>): Promise<{
+    eligible_for_human_acceptance: boolean
+    errors: string[]
+    dependency_gaps: Array<Record<string, unknown>>
+  }> {
+    return this.request(`/api/v1/capabilities/${claimId}/validate`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  submitCapabilityReview(
+    claimId: string,
+    payload: Record<string, unknown>,
+  ): Promise<{ id: string; number: number; decision: string }> {
+    return this.request(`/api/v1/capabilities/${claimId}/review`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  adminReleaseCheck(snapshotId: string): Promise<AdminReleaseCheck> {
+    return this.request(`/api/v1/admin/snapshots/${snapshotId}/release-check`)
+  }
+
+  publishSnapshot(
+    snapshotId: string,
+    payload: {
+      revision_ids: string[]
+      expected_active_publication_id: string | null
+      acknowledge_coverage_gaps: boolean
+      comment: string
+    },
+  ): Promise<{ publication_id: string; snapshot_id: string; payload_hash: string }> {
+    return this.request(`/api/v1/snapshots/${snapshotId}/publish`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  rollbackPublication(
+    categoryId: string,
+    payload: {
+      publication_id: string
+      expected_active_publication_id: string | null
+      comment: string
+    },
+  ): Promise<{ publication_id: string; snapshot_id: string }> {
+    return this.request(`/api/v1/categories/${categoryId}/rollback`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  publications(categoryId: string): Promise<
+    Array<{
+      publication_id: string
+      previous_publication_id: string | null
+      action: string
+      actor: string
+      comment: string
+    }>
+  > {
+    return this.request(`/api/v1/categories/${categoryId}/publications`)
+  }
+
+  adminAudit(categoryId: string): Promise<{ items: Array<Record<string, unknown>> }> {
+    return this.request(`/api/v1/admin/audit?category_id=${encodeURIComponent(categoryId)}&limit=100`)
   }
 
   listTasks(params: {

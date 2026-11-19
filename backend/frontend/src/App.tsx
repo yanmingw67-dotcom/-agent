@@ -8,6 +8,11 @@ import { Login } from './pages/Login'
 import { NewTask } from './pages/NewTask'
 import { ResultDetail } from './pages/ResultDetail'
 import { TaskList } from './pages/TaskList'
+import { AdminCategories } from './pages/AdminCategories'
+import { AdminOverview } from './pages/AdminOverview'
+import { AdminWorkspace } from './pages/AdminWorkspace'
+import { Alert, Spinner } from './components/ui'
+import type { Identity } from './types'
 
 const STORAGE_KEY = 'p23.workbench.token'
 
@@ -30,6 +35,9 @@ function storedToken(): string {
 export default function App() {
   const [token, setToken] = useState(storedToken)
   const [authMessage, setAuthMessage] = useState('')
+  const [identity, setIdentity] = useState<Identity | null>(null)
+  const [identityLoading, setIdentityLoading] = useState(false)
+  const [identityError, setIdentityError] = useState('')
   const route = useHashRoute()
 
   useEffect(() => {
@@ -45,6 +53,34 @@ export default function App() {
       setAuthMessage('登录已失效，请重新输入访问令牌。')
     })
   }, [token])
+
+  useEffect(() => {
+    if (!api) {
+      setIdentity(null)
+      return undefined
+    }
+    let active = true
+    setIdentityLoading(true)
+    setIdentityError('')
+    api
+      .me()
+      .then((value) => {
+        if (active) setIdentity(value)
+      })
+      .catch(() => {
+        // 普通售前使用旧后端或仅开放检索模式时，身份接口不可用不应阻断评估工作台。
+        if (active) {
+          setIdentity(null)
+          setIdentityError('无法确认管理员身份，请确认后端已启用 /api/v1/auth/me。')
+        }
+      })
+      .finally(() => {
+        if (active) setIdentityLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [api])
 
   function login(next: string) {
     try {
@@ -69,8 +105,42 @@ export default function App() {
     return <Login onLogin={login} initialError={authMessage} />
   }
 
+  const adminRoute = route.name === 'admin' || route.name.startsWith('admin-')
+  if (adminRoute && !identityLoading && !identity?.is_admin) {
+    return (
+      <Layout routeName={route.name} token={token} onLogout={logout} isAdmin={false}>
+        <div className="page">
+          <header className="page-head">
+            <div>
+              <span className="eyebrow">管理员工作台</span>
+              <h1>需要管理员权限</h1>
+              <p>管理员页面由服务端权限校验；普通售前账号只能查看已发布知识。</p>
+            </div>
+          </header>
+          <Alert tone="danger" title="访问被拒绝">
+            {identityError || '当前令牌不是管理员令牌，无法进入产品知识维护工作台。'}
+          </Alert>
+        </div>
+      </Layout>
+    )
+  }
+
   let content
-  if (route.name === 'new') {
+  if (adminRoute && identityLoading) {
+    content = (
+      <div className="page">
+        <div className="loading-panel">
+          <Spinner label="正在校验管理员身份…" />
+        </div>
+      </div>
+    )
+  } else if (route.name === 'admin') {
+    content = <AdminOverview api={api} />
+  } else if (route.name === 'admin-categories') {
+    content = <AdminCategories api={api} />
+  } else if (route.name === 'admin-category' && route.id) {
+    content = <AdminWorkspace api={api} id={route.id} initialTab={route.tab} />
+  } else if (route.name === 'new') {
     content = <NewTask api={api} />
   } else if (route.name === 'extraction' && route.id) {
     content = <ExtractionDetail api={api} id={route.id} />
@@ -83,7 +153,12 @@ export default function App() {
   }
 
   return (
-    <Layout routeName={route.name} token={token} onLogout={logout}>
+    <Layout
+      routeName={route.name}
+      token={token}
+      onLogout={logout}
+      isAdmin={Boolean(identity?.is_admin)}
+    >
       {content}
     </Layout>
   )

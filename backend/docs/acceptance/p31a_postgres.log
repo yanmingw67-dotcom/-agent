@@ -1,0 +1,29 @@
+$ docker run postgres:16.9-bookworm (127.0.0.1:55439, db=p31test)
+/var/run/postgresql:5432 - accepting connections
+
+$ DATABASE_URL=... .venv/bin/alembic upgrade head
+EXIT=0
+
+$ table count / alembic version
+tables 36
+version 0012
+
+$ DATABASE_URL=... .venv/bin/alembic downgrade base
+EXIT=0
+tables 1
+
+$ DATABASE_URL=... .venv/bin/alembic upgrade head (roundtrip)
+EXIT=0
+tables 36
+version 0012
+
+$ P16_RUN_POSTGRES=1 .venv/bin/pytest -q tests/infrastructure/test_p16_postgres.py
+..                                                                       [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 1 warning in 2.40s
+EXIT=0

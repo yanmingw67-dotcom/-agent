@@ -1,12 +1,13 @@
 """只有显式管理员审核可形成可发布修订；普通用户仅见当前冻结清单。"""
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.auth import admin, principal
 from app.core.security import AppError
 from app.db.knowledge_models import CapabilityClaim
+from app.db.models import AuditEvent
 from app.db.review_models import PublicationSwitch, ReviewEvent
 from app.db.session import get_db
 from app.knowledge import review as service
@@ -159,9 +160,26 @@ def relation(body: RelationRequest, role=Depends(admin), db: Session = Depends(g
 
 @router.post("/snapshots/{snapshot_id}/publish")
 def publish_snapshot(
-    snapshot_id: str, body: PublishRequest, role=Depends(admin), db: Session = Depends(get_db)
+    snapshot_id: str,
+    body: PublishRequest,
+    request: Request,
+    role=Depends(admin),
+    db: Session = Depends(get_db),
 ):
     row = publish(db, snapshot_id, body)
+    db.add(
+        AuditEvent(
+            principal_id=role,
+            action="publication.publish",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={
+                "category_id": row.category_id,
+                "snapshot_id": row.snapshot_id,
+                "payload_hash": row.payload_hash,
+            },
+        )
+    )
     db.commit()
     return {
         "publication_id": row.id,
@@ -172,9 +190,22 @@ def publish_snapshot(
 
 @router.post("/categories/{category_id}/rollback")
 def rollback_publication(
-    category_id: str, body: RollbackRequest, role=Depends(admin), db: Session = Depends(get_db)
+    category_id: str,
+    body: RollbackRequest,
+    request: Request,
+    role=Depends(admin),
+    db: Session = Depends(get_db),
 ):
     row = rollback(db, category_id, body)
+    db.add(
+        AuditEvent(
+            principal_id=role,
+            action="publication.rollback",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={"category_id": category_id, "snapshot_id": row.snapshot_id},
+        )
+    )
     db.commit()
     return {"publication_id": row.id, "snapshot_id": row.snapshot_id}
 

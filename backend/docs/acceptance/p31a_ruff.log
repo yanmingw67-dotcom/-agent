@@ -1,0 +1,7 @@
+$ .venv/bin/ruff check .
+All checks passed!
+EXIT=0
+
+$ .venv/bin/ruff format --check .
+205 files already formatted
+EXIT=0

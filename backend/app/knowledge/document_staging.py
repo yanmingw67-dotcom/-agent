@@ -53,9 +53,26 @@ def _verify_extracted_source(db, snapshot, settings):
 
 
 def _source_snapshot(db, category):
-    if not category.active_snapshot_id:
-        raise AppError(409, "DERIVATION_SOURCE_REQUIRED", "品类没有受控当前源码，不能派生暂存快照")
-    source = db.get(Snapshot, category.active_snapshot_id)
+    # 首次发布前没有 active_snapshot_id：只允许使用该品类最近一次已索引的
+    # 基础源码快照作为工作来源。绝不伪造源码，也不把派生快照再派生一层。
+    source_id = category.active_snapshot_id
+    if not source_id:
+        source_id = db.scalar(
+            select(Snapshot.id)
+            .where(
+                Snapshot.category_id == category.id,
+                Snapshot.status == "extracted",
+                Snapshot.index_status == "indexed",
+                Snapshot.derivation_type.is_(None),
+            )
+            .order_by(Snapshot.created_at.desc(), Snapshot.id.desc())
+            .limit(1)
+        )
+    if not source_id:
+        raise AppError(
+            409, "DERIVATION_SOURCE_REQUIRED", "品类没有已索引的受控源码，不能派生暂存快照"
+        )
+    source = db.get(Snapshot, source_id)
     if not source or source.category_id != category.id:
         raise AppError(409, "DERIVATION_SOURCE_INVALID", "当前源码指针无效")
     if source.status not in {"extracted", "published"} or source.index_status != "indexed":
@@ -313,4 +330,34 @@ def replace_document(db, snapshot_id, document_id, key, sha256, size, actor, cor
     )
     db.commit()
     (get_settings().document_store / old_key).unlink(missing_ok=True)
+    return {"document_id": doc.id, "job_id": job.id, "snapshot_id": snapshot.id}
+
+
+def reparse_document(db, snapshot_id, document_id, actor, correlation_id):
+    """在派生暂存快照内重建单个文档解析结果；已引用证据的文档禁止重解析。"""
+    snapshot = require_derived_staging(db, snapshot_id)
+    doc = db.get(Document, document_id)
+    if not doc or doc.snapshot_id != snapshot.id:
+        raise AppError(404, "DOCUMENT_NOT_FOUND", "暂存快照中没有该文档")
+    _document_in_use(db, snapshot.id, doc.id)
+    doc.parse_status, doc.error_code, doc.parse_details = "pending", None, {}
+    job = KnowledgeJob(
+        category_id=snapshot.category_id,
+        snapshot_id=snapshot.id,
+        job_type="document_index",
+        stage="extracted",
+        metrics_json={"model_mode": "NOT_USED", "reparse_document_id": doc.id},
+    )
+    db.add(job)
+    db.flush()
+    db.add(
+        AuditEvent(
+            principal_id=actor,
+            action="documents.staging.reparse_requested",
+            resource_id=doc.id,
+            correlation_id=correlation_id,
+            details_json={"job_id": job.id, "snapshot_id": snapshot.id},
+        )
+    )
+    db.commit()
     return {"document_id": doc.id, "job_id": job.id, "snapshot_id": snapshot.id}

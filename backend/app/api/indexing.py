@@ -3,14 +3,14 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, Form, Request, UploadFile
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.auth import admin
 from app.core.config import get_settings
 from app.core.security import AppError
-from app.db.index_models import Document
+from app.db.index_models import Document, DocumentSegment
 from app.db.knowledge_models import DocumentDiscoveryRun
 from app.db.models import AuditEvent, KnowledgeJob, Snapshot
 from app.db.session import get_db
@@ -22,6 +22,9 @@ from app.knowledge.document_staging import (
 )
 from app.knowledge.document_staging import (
     remove_document as remove_staged_document,
+)
+from app.knowledge.document_staging import (
+    reparse_document as reparse_staged_document,
 )
 from app.knowledge.document_staging import (
     replace_document as replace_staged_document,
@@ -255,6 +258,17 @@ async def replace_document(
             release(settings, key)
 
 
+@router.post("/snapshots/{snapshot_id}/documents/{document_id}/reparse", status_code=202)
+def reparse_document(
+    snapshot_id: str,
+    document_id: str,
+    request: Request,
+    role=Depends(admin),
+    db: Session = Depends(get_db),
+):
+    return reparse_staged_document(db, snapshot_id, document_id, role, request.state.correlation_id)
+
+
 @router.post("/snapshots/{snapshot_id}/discover-documents", status_code=202)
 def discover_documents(
     snapshot_id: str,
@@ -339,10 +353,18 @@ def list_documents(snapshot_id: str, role=Depends(admin), db: Session = Depends(
         {
             "id": d.id,
             "filename": d.filename,
+            "sha256": d.sha256,
+            "size": d.size,
             "parse_status": d.parse_status,
             "error_code": d.error_code,
+            "parser_version": d.parser_version,
             "parse_details": d.parse_details,
             "origin": d.origin_json,
+            "segment_count": db.scalar(
+                select(func.count())
+                .select_from(DocumentSegment)
+                .where(DocumentSegment.document_id == d.id)
+            ),
         }
         for d in db.scalars(select(Document).where(Document.snapshot_id == snapshot_id).limit(200))
     ]

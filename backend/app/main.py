@@ -11,6 +11,9 @@ from sqlalchemy.exc import DBAPIError
 from starlette.exceptions import HTTPException
 
 from app.api import (
+    admin as admin_api,
+)
+from app.api import (
     capabilities,
     categories,
     conflicts,
@@ -126,6 +129,7 @@ def create_app():
         return metric_snapshot()
 
     if settings.service_mode != "retrieval":
+        app.include_router(admin_api.router)
         app.include_router(categories.router)
         app.include_router(knowledge_uploads.router)
         app.include_router(jobs.router)
