@@ -5,6 +5,8 @@ __pycache__/
 *.egg-info/
 .env
 backend/.env
+.env.p31b
+backend/.env.p31b
 storage/
 *.db
 .DS_Store

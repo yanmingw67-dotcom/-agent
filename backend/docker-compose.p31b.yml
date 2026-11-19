@@ -1,0 +1,237 @@
+name: product-knowledge-p31b
+
+# P3.1-B 独立验收环境：独立项目名、独立数据库、独立存储卷、独立端口。
+# 所有容器内存储路径统一为 /data/<kind>，SOURCE_ROOT 与 INGESTION_ROOT 指向同一目录，
+# 从而不再依赖人工创建软链。模型默认不配置，企业数据模型授权保持关闭。
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: product-knowledge:p31b-${P31B_IMAGE_TAG:-local}
+  environment: &app-env
+    DATABASE_URL: postgresql+psycopg://knowledge:${POSTGRES_PASSWORD:?请先由 scripts/p31b_env.sh init 生成 .env.p31b}@postgres:5432/knowledge_p31b
+    REDIS_URL: redis://redis:6379/6
+    ADMIN_TOKEN: ${ADMIN_TOKEN:?请先由 scripts/p31b_env.sh init 生成 .env.p31b}
+    READ_TOKEN: ${READ_TOKEN:?请先由 scripts/p31b_env.sh init 生成 .env.p31b}
+    CORS_ORIGINS: http://127.0.0.1:${P31B_UI_PORT:-18180},http://localhost:${P31B_UI_PORT:-18180}
+    ARCHIVE_ROOT: /data/archives
+    INGESTION_ROOT: /data/ingestion
+    SOURCE_ROOT: /data/ingestion
+    DOCUMENTS_ROOT: /data/documents
+    STORAGE_CONTROL_ROOT: /data/control
+    TENDER_ROOT: /data/tender
+    EXPORT_ROOT: /data/exports
+    STORAGE_QUOTA_BYTES: "10737418240"
+    STORAGE_MIN_FREE_BYTES: "1073741824"
+    MAX_UPLOAD_BYTES: "104857600"
+    MAX_FILE_BYTES: "20971520"
+    MAX_TOTAL_BYTES: "524288000"
+    DOCUMENT_MAX_BYTES: "20971520"
+    DOCUMENT_DISCOVERY_MODE: structural
+    TENDER_MODEL_MODE: structural
+    TENDER_QUEUE_ENABLED: "true"
+    EVALUATION_MODEL_MODE: structural
+    EVALUATION_QUEUE_ENABLED: "true"
+    EXPORT_QUEUE_ENABLED: "true"
+    BUILDER_MODEL: ${BUILDER_MODEL:-}
+    BUILDER_BASE_URL: ${BUILDER_BASE_URL:-}
+    BUILDER_API_KEY: ${BUILDER_API_KEY:-}
+    BUILDER_ALLOW_SYNTHETIC: "false"
+    BUILDER_ALLOW_ENTERPRISE: "false"
+  read_only: true
+  tmpfs: ["/tmp:size=128m,mode=1777"]
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  pids_limit: 128
+  mem_limit: 768m
+  cpus: 0.5
+  restart: unless-stopped
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  api:
+    <<: *app
+    command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --no-access-log"]
+    ports: ["127.0.0.1:${P31B_API_PORT:-18190}:8000"]
+    mem_limit: 768m
+    volumes:
+      - archives:/data/archives
+      - ingestion:/data/ingestion
+      - documents:/data/documents
+      - control:/data/control
+      - tender:/data/tender
+      - exports:/data/exports
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "app.jobs.worker"]
+    environment:
+      <<: *app-env
+      WORKER_KIND: ingestion
+    cpus: 0.25
+    volumes:
+      - archives:/data/archives:ro
+      - ingestion:/data/ingestion
+      - control:/data/control
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; from app.jobs.queue import connection; connection().ping(); assert time.time()-float(Path('/tmp/knowledge-worker-heartbeat').read_text()) < 360"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  indexer:
+    <<: *app
+    command: ["python", "-m", "app.jobs.worker"]
+    environment:
+      <<: *app-env
+      WORKER_KIND: index
+      JOB_TIMEOUT_SECONDS: "1800"
+    cpus: 0.75
+    mem_limit: 1280m
+    volumes:
+      - ingestion:/data/ingestion:ro
+      - documents:/data/documents:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; assert time.time()-float(Path('/tmp/knowledge-worker-heartbeat').read_text()) < 1860"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  builder:
+    <<: *app
+    command: ["python", "-m", "app.jobs.worker"]
+    environment:
+      <<: *app-env
+      WORKER_KIND: builder
+    cpus: 0.5
+    mem_limit: 1024m
+    volumes:
+      - ingestion:/data/ingestion:ro
+      - documents:/data/documents:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; assert time.time()-float(Path('/tmp/knowledge-worker-heartbeat').read_text()) < 1860"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  taskworker:
+    <<: *app
+    command: ["python", "-m", "app.jobs.task_worker"]
+    cpus: 0.5
+    mem_limit: 1024m
+    volumes:
+      - ingestion:/data/ingestion:ro
+      - documents:/data/documents:ro
+      - tender:/data/tender
+      - exports:/data/exports
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; from pathlib import Path; from app.jobs.queue import connection; connection().ping(); assert time.time()-float(Path('/tmp/knowledge-taskworker-heartbeat').read_text()) < 120"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  retrieval:
+    <<: *app
+    command: ["uvicorn", "app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--limit-concurrency", "16", "--timeout-keep-alive", "5", "--no-access-log"]
+    environment:
+      <<: *app-env
+      SERVICE_MODE: retrieval
+    cpus: 1
+    mem_limit: 768m
+    ports: ["127.0.0.1:${P31B_RETRIEVAL_PORT:-18191}:8000"]
+    volumes:
+      - ingestion:/data/ingestion:ro
+      - documents:/data/documents:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE: /
+    image: product-knowledge-p31b-frontend:${P31B_IMAGE_TAG:-local}
+    ports: ["127.0.0.1:${P31B_UI_PORT:-18180}:80"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  postgres:
+    image: postgres:16.9-bookworm
+    environment:
+      POSTGRES_DB: knowledge_p31b
+      POSTGRES_USER: knowledge
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?请先生成 .env.p31b}
+    command: ["postgres", "-c", "shared_buffers=256MB", "-c", "work_mem=4MB", "-c", "max_connections=50"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    mem_limit: 1536m
+    cpus: 0.75
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knowledge -d knowledge_p31b"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4.4-bookworm
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "128mb", "--maxmemory-policy", "noeviction"]
+    volumes: ["redis_data:/data"]
+    mem_limit: 256m
+    cpus: 0.25
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+volumes:
+  archives:
+  ingestion:
+  documents:
+  control:
+  tender:
+  exports:
+  postgres_data:
+  redis_data:
