@@ -7,7 +7,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 COPY --chown=app:app app ./app
 COPY --chown=app:app alembic.ini ./
-RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control && chown -R app:app /data
+RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control /data/tender /data/exports && chown -R app:app /data
 ENV PATH="/app/.venv/bin:$PATH"
 USER app
 EXPOSE 8000
