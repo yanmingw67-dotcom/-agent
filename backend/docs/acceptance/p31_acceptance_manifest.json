@@ -2,8 +2,11 @@
   "acceptance_id": "P31-20261119-1340",
   "phase": "P3.1",
   "baseline_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
-  "head_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
+  "code_commit": "fa0fc2dac3dd152f895db01e98582849391d34c8",
+  "head_commit": "fa0fc2dac3dd152f895db01e98582849391d34c8",
+  "head_commit_note": "Code and regression tests commit. Acceptance report/logs are committed immediately after this manifest.",
   "overall_status": "BLOCKED",
+  "overall_conclusion": "A1-A5 and D2-D4 passed on the real tender file; B/C/D1/D5-D10/E4b remain blocked; ENV-P1-01 is still open, so P3.1 is not declared passed.",
   "environment": {
     "database": "knowledge_p31_acceptance",
     "postgres_version": "16.9",
@@ -12,10 +15,20 @@
     "api": "http://127.0.0.1:18080",
     "container": "p31-acceptance-api",
     "runtime_image": "product-knowledge:p1.3",
-    "code_source": "HEAD mounted read-only; image build from HEAD attempted but failed on base-image pull DeadlineExceeded",
+    "code_source": "fa0fc2d source mounted read-only; a previous HEAD image build failed on base-image pull DeadlineExceeded and was not retried this round",
     "storage_root": "backend/storage/p31_acceptance",
     "redis_db": 5,
-    "model_mode": "structural"
+    "model_mode": "structural",
+    "isolated_business_data": {
+      "categories": 1,
+      "tender_extraction_jobs": 6,
+      "source_snapshots": 0,
+      "publications": 0
+    },
+    "health": {
+      "live": 200,
+      "ready": 200
+    }
   },
   "production_database": {
     "name": "knowledge",
@@ -27,32 +40,193 @@
     "modified": false
   },
   "ids": {
-    "tender_job_id": null,
+    "category_id": "7a0ac606-ff5a-42cc-a824-d45aa1044467",
+    "category_slug": "waf_p31",
+    "tender_job_id": "e8af956e-3982-4072-adb2-319f7da9f82c",
+    "tender_job_idempotency_key": "p31-real-20261119-05",
+    "manual_ops_job_id": "9295dd26-ac27-4c53-9e26-af2014183148",
+    "manual_ops_idempotency_key": "p31-real-edit-20261119-02",
+    "failed_job_id": "88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa",
     "snapshot_id": null,
     "publication_id": null,
-    "reason": "No real tender file, real product source/document, or authorized model was provided; no real extraction/evaluation was started."
+    "snapshot_publication_reason": "No real WAF source/document or admin-reviewed publication was provided; no real snapshot or publication was created."
+  },
+  "real_input": {
+    "file_name": "1-WAF招标技术参数表.docx",
+    "relative_path": ".monkeyai/uploads/attachment-3792846006/1-WAF招标技术参数表.docx",
+    "sha256": "94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c",
+    "type": "docx (OOXML)",
+    "hash_matches_api_record": true,
+    "structure": {
+      "paragraphs": 15,
+      "tables": 1,
+      "table_rows_including_header": 16,
+      "table_columns": 4,
+      "headers": [
+        "序号",
+        "功能项",
+        "技术参数要求",
+        "证明材料要求"
+      ],
+      "data_rows": 15
+    }
+  },
+  "real_extraction": {
+    "status": "succeeded",
+    "coverage_status": "complete",
+    "extracted_count": 15,
+    "skipped_count": 33,
+    "ambiguous_count": 0,
+    "parameters": 15,
+    "top_level_subclauses": 46,
+    "top_level_children": [
+      4,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "atomic_requirements": 199,
+    "text_mismatches": 0,
+    "tree_mismatches": 0,
+    "source_span_errors": 0,
+    "proof_cells_filtered": 15,
+    "duration_ms": 104.8,
+    "review_required": true,
+    "review_reason": "Parameter 2 contains an open enumeration introduced by “至少包括”; the extraction is complete but requires human review.",
+    "coverage_reason_counts": {
+      "filtered|document_title": 1,
+      "filtered|proof_material": 3,
+      "filtered|section_heading": 4,
+      "filtered|non_technical_section": 9,
+      "filtered|table_header": 1,
+      "filtered|proof_or_commercial_column": 15,
+      "extracted|None": 15
+    },
+    "blank_threshold_total": 8,
+    "open_enumeration_total": 23,
+    "evidence": [
+      "storage/p31_acceptance/evidence/p31_real_extraction_final.json",
+      "storage/p31_acceptance/evidence/p31_real_coverage_final.json",
+      "storage/p31_acceptance/evidence/p31_real_audit_summary.json",
+      "storage/p31_acceptance/evidence/job_id_final.txt"
+    ]
+  },
+  "manual_ops": {
+    "job_id": "9295dd26-ac27-4c53-9e26-af2014183148",
+    "checks": {
+      "edit": {
+        "http": 200,
+        "revision": 2,
+        "anchor_status": "manual_edit",
+        "children": 2,
+        "atoms": 4,
+        "threshold": "10 Gbps",
+        "span_ok": true
+      },
+      "split": {
+        "http": 200,
+        "parts": 2,
+        "each_children": 2,
+        "each_atoms": 2,
+        "anchor_status": "manual_split",
+        "span_ok": true
+      },
+      "merge": {
+        "http": 200,
+        "revision": 2,
+        "anchor_status": "manual_merge",
+        "children": 6,
+        "atoms": 33,
+        "span_ok": true
+      },
+      "add": {
+        "http": 201,
+        "method": "user_added",
+        "locator_kind": "user",
+        "children": 2,
+        "atoms": 2,
+        "order_index": 16,
+        "span_ok": true
+      }
+    },
+    "final_active_count": 16,
+    "final_order_indexes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "all_spans_ok": true,
+    "all_tree_match": true,
+    "all_leaf_match": true,
+    "orders_contiguous": true,
+    "corrections_actions": [
+      "add",
+      "merge",
+      "split",
+      "edit"
+    ],
+    "evidence": "storage/p31_acceptance/evidence/p31_manual_ops_evidence.json"
   },
   "tests": {
     "full_pytest": {
-      "passed": 418,
+      "passed": 424,
       "skipped": 32,
-      "seconds": 71.38
+      "seconds": 79.31,
+      "log": "p31_full_pytest_after_fix.log"
     },
     "module_regression": {
-      "passed": 109,
-      "seconds": 9.74
+      "passed": 145,
+      "seconds": 12.36,
+      "log": "p31_module_regression_after_fix.log"
     },
-    "ruff_check": "PASS",
+    "focused_span_units_caption": {
+      "passed": 24,
+      "log": "p31_code_fix_verification.log"
+    },
+    "ruff_check": {
+      "status": "PASS",
+      "log": "p31_ruff_check_after_fix.log"
+    },
     "ruff_format": {
       "status": "PASS",
-      "files": 197
+      "files": 178,
+      "log": "p31_ruff_format_after_fix.log"
     },
-    "frontend_typecheck": "PASS",
+    "frontend_typecheck": {
+      "status": "PASS",
+      "note": "Frontend unchanged this round; previous log retained."
+    },
     "frontend_build": {
       "status": "PASS",
-      "modules": 42,
-      "js_kb": 296.29,
-      "css_kb": 33.47
+      "note": "Frontend unchanged this round; previous log retained."
+    },
+    "secret_scan": {
+      "status": "PASS",
+      "log": "p31_secret_scan_after_fix.log"
     }
   },
   "model": {
@@ -70,8 +244,9 @@
     "cost": "NOT_APPLICABLE_NO_CALL"
   },
   "real_sample_counts": {
-    "top_level_parameters": 0,
-    "numbered_subclauses": 0,
+    "top_level_parameters": 15,
+    "numbered_subclauses": 46,
+    "atomic_requirements": 199,
     "evaluated_parameters": 0,
     "evidence_records": 0,
     "manual_reviews": 0
@@ -81,7 +256,7 @@
       "id": "ENV-P1-01",
       "severity": "P1",
       "status": "OPEN",
-      "summary": "Shared deployment runs old image and migration 0007; zero tender/workbench routes. Isolated environment mitigates."
+      "summary": "Shared deployment still runs old image and migration 0007; zero tender/workbench routes. Isolated acceptance environment mitigates but does not close this item."
     },
     {
       "id": "DATA-P2-01",
@@ -93,30 +268,101 @@
       "id": "ENV-P2-01",
       "severity": "P2",
       "status": "OPEN",
-      "summary": "Acceptance runtime uses existing p1.3 image with HEAD source mounted; HEAD image build failed on base-image pull DeadlineExceeded."
+      "summary": "Acceptance runtime uses existing p1.3 image with validated source mounted; a previous HEAD image build failed on base-image pull DeadlineExceeded and was not retried this round."
+    },
+    {
+      "id": "P31-D01",
+      "severity": "P1",
+      "status": "FIXED",
+      "summary": "Table rows inherited the preceding “一、编制说明” section and produced NO_TECHNICAL_PARAMETERS.",
+      "before": "job 88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa failed with 0 extracted / 33 skipped",
+      "fix": "app/tender/structure.py TABLE_CAPTION / is_table_caption; regression tests/unit/test_p21_table_caption_section.py"
+    },
+    {
+      "id": "P31-D02",
+      "severity": "P2",
+      "status": "FIXED",
+      "summary": "Threshold units were lost or mismatched, and “至少包括” was falsely marked as a blank threshold.",
+      "before": "job c3fc7847-3584-4a67-a60a-dfc21edf4dda: 11 blank thresholds, 35 span errors, 195 atoms",
+      "fix": "app/tender/rules.py THRESHOLD unit set and negative lookahead; regression tests/unit/test_p21_threshold_units.py"
+    },
+    {
+      "id": "P31-D03",
+      "severity": "P2",
+      "status": "FIXED",
+      "summary": "Atomic requirement source_span was offset after capability prefixes and trimmed subclauses.",
+      "before": "job b579dbf5-151e-47d1-b777-5eea897b0dba: 35 span errors / 199 atoms; manual job 80d2d999-12b7-4c56-99af-1ec51153dfa8: 20 / 168",
+      "fix": "app/tender/rules.py OR/AND child base includes outer trim; _ordered_atoms records trimmed offsets; regression tests/unit/test_p21_source_spans.py"
+    },
+    {
+      "id": "P31-D04",
+      "severity": "P2",
+      "status": "OPEN",
+      "summary": "When one atomic requirement contains multiple blank thresholds (vCPU / GB), only the first threshold is structured; original text is preserved and flagged for review.",
+      "example": "parameter 15 subclause 3",
+      "impact": "A3 passes with a known limitation; no fabricated value is produced."
+    },
+    {
+      "id": "P31-D05",
+      "severity": "P2",
+      "status": "OPEN",
+      "summary": "Secondary recommendation thresholds inside parentheses (e.g. 5000 条, 1%) are not atomized separately; the primary threshold and original text are preserved.",
+      "examples": [
+        "parameter 3 subclause 1",
+        "parameter 14 subclause 2"
+      ]
+    },
+    {
+      "id": "P31-D06",
+      "severity": "P2",
+      "status": "OPEN",
+      "summary": "A failed job that extracts zero parameters can still report coverage_status=complete; observed in the pre-fix failed job.",
+      "before": "job 88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa: status=failed, coverage_status=complete, extracted=0",
+      "impact": "Consumers must check both job status and coverage_status; not reproduced after the fix."
     }
   ],
   "deliverables": {
-    "tender_coverage_15_46": "BLOCKED",
+    "tender_coverage_15_46": "PASS",
     "knowledge_capability_inventory": "BLOCKED",
-    "fifteen_parameter_review": "BLOCKED",
-    "atomic_requirement_details": "BLOCKED",
-    "evidence_traceability": "BLOCKED",
-    "model_usage_cost": "BLOCKED",
-    "export_verification": "BLOCKED",
+    "fifteen_parameter_review": "PASS (extraction only; no product-support conclusion)",
+    "atomic_requirement_details": "PASS (199 atoms, spans exact)",
+    "evidence_traceability": "BLOCKED (no real product evidence)",
+    "model_usage_cost": "BLOCKED (0 calls, no authorization)",
+    "export_verification": "BLOCKED (no real evaluation result)",
     "defect_list": "PASS",
     "blocked_items": "PASS"
   },
   "blocked_inputs": [
-    "Real WAF招标技术参数表.docx",
-    "Authorized real WAF product source snapshot or formal technical documents",
+    "Real WAF product source snapshot or formal technical documents",
     "Admin-reviewed and published real product capability baseline",
     "Authorized model proof, data-export approval and pricing",
-    "Business reviewer and sign-off"
+    "Business reviewer and sign-off for product-support conclusions"
+  ],
+  "known_limitations": [
+    "P31-D04: multiple blank thresholds in one atom only structure the first value.",
+    "P31-D05: parenthetical secondary recommendation thresholds are not separately atomized.",
+    "P31-D06: failed/all-filtered pre-fix job reported coverage_status=complete."
   ],
   "status_counts": {
-    "PASS": 13,
+    "PASS": 21,
     "FAIL": 0,
-    "BLOCKED": 31
-  }
+    "BLOCKED": 23
+  },
+  "evidence_index": [
+    "docs/acceptance/p31_status_matrix.csv",
+    "docs/acceptance/p31_parameter_audit.csv",
+    "docs/acceptance/p31_subclause_audit.csv",
+    "docs/acceptance/p31_real_extraction_after_fix.log",
+    "docs/acceptance/p31_manual_ops.log",
+    "docs/acceptance/p31_code_fix_verification.log",
+    "docs/acceptance/p31_final_environment_check.log",
+    "docs/acceptance/p31_full_pytest_after_fix.log",
+    "docs/acceptance/p31_module_regression_after_fix.log",
+    "docs/acceptance/p31_ruff_check_after_fix.log",
+    "docs/acceptance/p31_ruff_format_after_fix.log",
+    "docs/acceptance/p31_secret_scan_after_fix.log",
+    "storage/p31_acceptance/evidence/p31_real_extraction_final.json",
+    "storage/p31_acceptance/evidence/p31_real_coverage_final.json",
+    "storage/p31_acceptance/evidence/p31_manual_ops_evidence.json"
+  ]
 }

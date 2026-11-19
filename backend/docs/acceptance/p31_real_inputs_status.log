@@ -36,3 +36,17 @@ model_calls_this_round=0
 acceptance_env_overrides=TENDER_MODEL_MODE=structural,EVALUATION_MODEL_MODE=structural
 image_build_from_head=FAILED(DeadlineExceeded)
 runtime_image=product-knowledge:p1.3 (HEAD source mounted read-only)
+
+== real tender input status (updated 2026-11-19) ==
+real_tender_file=.monkeyai/uploads/attachment-3792846006/1-WAF招标技术参数表.docx
+real_tender_sha256=94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+real_tender_status=FOUND_AND_USED
+real_extraction_job=e8af956e-3982-4072-adb2-319f7da9f82c
+real_extraction_status=succeeded
+real_extraction_coverage=complete
+real_top_level_parameters=15
+real_explicit_subclauses=46
+real_atomic_requirements=199
+manual_ops_job=9295dd26-ac27-4c53-9e26-af2014183148
+manual_ops_status=PASS
+note=Previous “exact filename search” section records the pre-submission state; it is retained as history, not the current input status.

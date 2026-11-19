@@ -1,0 +1,49 @@
+phase=P3.1 real extraction after fixes
+acceptance_id=P31-20261119-1340
+input_file=1-WAF招标技术参数表.docx
+input_sha256=94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+input_type=docx (OOXML)
+api=http://127.0.0.1:18080
+job_id=e8af956e-3982-4072-adb2-319f7da9f82c
+idempotency_key=p31-real-20261119-05
+status=succeeded
+coverage_status=complete
+extracted=15
+skipped=33
+ambiguous=0
+parameters=15
+top_level_children=4,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+explicit_subclauses=46
+atomic_requirements=199
+text_mismatches=0
+tree_mismatches=0
+span_errors=0
+proof_cells_filtered=15
+coverage_reasons:
+- filtered|document_title=1
+- filtered|proof_material=3
+- filtered|section_heading=4
+- filtered|non_technical_section=9
+- filtered|table_header=1
+- filtered|proof_or_commercial_column=15
+- extracted|None=15
+structured_thresholds:
+- 3: 不少于3000条; 不低于1次
+- 4: 不小于1MB
+- 6: 不大于1秒
+- 9: 不少于6个月
+- 10: 4个blank_threshold（Gbps/万）+ 不大于1ms
+- 11: 不低于1次
+- 12: 不少于7天
+- 14: 2个blank_threshold（%）
+- 15: 1个blank_threshold（vCPU）
+blank_threshold_total=8
+open_enumeration_total=23
+review_required=true
+review_reason=parameter 2 contains “至少包括” open enumeration; human review required
+evidence=storage/p31_acceptance/evidence/p31_real_extraction_final.json
+evidence=storage/p31_acceptance/evidence/p31_real_coverage_final.json
+evidence=storage/p31_acceptance/evidence/p31_real_audit_summary.json
+audit=docs/acceptance/p31_parameter_audit.csv (15 rows)
+audit=docs/acceptance/p31_subclause_audit.csv (46 rows)
+note=Committed audit CSV keeps hashes/spans/counts, not full tender text.

@@ -1,0 +1,15 @@
+phase=P3.1 atomic requirement source_span defects (before fix)
+source=real API job 80d2d999-12b7-4c56-99af-1ec51153dfa8 (manual ops, before fix)
+observed_total=20 span mismatches / 168 atomic requirements / 16 active parameters
+observed_total_before_manual=35 span mismatches / 199 atomic requirements (job b579dbf5-151e-47d1-b777-5eea897b0dba)
+observed:
+- parameter 8 API 安全防护: 9/9 atomic requirement spans did not match original_text
+- parameter 7 WebShell 与内存马检测: 2/7 spans did not match
+- merged parameter 4: 9/33 spans did not match
+examples:
+- requirement "WebShell 静态特征检测与动态行为检测" -> span text " WebShell 静态特征检测与动态行为检"
+- requirement "API 资产自动发现与接口台账（自动梳理 URL、方法、参数）" -> span text " API 资产自动发现与接口台账（自动梳理 URL、方法、参数"
+- requirement "HTTP/1.1" -> span text " HTTP/1."
+diagnosis=OR/AND child spans miss the outer trim offset after a capability prefix; ordered subclause spans also ignore leading/trailing trim
+regression_test=tests/unit/test_p21_source_spans.py
+pre_fix_result=1 failed

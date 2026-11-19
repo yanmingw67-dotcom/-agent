@@ -1,0 +1,23 @@
+phase=P3.1 real extraction failure evidence (before fix)
+file=../.monkeyai/uploads/attachment-3792846006/1-WAF招标技术参数表.docx
+local_sha256=94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+api_original_file_hash=94052a70677167d92a2ec50b8933024450283f7e65d5dfc652f602b57b32af3c
+hash_match=True
+job_id=88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa
+status=failed
+coverage_status=complete
+extracted_count=0
+skipped_count=33
+ambiguous_count=0
+error_code=NO_TECHNICAL_PARAMETERS
+coverage_reason_counts:
+  filtered	document_title	1
+  filtered	non_technical_section	25
+  filtered	proof_material	3
+  filtered	section_heading	3
+  filtered	table_header	1
+filtered_table_rows_reason=non_technical_section
+observed_section=一、编制说明
+expected_table_section=表 1  WAF 技术参数要求
+diagnosis=table rows inherit the preceding "编制说明" section; table caption is not treated as a section boundary
+result=FAIL_BEFORE_FIX

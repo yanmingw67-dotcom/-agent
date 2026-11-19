@@ -1,45 +1,45 @@
-"id","area","item","status","evidence","reason_or_action"
-"A1","A","15条顶层参数与顺序","BLOCKED","p31_real_inputs_status.log","真实Word缺失；0/15"
-"A2","A","46个编号子条款覆盖","BLOCKED","p31_real_inputs_status.log","真实Word缺失；0/46"
-"A3","A","技术逻辑与量化条件","BLOCKED","p31_module_regression.log","仅合成规则测试，不是真实文件"
-"A4","A","证明材料与非技术条款过滤","BLOCKED","p31_real_inputs_status.log","未在真实Word验证"
-"A5","A","原文位置与修正审计","BLOCKED","p31_real_inputs_status.log","无真实提取结果"
-"B1","B","真实源码/文档完整性","BLOCKED","p31_real_inputs_status.log","仅演示资产"
-"B2","B","解析成功率","BLOCKED","p31_real_inputs_status.log","无真实输入"
-"B3","B","功能发现覆盖","BLOCKED","p31_real_inputs_status.log","无真实产品知识"
-"B4","B","技术机制提取","BLOCKED","p31_real_inputs_status.log","无真实产品知识"
-"B5","B","源码证据引用","BLOCKED","p31_real_inputs_status.log","无真实源码快照"
-"B6","B","技术文档证据引用","BLOCKED","p31_real_inputs_status.log","无正式技术文档"
-"B7","B","已审核能力证据完整性","BLOCKED","p31_real_inputs_status.log","只有synthetic_public发布物"
-"B8","B","发布清单与当前有效快照","BLOCKED","p31_real_inputs_status.log","无真实发布清单"
-"B9","B","已发布能力检索","BLOCKED","p31_real_inputs_status.log","无真实已发布能力"
-"B10","B","否定能力/适用范围/限制条件","BLOCKED","p31_real_inputs_status.log","无业务复核基准"
-"C1","C","三分类结论","BLOCKED","p31_model_calls.log","0条真实结论"
-"C2","C","技术等效","BLOCKED","p31_model_calls.log","无真实证据与授权模型"
-"C3","C","逻辑汇总与冲突","BLOCKED","p31_module_regression.log","仅合成门槛测试"
-"C4","C","真实模型记录","BLOCKED","p31_model_calls.log","0次调用、0 Token、无授权证明"
-"D1","D","选择真实产品","BLOCKED","p31_environment_health.log","隔离库为空；正式库仅演示品类"
-"D2","D","上传真实Word","BLOCKED","p31_real_inputs_status.log","文件缺失"
-"D3","D","查看提取结果","BLOCKED","p31_real_inputs_status.log","无真实提取任务"
-"D4","D","人工修正与审计","BLOCKED","p31_real_inputs_status.log","无真实结果可修正"
-"D5","D","启动评估","BLOCKED","p31_model_calls.log","无真实知识/授权模型"
-"D6","D","查看证据","BLOCKED","p31_real_inputs_status.log","无真实证据"
-"D7","D","提交人工复核","BLOCKED","p31_real_inputs_status.log","无真实评估任务"
-"D8","D","导出Word/Excel","BLOCKED","p31_module_regression.log","无真实导出；合成测试仅覆盖代码路径"
-"D9","D","自动结论不被人工覆盖","BLOCKED","p31_module_regression.log","无真实自动结论"
-"D10","D","历史任务不受新发布影响","BLOCKED","p31_real_inputs_status.log","无真实发布更新对照"
-"E1","E","独立PostgreSQL环境","PASS","p31_environment_health.log","0012，36表，API 18080，健康200"
-"E2","E","不覆盖正式知识库/生产库","PASS","p31_baseline.log","正式库仍0007，数据量未变"
-"E3","E","独立文件/导出/审计目录","PASS","p31_environment_health.log","storage/p31_acceptance独立目录"
-"E4","E","验收任务ID","PASS","p31_acceptance_manifest.json","已记录P31-20261119-1340"
-"E4b","E","真实快照ID/发布清单ID","BLOCKED","p31_acceptance_manifest.json","无真实资料；字段为空"
-"E5","E","耗时/模型量/错误状态","PASS","p31_full_pytest.log","测试耗时与0模型调用已记录"
-"E6","E","保留失败与不确定结论","PASS","P3.1_ACCEPTANCE_REPORT.md","全部BLOCKED，不写成通过"
-"E7","E","不写入资料全文到公开日志","PASS","p31_real_inputs_status.log","仅路径/哈希/计数/状态"
-"E8","E","清理前导出脱敏结果与索引","PASS","p31_acceptance_manifest.json","已生成manifest/矩阵/日志；未删除环境"
-"R1","R","全量自动化回归","PASS","p31_full_pytest.log","418 passed, 32 skipped"
-"R2","R","P2.1-P2.3模块专项","PASS","p31_module_regression.log","109 passed（合成数据）"
-"R3","R","Ruff检查与格式","PASS","p31_ruff_check.log; p31_ruff_format.log","check通过；197 files formatted"
-"R4","R","前端类型检查与构建","PASS","p31_frontend_typecheck.log; p31_frontend_build.log","均退出0"
-"R5","R","提交前敏感信息扫描","PASS","p31_secret_scan.log","未发现Token/密码/API Key"
-"G1","G","P3.1总体","BLOCKED","P3.1_ACCEPTANCE_REPORT.md","真实资料与授权模型缺失，不宣布通过"
+id,area,item,status,evidence,reason_or_action
+A1,A,15条顶层参数与顺序,PASS,p31_real_extraction_after_fix.log,15/15；顺序1-15；原文0不一致
+A2,A,46个编号子条款覆盖,PASS,p31_real_extraction_after_fix.log,46/46；顶层子节点4+3*14；199原子要求
+A3,A,技术逻辑与量化条件,PASS,p31_source_span_defects_before_fix.log; p31_code_fix_verification.log,AND/OR、至少N、单位、空白占位已在真实文件核对；3个缺陷已修复；保留2个P2已知限制
+A4,A,证明材料与非技术条款过滤,PASS,p31_real_extraction_after_fix.log,15个证明列、9个非技术段、4个标题、表头与文档标题均过滤
+A5,A,原文位置与修正审计,PASS,p31_manual_ops.log,199个原子区间逐字一致；编辑/拆分/合并/新增审计通过
+B1,B,真实源码/文档完整性,BLOCKED,p31_real_inputs_status.log,仅演示资产；无真实WAF源码/正式技术文档
+B2,B,解析成功率,BLOCKED,p31_real_inputs_status.log,无真实产品知识输入
+B3,B,功能发现覆盖,BLOCKED,p31_real_inputs_status.log,无真实产品知识
+B4,B,技术机制提取,BLOCKED,p31_real_inputs_status.log,无真实产品知识
+B5,B,源码证据引用,BLOCKED,p31_real_inputs_status.log,无真实源码快照
+B6,B,技术文档证据引用,BLOCKED,p31_real_inputs_status.log,无正式技术文档
+B7,B,已审核能力证据完整性,BLOCKED,p31_real_inputs_status.log,只有synthetic_public发布物
+B8,B,发布清单与当前有效快照,BLOCKED,p31_real_inputs_status.log,无真实发布清单
+B9,B,已发布能力检索,BLOCKED,p31_real_inputs_status.log,无真实已发布能力
+B10,B,否定能力/适用范围/限制条件,BLOCKED,p31_real_inputs_status.log,无业务复核基准
+C1,C,三分类结论,BLOCKED,p31_model_calls.log,0条真实结论
+C2,C,技术等效,BLOCKED,p31_model_calls.log,无真实证据与授权模型
+C3,C,逻辑汇总与冲突,BLOCKED,p31_module_regression.log,仅合成门槛测试
+C4,C,真实模型记录,BLOCKED,p31_model_calls.log,0次调用、0 Token、无授权证明
+D1,D,选择真实产品,BLOCKED,p31_final_environment_check.log,隔离库已创建/选择waf_p31品类，但仅用于提取；无真实产品知识/发布物
+D2,D,上传真实Word,PASS,p31_real_extraction_after_fix.log,202上传；job e8af956e succeeded
+D3,D,查看提取结果,PASS,p31_real_extraction_after_fix.log,15参数/46子条款/199原子；coverage=complete
+D4,D,人工修正与审计,PASS,p31_manual_ops.log,edit/split/merge/add均2xx；区间/树/叶子/顺序全通过
+D5,D,启动评估,BLOCKED,p31_model_calls.log,无真实知识/授权模型
+D6,D,查看证据,BLOCKED,p31_real_inputs_status.log,无真实产品证据
+D7,D,提交人工复核,BLOCKED,p31_real_inputs_status.log,无真实评估任务
+D8,D,导出Word/Excel,BLOCKED,p31_module_regression.log,无真实评估结果；合成测试仅覆盖代码路径
+D9,D,自动结论不被人工覆盖,BLOCKED,p31_module_regression.log,无真实自动结论
+D10,D,历史任务不受新发布影响,BLOCKED,p31_real_inputs_status.log,无真实发布更新对照
+E1,E,独立PostgreSQL环境,PASS,p31_final_environment_check.log,0012，36表，API 18080，live/ready 200
+E2,E,不覆盖正式知识库/生产库,PASS,p31_final_environment_check.log,正式库仍0007；65/64/33/2未变
+E3,E,独立文件/导出/审计目录,PASS,p31_final_environment_check.log,storage/p31_acceptance独立目录
+E4,E,验收任务ID,PASS,p31_acceptance_manifest.json,已记录P31-20261119-1340
+E4b,E,真实快照ID/发布清单ID,BLOCKED,p31_acceptance_manifest.json,无真实产品资料；字段为空
+E5,E,耗时/模型量/错误状态,PASS,p31_real_extraction_after_fix.log,真实job succeeded，104.8ms，0模型调用，0错误
+E6,E,保留失败与不确定结论,PASS,P3.1_ACCEPTANCE_REPORT.md,失败证据、P2限制与BLOCKED均保留
+E7,E,不写入资料全文到公开日志,PASS,p31_subclause_audit.csv,提交清单仅哈希/区间/计数；全文只在本地证据
+E8,E,清理前导出脱敏结果与索引,PASS,p31_acceptance_manifest.json,manifest/矩阵/审计CSV/日志已生成；未删除环境
+R1,R,全量自动化回归,PASS,p31_full_pytest_after_fix.log,"424 passed, 32 skipped"
+R2,R,P2.1-P2.3模块专项,PASS,p31_module_regression_after_fix.log,145 passed
+R3,R,Ruff检查与格式,PASS,p31_ruff_check_after_fix.log; p31_ruff_format_after_fix.log,check退出0；178 files formatted
+R4,R,前端类型检查与构建,PASS,p31_frontend_typecheck.log; p31_frontend_build.log,均退出0；本轮未改前端
+R5,R,提交前敏感信息扫描,PASS,p31_secret_scan_after_fix.log,未发现Token/密码/API Key
+G1,G,P3.1总体,BLOCKED,P3.1_ACCEPTANCE_REPORT.md,A与D2-D4通过；B/C/D1/D5-D10/E4b仍阻塞；ENV-P1-01未关闭

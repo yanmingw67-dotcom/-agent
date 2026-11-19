@@ -1,0 +1,17 @@
+phase=P3.1 final environment check
+timestamp=2026-11-19T22:05:00+08:00
+production_db=knowledge
+migration=0007
+categories=65
+source_snapshots=64
+documents=33
+publications=2
+acceptance_db=knowledge_p31_acceptance
+migration=0012
+tables=36
+categories=1
+tender_jobs=6
+source_snapshots=0
+publications=0
+api_live=200
+api_ready=200

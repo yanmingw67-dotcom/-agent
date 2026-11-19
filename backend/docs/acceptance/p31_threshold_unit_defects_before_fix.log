@@ -1,0 +1,14 @@
+phase=P3.1 real threshold/unit defects (before fix)
+source=real API job c3fc7847-3584-4a67-a60a-dfc21edf4dda
+observed:
+- 内置防护规则不少于 3000 条 -> threshold=3000 unit=None
+- 日志留存不少于 6 个月 -> threshold=6 unit=个
+- 存储不少于 7 天 -> threshold=7 unit=None
+- 不小于 1MB -> threshold=1 unit=None
+- 升级频率不低于每周 1 次 -> threshold=None unit=None ambiguity=blank_threshold
+- 误报率不高于 ______% -> threshold=None unit=None ambiguity=blank_threshold
+- 资源占用不高于 ______vCPU -> threshold=None unit=None ambiguity=blank_threshold
+- 至少包括 SQL 注入 -> threshold=None unit=None ambiguity=blank_threshold
+regression_test=tests/unit/test_p21_threshold_units.py
+pre_fix_result=3 failed
+diagnosis=THRESHOLD unit alternation lacks 条/个月/天/MB/次/%/vCPU; "至少" matches without a numeric value and is misread as a blank threshold

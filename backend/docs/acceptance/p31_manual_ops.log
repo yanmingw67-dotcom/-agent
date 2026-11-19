@@ -1,0 +1,51 @@
+phase=P3.1 manual edit/split/merge/add verification after source_span fix
+job_id=9295dd26-ac27-4c53-9e26-af2014183148
+idempotency_key=p31-real-edit-20261119-02
+upload_status=202
+extraction_status=succeeded
+extracted=15
+edit:
+- endpoint=PATCH /api/v1/tender/extractions/{job_id}/parameters/{id}
+- http=200
+- status=corrected
+- revision=2
+- anchor_status=manual_edit
+- top_level_children=2
+- atomic_requirements=4
+- threshold=10 Gbps
+- span_ok=true
+split:
+- endpoint=POST /api/v1/tender/extractions/{job_id}/parameters/{id}/split
+- http=200
+- parts=2
+- each_parts_children=2
+- each_parts_atoms=2
+- anchor_status=manual_split
+- span_ok=true
+merge:
+- endpoint=POST /api/v1/tender/extractions/{job_id}/merge
+- http=200
+- status=corrected
+- anchor_status=manual_merge
+- top_level_children=6
+- atomic_requirements=33
+- revision=2
+- span_ok=true
+add:
+- endpoint=POST /api/v1/tender/extractions/{job_id}/parameters
+- http=201
+- status=corrected
+- extraction_method=user_added
+- source_locator.kind=user
+- top_level_children=2
+- atomic_requirements=2
+- order_index=16
+- span_ok=true
+final:
+- active_count=16
+- order_indexes=1..16 contiguous=true
+- all_spans_ok=true
+- all_tree_match=true
+- all_leaf_match=true
+- corrections_actions=add,merge,split,edit
+evidence=storage/p31_acceptance/evidence/p31_manual_ops_evidence.json
