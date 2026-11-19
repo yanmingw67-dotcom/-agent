@@ -187,6 +187,25 @@ export interface ResultsPayload {
   parameters: ParameterResult[]
 }
 
+export interface TenderAtomicRequirement {
+  requirement_id: string
+  original_text: string
+  requirement_text?: string
+  requirement_type: string
+  logical_relation: string
+  logical_group_id: string | null
+  is_mandatory: boolean
+  mandatory_status?: string
+  threshold?: string | number | null
+  threshold_operator?: string | null
+  unit?: string | null
+  conditions?: string[]
+  ambiguity?: string | null
+  source_span?: { start: number; end: number }
+  parent_requirement_id?: string | null
+  depth?: number
+}
+
 export interface TenderParameter {
   id: string
   order_index: number
@@ -198,9 +217,36 @@ export interface TenderParameter {
   extraction_method: string
   extraction_confidence: string
   review_required: boolean
-  atomic_requirements: Array<{ original_text?: string; requirement_text?: string }>
+  atomic_requirements: TenderAtomicRequirement[]
+  logic_tree?: Record<string, unknown>
+  model_hints?: string[]
   status: string
   revision: number
+  superseded_by?: string | null
+}
+
+export type CorrectionAction = 'edit' | 'split' | 'merge' | 'add' | 'confirm'
+
+export interface CorrectionRecord {
+  correction_id: string
+  job_id: string
+  parameter_id: string | null
+  actor: string
+  action: CorrectionAction
+  correlation_id: string | null
+  before: {
+    parameter_name?: string
+    original_text?: string
+    atomic_requirements?: TenderAtomicRequirement[]
+    parameter_ids?: string[]
+  }
+  after: {
+    parameter_name?: string
+    original_text?: string
+    atomic_requirements?: TenderAtomicRequirement[]
+    parameter_ids?: string[]
+  }
+  created_at: string
 }
 
 export interface ExtractionJob {
@@ -239,7 +285,11 @@ export interface ExportJob {
   summary: Record<string, unknown>
   error_code: string | null
   download_token: string
+  download_expires_at: string | null
+  download_expired: boolean
   download_url: string
+  file_sha256: string | null
+  integrity_available: boolean
   created_at: string
   started_at: string | null
   finished_at: string | null

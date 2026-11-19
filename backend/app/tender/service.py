@@ -525,6 +525,21 @@ def _display_name(text: str):
     return value[:120] or "用户修正参数"
 
 
+def _corrected_locator(locator: dict | None, action: str):
+    """人工修改后旧文档锚点不再可信，仅作为审计来源保留。"""
+    original = dict(locator or {})
+    base = {
+        key: value
+        for key, value in original.items()
+        if key not in {"anchor_status", "original_locator"}
+    }
+    return {
+        **base,
+        "anchor_status": action,
+        "original_locator": original,
+    }
+
+
 def _before(parameter: TenderParameter):
     return {
         "parameter_id": parameter.id,
@@ -662,6 +677,8 @@ def edit_parameter(
             raise AppError(422, "EMPTY_PARAMETER_TEXT", "参数正文不能为空")
         parameter.original_text = value
         parameter.normalized_text = normalize(value)
+        # 原文改变后原文件行号不再对应新文本，保留旧定位仅用于审计，避免页面继续引用失效锚点。
+        parameter.source_locator = _corrected_locator(parameter.source_locator, "manual_edit")
         _write_requirements(db, job.id, parameter, value)
     parameter.status = "corrected"
     parameter.revision += 1
@@ -729,6 +746,15 @@ def add_parameter(
     db.add(parameter)
     db.flush()
     _write_requirements(db, job.id, parameter, value)
+    # 拆分/合并会把失效参数排到高位，新增后统一重排，避免界面出现 1000015 之类序号。
+    rows = db.scalars(
+        select(TenderParameter)
+        .where(TenderParameter.job_id == job.id)
+        .order_by(TenderParameter.order_index)
+    ).all()
+    active_ids = [row.id for row in rows if row.status != "superseded"]
+    superseded_ids = [row.id for row in rows if row.status == "superseded"]
+    _renumber(db, job.id, active_ids + superseded_ids)
     _audit(db, job.id, parameter.id, principal_id, "add", correlation_id, {}, _after(parameter))
     db.commit()
     return parameter
@@ -761,6 +787,7 @@ def split_parameter(
     ).all()
     original_order = parameter.order_index
     before = _before(parameter)
+    split_locator = _corrected_locator(parameter.source_locator, "manual_split")
     # 先把既有顺序整体后移，避免拆分新增行与原下一行发生唯一约束冲突。
     _shift_orders(db, job.id)
     parameter.status = "superseded"
@@ -772,7 +799,7 @@ def split_parameter(
             parameter_name=name,
             original_text=text,
             normalized_text=normalize(text),
-            source_locator={**parameter.source_locator, "split_from": parameter.id},
+            source_locator={**split_locator, "split_from": parameter.id},
             extraction_method="user_split",
             extraction_confidence="user",
             review_required=False,
@@ -825,6 +852,7 @@ def merge_parameters(
     target.original_text = merged_text
     target.normalized_text = normalize(merged_text)
     target.parameter_name = (parameter_name or target.parameter_name)[:500]
+    target.source_locator = _corrected_locator(target.source_locator, "manual_merge")
     target.status = "corrected"
     target.revision += 1
     _write_requirements(db, job.id, target, merged_text)
@@ -854,6 +882,39 @@ def merge_parameters(
     )
     db.commit()
     return target
+
+
+def corrections_json(
+    db: Session,
+    job_id: str,
+    principal_id: str,
+    *,
+    parameter_id: str | None = None,
+    limit: int = 200,
+):
+    _owned_job(db, job_id, principal_id)
+    statement = select(TenderCorrection).where(TenderCorrection.job_id == job_id)
+    if parameter_id:
+        statement = statement.where(TenderCorrection.parameter_id == parameter_id)
+    rows = db.scalars(
+        statement.order_by(TenderCorrection.created_at.desc(), TenderCorrection.id.desc()).limit(
+            min(max(limit, 1), 500)
+        )
+    ).all()
+    return [
+        {
+            "correction_id": row.id,
+            "job_id": row.job_id,
+            "parameter_id": row.parameter_id,
+            "actor": row.actor,
+            "action": row.action,
+            "correlation_id": row.correlation_id,
+            "before": row.before_json or {},
+            "after": row.after_json or {},
+            "created_at": row.created_at,
+        }
+        for row in rows
+    ]
 
 
 def _manual_change_count(db: Session, job_id: str) -> int:

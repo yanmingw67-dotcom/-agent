@@ -38,8 +38,7 @@ from tests.integration.test_p22_api import (
 def _download(client, export):
     response = client.get(
         f"/api/v1/tender/workbench/exports/{export['export_id']}/download",
-        headers=READ,
-        params={"token": export["download_token"]},
+        headers={**READ, "X-Export-Token": export["download_token"]},
     )
     assert response.status_code == 200, response.text
     return response.content
@@ -208,6 +207,21 @@ class P23PostgresTests(unittest.TestCase):
         get_engine().dispose()
         get_engine.cache_clear()
         config = Config("alembic.ini")
+        columns = {
+            column["name"] for column in inspect(self.engine).get_columns("evaluation_export_jobs")
+        }
+        assert {"download_expires_at", "file_sha256"} <= columns
+        command.downgrade(config, "0011")
+        columns = {
+            column["name"] for column in inspect(self.engine).get_columns("evaluation_export_jobs")
+        }
+        assert "download_expires_at" not in columns
+        assert "file_sha256" not in columns
+        command.upgrade(config, "head")
+        columns = {
+            column["name"] for column in inspect(self.engine).get_columns("evaluation_export_jobs")
+        }
+        assert {"download_expires_at", "file_sha256"} <= columns
         command.downgrade(config, "0010")
         tables = set(inspect(self.engine).get_table_names())
         assert "evaluation_reviews" not in tables

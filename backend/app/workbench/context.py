@@ -5,8 +5,13 @@
 页面标注“证据来源不可用”或导出失败关闭；绝不静默替换为其他来源。
 """
 
+from sqlalchemy import select
+
+from app.core.security import AppError
+from app.db.evaluation_models import EvaluationEvidence
 from app.db.models import Snapshot
 from app.db.review_models import ClaimRevision, Publication
+from app.evaluation.retrieval import PinnedKnowledge
 from app.ingestion.text import digest
 from app.knowledge.evidence_registry import canonical
 
@@ -61,6 +66,57 @@ def pinned_capabilities(db, job):
             "implementation_mechanism": content.get("implementation_mechanism") or "",
         }
     return capabilities, None
+
+
+def verify_export_evidence(db, job, capabilities: dict):
+    """导出前按 P2.2 固定快照逻辑重新回读全部证据。
+
+    复用 PinnedKnowledge 的来源文件、文档分段、引文哈希校验与进程内缓存；
+    任一证据失效都返回具体错误码并失败关闭，不回退当前发布版本。
+    """
+    try:
+        knowledge = PinnedKnowledge(db, job)
+    except AppError as exc:
+        raise AppError(
+            409,
+            exc.error_code,
+            f"导出前固定发布版本校验失败：{exc.message}",
+        ) from exc
+    rows = list(db.scalars(select(EvaluationEvidence).where(EvaluationEvidence.job_id == job.id)))
+    verified = {}
+    for row in rows:
+        result = verified.get(row.evidence_id)
+        if result is None:
+            try:
+                result = knowledge.read_verified_evidence(row.evidence_id)
+            except AppError as exc:
+                raise AppError(
+                    409,
+                    exc.error_code,
+                    f"导出前证据再验证失败：{exc.message}",
+                ) from exc
+            verified[row.evidence_id] = result
+        capability = capabilities.get(row.capability_id)
+        if not capability or capability.get("revision_id") != row.revision_id:
+            raise AppError(
+                409,
+                "EXPORT_EVIDENCE_CAPABILITY_MISMATCH",
+                "证据引用的能力修订不在任务固定的发布版本中",
+            )
+        if (
+            result.get("id") != row.evidence_id
+            or result.get("source_ref") != row.source_ref
+            or result.get("locator") != row.locator
+            or result.get("source_hash") != row.source_hash
+            or result.get("quote_hash") != row.quote_hash
+            or (row.quote and not str(result.get("quote") or "").startswith(row.quote))
+        ):
+            raise AppError(
+                409,
+                "EXPORT_EVIDENCE_MISMATCH",
+                "已持久化证据与固定快照回读结果不一致",
+            )
+    return verified
 
 
 def source_type_label(kind: str):

@@ -111,6 +111,8 @@ class Settings(BaseSettings):
     export_max_cell_chars: int = 20000
     export_max_file_bytes: int = 50 * 1024 * 1024
     export_max_active_jobs: int = 2
+    # 下载凭证为短期凭证；过期后必须重新签发，不能继续访问历史导出文件。
+    export_download_ttl_seconds: int = 3600
     export_job_timeout_seconds: int = 300
     export_queue_enabled: bool = False
     export_queue_name: str = "evaluation-export"
@@ -241,6 +243,7 @@ class Settings(BaseSettings):
         "export_max_cell_chars",
         "export_max_file_bytes",
         "export_max_active_jobs",
+        "export_download_ttl_seconds",
         "export_job_timeout_seconds",
     )
     @classmethod

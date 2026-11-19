@@ -150,6 +150,22 @@ def get_coverage(
     return {"job_id": job_id, "records": records, "regions": records}
 
 
+@router.get("/{job_id}/corrections")
+def list_corrections(
+    job_id: str,
+    parameter_id: str | None = Query(default=None, max_length=36),
+    limit: int = Query(default=200, ge=1, le=500),
+    principal_id=Depends(tender_principal),
+    db: Session = Depends(get_db),
+):
+    return {
+        "job_id": job_id,
+        "items": service.corrections_json(
+            db, job_id, principal_id, parameter_id=parameter_id, limit=limit
+        ),
+    }
+
+
 @router.post("/{job_id}/retry", status_code=202)
 def retry_job(
     job_id: str,

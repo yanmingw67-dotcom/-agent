@@ -1,0 +1,51 @@
+P2.3 R02/R03 下载文件内容校验（合成数据）
+{
+  "format": "docx",
+  "export_id": "5999b71c-78e6-4cc0-bc03-f727d4d665dd",
+  "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "size_bytes": 41577,
+  "stored_sha256": "2f3c18e1b6424f4b840b420bf61d1ab16d9bc8ff3e767734d35f4647c1451d49",
+  "actual_sha256": "2f3c18e1b6424f4b840b420bf61d1ab16d9bc8ff3e767734d35f4647c1451d49",
+  "sha_match": true,
+  "parameter_count": 7,
+  "atomic_count": 15,
+  "review_count": 1,
+  "tables": 5,
+  "title": true,
+  "auto_vs_manual": true,
+  "review_section": true,
+  "corrected_parameter_name": true,
+  "merged_parameter_name": true,
+  "added_parameter": true,
+  "review_comment": true,
+  "adjust_reason": true,
+  "no_bid_proof_requirement": true
+}
+{
+  "format": "xlsx",
+  "export_id": "14245ca7-fbde-4277-a69c-21360400031c",
+  "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "size_bytes": 12920,
+  "stored_sha256": "3ac3ee85d5cb60e74ff1c6adf4de2e8b0bd6030776327dbc529fd5ec392aec6c",
+  "actual_sha256": "3ac3ee85d5cb60e74ff1c6adf4de2e8b0bd6030776327dbc529fd5ec392aec6c",
+  "sha_match": true,
+  "zip_integrity": true,
+  "sheetnames": [
+    "评估结果汇总",
+    "原子子要求明细",
+    "待确认与问题清单",
+    "证据索引"
+  ],
+  "summary_max_row": 8,
+  "atom_max_row": 16,
+  "formula_cells": 0,
+  "corrected_parameter_name": true,
+  "merged_parameter_name": true,
+  "added_parameter": true,
+  "review_comment": true,
+  "adjust_reason": true,
+  "no_bid_proof_requirement": true,
+  "parameter_count": 7,
+  "atomic_count": 15,
+  "review_count": 1
+}

@@ -460,6 +460,14 @@ export function ResultDetail({ api, id }: { api: ApiClient; id: string }) {
                     {' '}参数 {countLabel(item.parameter_count)} 条
                   </span>
                   {item.error_code && <span className="text-danger">失败原因：{item.error_code}</span>}
+                  {item.status === 'succeeded' && (
+                    <span>
+                      下载凭证到期：{item.download_expires_at ? formatDate(item.download_expires_at) : '历史任务无凭证'}
+                      {item.integrity_available
+                        ? ' · 文件完整性摘要可用'
+                        : ' · 缺少生成时完整性摘要，需重新生成'}
+                    </span>
+                  )}
                 </div>
                 <Badge tone={item.status === 'succeeded' ? 'ok' : item.status === 'failed' ? 'danger' : 'info'} dot>
                   {item.status === 'succeeded' ? '可下载' : item.status === 'failed' ? '生成失败' : '生成中'}
@@ -467,7 +475,12 @@ export function ResultDetail({ api, id }: { api: ApiClient; id: string }) {
                 <button
                   type="button"
                   className="button button-secondary button-small"
-                  disabled={item.status !== 'succeeded' || downloading === item.export_id || item.file_available === false}
+                  disabled={
+                    item.status !== 'succeeded' ||
+                    downloading === item.export_id ||
+                    item.file_available === false ||
+                    !item.integrity_available
+                  }
                   onClick={() => void download(item)}
                 >
                   {downloading === item.export_id ? '下载中…' : '下载'}

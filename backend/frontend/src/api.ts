@@ -1,5 +1,6 @@
 import type {
   Category,
+  CorrectionRecord,
   EvaluationJob,
   ExportFormat,
   ExportJob,
@@ -143,6 +144,59 @@ export class ApiClient {
     })
   }
 
+  editParameter(
+    extractionId: string,
+    parameterId: string,
+    payload: { parameter_name?: string; original_text?: string },
+  ): Promise<unknown> {
+    return this.request(
+      `/api/v1/tender/extractions/${extractionId}/parameters/${parameterId}`,
+      { method: 'PATCH', body: payload },
+    )
+  }
+
+  splitParameter(
+    extractionId: string,
+    parameterId: string,
+    parts: Array<{ parameter_name?: string; original_text: string }>,
+  ): Promise<unknown> {
+    return this.request(
+      `/api/v1/tender/extractions/${extractionId}/parameters/${parameterId}/split`,
+      { method: 'POST', body: { parts } },
+    )
+  }
+
+  mergeParameters(
+    extractionId: string,
+    parameterIds: string[],
+    parameterName?: string,
+  ): Promise<unknown> {
+    return this.request(`/api/v1/tender/extractions/${extractionId}/merge`, {
+      method: 'POST',
+      body: { parameter_ids: parameterIds, parameter_name: parameterName || undefined },
+    })
+  }
+
+  addParameter(
+    extractionId: string,
+    payload: { parameter_name?: string; original_text: string },
+  ): Promise<unknown> {
+    return this.request(`/api/v1/tender/extractions/${extractionId}/parameters`, {
+      method: 'POST',
+      body: payload,
+    })
+  }
+
+  listCorrections(
+    extractionId: string,
+    parameterId?: string,
+  ): Promise<{ job_id: string; items: CorrectionRecord[] }> {
+    const query = new URLSearchParams()
+    if (parameterId) query.set('parameter_id', parameterId)
+    const suffix = query.toString() ? `?${query.toString()}` : ''
+    return this.request(`/api/v1/tender/extractions/${extractionId}/corrections${suffix}`)
+  }
+
   confirmParameter(extractionId: string, parameterId: string): Promise<unknown> {
     return this.request(
       `/api/v1/tender/extractions/${extractionId}/parameters/${parameterId}/confirm`,
@@ -193,13 +247,37 @@ export class ApiClient {
     return this.request<ExportJob>(`/api/v1/tender/workbench/exports/${exportId}`)
   }
 
+  refreshDownloadToken(
+    exportId: string,
+  ): Promise<{ export_id: string; download_token: string; download_expires_at: string }> {
+    return this.request(`/api/v1/tender/workbench/exports/${exportId}/download-token`, {
+      method: 'POST',
+    })
+  }
+
   async downloadExport(exportJob: ExportJob): Promise<void> {
-    const response = await fetch(
-      `${API_BASE}/api/v1/tender/workbench/exports/${exportJob.export_id}/download?token=${encodeURIComponent(
-        exportJob.download_token,
-      )}`,
-      { headers: { Authorization: `Bearer ${this.token}` } },
-    )
+    const request = (token: string) =>
+      fetch(
+        `${API_BASE}/api/v1/tender/workbench/exports/${exportJob.export_id}/download`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            // 下载凭证只放在专用请求头，绝不拼进 URL、历史记录或日志。
+            'X-Export-Token': token,
+          },
+        },
+      )
+    let response = await request(exportJob.download_token)
+    if (!response.ok) {
+      const failure = await parseError(response)
+      if (failure.code === 'EXPORT_TOKEN_EXPIRED') {
+        const fresh = await this.refreshDownloadToken(exportJob.export_id)
+        response = await request(fresh.download_token)
+      } else {
+        if (response.status === 401) this.onUnauthorized?.()
+        throw failure
+      }
+    }
     if (!response.ok) {
       if (response.status === 401) this.onUnauthorized?.()
       throw await parseError(response)

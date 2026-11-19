@@ -11,6 +11,14 @@ import { TaskList } from './pages/TaskList'
 
 const STORAGE_KEY = 'p23.workbench.token'
 
+function clearStoredToken() {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY)
+  } catch {
+    // 忽略存储不可用。
+  }
+}
+
 function storedToken(): string {
   try {
     return window.localStorage.getItem(STORAGE_KEY) || ''
@@ -31,6 +39,8 @@ export default function App() {
   const api = useMemo(() => {
     if (!token) return null
     return new ApiClient(token, () => {
+      // 认证失败时同时清除内存态与持久化凭证，避免刷新页面后继续复用失效令牌。
+      clearStoredToken()
       setToken('')
       setAuthMessage('登录已失效，请重新输入访问令牌。')
     })
@@ -50,11 +60,7 @@ export default function App() {
   }
 
   function logout() {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY)
-    } catch {
-      // 忽略存储不可用。
-    }
+    clearStoredToken()
     setToken('')
     setAuthMessage('')
   }

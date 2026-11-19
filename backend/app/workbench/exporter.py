@@ -13,7 +13,7 @@ import hashlib
 import json
 import os
 import re
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from docx import Document
@@ -35,7 +35,12 @@ from app.db.models import AuditEvent, Category
 from app.db.session import session_factory
 from app.db.workbench_models import EvaluationExportJob
 from app.evaluation.service import _parameter_payload, job_json
-from app.workbench.context import enrich_evidence, pinned_capabilities, source_type_label
+from app.workbench.context import (
+    enrich_evidence,
+    pinned_capabilities,
+    source_type_label,
+    verify_export_evidence,
+)
 from app.workbench.reviews import latest_reviews, review_json, review_summary
 
 REVIEWABLE = {"succeeded", "partial"}
@@ -101,6 +106,8 @@ def report_data(db, export: EvaluationExportJob):
             "EXPORT_EVIDENCE_CONTEXT_UNAVAILABLE",
             "任务固定发布版本校验失败，不能导出；系统不会替换为当前生效版本",
         )
+    # 必须在生成文件前完成证据再验证；PinnedKnowledge 的缓存保证每条证据只回读一次。
+    verify_export_evidence(db, job, capabilities)
     rows = list(db.scalars(select(ParameterEvaluation).where(ParameterEvaluation.job_id == job.id)))
     if not rows or len(rows) != job.parameter_count:
         raise AppError(
@@ -896,6 +903,8 @@ def create_export(db, job: EvaluationJob, principal_id: str, fmt: str):
         format=fmt,
         status="queued",
         download_token=token_urlsafe(32),
+        download_expires_at=datetime.now(UTC)
+        + timedelta(seconds=settings.export_download_ttl_seconds),
         dispatch_token=uuid4().hex,
         summary_json={},
     )
@@ -948,9 +957,11 @@ def run_export_job(export_id: str, dispatch_token: str | None = None):
                 temp.unlink(missing_ok=True)
                 raise AppError(413, "EXPORT_FILE_TOO_LARGE", "导出文件超过大小上限")
             os.chmod(temp, 0o600)
+            generated_sha256 = file_sha256(temp)
             os.replace(temp, path)
             export.status = "succeeded"
             export.storage_key = storage_key
+            export.file_sha256 = generated_sha256
             export.size_bytes = size
             export.parameter_count = data["parameter_count"]
             export.atomic_count = data["atomic_count"]
@@ -966,6 +977,7 @@ def run_export_job(export_id: str, dispatch_token: str | None = None):
                 "publication_id": data["publication_id"],
                 "publication_hash": data["publication_hash"],
                 "data_digest": data["data_digest"],
+                "file_sha256": generated_sha256,
             }
             export.finished_at = datetime.now(UTC)
             export.error_code = None
@@ -1014,7 +1026,28 @@ def schedule_export(export_id: str, token: str | None, background_tasks):
     background_tasks.add_task(run_export_job, export_id, token)
 
 
+def as_utc(value):
+    if value is None:
+        return None
+    return value if value.tzinfo else value.replace(tzinfo=UTC)
+
+
+def token_fingerprint(token: str | None):
+    if not token:
+        return ""
+    return hashlib.sha256(token.encode()).hexdigest()[:12]
+
+
+def file_sha256(path: Path):
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def export_json(export: EvaluationExportJob):
+    expires_at = as_utc(export.download_expires_at)
     return {
         "export_id": export.id,
         "job_id": export.job_id,
@@ -1029,9 +1062,11 @@ def export_json(export: EvaluationExportJob):
         "summary": export.summary_json or {},
         "error_code": export.error_code,
         "download_token": export.download_token,
-        "download_url": (
-            f"/api/v1/tender/workbench/exports/{export.id}/download?token={export.download_token}"
-        ),
+        "download_expires_at": expires_at,
+        "download_expired": bool(expires_at and expires_at <= datetime.now(UTC)),
+        "download_url": f"/api/v1/tender/workbench/exports/{export.id}/download",
+        "file_sha256": export.file_sha256,
+        "integrity_available": bool(export.file_sha256),
         "created_at": export.created_at,
         "started_at": export.started_at,
         "finished_at": export.finished_at,

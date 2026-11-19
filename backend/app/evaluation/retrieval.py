@@ -149,6 +149,10 @@ class PinnedKnowledge:
             )
         return trusted
 
+    def read_verified_evidence(self, eid: str) -> dict:
+        """供导出等只读复核复用同一套证据回读与缓存。"""
+        return self._read_evidence(eid)
+
     def _read_evidence(self, eid: str) -> dict:
         if eid in self.cache:
             cached = self.cache[eid]

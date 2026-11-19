@@ -94,6 +94,9 @@ class EvaluationExportJob(Base):
     summary_json: Mapped[dict] = mapped_column(JSON, default=dict)
     error_code: Mapped[str | None] = mapped_column(String(64))
     download_token: Mapped[str] = mapped_column(String(64))
+    # 旧导出任务这两列为空：凭证视为已过期、文件完整性摘要不可用，必须重新生成。
+    download_expires_at: Mapped[datetime | None] = mapped_column()
+    file_sha256: Mapped[str | None] = mapped_column(String(64))
     dispatch_token: Mapped[str | None] = mapped_column(String(36))
     created_at: Mapped[datetime] = mapped_column(default=now)
     started_at: Mapped[datetime | None] = mapped_column()

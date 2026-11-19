@@ -1,11 +1,11 @@
 """P2.3 评估工作台 API：任务查询、结果详情、人工复核与受控导出。"""
 
 import secrets
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Literal
 
-from fastapi import APIRouter, BackgroundTasks, Depends, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, Query, Request
 from fastapi.responses import FileResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -18,9 +18,12 @@ from app.db.session import get_db
 from app.db.workbench_models import EvaluationExportJob
 from app.workbench import results, reviews
 from app.workbench.exporter import (
+    as_utc,
     create_export,
     export_json,
+    file_sha256,
     schedule_export,
+    token_fingerprint,
 )
 from app.workbench.schemas import ExportCreate, ReviewCreate
 
@@ -199,30 +202,91 @@ def _path_exists(row: EvaluationExportJob):
         return False
 
 
-@router.get("/exports/{export_id}/download")
-def download_export(
+@router.post("/exports/{export_id}/download-token")
+def refresh_download_token(
     export_id: str,
     request: Request,
-    token: str = Query(min_length=20, max_length=128),
     principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     row = _owned_export(db, export_id, principal_id)
-    if not secrets.compare_digest(token, row.download_token):
+    if row.status != "succeeded":
+        raise AppError(409, "EXPORT_NOT_READY", "导出文件尚未生成")
+    if not row.file_sha256:
+        raise AppError(
+            409,
+            "EXPORT_INTEGRITY_UNAVAILABLE",
+            "历史导出缺少生成时完整性摘要，请重新生成导出",
+        )
+    row.download_token = secrets.token_urlsafe(32)
+    row.download_expires_at = datetime.now(UTC) + timedelta(
+        seconds=get_settings().export_download_ttl_seconds
+    )
+    db.add(
+        AuditEvent(
+            principal_id=(principal_id or "unknown")[:32],
+            action="evaluation.export.token_issued",
+            resource_id=row.job_id,
+            correlation_id=(getattr(request.state, "correlation_id", None) or row.id)[:36],
+            details_json={
+                "export_id": row.id,
+                "format": row.format,
+                "token_fingerprint": token_fingerprint(row.download_token),
+                "expires_at": as_utc(row.download_expires_at).isoformat(),
+            },
+        )
+    )
+    db.commit()
+    return {
+        "export_id": row.id,
+        "download_token": row.download_token,
+        "download_expires_at": as_utc(row.download_expires_at),
+    }
+
+
+@router.get("/exports/{export_id}/download")
+def download_export(
+    export_id: str,
+    request: Request,
+    x_export_token: str | None = Header(default=None, alias="X-Export-Token"),
+    principal_id=Depends(tender_principal),
+    db: Session = Depends(get_db),
+):
+    row = _owned_export(db, export_id, principal_id)
+    if not x_export_token or not 20 <= len(x_export_token) <= 128:
+        raise AppError(403, "EXPORT_TOKEN_INVALID", "下载令牌无效")
+    expires_at = as_utc(row.download_expires_at)
+    if not expires_at or expires_at <= datetime.now(UTC):
+        raise AppError(403, "EXPORT_TOKEN_EXPIRED", "下载令牌已过期，请重新签发")
+    if not secrets.compare_digest(x_export_token, row.download_token):
         raise AppError(403, "EXPORT_TOKEN_INVALID", "下载令牌无效")
     if row.status != "succeeded":
         raise AppError(409, "EXPORT_NOT_READY", "导出文件尚未生成")
+    if not row.file_sha256:
+        raise AppError(
+            409,
+            "EXPORT_INTEGRITY_UNAVAILABLE",
+            "历史导出缺少生成时完整性摘要，请重新生成导出",
+        )
     path = _export_path(row)
     settings = get_settings()
     if path.stat().st_size > settings.export_max_file_bytes:
         raise AppError(409, "EXPORT_FILE_INVALID", "导出文件超过允许大小")
+    if file_sha256(path) != row.file_sha256:
+        raise AppError(409, "EXPORT_FILE_TAMPERED", "导出文件完整性校验失败，请重新生成")
     db.add(
         AuditEvent(
             principal_id=(principal_id or "unknown")[:32],
             action="evaluation.export.download",
             resource_id=row.job_id,
             correlation_id=(getattr(request.state, "correlation_id", None) or row.id)[:36],
-            details_json={"export_id": row.id, "format": row.format},
+            details_json={
+                "export_id": row.id,
+                "format": row.format,
+                "token_fingerprint": token_fingerprint(x_export_token),
+                "expires_at": expires_at.isoformat(),
+                "file_sha256": row.file_sha256,
+            },
         )
     )
     db.commit()

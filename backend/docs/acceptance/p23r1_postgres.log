@@ -1,0 +1,9 @@
+P23_PG_METRICS {"job_id": "1f6acd72-2895-44d9-a214-258880c54f92", "parameter_count": 5, "atomic_count": 9, "review_count": 1, "docx_bytes": 40972, "xlsx_bytes": 11544}
+.
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 1.49s
