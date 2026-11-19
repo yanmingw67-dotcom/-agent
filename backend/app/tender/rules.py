@@ -97,9 +97,11 @@ PAGE_NUMBER = re.compile(
 REMARK = re.compile(r"^\s*备注\s*[:：]")
 CONDITION = re.compile(r"(?:在|当|仅在|限于)([^，。；;]{2,40}?)(?:下|时|情况下)")
 THRESHOLD = re.compile(
-    r"(不低于|不少于|不小于|不高于|不超过|不大于|至少|至多|>=|<=|≥|≤|＞|＜|>|<)\s*"
+    r"(不低于|不少于|不小于|不高于|不超过|不大于|"
+    r"至少(?!包括|具备|支持|提供|包含|覆盖)|至多|>=|<=|≥|≤|＞|＜|>|<)\s*"
+    r"(?:每(?:周|日|天|月|年)\s*)?"
     r"([0-9]+(?:\.[0-9]+)?|[_＿]{2,})?\s*"
-    r"(Gbps|Mbps|QPS|TPS|ms|秒|分钟|小时|个|种|路|万)?",
+    r"(Gbps|Mbps|MB|GB|TB|QPS|TPS|ms|毫秒|秒|分钟|小时|天|个月|年|条|个|种|路|台|套|次|%|vCPU|核|万)?",
     re.I,
 )
 
@@ -267,9 +269,12 @@ def _ordered_atoms(text: str, base: int = 0):
     atoms = []
     for index, match in enumerate(matches):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        atom = text[match.end() : end].strip(" \n；;，,")
+        raw = text[match.end() : end]
+        atom = raw.strip(" \n；;，,")
         if atom:
-            atoms.append((atom, base + match.end(), base + end))
+            leading = raw.find(atom)
+            start = match.end() + leading
+            atoms.append((atom, base + start, base + start + len(atom)))
     return atoms
 
 
@@ -303,7 +308,7 @@ def _enumerated_atoms(text: str, base: int = 0):
 
 _MINIMUM = re.compile(
     r"(?:至少|不少于|不小于|最少)\s*(?:支持|具备|提供|包含|覆盖)?\s*"
-    r"([一二三四五六七八九十\d]+)\s*(种|项|个|路)"
+    r"([一二三四五六七八九十\d]+)\s*(种|项|个(?!月)|路)"
 )
 _OPEN_ENUMERATION = re.compile(r"包括但不限于|包括但不局限于|包含但不限于|至少包括", re.I)
 _OPTIONAL = re.compile(r"可选|可选项|宜|建议|允许|非必须|不强制", re.I)
@@ -590,7 +595,7 @@ def _parse_logic(
         parts = [
             _parse_logic(
                 part,
-                base + part_start,
+                base + start + part_start,
                 group_id,
                 open_enum=open_enum,
                 open_enum_mode=open_enum_mode,
@@ -612,7 +617,7 @@ def _parse_logic(
         parts = [
             _parse_logic(
                 part,
-                base + part_start,
+                base + start + part_start,
                 group_id,
                 open_enum=open_enum,
                 open_enum_mode=open_enum_mode,

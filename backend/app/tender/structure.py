@@ -52,6 +52,11 @@ SECTION_HEADING = re.compile(
     r"(?:要求|表|说明|条款|一览表|如下)?$",
     re.I,
 )
+# 表格标题常出现在“编制说明”之后、技术表格之前，必须结束前一段噪声章节。
+TABLE_CAPTION = re.compile(
+    r"^(?:表|table)\s*\d+\s*[.、:：-]?\s*.*(?:技术参数|技术要求|功能参数|技术规格|参数表)",
+    re.I,
+)
 
 
 @dataclass
@@ -281,6 +286,7 @@ def parse_docx(path: Path, settings: Settings) -> ParsedDocument:
             if not text:
                 continue
             style = paragraph.style.name if paragraph.style else ""
+            is_table_caption = bool(TABLE_CAPTION.match(text))
             is_heading = (
                 style.startswith("Heading")
                 or bool(
@@ -291,6 +297,7 @@ def parse_docx(path: Path, settings: Settings) -> ParsedDocument:
                     )
                 )
                 or bool(SECTION_HEADING.match(text.strip("：: ")))
+                or is_table_caption
             )
             if is_heading:
                 section = text[:240]
