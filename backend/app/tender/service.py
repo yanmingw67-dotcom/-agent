@@ -237,6 +237,7 @@ def _load_for_run(job_id: str, token: str | None):
         job.dispatch_token = token or job.dispatch_token or str(uuid4())
         return {
             "id": job.id,
+            "principal_id": job.principal_id,
             "input_type": job.input_type,
             "text": job.original_text,
             "storage_key": job.original_storage_key,
@@ -280,6 +281,7 @@ def _replace_results(db: Session, job: TenderExtractionJob, result, elapsed_ms: 
                 "section": candidate.section,
                 "extra_locators": candidate.extra_locators,
                 "source_locator": candidate.source_locator,
+                "model_hints": candidate.model_hints,
             },
             status="extracted",
             revision=1,
@@ -342,7 +344,7 @@ def _replace_results(db: Session, job: TenderExtractionJob, result, elapsed_ms: 
     job.finished_at = now()
 
 
-def run_tender_job(job_id: str, token: str | None = None):
+def run_tender_job(job_id: str, token: str | None = None, *, model=None):
     settings = get_settings()
     started = time.monotonic()
     data = _load_for_run(job_id, token)
@@ -361,6 +363,16 @@ def run_tender_job(job_id: str, token: str | None = None):
         if text_chars > settings.tender_max_text_chars:
             raise TenderParseError("TEXT_LIMIT")
         result = extract(parsed, max_parameters=settings.tender_max_parameters)
+        if settings.tender_model_mode != "structural" or model is not None:
+            from app.tender.model import refine_tender
+
+            result = refine_tender(
+                result,
+                parsed,
+                job_id,
+                data["principal_id"],
+                model=model,
+            )
         with session_factory().begin() as db:
             job = db.scalar(
                 select(TenderExtractionJob)
@@ -422,6 +434,7 @@ def parameter_json(parameter: TenderParameter):
         "review_required": parameter.review_required,
         "atomic_requirements": parameter.atomic_requirements,
         "logic_tree": parameter.logic_tree,
+        "model_hints": (parameter.original_json or {}).get("model_hints", []),
         "status": parameter.status,
         "revision": parameter.revision,
         "superseded_by": parameter.superseded_by,
@@ -841,10 +854,52 @@ def merge_parameters(
     return target
 
 
+def _manual_change_count(db: Session, job_id: str) -> int:
+    return int(
+        db.scalar(
+            select(func.count())
+            .select_from(TenderParameter)
+            .where(
+                TenderParameter.job_id == job_id,
+                TenderParameter.status.in_(["corrected", "confirmed", "superseded"]),
+            )
+        )
+        or 0
+    )
+
+
 def retry_job(db: Session, job_id: str, principal_id: str):
+    """失败重试：只在没有人工结果时恢复同一任务。
+
+    已成功/部分成功、或存在修正/确认/拆分结果时，普通重试不会覆盖任何参数；
+    用户应调用 reextract_job 创建新任务，旧任务及其修正审计保持可查。
+    """
     job = _owned_job(db, job_id, principal_id, lock=True)
-    if job.status not in {"failed", "partial", "succeeded"}:
-        raise AppError(409, "TENDER_JOB_NOT_RETRYABLE", "当前任务不能重试")
+    if job.status != "failed":
+        raise AppError(
+            409,
+            "TENDER_JOB_USE_REEXTRACT",
+            "当前任务不是失败任务；主动重新提取请创建新的重新提取任务",
+        )
+    if _manual_change_count(db, job.id):
+        raise AppError(
+            409,
+            "TENDER_JOB_HAS_MANUAL_CHANGES",
+            "任务包含人工修正或确认结果，普通重试不会覆盖；请创建新的重新提取任务",
+        )
+    if (
+        db.scalar(
+            select(func.count())
+            .select_from(TenderParameter)
+            .where(TenderParameter.job_id == job.id)
+        )
+        or 0
+    ):
+        raise AppError(
+            409,
+            "TENDER_JOB_HAS_RESULTS_USE_REEXTRACT",
+            "失败任务已有结果记录，普通重试不会重建主键；请创建新的重新提取任务",
+        )
     job.status = "queued"
     job.attempt += 1
     job.started_at = None
@@ -852,3 +907,26 @@ def retry_job(db: Session, job_id: str, principal_id: str):
     job.error_code = None
     db.commit()
     return job
+
+
+def reextract_job(db: Session, job_id: str, principal_id: str):
+    """用户主动重新提取：新建任务，旧任务、参数 ID 和修正审计原样保留。"""
+    original = _owned_job(db, job_id, principal_id)
+    if original.status in {"queued", "running"}:
+        raise AppError(409, "TENDER_JOB_RUNNING", "任务尚未完成，不能重新提取")
+    metadata = dict(original.input_metadata or {})
+    metadata.pop("title", None)
+    metadata["reextract_of"] = original.id
+    job, created = _new_job(
+        db,
+        principal_id=principal_id,
+        category_id=original.category_id,
+        input_type=original.input_type,
+        idempotency_key=None,
+        metadata=metadata,
+        filename=original.original_filename,
+        file_hash=original.original_file_hash,
+        storage_key=original.original_storage_key,
+        text=original.original_text,
+    )
+    return job, created

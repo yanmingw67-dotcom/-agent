@@ -1,0 +1,2 @@
+$ find . -type f \( -iname "*WAF*招标*" -o -iname "*招标*技术参数*" \) -not -path "./backend/.venv/*" -print
+RESULT: no real WAF tender technical parameter file found; real-file acceptance NOT PASSED (unverified).

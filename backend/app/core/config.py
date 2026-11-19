@@ -1,3 +1,5 @@
+import json
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -12,6 +14,9 @@ class Settings(BaseSettings):
     redis_url: str = "redis://redis:6379/0"
     admin_token: SecretStr
     read_token: SecretStr
+    # 可选的普通用户 Token 映射：{"用户ID": "Token"}。为空时只保留共享 read 身份，
+    # 不得据此声称已经实现真实多用户账号体系。
+    read_user_tokens: SecretStr = SecretStr("")
     archive_root: Path = Path("/data/archives")
     ingestion_root: Path = Path("/data/ingestion")
     source_root: Path = Path("/data/sources")
@@ -77,6 +82,12 @@ class Settings(BaseSettings):
     tender_queue_name: str = "tender-extraction"
     tender_job_timeout_seconds: int = 900
     tender_queue_enabled: bool = False
+    tender_model_mode: Literal["structural", "model", "hybrid"] = "structural"
+    tender_model_classification: Literal["synthetic_public", "enterprise"] = "enterprise"
+    tender_model_max_requests: int = 2
+    tender_model_max_tokens: int = 30000
+    tender_model_max_context_chars: int = 60000
+    tender_model_batch_regions: int = 16
 
     @field_validator(
         "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
@@ -103,6 +114,29 @@ class Settings(BaseSettings):
     @property
     def control_store(self):
         return self.storage_control_root or self.archive_root.parent / ".control"
+
+    @field_validator("read_user_tokens")
+    @classmethod
+    def valid_read_user_tokens(cls, value):
+        raw = value.get_secret_value().strip()
+        if not raw:
+            return value
+        try:
+            mapping = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError("读用户 Token 映射必须是 JSON 对象") from exc
+        if not isinstance(mapping, dict) or not mapping:
+            raise ValueError("读用户 Token 映射不能为空")
+        for user_id, token in mapping.items():
+            if not isinstance(user_id, str) or not re.fullmatch(
+                r"[A-Za-z0-9][A-Za-z0-9_.@-]{0,63}", user_id
+            ):
+                raise ValueError("读用户 ID 只能使用字母、数字、点、下划线、@ 或连字符")
+            if user_id in {"admin", "read", "read-shared"}:
+                raise ValueError("读用户 ID 不能使用保留身份")
+            if not isinstance(token, str) or len(token) < 32:
+                raise ValueError("读用户 Token 至少 32 个字符")
+        return value
 
     @field_validator("admin_token", "read_token")
     @classmethod
@@ -153,6 +187,10 @@ class Settings(BaseSettings):
         "tender_max_parameters",
         "tender_max_active_jobs",
         "tender_job_timeout_seconds",
+        "tender_model_max_requests",
+        "tender_model_max_tokens",
+        "tender_model_max_context_chars",
+        "tender_model_batch_regions",
     )
     @classmethod
     def positive_limit(cls, value):
@@ -164,6 +202,18 @@ class Settings(BaseSettings):
     def distinct_tokens(self):
         if self.admin_token == self.read_token:
             raise ValueError("管理员和只读 Token 必须不同")
+        raw = self.read_user_tokens.get_secret_value().strip()
+        if raw:
+            mapping = json.loads(raw)
+            values = [token for token in mapping.values()]
+            if len(values) != len(set(values)):
+                raise ValueError("读用户 Token 不能重复")
+            reserved = {
+                self.admin_token.get_secret_value(),
+                self.read_token.get_secret_value(),
+            }
+            if reserved & set(values):
+                raise ValueError("读用户 Token 不能与管理员或共享只读 Token 相同")
         return self
 
 

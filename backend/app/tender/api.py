@@ -3,7 +3,7 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Query, Request, UploadFile
 from sqlalchemy.orm import Session
 
-from app.core.auth import principal
+from app.core.auth import tender_principal
 from app.core.config import get_settings
 from app.core.security import AppError
 from app.db.session import get_db
@@ -60,12 +60,12 @@ def create_text(
     payload: TextCreate,
     request: Request,
     background_tasks: BackgroundTasks,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     job, created = service.create_text_job(
         db,
-        principal_id=role,
+        principal_id=principal_id,
         category_id=payload.category_id,
         text=payload.text,
         idempotency_key=payload.idempotency_key,
@@ -83,7 +83,7 @@ async def create_upload(
     category_id: str = Form(...),
     file: UploadFile = File(...),
     idempotency_key: str | None = Form(default=None),
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     settings = get_settings()
@@ -94,7 +94,7 @@ async def create_upload(
         key, sha, size = await service.receive_upload(file, suffix, settings)
         job, created = service.create_file_job(
             db,
-            principal_id=role,
+            principal_id=principal_id,
             category_id=category_id,
             key=key,
             file_hash=sha,
@@ -117,22 +117,22 @@ async def create_upload(
 @router.get("")
 def list_jobs(
     limit: int = Query(default=20, ge=1, le=100),
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
-    jobs = service.list_jobs(db, role, limit=limit)
+    jobs = service.list_jobs(db, principal_id, limit=limit)
     return {"jobs": [service.job_json(db, job, include_parameters=False) for job in jobs]}
 
 
 @router.get("/{job_id}")
-def get_job(job_id: str, role=Depends(principal), db: Session = Depends(get_db)):
-    job = service.get_job(db, job_id, role)
+def get_job(job_id: str, principal_id=Depends(tender_principal), db: Session = Depends(get_db)):
+    job = service.get_job(db, job_id, principal_id)
     return service.job_json(db, job)
 
 
 @router.get("/{job_id}/result")
-def get_result(job_id: str, role=Depends(principal), db: Session = Depends(get_db)):
-    job = service.get_job(db, job_id, role)
+def get_result(job_id: str, principal_id=Depends(tender_principal), db: Session = Depends(get_db)):
+    job = service.get_job(db, job_id, principal_id)
     return service.job_json(db, job)
 
 
@@ -142,10 +142,10 @@ def get_coverage(
     disposition: str | None = Query(default=None),
     limit: int = Query(default=100, ge=1, le=500),
     offset: int = Query(default=0, ge=0),
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
-    service.get_job(db, job_id, role)
+    service.get_job(db, job_id, principal_id)
     records = service.coverage_json(db, job_id, disposition=disposition, limit=limit, offset=offset)
     return {"job_id": job_id, "records": records, "regions": records}
 
@@ -154,12 +154,27 @@ def get_coverage(
 def retry_job(
     job_id: str,
     background_tasks: BackgroundTasks,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
-    job = service.retry_job(db, job_id, role)
+    job = service.retry_job(db, job_id, principal_id)
     _schedule(job.id, background_tasks)
     return _created(job, True)
+
+
+@router.post("/{job_id}/reextract", status_code=202)
+def reextract_job(
+    job_id: str,
+    background_tasks: BackgroundTasks,
+    principal_id=Depends(tender_principal),
+    db: Session = Depends(get_db),
+):
+    job, created = service.reextract_job(db, job_id, principal_id)
+    if created:
+        _schedule(job.id, background_tasks)
+    body = _created(job, created)
+    body["source_job_id"] = job_id
+    return body
 
 
 @router.patch("/{job_id}/parameters/{parameter_id}")
@@ -168,7 +183,7 @@ def edit_parameter(
     parameter_id: str,
     payload: ParameterEdit,
     request: Request,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     if payload.parameter_name is None and payload.original_text is None:
@@ -177,7 +192,7 @@ def edit_parameter(
         db,
         job_id,
         parameter_id,
-        role,
+        principal_id,
         parameter_name=payload.parameter_name,
         original_text=payload.original_text,
         correlation_id=_correlation(request),
@@ -190,11 +205,11 @@ def confirm_parameter(
     job_id: str,
     parameter_id: str,
     request: Request,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     parameter = service.confirm_parameter(
-        db, job_id, parameter_id, role, correlation_id=_correlation(request)
+        db, job_id, parameter_id, principal_id, correlation_id=_correlation(request)
     )
     return service.parameter_json(parameter)
 
@@ -205,14 +220,14 @@ def split_parameter(
     parameter_id: str,
     payload: SplitRequest,
     request: Request,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     parameters = service.split_parameter(
         db,
         job_id,
         parameter_id,
-        role,
+        principal_id,
         [part.model_dump() for part in payload.parts],
         correlation_id=_correlation(request),
     )
@@ -224,13 +239,13 @@ def merge_parameters(
     job_id: str,
     payload: MergeRequest,
     request: Request,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     parameter = service.merge_parameters(
         db,
         job_id,
-        role,
+        principal_id,
         payload.parameter_ids,
         parameter_name=payload.parameter_name,
         correlation_id=_correlation(request),
@@ -243,13 +258,13 @@ def add_parameter(
     job_id: str,
     payload: AddRequest,
     request: Request,
-    role=Depends(principal),
+    principal_id=Depends(tender_principal),
     db: Session = Depends(get_db),
 ):
     parameter = service.add_parameter(
         db,
         job_id,
-        role,
+        principal_id,
         parameter_name=payload.parameter_name,
         original_text=payload.original_text,
         correlation_id=_correlation(request),

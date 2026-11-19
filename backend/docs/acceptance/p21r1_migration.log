@@ -1,0 +1,11 @@
+$ DATABASE_URL=sqlite:////tmp/p21r1_migration.db uv run alembic upgrade head
+$ DATABASE_URL=... uv run alembic downgrade 0008
+$ DATABASE_URL=... uv run alembic upgrade head
+$ sqlite3 ... alembic_version
+0009
+$ sqlite3 ... tender tables
+tender_atomic_requirements
+tender_corrections
+tender_extraction_jobs
+tender_parameters
+tender_regions

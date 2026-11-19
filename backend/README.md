@@ -78,6 +78,7 @@ compose_smoke 不使用队列 Mock，创建人工测试品类并验证真实后�
 
 鉴权格式为 `Authorization: Bearer <ADMIN_TOKEN 或 READ_TOKEN>`。
 Token 从私有 .env 读取，不要写入命令历史或公开截图。
+P2.1 需要区分普通用户时可配置 `READ_USER_TOKENS` 为 JSON 映射；共享 `READ_TOKEN` 固定映射为 `read-shared`，该映射不是完整账号生命周期体系。
 源码名必须为安全的 .zip 文件名，MIME 支持 application/zip、
 application/x-zip-compressed 和 application/octet-stream，另检查内容签名。
 传输签名不合法返回 422，文件/请求超限返回 413，权限不足返回 403；

@@ -70,7 +70,7 @@ PAGE_NUMBER = re.compile(
 REMARK = re.compile(r"^\s*备注\s*[:：]")
 CONDITION = re.compile(r"(?:在|当|仅在|限于)([^，。；;]{2,40}?)(?:下|时|情况下)")
 THRESHOLD = re.compile(
-    r"(不低于|不少于|不小于|不高于|不超过|不大于|至少|至多|>=|<=|>|<)\s*"
+    r"(不低于|不少于|不小于|不高于|不超过|不大于|至少|至多|>=|<=|≥|≤|＞|＜|>|<)\s*"
     r"([0-9]+(?:\.[0-9]+)?|[_＿]{2,})?\s*"
     r"(Gbps|Mbps|QPS|TPS|ms|秒|分钟|小时|个|种|路|万)?",
     re.I,
@@ -91,6 +91,7 @@ class Candidate:
     atomic_requirements: list[dict] = field(default_factory=list)
     logic_tree: dict = field(default_factory=dict)
     extra_locators: list[dict] = field(default_factory=list)
+    model_hints: list[dict] = field(default_factory=list)
 
 
 @dataclass
@@ -244,87 +245,358 @@ def _enumerated_atoms(text: str, base: int = 0):
     return atoms
 
 
-def _atomic(text: str, base: int = 0):
-    subclauses = _ordered_atoms(text, base)
-    if subclauses:
-        atoms = subclauses
-        relation = "AND"
-        requirement_type = "explicit_subclause"
-    else:
-        or_parts = re.split(r"\s*(?:或|或者)\s*", text)
-        if len(or_parts) >= 2 and all(len(part.strip(" ，,。；;")) >= 2 for part in or_parts):
-            atoms = []
-            cursor = 0
-            for part in or_parts:
-                value = part.strip(" ，,。；;")
-                start = text.find(value, cursor)
-                if start < 0:
-                    start = cursor
-                atoms.append((value, base + start, base + start + len(value)))
-                cursor = start + len(value)
-            relation = "OR"
-            requirement_type = "alternative"
-        else:
-            atoms = _enumerated_atoms(text, base)
-            relation = "AND"
-            requirement_type = "capability" if not atoms else "enumerated_condition"
-    minimum = re.search(
-        r"(?:至少|不少于|不小于)\s*(?:支持|具备|提供)?\s*"
-        r"([一二三四五六七八九十\d]+)\s*(?:种|项|个|路)",
-        text,
-    )
-    if minimum:
-        atoms = [(text.strip(" 。；;"), base, base + len(text))]
-        relation = "AT_LEAST"
-        requirement_type = "minimum_count"
-    if not atoms:
-        atoms = [(text.strip(" 。；;"), base, base + len(text))]
-        requirement_type = "capability"
-    group_id = uuid.uuid4().hex
-    requirements = []
-    for value, start, end in atoms:
-        value = value.strip(" \n；;，,")
-        if not value:
+_MINIMUM = re.compile(
+    r"(?:至少|不少于|不小于|最少)\s*(?:支持|具备|提供|包含|覆盖)?\s*"
+    r"([一二三四五六七八九十\d]+)\s*(种|项|个|路)"
+)
+_OPEN_ENUMERATION = re.compile(r"包括但不限于|包括但不局限于|包含但不限于|至少包括", re.I)
+_OPTIONAL = re.compile(r"可选|可选项|宜|建议|允许|非必须|不强制", re.I)
+_REQUIRED = re.compile(r"必须|须|应(?:当)?|要求|不得|禁止", re.I)
+_CAPABILITY_PREFIX = re.compile(r"^(支持|具备|提供|实现|能够|可以|覆盖|兼容|包含)(.+)$", re.S)
+_OR_SPLIT = re.compile(r"\s*(?:或者|或)\s*")
+_AND_SPLIT = re.compile(r"\s*(?:并且|而且|以及|和|及|、|且|[；;，,])\s*")
+_TRIM = " \t\n\r；;，,。"
+LOGIC_AMBIGUITY = "logic_ambiguity"
+
+
+def _trim_span(text: str, start: int, end: int):
+    while start < end and text[start] in _TRIM:
+        start += 1
+    while end > start and text[end - 1] in _TRIM:
+        end -= 1
+    return text[start:end], start, end
+
+
+def _depth_at(text: str):
+    depths = []
+    depth = 0
+    for char in text:
+        depths.append(depth)
+        if char in "(（":
+            depth += 1
+        elif char in ")）":
+            depth = max(0, depth - 1)
+    return depths
+
+
+def _split_top(text: str, pattern):
+    """只在括号外拆分；保留每个操作数在原文中的绝对锚点。"""
+    depths = _depth_at(text)
+    parts = []
+    last = 0
+    for match in pattern.finditer(text):
+        if depths[match.start()] != 0:
             continue
-        value_threshold, unit, ambiguity = _threshold(value)
-        conditions = _conditions(value)
-        mandatory = not bool(re.search(r"可选|允许|可以", value)) or bool(
-            re.search(r"必须|须|要求", value)
+        value, start, end = _trim_span(text, last, match.start())
+        if value:
+            parts.append((value, start, end))
+        last = match.end()
+    value, start, end = _trim_span(text, last, len(text))
+    if value:
+        parts.append((value, start, end))
+    return parts
+
+
+def _wrapped(text: str):
+    value, start, end = _trim_span(text, 0, len(text))
+    if len(value) < 2 or value[0] not in "(（" or value[-1] not in ")）":
+        return None
+    depth = 0
+    for index, char in enumerate(value):
+        if char in "(（":
+            depth += 1
+        elif char in ")）":
+            depth -= 1
+            if depth == 0 and index != len(value) - 1:
+                return None
+    if depth != 0:
+        return None
+    return value[1:-1], start + 1, start + len(value) - 1
+
+
+def _mandatory(value: str, open_enum: bool = False):
+    if open_enum:
+        return False
+    if _REQUIRED.search(value):
+        return True
+    return not bool(_OPTIONAL.search(value))
+
+
+def _leaf_node(
+    value: str,
+    start: int,
+    end: int,
+    *,
+    group_id: str,
+    relation: str,
+    explicit: bool = False,
+    open_enum: bool = False,
+    logic_ambiguity: str | None = None,
+    minimum=None,
+):
+    raw_start = start
+    value, local_start, local_end = _trim_span(value, 0, len(value))
+    if not value:
+        return None
+    start, end = raw_start + local_start, raw_start + local_end
+    threshold, unit, threshold_ambiguity = _threshold(value)
+    operator_match = THRESHOLD.search(value)
+    threshold_operator = operator_match.group(1) if operator_match else None
+    if minimum:
+        threshold = minimum.group(1)
+        unit = minimum.group(2)
+        threshold_ambiguity = None
+    if not threshold and not threshold_ambiguity and re.search(r"[_＿]{2,}", value):
+        threshold_ambiguity = "blank_threshold"
+    ambiguity = threshold_ambiguity
+    if open_enum and not ambiguity:
+        ambiguity = "open_enumeration"
+    if logic_ambiguity and not ambiguity:
+        ambiguity = logic_ambiguity
+    if minimum:
+        requirement_type, relation_code = "minimum_count", "AT_LEAST"
+    elif explicit:
+        requirement_type, relation_code = "explicit_subclause", relation
+    elif open_enum:
+        requirement_type, relation_code = "open_enumeration", relation
+    elif relation == "OR":
+        requirement_type, relation_code = "alternative", relation
+    else:
+        requirement_type, relation_code = "capability", relation
+    requirement = {
+        "requirement_id": uuid.uuid4().hex,
+        "original_text": value,
+        "requirement_type": requirement_type,
+        "logical_relation": relation_code,
+        "logical_group_id": group_id,
+        "is_mandatory": _mandatory(value, open_enum),
+        "threshold": threshold,
+        "threshold_operator": threshold_operator,
+        "unit": unit,
+        "conditions": _conditions(value),
+        "ambiguity": ambiguity,
+        "logic_ambiguity": logic_ambiguity,
+        "source_span": {"start": start, "end": end},
+        "parent_requirement_id": None,
+        "depth": 0,
+    }
+    node = {
+        "kind": "leaf",
+        "requirement_id": requirement["requirement_id"],
+        "relation": "LEAF",
+        "logical_relation": relation_code,
+        "logical_group_id": group_id,
+        "source_span": requirement["source_span"],
+        "children": [],
+    }
+    return {"requirements": [requirement], "node": node, "relation": relation_code}
+
+
+def _compose(parts, operator: str, start: int, end: int, group_id: str):
+    parts = [part for part in parts if part]
+    if not parts:
+        return None
+    if len(parts) == 1:
+        return parts[0]
+    children = [part["node"] for part in parts]
+    requirements = [req for part in parts for req in part["requirements"]]
+    node = {
+        "kind": "node",
+        "node_id": uuid.uuid4().hex,
+        "relation": operator,
+        "logical_relation": operator,
+        "logical_group_id": group_id,
+        "source_span": {"start": start, "end": end},
+        "children": children,
+    }
+    return {"requirements": requirements, "node": node, "relation": operator}
+
+
+def _parse_logic(
+    text: str,
+    base: int,
+    group_id: str,
+    *,
+    explicit: bool = False,
+    open_enum: bool = False,
+    relation: str = "AND",
+):
+    value, start, end = _trim_span(text, 0, len(text))
+    if not value:
+        return None
+    if value.count("(") + value.count("（") != value.count(")") + value.count("）"):
+        return _leaf_node(
+            value,
+            base + start,
+            base + end,
+            group_id=group_id,
+            relation="UNKNOWN",
+            explicit=explicit,
+            logic_ambiguity="unbalanced_parentheses",
         )
-        requirements.append(
-            {
-                "requirement_id": uuid.uuid4().hex,
-                "original_text": value,
-                "requirement_type": requirement_type if not minimum else "minimum_count",
-                "logical_relation": relation,
-                "logical_group_id": group_id,
-                "is_mandatory": mandatory,
-                "threshold": value_threshold,
-                "unit": unit,
-                "conditions": conditions,
-                "ambiguity": ambiguity,
-                "source_span": {"start": start, "end": end},
-                "parent_requirement_id": None,
-                "depth": 0,
-            }
+
+    # 显式 (1)(2)(3) 子条款是 AND 组；每个子条款仍可递归解析自身逻辑。
+    subclauses = _ordered_atoms(value, base + start)
+    if len(subclauses) >= 2:
+        parts = []
+        for child, child_start, _child_end in subclauses:
+            parts.append(
+                _parse_logic(
+                    child,
+                    child_start,
+                    group_id,
+                    explicit=True,
+                    open_enum=open_enum,
+                )
+            )
+        return _compose(parts, "AND", base + start, base + end, group_id)
+
+    minimum = _MINIMUM.search(value)
+    if minimum:
+        before_minimum = value[: minimum.start()]
+        if not re.search(r"或者|或|并且|而且|以及|和|及|且|[；;，,]", before_minimum):
+            return _leaf_node(
+                value,
+                base + start,
+                base + end,
+                group_id=group_id,
+                relation="AT_LEAST",
+                explicit=explicit,
+                open_enum=open_enum,
+                minimum=minimum,
+            )
+
+    prefix = _CAPABILITY_PREFIX.match(value)
+    if prefix:
+        prefix_text, rest = prefix.group(1), prefix.group(2)
+        parsed = _parse_logic(
+            rest,
+            base + start + len(prefix_text),
+            group_id,
+            explicit=explicit,
+            open_enum=open_enum,
+            relation=relation,
         )
-    if minimum and requirements:
-        requirements[0]["threshold"] = minimum.group(1)
-        requirements[0]["requirement_type"] = "minimum_count"
-    return requirements
+        if parsed and parsed["requirements"]:
+            first = parsed["requirements"][0]
+            rest_start = base + start + len(prefix_text)
+            # 前缀只能贴到连续原文上；括号内的子要求不能拼成不存在的原文。
+            if first["source_span"]["start"] == rest_start:
+                first["original_text"] = prefix_text + first["original_text"]
+                first["source_span"]["start"] = base + start
+            parsed["node"]["source_span"]["start"] = base + start
+            return parsed
+
+    open_enum = open_enum or bool(_OPEN_ENUMERATION.search(value))
+    or_parts = _split_top(value, _OR_SPLIT)
+    if len(or_parts) >= 2 and all(len(part[0].strip(" ，,。；;")) >= 1 for part in or_parts):
+        parts = [
+            _parse_logic(
+                part,
+                base + part_start,
+                group_id,
+                open_enum=open_enum,
+                relation="OR",
+            )
+            for part, part_start, _ in or_parts
+        ]
+        return _compose(
+            parts,
+            "OR_OPEN" if open_enum else "OR",
+            base + start,
+            base + end,
+            group_id,
+        )
+
+    and_parts = _split_top(value, _AND_SPLIT)
+    if len(and_parts) >= 2 and all(len(part[0].strip(" ，,。；;")) >= 1 for part in and_parts):
+        parts = [
+            _parse_logic(
+                part,
+                base + part_start,
+                group_id,
+                open_enum=open_enum,
+                relation="AND",
+            )
+            for part, part_start, _ in and_parts
+        ]
+        return _compose(
+            parts,
+            "AND_OPEN" if open_enum else "AND",
+            base + start,
+            base + end,
+            group_id,
+        )
+
+    wrapped = _wrapped(value)
+    if wrapped:
+        inner, inner_start, inner_end = wrapped
+        parsed = _parse_logic(
+            inner,
+            base + inner_start,
+            group_id,
+            explicit=explicit,
+            open_enum=open_enum,
+        )
+        if parsed:
+            parsed["node"]["source_span"] = {"start": base + start, "end": base + end}
+            return parsed
+
+    return _leaf_node(
+        value,
+        base + start,
+        base + end,
+        group_id=group_id,
+        relation=relation,
+        explicit=explicit,
+        open_enum=open_enum,
+    )
+
+
+def _assign_tree(requirements, node, parent=None, depth=0):
+    if node.get("kind") == "leaf":
+        requirement = next(
+            item for item in requirements if item["requirement_id"] == node["requirement_id"]
+        )
+        requirement["parent_requirement_id"] = parent
+        requirement["depth"] = depth
+        return
+    node_id = node.get("node_id")
+    for child in node.get("children", []):
+        _assign_tree(requirements, child, node_id, depth + 1)
+
+
+def _atomic(text: str, base: int = 0):
+    group_id = uuid.uuid4().hex
+    parsed = _parse_logic(text, base, group_id)
+    return parsed["requirements"] if parsed else []
 
 
 def build_requirements(text: str):
-    requirements = _atomic(text)
-    group = requirements[0]["logical_group_id"] if requirements else None
+    group_id = uuid.uuid4().hex
+    parsed = _parse_logic(text, 0, group_id)
+    if not parsed:
+        requirements = []
+        tree = {"relation": "AND", "logical_group_id": group_id, "children": []}
+        return requirements, tree
+    requirements = parsed["requirements"]
+    tree = parsed["node"]
+    _assign_tree(requirements, tree)
     tree = {
-        "relation": requirements[0]["logical_relation"] if requirements else "AND",
-        "logical_group_id": group,
-        "children": [
-            {"requirement_id": item["requirement_id"], "relation": "LEAF"} for item in requirements
-        ],
+        **tree,
+        "relation": tree.get("relation") or tree.get("logical_relation") or "AND",
+        "logical_group_id": group_id,
     }
     return requirements, tree
+
+
+def _shift_spans(node: dict, offset: int):
+    span = node.get("source_span")
+    if span:
+        span["start"] += offset
+        span["end"] += offset
+    for child in node.get("children", []):
+        _shift_spans(child, offset)
 
 
 def _candidate_from_text(
@@ -342,6 +614,10 @@ def _candidate_from_text(
     name = _name_from_text(text, number)
     body = _strip_number(text)[1] if number else text
     requirements, tree = build_requirements(body)
+    offset = text.find(body) if number else 0
+    if offset > 0:
+        # 叶节点的 span 与 requirement 共用同一对象，只遍历树即可避免重复偏移。
+        _shift_spans(tree, offset)
     return Candidate(
         parameter_name=name,
         original_number=number,
