@@ -8,6 +8,7 @@ from app.db import (  # noqa: F401
     knowledge_models,
     review_models,
     tender_models,
+    workbench_models,
 )
 from app.db.models import Base
 

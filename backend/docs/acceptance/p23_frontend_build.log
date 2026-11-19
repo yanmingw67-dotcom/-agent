@@ -1,0 +1,13 @@
+
+> tender-parameter-workbench@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.6 building for production...
+transforming...
+✓ 41 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:  0.33 kB
+dist/assets/index-CnMKdFGK.css   31.79 kB │ gzip:  6.72 kB
+dist/assets/index-C5QptWTP.js   283.70 kB │ gzip: 85.75 kB
+✓ built in 630ms

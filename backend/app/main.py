@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import DBAPIError
@@ -29,6 +30,7 @@ from app.db.session import get_engine
 from app.evaluation import api as evaluation
 from app.jobs.queue import connection
 from app.tender import api as tender
+from app.workbench import api as workbench
 
 
 def error_response(request, status, code, message):
@@ -55,6 +57,15 @@ def create_app():
 
     app = FastAPI(title="产品知识索引与检索 API", version="0.2.0", lifespan=lifespan)
     app.add_middleware(RequestGuard, max_body_bytes=settings.max_upload_bytes + 1024 * 1024)
+    if settings.cors_origin_list:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=settings.cors_origin_list,
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+            allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
+            expose_headers=["Content-Disposition", "X-Correlation-ID"],
+        )
 
     @app.exception_handler(AppError)
     async def app_error(request: Request, exc: AppError):
@@ -119,6 +130,7 @@ def create_app():
         app.include_router(conflicts.router)
         app.include_router(tender.router)
         app.include_router(evaluation.router)
+        app.include_router(workbench.router)
     app.include_router(retrieval.router)
     app.include_router(probe.router)
     return app

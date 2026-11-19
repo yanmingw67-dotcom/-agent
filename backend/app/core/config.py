@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     redis_url: str = "redis://redis:6379/0"
     admin_token: SecretStr
     read_token: SecretStr
+    # 允许独立部署的工作台前端跨域访问；多个来源用逗号分隔，留空即关闭 CORS。
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     # 可选的普通用户 Token 映射：{"用户ID": "Token"}。为空时只保留共享 read 身份，
     # 不得据此声称已经实现真实多用户账号体系。
     read_user_tokens: SecretStr = SecretStr("")
@@ -103,6 +105,15 @@ class Settings(BaseSettings):
     evaluation_model_max_tokens: int = 40000
     evaluation_model_max_context_chars: int = 60000
     evaluation_model_batch_requirements: int = 12
+    export_root: Path | None = None
+    export_max_parameters: int = 1000
+    export_max_evidence: int = 5000
+    export_max_cell_chars: int = 20000
+    export_max_file_bytes: int = 50 * 1024 * 1024
+    export_max_active_jobs: int = 2
+    export_job_timeout_seconds: int = 300
+    export_queue_enabled: bool = False
+    export_queue_name: str = "evaluation-export"
 
     @field_validator(
         "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
@@ -125,6 +136,14 @@ class Settings(BaseSettings):
     @property
     def tender_store(self):
         return self.tender_root or self.archive_root.parent / "tender"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def export_store(self):
+        return self.export_root or self.archive_root.parent / "exports"
 
     @property
     def control_store(self):
@@ -217,6 +236,12 @@ class Settings(BaseSettings):
         "evaluation_model_max_tokens",
         "evaluation_model_max_context_chars",
         "evaluation_model_batch_requirements",
+        "export_max_parameters",
+        "export_max_evidence",
+        "export_max_cell_chars",
+        "export_max_file_bytes",
+        "export_max_active_jobs",
+        "export_job_timeout_seconds",
     )
     @classmethod
     def positive_limit(cls, value):
