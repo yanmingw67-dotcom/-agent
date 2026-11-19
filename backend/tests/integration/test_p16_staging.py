@@ -318,3 +318,25 @@ def test_document_update_isolated_until_publish_and_rollback(client, environment
     assert evidence["locator"]
     assert evidence["quote"]
     assert evidence["quote_hash"] == digest(evidence["quote"].encode())
+
+
+def test_derive_skips_excluded_source_files_without_physical_copy(client):
+    """排除项保留审计记录但不会落盘，不能阻断派生暂存快照。"""
+    cid, sid = setup(client)
+    with session_factory().begin() as db:
+        db.add(
+            SourceFile(
+                snapshot_id=sid,
+                path="__pycache__/missing.pyc",
+                sha256="0" * 64,
+                size=1,
+                language="binary",
+                role="excluded",
+                parse_status="excluded",
+                parser_version="p16-test",
+            )
+        )
+    result = derive(client, cid)
+    assert result["derived_from_snapshot_id"] == sid
+    assert result["derivation_type"] == "document_update"
+

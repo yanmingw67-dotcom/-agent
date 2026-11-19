@@ -150,16 +150,7 @@ def main():
         category_id = create_category(client, admin, "gate1-main")
         compose("stop", "worker", "indexer", "builder", "taskworker")
         started = time.monotonic()
-        source = archive(
-            [
-                ("src/notify.py", "def notify(message):\n    return message\n"),
-                ("README.md", "# Demo\n"),
-                ("docs/manual.md", "# Manual\n"),
-                ("tests/test_notify.py", "def test_notify():\n    assert True\n"),
-                ("__pycache__/x.pyc", "x"),
-                (".DS_Store", "x"),
-            ]
-        )
+        source = (ROOT / "tests" / "fixtures" / "demo_waf_source.zip").read_bytes()
         response = client.post(
             f"/api/v1/categories/{category_id}/source",
             headers=admin,
@@ -178,14 +169,14 @@ def main():
         evidence["jobs"]["source_import_detail"] = {
             "status": import_job["status"],
             "attempt": import_job["attempt"],
-            "metrics": import_job["metrics"],
+            "metrics": import_job["metrics_json"],
         }
         check("source_import_succeeded", import_job["status"] == "succeeded", import_job["status"])
         check(
             "source_import_counts",
-            import_job["metrics"].get("file_count") == 4
-            and import_job["metrics"].get("excluded_count") == 2,
-            json.dumps(import_job["metrics"], ensure_ascii=False),
+            import_job["metrics_json"].get("file_count") == 4
+            and import_job["metrics_json"].get("excluded_count") == 2,
+            json.dumps(import_job["metrics_json"], ensure_ascii=False),
         )
 
         # 2. 源码索引。

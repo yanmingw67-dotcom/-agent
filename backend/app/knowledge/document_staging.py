@@ -40,7 +40,15 @@ def _verify_extracted_source(db, snapshot, settings):
         or manifest.get("source_sha256") != snapshot.source_sha256
     ):
         raise AppError(409, "DERIVATION_MANIFEST_MISMATCH", "受控源码 manifest 与快照不一致")
-    files = list(db.scalars(select(SourceFile).where(SourceFile.snapshot_id == snapshot.id)))
+    # 排除项保留审计记录但不会落盘，派生校验只覆盖实际索引的文件。
+    files = list(
+        db.scalars(
+            select(SourceFile).where(
+                SourceFile.snapshot_id == snapshot.id,
+                SourceFile.parse_status != "excluded",
+            )
+        )
+    )
     if not files:
         raise AppError(409, "DERIVATION_SOURCE_EMPTY", "受控源码没有可校验的索引文件")
     for file in files:
