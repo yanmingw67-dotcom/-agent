@@ -2,7 +2,13 @@ from alembic import context
 from sqlalchemy import create_engine, pool
 
 from app.core.config import get_settings
-from app.db import index_models, knowledge_models, review_models, tender_models  # noqa: F401
+from app.db import (  # noqa: F401
+    evaluation_models,
+    index_models,
+    knowledge_models,
+    review_models,
+    tender_models,
+)
 from app.db.models import Base
 
 config = context.config

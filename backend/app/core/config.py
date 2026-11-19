@@ -88,6 +88,21 @@ class Settings(BaseSettings):
     tender_model_max_tokens: int = 30000
     tender_model_max_context_chars: int = 60000
     tender_model_batch_regions: int = 16
+    evaluation_max_parameters: int = 1000
+    evaluation_max_atomic_requirements: int = 5000
+    evaluation_max_active_jobs: int = 2
+    evaluation_retrieval_limit: int = 5
+    evaluation_evidence_per_capability: int = 20
+    evaluation_evidence_snippet_chars: int = 300
+    evaluation_queue_name: str = "tender-evaluation"
+    evaluation_job_timeout_seconds: int = 900
+    evaluation_queue_enabled: bool = False
+    evaluation_model_mode: Literal["structural", "hybrid"] = "hybrid"
+    evaluation_model_classification: Literal["synthetic_public", "enterprise"] = "enterprise"
+    evaluation_model_max_requests: int = 4
+    evaluation_model_max_tokens: int = 40000
+    evaluation_model_max_context_chars: int = 60000
+    evaluation_model_batch_requirements: int = 12
 
     @field_validator(
         "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
@@ -191,6 +206,17 @@ class Settings(BaseSettings):
         "tender_model_max_tokens",
         "tender_model_max_context_chars",
         "tender_model_batch_regions",
+        "evaluation_max_parameters",
+        "evaluation_max_atomic_requirements",
+        "evaluation_max_active_jobs",
+        "evaluation_retrieval_limit",
+        "evaluation_evidence_per_capability",
+        "evaluation_evidence_snippet_chars",
+        "evaluation_job_timeout_seconds",
+        "evaluation_model_max_requests",
+        "evaluation_model_max_tokens",
+        "evaluation_model_max_context_chars",
+        "evaluation_model_batch_requirements",
     )
     @classmethod
     def positive_limit(cls, value):

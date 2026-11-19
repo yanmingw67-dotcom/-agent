@@ -1,0 +1,20 @@
+$ uv run pytest -q -s --durations=10 tests/unit/test_p22_logic.py tests/unit/test_p22_atomic.py tests/integration/test_p22_api.py tests/integration/test_p22_model.py
+..............................
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+0.40s call     tests/integration/test_p22_api.py::test_five_parameters_yield_exactly_five_verdicts_and_fixed_publication
+0.34s call     tests/integration/test_p22_api.py::test_cross_user_and_admin_cannot_read_evaluation
+0.27s call     tests/integration/test_p22_api.py::test_word_fifteen_parameters_and_45_atoms_yield_15_verdicts
+0.25s call     tests/integration/test_p22_api.py::test_document_evidence_is_verified_against_pinned_document
+0.23s call     tests/integration/test_p22_api.py::test_single_parameter_failure_is_isolated_and_fail_closed
+0.23s setup    tests/integration/test_p22_api.py::test_tampered_pinned_publication_fails_closed_and_retry_resumes
+0.18s setup    tests/integration/test_p22_api.py::test_cross_user_and_admin_cannot_read_evaluation
+0.18s call     tests/integration/test_p22_api.py::test_tampered_pinned_publication_fails_closed_and_retry_resumes
+0.15s setup    tests/integration/test_p22_api.py::test_five_parameters_yield_exactly_five_verdicts_and_fixed_publication
+0.12s setup    tests/integration/test_p22_api.py::test_word_fifteen_parameters_and_45_atoms_yield_15_verdicts
+30 passed, 1 warning in 3.20s

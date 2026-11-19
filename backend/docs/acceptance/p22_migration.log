@@ -1,0 +1,9 @@
+$ DATABASE_URL=sqlite:////tmp/p22_migration.db uv run alembic upgrade head
+$ ... downgrade 0009
+$ ... upgrade head
+$ DATABASE_URL=sqlite:////tmp/p22_migration.db uv run alembic current
+0010 (head)
+$ sqlite3 /tmp/p22_migration.db ".schema evaluation_evidence" | grep -E "evidence_id|capability_id|revision_id"
+	evidence_id VARCHAR(80) NOT NULL, 
+	capability_id VARCHAR(80) NOT NULL, 
+	revision_id VARCHAR(80) NOT NULL, 
