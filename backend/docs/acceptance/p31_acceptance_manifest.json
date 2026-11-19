@@ -1,0 +1,122 @@
+{
+  "acceptance_id": "P31-20261119-1340",
+  "phase": "P3.1",
+  "baseline_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
+  "head_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
+  "overall_status": "BLOCKED",
+  "environment": {
+    "database": "knowledge_p31_acceptance",
+    "postgres_version": "16.9",
+    "migration": "0012",
+    "tables": 36,
+    "api": "http://127.0.0.1:18080",
+    "container": "p31-acceptance-api",
+    "runtime_image": "product-knowledge:p1.3",
+    "code_source": "HEAD mounted read-only; image build from HEAD attempted but failed on base-image pull DeadlineExceeded",
+    "storage_root": "backend/storage/p31_acceptance",
+    "redis_db": 5,
+    "model_mode": "structural"
+  },
+  "production_database": {
+    "name": "knowledge",
+    "migration": "0007",
+    "categories": 65,
+    "source_snapshots": 64,
+    "documents": 33,
+    "publications": 2,
+    "modified": false
+  },
+  "ids": {
+    "tender_job_id": null,
+    "snapshot_id": null,
+    "publication_id": null,
+    "reason": "No real tender file, real product source/document, or authorized model was provided; no real extraction/evaluation was started."
+  },
+  "tests": {
+    "full_pytest": {
+      "passed": 418,
+      "skipped": 32,
+      "seconds": 71.38
+    },
+    "module_regression": {
+      "passed": 109,
+      "seconds": 9.74
+    },
+    "ruff_check": "PASS",
+    "ruff_format": {
+      "status": "PASS",
+      "files": 197
+    },
+    "frontend_typecheck": "PASS",
+    "frontend_build": {
+      "status": "PASS",
+      "modules": 42,
+      "js_kb": 296.29,
+      "css_kb": 33.47
+    }
+  },
+  "model": {
+    "configured_name": "glm-5.3-flash",
+    "authorization_proof": "NOT_PROVIDED",
+    "enterprise_assets_allowed": false,
+    "requests": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "retries": 0,
+    "degraded": null,
+    "deterministic_conclusions": 0,
+    "model_assisted_conclusions": 0,
+    "server_rejected_conclusions": 0,
+    "cost": "NOT_APPLICABLE_NO_CALL"
+  },
+  "real_sample_counts": {
+    "top_level_parameters": 0,
+    "numbered_subclauses": 0,
+    "evaluated_parameters": 0,
+    "evidence_records": 0,
+    "manual_reviews": 0
+  },
+  "defects": [
+    {
+      "id": "ENV-P1-01",
+      "severity": "P1",
+      "status": "OPEN",
+      "summary": "Shared deployment runs old image and migration 0007; zero tender/workbench routes. Isolated environment mitigates."
+    },
+    {
+      "id": "DATA-P2-01",
+      "severity": "P2",
+      "status": "OPEN",
+      "summary": "61 snapshots and 31 documents labeled enterprise are demo/manual fixtures; only synthetic_public publications exist."
+    },
+    {
+      "id": "ENV-P2-01",
+      "severity": "P2",
+      "status": "OPEN",
+      "summary": "Acceptance runtime uses existing p1.3 image with HEAD source mounted; HEAD image build failed on base-image pull DeadlineExceeded."
+    }
+  ],
+  "deliverables": {
+    "tender_coverage_15_46": "BLOCKED",
+    "knowledge_capability_inventory": "BLOCKED",
+    "fifteen_parameter_review": "BLOCKED",
+    "atomic_requirement_details": "BLOCKED",
+    "evidence_traceability": "BLOCKED",
+    "model_usage_cost": "BLOCKED",
+    "export_verification": "BLOCKED",
+    "defect_list": "PASS",
+    "blocked_items": "PASS"
+  },
+  "blocked_inputs": [
+    "Real WAF招标技术参数表.docx",
+    "Authorized real WAF product source snapshot or formal technical documents",
+    "Admin-reviewed and published real product capability baseline",
+    "Authorized model proof, data-export approval and pricing",
+    "Business reviewer and sign-off"
+  ],
+  "status_counts": {
+    "PASS": 13,
+    "FAIL": 0,
+    "BLOCKED": 31
+  }
+}

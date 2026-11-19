@@ -1,0 +1,38 @@
+== exact real tender filename ==
+(end)
+== related WAF fixtures ==
+./tests/fixtures/demo_waf_source.zip
+./tests/fixtures/p12/demo_waf_manual.docx
+./tests/fixtures/p12/demo_waf_manual.pdf
+== fixture hashes ==
+fda28d7f561e47ff1aa9d7584d0b6322f520bc87cab06257901c6dd06f076d39  tests/fixtures/p12/demo_waf_manual.docx
+d6ed8526fa1be24872c200db8f21a05458213cb273675685543ececc890b2bd1  tests/fixtures/p12/demo_waf_manual.pdf
+d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e  tests/fixtures/demo_waf_source.zip
+== document inventory ==
+bad.txt|failed|enterprise|1
+before.txt|parsed|enterprise|2
+demo_capabilities.xlsx|parsed|enterprise|7
+demo_waf_manual.docx|parsed|enterprise|7
+demo_waf_manual.pdf|parsed|enterprise|7
+manual.md|parsed|enterprise|4
+manual.md|parsed|synthetic_public|2
+mixed.pdf|partial|enterprise|2
+scale.xlsx|parsed|enterprise|1
+== publication inventory ==
+1af83dd5-e04e-4517-a81c-ab8a15201280|P1.3自主探索人工公开样例|synthetic_public
+db315185-3b36-4c8f-b9a4-3a7e055a1369|P1.3自主探索人工公开样例|synthetic_public
+== classification counts ==
+documents|enterprise|31
+documents|synthetic_public|2
+snapshots|enterprise|61
+snapshots|synthetic_public|3
+== model configuration (no secrets) ==
+BUILDER_MODEL='glm-5.3-flash'
+BUILDER_ALLOW_SYNTHETIC='true'
+BUILDER_ALLOW_ENTERPRISE='false'
+authorization_proof=NOT_PROVIDED
+model_calls_this_round=0
+
+acceptance_env_overrides=TENDER_MODEL_MODE=structural,EVALUATION_MODEL_MODE=structural
+image_build_from_head=FAILED(DeadlineExceeded)
+runtime_image=product-knowledge:p1.3 (HEAD source mounted read-only)

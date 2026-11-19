@@ -1,0 +1,34 @@
+== baseline ==
+2026-11-19T13:40:01Z
+284ef175f74e9dfe6d99b9773d78299e215b7e1b
+?? .ohmyagent/
+?? backend/docs/acceptance/p31_baseline.log
+?? backend/docs/acceptance/p31_environment_migration.log
+?? backend/docs/acceptance/p31_frontend_build.log
+?? backend/docs/acceptance/p31_frontend_typecheck.log
+?? backend/docs/acceptance/p31_full_pytest.log
+?? backend/docs/acceptance/p31_ruff_check.log
+?? backend/docs/acceptance/p31_ruff_format.log
+git@github.com:yanmingw67-dotcom/-agent.git
+Python 3.12.14
+== compose ==
+NAME                                SERVICE     STATUS
+product-knowledge-p11-api-1         api         Up 30 hours (healthy)
+product-knowledge-p11-builder-1     builder     Up 31 hours (healthy)
+product-knowledge-p11-indexer-1     indexer     Up 36 hours (healthy)
+product-knowledge-p11-postgres-1    postgres    Up 2 days (healthy)
+product-knowledge-p11-redis-1       redis       Up 2 days (healthy)
+product-knowledge-p11-retrieval-1   retrieval   Up 30 hours (healthy)
+product-knowledge-p11-worker-1      worker      Up 36 hours (healthy)
+== production db ==
+alembic|0007
+categories|65
+snapshots|64
+documents|33
+publications|2
+== acceptance db ==
+alembic|0012
+tables|36
+categories|0
+snapshots|0
+jobs|0

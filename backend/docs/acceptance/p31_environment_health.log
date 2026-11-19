@@ -1,0 +1,14 @@
+== acceptance API auth ==
+unauthenticated_tender=401
+unauthenticated_workbench=401
+admin_tender=200
+admin_workbench=200
+== health ==
+live=200
+ready=200
+== routes ==
+tender_routes 28
+== data remaining empty ==
+categories|0
+tender_jobs|0
+evaluation_jobs|0
