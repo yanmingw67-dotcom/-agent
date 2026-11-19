@@ -1,0 +1,3 @@
+docx_15_params: rounds=30 min=12.43ms median=14.15ms p95=15.26ms max=17.90ms
+text_1000_params: rounds=10 min=29.04ms median=30.47ms p95=38.57ms max=41.48ms
+fixture= synthetic WAF 15 rows; text=1000 numbered paragraphs; not real enterprise tender

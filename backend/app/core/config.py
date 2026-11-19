@@ -66,6 +66,17 @@ class Settings(BaseSettings):
     document_discovery_max_tokens: int = 60000
     document_discovery_max_context_chars: int = 60000
     document_discovery_max_text_chars: int = 12000
+    tender_root: Path | None = None
+    tender_max_file_bytes: int = 20 * 1024 * 1024
+    tender_max_text_chars: int = 2_000_000
+    tender_max_pages: int = 200
+    tender_max_sheets: int = 30
+    tender_max_rows: int = 20000
+    tender_max_parameters: int = 1000
+    tender_max_active_jobs: int = 2
+    tender_queue_name: str = "tender-extraction"
+    tender_job_timeout_seconds: int = 900
+    tender_queue_enabled: bool = False
 
     @field_validator(
         "builder_input_usd_per_million", "builder_output_usd_per_million", mode="before"
@@ -84,6 +95,10 @@ class Settings(BaseSettings):
     @property
     def document_store(self):
         return self.documents_root or self.archive_root.parent / "documents"
+
+    @property
+    def tender_store(self):
+        return self.tender_root or self.archive_root.parent / "tender"
 
     @property
     def control_store(self):
@@ -130,6 +145,14 @@ class Settings(BaseSettings):
         "document_discovery_max_tokens",
         "document_discovery_max_context_chars",
         "document_discovery_max_text_chars",
+        "tender_max_file_bytes",
+        "tender_max_text_chars",
+        "tender_max_pages",
+        "tender_max_sheets",
+        "tender_max_rows",
+        "tender_max_parameters",
+        "tender_max_active_jobs",
+        "tender_job_timeout_seconds",
     )
     @classmethod
     def positive_limit(cls, value):

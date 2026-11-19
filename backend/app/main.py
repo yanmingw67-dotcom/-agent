@@ -27,6 +27,7 @@ from app.core.metrics import snapshot as metric_snapshot
 from app.core.security import AppError
 from app.db.session import get_engine
 from app.jobs.queue import connection
+from app.tender import api as tender
 
 
 def error_response(request, status, code, message):
@@ -115,6 +116,7 @@ def create_app():
         app.include_router(investigations.router)
         app.include_router(capabilities.router)
         app.include_router(conflicts.router)
+        app.include_router(tender.router)
     app.include_router(retrieval.router)
     app.include_router(probe.router)
     return app

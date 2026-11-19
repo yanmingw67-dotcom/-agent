@@ -1,0 +1,10 @@
+== alembic upgrade head ==
+exit=0
+== tables ==
+version 0009
+tables ['tender_atomic_requirements', 'tender_corrections', 'tender_extraction_jobs', 'tender_parameters', 'tender_regions']
+== alembic downgrade 0008 ==
+exit=0
+== alembic upgrade head (roundtrip) ==
+exit=0
+0009 (head)
