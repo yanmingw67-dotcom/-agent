@@ -86,6 +86,12 @@ def test_product_form_and_component_differences_are_not_reported_as_conflict():
     assert match_pair(node_left, node_right) is None
 
 
+def test_explicitly_exclusive_environment_scopes_are_not_reported_as_duplicate():
+    left = claim("日志导出", channel="source", supported_scope=["仅支持生产环境"])
+    right = claim("日志导出", channel="document", supported_scope=["仅支持测试环境"])
+    assert match_pair(left, right) is None
+
+
 def test_scope_and_condition_differences_are_not_reported_as_duplicate():
     left = claim(
         "策略导出",
@@ -104,14 +110,48 @@ def test_scope_and_condition_differences_are_not_reported_as_duplicate():
     assert match_pair(left, right) is None
 
 
-def test_configuration_differences_are_not_reported_as_duplicate():
+def test_explicit_switch_configuration_differences_are_not_reported_as_duplicate():
     left = claim("策略导出", channel="source", action="默认开启策略导出")
     right = claim("策略导出", channel="document", action="默认关闭策略导出")
     assert match_pair(left, right) is None
 
-    required = claim("日志导出", channel="source", conditions=["必须开启审计模式"])
-    optional = claim("日志导出", channel="document", conditions=["可选开启审计模式"])
-    assert match_pair(required, optional) is None
+
+def test_required_and_optional_same_switch_are_not_exclusive():
+    left = claim(
+        "日志导出",
+        channel="source",
+        supported_scope=["仅支持集群部署"],
+        conditions=["必须开启审计模式"],
+    )
+    right = claim(
+        "日志导出",
+        channel="document",
+        claim_type="exclusion",
+        action="不支持日志导出",
+        target="日志导出",
+        supported_scope=["仅支持集群部署"],
+        conditions=["可选开启审计模式"],
+    )
+    kind, details = match_pair(left, right)
+    assert kind == "support_exclusion_conflict"
+    assert details["match"]["applicability_relation"] == "overlap"
+    assert details["match"]["auto_merge"] is False
+    assert details["match"]["auto_resolve"] is False
+
+
+def test_missing_conditions_keep_unknown_and_conflict():
+    left = claim("日志导出", channel="source", supported_scope=["仅支持集群部署"])
+    right = claim(
+        "日志导出",
+        channel="document",
+        claim_type="exclusion",
+        action="不支持日志导出",
+        target="日志导出",
+        supported_scope=["仅支持集群部署"],
+    )
+    kind, details = match_pair(left, right)
+    assert kind == "support_exclusion_conflict"
+    assert details["match"]["applicability_relation"] == "unknown"
 
 
 def test_same_source_same_capability_is_not_a_dual_source_duplicate():

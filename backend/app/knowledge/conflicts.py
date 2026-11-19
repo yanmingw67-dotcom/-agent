@@ -32,8 +32,6 @@ SCOPE_SUFFIX = re.compile(r"(?:部署|环境|模式|方式|场景)$")
 CONDITION_PREFIX = re.compile(r"^(?:必须|需|须|要求|可选|允许|支持)")
 STATE_ON = {"开启", "启用", "打开", "允许"}
 STATE_OFF = {"关闭", "禁用", "禁止", "不支持"}
-REQUIRED = {"必须", "需", "须", "要求"}
-OPTIONAL = {"可选", "允许"}
 EXCLUSIVE_TERMS = [
     ("生产", "测试"),
     ("集群", "单机"),
@@ -135,11 +133,10 @@ def _disjoint(left, right):
 
 
 def _state_conflict(left, right):
+    """只把明确的开关状态冲突视为互斥；必须/可选不能单独证明互斥。"""
     left_on, right_on = left & STATE_ON, right & STATE_ON
     left_off, right_off = left & STATE_OFF, right & STATE_OFF
-    if (left_on and right_off) or (right_on and left_off):
-        return True
-    return bool((left & REQUIRED and right & OPTIONAL) or (right & REQUIRED and left & OPTIONAL))
+    return bool((left_on and right_off) or (right_on and left_off))
 
 
 def _config_state_conflict(left, right):
