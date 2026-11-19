@@ -3,10 +3,10 @@
   "phase": "P3.1",
   "baseline_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
   "code_commit": "fa0fc2dac3dd152f895db01e98582849391d34c8",
-  "head_commit": "1bc96639f42dfe72fcc2dd12be30cab3a765b030",
-  "head_commit_note": "Code commit fa0fc2d plus acceptance report/logs commit 1bc9663.",
+  "head_commit": "f953f10564dc0026757103c26b607ca52b27c62b",
+  "head_commit_note": "Remediation code/tests/evidence commit f953f105; report, progress, matrix and this manifest are recorded in the following documentation commit.",
   "overall_status": "BLOCKED",
-  "overall_conclusion": "A1-A5 and D2-D4 passed on the real tender file; B/C/D1/D5-D10/E4b remain blocked; ENV-P1-01 is still open, so P3.1 is not declared passed.",
+  "overall_conclusion": "D04 multiple blank thresholds and D06 failed-job coverage inconsistency are fixed and covered by targeted tests; the real tender file now yields 200 atoms with zero span/tree errors. B/C/D1/D5-D10/E4b remain blocked, P31-D05 remains open, and ENV-P1-01 is still open, so P3.1 is not declared passed.",
   "environment": {
     "database": "knowledge_p31_acceptance",
     "postgres_version": "16.9",
@@ -21,7 +21,7 @@
     "model_mode": "structural",
     "isolated_business_data": {
       "categories": 1,
-      "tender_extraction_jobs": 6,
+      "tender_extraction_jobs": 8,
       "source_snapshots": 0,
       "publications": 0
     },
@@ -42,14 +42,16 @@
   "ids": {
     "category_id": "7a0ac606-ff5a-42cc-a824-d45aa1044467",
     "category_slug": "waf_p31",
-    "tender_job_id": "e8af956e-3982-4072-adb2-319f7da9f82c",
-    "tender_job_idempotency_key": "p31-real-20261119-05",
+    "tender_job_id": "60d10838-416e-46fd-92ae-0e010d96afca",
+    "tender_job_idempotency_key": "p31-real-20261119-07",
     "manual_ops_job_id": "9295dd26-ac27-4c53-9e26-af2014183148",
     "manual_ops_idempotency_key": "p31-real-edit-20261119-02",
     "failed_job_id": "88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa",
     "snapshot_id": null,
     "publication_id": null,
-    "snapshot_publication_reason": "No real WAF source/document or admin-reviewed publication was provided; no real snapshot or publication was created."
+    "snapshot_publication_reason": "No real WAF source/document or admin-reviewed publication was provided; no real snapshot or publication was created.",
+    "previous_tender_job_id": "e8af956e-3982-4072-adb2-319f7da9f82c",
+    "previous_tender_job_idempotency_key": "p31-real-20261119-05"
   },
   "real_input": {
     "file_name": "1-WAF招标技术参数表.docx",
@@ -96,12 +98,12 @@
       3,
       3
     ],
-    "atomic_requirements": 199,
+    "atomic_requirements": 200,
     "text_mismatches": 0,
     "tree_mismatches": 0,
     "source_span_errors": 0,
     "proof_cells_filtered": 15,
-    "duration_ms": 104.8,
+    "duration_ms": 49,
     "review_required": true,
     "review_reason": "Parameter 2 contains an open enumeration introduced by “至少包括”; the extraction is complete but requires human review.",
     "coverage_reason_counts": {
@@ -113,14 +115,95 @@
       "filtered|proof_or_commercial_column": 15,
       "extracted|None": 15
     },
-    "blank_threshold_total": 8,
+    "blank_threshold_total": 9,
     "open_enumeration_total": 23,
     "evidence": [
       "storage/p31_acceptance/evidence/p31_real_extraction_final.json",
       "storage/p31_acceptance/evidence/p31_real_coverage_final.json",
       "storage/p31_acceptance/evidence/p31_real_audit_summary.json",
-      "storage/p31_acceptance/evidence/job_id_final.txt"
-    ]
+      "storage/p31_acceptance/evidence/job_id_final.txt",
+      "storage/p31_acceptance/evidence/p31_d04_d06_real_job.json"
+    ],
+    "job_id": "60d10838-416e-46fd-92ae-0e010d96afca",
+    "idempotency_key": "p31-real-20261119-07",
+    "quantified_blank_threshold_total": 8,
+    "model_requests": 0,
+    "variation_from_previous": "199 -> 200: parameter 15 now represents the second blank constraint (______GB memory) as an independent AND leaf with inherited \"不高于\"; no value was guessed.",
+    "blank_thresholds": [
+      {
+        "parameter": "1",
+        "metric": "procurement form",
+        "text": "本次采购形态为：______（按项目填写）",
+        "unit": null,
+        "operator": null,
+        "quantified": false
+      },
+      {
+        "parameter": "10",
+        "metric": "network throughput",
+        "text": "网络层吞吐不低于 ______Gbps",
+        "unit": "Gbps",
+        "operator": "不低于",
+        "quantified": true
+      },
+      {
+        "parameter": "10",
+        "metric": "application throughput",
+        "text": "应用层吞吐不低于 ______Gbps",
+        "unit": "Gbps",
+        "operator": "不低于",
+        "quantified": true
+      },
+      {
+        "parameter": "10",
+        "metric": "concurrent connections",
+        "text": "并发连接数不低于 ______万",
+        "unit": "万",
+        "operator": "不低于",
+        "quantified": true
+      },
+      {
+        "parameter": "10",
+        "metric": "new connections",
+        "text": "新建连接数不低于 ______万/秒",
+        "unit": "万",
+        "operator": "不低于",
+        "quantified": true
+      },
+      {
+        "parameter": "14",
+        "metric": "false positive rate",
+        "text": "误报率不高于 ______%（建议不超过 1%）",
+        "unit": "%",
+        "operator": "不高于",
+        "quantified": true
+      },
+      {
+        "parameter": "14",
+        "metric": "false negative rate",
+        "text": "漏报率不高于 ______%",
+        "unit": "%",
+        "operator": "不高于",
+        "quantified": true
+      },
+      {
+        "parameter": "15",
+        "metric": "CPU usage",
+        "text": "软件版单实例资源占用不高于 ______vCPU",
+        "unit": "vCPU",
+        "operator": "不高于",
+        "quantified": true
+      },
+      {
+        "parameter": "15",
+        "metric": "memory usage",
+        "text": "______GB 内存（按规格填写）",
+        "unit": "GB",
+        "operator": "不高于",
+        "quantified": true
+      }
+    ],
+    "tree_leaf_errors": 0
   },
   "manual_ops": {
     "job_id": "9295dd26-ac27-4c53-9e26-af2014183148",
@@ -193,15 +276,15 @@
   },
   "tests": {
     "full_pytest": {
-      "passed": 424,
+      "passed": 444,
       "skipped": 32,
-      "seconds": 79.31,
-      "log": "p31_full_pytest_after_fix.log"
+      "seconds": 72.65,
+      "log": "p31_d04_d06_full_pytest.log"
     },
     "module_regression": {
-      "passed": 145,
-      "seconds": 12.36,
-      "log": "p31_module_regression_after_fix.log"
+      "passed": 165,
+      "seconds": 12.45,
+      "log": "p31_d04_d06_regression.log"
     },
     "focused_span_units_caption": {
       "passed": 24,
@@ -209,24 +292,34 @@
     },
     "ruff_check": {
       "status": "PASS",
-      "log": "p31_ruff_check_after_fix.log"
+      "log": "本轮命令输出"
     },
     "ruff_format": {
       "status": "PASS",
-      "files": 178,
-      "log": "p31_ruff_format_after_fix.log"
+      "files": 203,
+      "log": "本轮命令输出"
     },
     "frontend_typecheck": {
       "status": "PASS",
-      "note": "Frontend unchanged this round; previous log retained."
+      "log": "p31_d04_d06_frontend.log",
+      "note": "ExtractionDetail.tsx and types.ts changed this round."
     },
     "frontend_build": {
       "status": "PASS",
-      "note": "Frontend unchanged this round; previous log retained."
+      "log": "p31_d04_d06_frontend.log"
     },
     "secret_scan": {
       "status": "PASS",
-      "log": "p31_secret_scan_after_fix.log"
+      "log": "p31_d04_d06_secret_scan.log"
+    },
+    "remediation_focused": {
+      "passed": 20,
+      "seconds": 1.52,
+      "log": "p31_d04_d06_after_fix.log"
+    },
+    "postgres": {
+      "passed": 2,
+      "log": "p31_d04_d06_postgres.log"
     }
   },
   "model": {
@@ -246,7 +339,7 @@
   "real_sample_counts": {
     "top_level_parameters": 15,
     "numbered_subclauses": 46,
-    "atomic_requirements": 199,
+    "atomic_requirements": 200,
     "evaluated_parameters": 0,
     "evidence_records": 0,
     "manual_reviews": 0
@@ -297,10 +390,12 @@
     {
       "id": "P31-D04",
       "severity": "P2",
-      "status": "OPEN",
-      "summary": "When one atomic requirement contains multiple blank thresholds (vCPU / GB), only the first threshold is structured; original text is preserved and flagged for review.",
+      "status": "FIXED",
+      "summary": "Multiple blank thresholds in one atomic requirement are now identified and represented independently with their own units.",
       "example": "parameter 15 subclause 3",
-      "impact": "A3 passes with a known limitation; no fabricated value is produced."
+      "impact": "A3 passes with a known limitation; no fabricated value is produced.",
+      "fix": "app/tender/rules.py: blank-quantity detection, separator-based AND split, inherited operator, literal spans; tests/unit/test_p21_multi_thresholds.py and tests/integration/test_p21_multi_threshold_edit.py",
+      "after": "Real job 60d10838: parameter 15 keeps both vCPU and GB blank constraints; 200 atoms; zero span/tree errors."
     },
     {
       "id": "P31-D05",
@@ -315,17 +410,19 @@
     {
       "id": "P31-D06",
       "severity": "P2",
-      "status": "OPEN",
-      "summary": "A failed job that extracts zero parameters can still report coverage_status=complete; observed in the pre-fix failed job.",
+      "status": "FIXED",
+      "summary": "Failed jobs can no longer report complete coverage or enter P2.2 without valid parameters.",
       "before": "job 88ea10d9-1e4f-49b6-8e23-7b32dc2cedaa: status=failed, coverage_status=complete, extracted=0",
-      "impact": "Consumers must check both job status and coverage_status; not reproduced after the fix."
+      "impact": "Consumers must check both job status and coverage_status; not reproduced after the fix.",
+      "fix": "app/tender/rules.py failure code/reason; app/tender/service.py effective_job_state and retry reset; app/evaluation/service.py zero-parameter gate; frontend canEvaluate and failure reason; tests/integration/test_p21_status_consistency.py",
+      "after": "Historical failed job 88ea10d9 is returned as failed + incomplete with FAILED_JOB_COVERAGE_COMPLETE; old successful job e8af956e remains 199 atoms and complete."
     }
   ],
   "deliverables": {
     "tender_coverage_15_46": "PASS",
     "knowledge_capability_inventory": "BLOCKED",
     "fifteen_parameter_review": "PASS (extraction only; no product-support conclusion)",
-    "atomic_requirement_details": "PASS (199 atoms, spans exact)",
+    "atomic_requirement_details": "PASS (200 atoms, spans exact)",
     "evidence_traceability": "BLOCKED (no real product evidence)",
     "model_usage_cost": "BLOCKED (0 calls, no authorization)",
     "export_verification": "BLOCKED (no real evaluation result)",
@@ -339,9 +436,7 @@
     "Business reviewer and sign-off for product-support conclusions"
   ],
   "known_limitations": [
-    "P31-D04: multiple blank thresholds in one atom only structure the first value.",
-    "P31-D05: parenthetical secondary recommendation thresholds are not separately atomized.",
-    "P31-D06: failed/all-filtered pre-fix job reported coverage_status=complete."
+    "P31-D05: parenthetical secondary recommendation thresholds are not separately atomized."
   ],
   "status_counts": {
     "PASS": 21,
@@ -363,6 +458,51 @@
     "docs/acceptance/p31_secret_scan_after_fix.log",
     "storage/p31_acceptance/evidence/p31_real_extraction_final.json",
     "storage/p31_acceptance/evidence/p31_real_coverage_final.json",
-    "storage/p31_acceptance/evidence/p31_manual_ops_evidence.json"
-  ]
+    "storage/p31_acceptance/evidence/p31_manual_ops_evidence.json",
+    "docs/acceptance/p31_d04_d06_remediation.md",
+    "docs/acceptance/p31_d04_d06_after_fix.log",
+    "docs/acceptance/p31_d04_d06_regression.log",
+    "docs/acceptance/p31_d04_d06_full_pytest.log",
+    "docs/acceptance/p31_d04_d06_postgres.log",
+    "docs/acceptance/p31_d04_d06_real_retest.log",
+    "docs/acceptance/p31_d06_historical_status.log",
+    "docs/acceptance/p31_d04_d06_frontend.log",
+    "docs/acceptance/p31_d04_d06_secret_scan.log"
+  ],
+  "acceptance_round": "P31-D04/D06 remediation and Agent A admin entry check",
+  "remediation_baseline_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
+  "remediation_code_commit": "f953f10564dc0026757103c26b607ca52b27c62b",
+  "defect_counts": {
+    "FIXED": 5,
+    "OPEN": 1
+  },
+  "admin_entry": {
+    "status": "ADMIN_API_ONLY",
+    "admin_ui_available": false,
+    "admin_api_available": true,
+    "zip_source_upload_api": "POST /api/v1/categories/{category_id}/source (admin, .zip only)",
+    "admin_document_upload": "NOT_AVAILABLE",
+    "review_evidence_publish_apis": [
+      "GET /api/v1/admin/capabilities/{claim_id}",
+      "POST /api/v1/capabilities/{claim_id}/review",
+      "POST /api/v1/capabilities/{claim_id}/validate",
+      "POST /api/v1/snapshots/{snapshot_id}/review-evidence",
+      "POST /api/v1/snapshots/{snapshot_id}/publish",
+      "POST /api/v1/categories/{category_id}/rollback"
+    ],
+    "frontend_routes": [
+      "#/tasks",
+      "#/new",
+      "#/extractions/{job_id}",
+      "#/evaluations/{evaluation_id}",
+      "#/results/{id}",
+      "login"
+    ],
+    "frontend_5000_route": "NOT_APPLICABLE",
+    "startup": "backend Compose or local uvicorn; frontend vite at http://127.0.0.1:5173",
+    "migration_required": false,
+    "migration_head": "0012",
+    "independent_acceptance_environment": "API http://127.0.0.1:18080 is available; admin UI is not.",
+    "external_model_risk": "Admin upload itself records model_mode=NOT_USED; later knowledge investigation may call a model only after authorization and data-export approval."
+  }
 }
