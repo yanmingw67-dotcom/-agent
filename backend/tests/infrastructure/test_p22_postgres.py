@@ -28,13 +28,27 @@ from app.db.evaluation_models import (
 from app.db.models import Category
 from app.main import create_app
 from tests.conftest import READ
+from tests.integration.test_p14_review_publication import accept, publish, setup
 from tests.integration.test_p22_api import (
     create_evaluation,
     create_extraction,
     phrase_set,
     publish_synthetic,
+    review_body,
+    synthetic_content,
 )
 from tests.p21_assets import PARAM_NAMES, waf_docx
+
+
+def publish_custom(client, action, limitation, label):
+    cid, sid, claims, evidence = setup(client)
+    content = synthetic_content([action], label)
+    content["limitations"] = [limitation]
+    ticket = review_body(content, evidence["core/i_preview.py"])
+    revision = accept(client, claims[0], ticket)
+    result = publish(client, sid, [revision["id"]])
+    assert result.status_code == 200, result.text
+    return cid
 
 
 @unittest.skipUnless(os.getenv("P22_RUN_POSTGRES") == "1", "需显式真实PostgreSQL测试环境")
@@ -111,6 +125,29 @@ class P22PostgresTests(unittest.TestCase):
             assert data["job"]["checkpoint"] == {"completed": 5, "total": 5}
             assert len(data["parameters"]) == 5
             assert {p["verdict"] for p in data["parameters"]} <= {"支持", "不支持", "无法确认"}
+            assert any(p["verdict"] == "支持" for p in data["parameters"])
+
+            cid_negative = publish_custom(
+                client,
+                "支持 IPv4 协议解析",
+                "不支持 IPv6 协议解析",
+                "否定判断",
+            )
+            negative_extraction, _ = create_extraction(
+                client, cid_negative, text="1、支持 IPv6 协议解析。"
+            )
+            negative_job = create_evaluation(client, negative_extraction)["job_id"]
+            negative = client.get(
+                f"/api/v1/tender/evaluations/{negative_job}/results", headers=READ
+            ).json()
+            assert negative["job"]["status"] == "succeeded", negative["job"]
+            assert any(item["verdict"] == "不支持" for item in negative["parameters"]), negative
+            negative_evidence = client.get(
+                f"/api/v1/tender/evaluations/{negative_job}/evidence", headers=READ
+            ).json()["evidence"]
+            assert any(
+                item["verification_state"] == "verified_contradiction" for item in negative_evidence
+            ), negative_evidence
 
             cid2, publication2 = publish_synthetic(client, phrase_set(PARAM_NAMES), "十五项")
             upload = client.post(
@@ -197,4 +234,5 @@ class P22PostgresTests(unittest.TestCase):
                 "verified_context",
             }
             assert "verified_support" in states
-            assert db.scalar(select(func.count()).select_from(Category)) == 2
+            # 五项、十五项和否定判断使用三个独立合成快照/分类。
+            assert db.scalar(select(func.count()).select_from(Category)) == 3

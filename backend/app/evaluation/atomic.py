@@ -20,12 +20,14 @@ from app.db.models import AuditEvent
 from app.db.session import session_factory
 from app.evaluation.equivalence import (
     clean_requirement,
+    direct_support,
     mechanism_required,
+    metric_evaluation,
     minimum_options,
-    negative_assertions,
-    scope_overlap,
-    strong_lexical_match,
-    threshold_satisfied,
+    minimum_scope,
+    negative_assertion_bindings,
+    negative_scope_matches,
+    quantitative_scope,
 )
 from app.evaluation.logic import SUPPORTED, UNKNOWN, UNSUPPORTED
 from app.evaluation.retrieval import Candidate, PinnedKnowledge
@@ -39,23 +41,17 @@ INSTRUCTIONS = """你是招标参数技术符合性核验器。你只能使用�
 
 对每个原子要求输出一个判断：
 - supports：候选能力及其证据直接支持该要求，或能够论证技术等价；必须给出候选
-  ID、evidence_ids 和逐字 anchors。没有证据不得输出 supports。
-- contradicts：只有证据引文中存在明确否定或范围限制（不支持/不提供/未实现/
-  不覆盖等）且与要求范围相交时才可输出。
+  ID、evidence_ids 和逐字 anchors。没有证据不得输出 supports。关键词、字符
+  二元组或相似度本身不能证明支持；必须核实技术动作、对象、范围、必要约束和
+  适用条件。检测不等于检测并阻断，识别不等于处置，监测不等于自动响应，单机
+  部署不等于集群高可用；无法确定技术等效时必须输出 unknown。
+- contradicts：只有证据引文属于已审核 limitations.N 或其他明确允许的正式否定
+  断言，并且明确否定与要求相同的技术能力、对象、部署形态和适用条件时才可输出。
+  单纯出现“不支持”字样、否定对象不同或范围不一致时不得输出 contradicts。
 - unknown：证据不足、只有相似关键词、范围不清或无法确认。
 指定了必须采用的具体机制时，不得用“效果类似”替代；机制不兼容应说明。
 equivalence 取 identical/equivalent_effect/different_mechanism/insufficient；
 mechanism_compatible 仅在证据支持机制兼容时为 true。"""
-
-
-def _is_negative(quote: str) -> bool:
-    claims = negative_assertions(
-        {
-            "content": {"limitations": [quote]},
-            "assertions": [],
-        }
-    )
-    return bool(claims)
 
 
 @dataclass
@@ -317,47 +313,61 @@ class AtomicEvaluator:
         threshold = requirement.get("threshold")
         operator = requirement.get("threshold_operator")
         numeric_contradiction = None
+        scope_text = quantitative_scope(text) if threshold else text
         for candidate in retrieval.candidates:
-            lexical = strong_lexical_match(text, candidate.text, ignore_numbers=bool(threshold))
-            numeric = (
-                threshold_satisfied(threshold, operator, candidate.text) if threshold else None
+            candidate_conditions = candidate.content.get("conditions") or []
+            direct, direct_reasons = direct_support(
+                scope_text,
+                candidate.text,
+                requirement.get("conditions") or [],
+                candidate_conditions,
             )
+            metric = (
+                metric_evaluation(
+                    text,
+                    parameter_name,
+                    threshold,
+                    operator,
+                    requirement.get("unit"),
+                    candidate.text,
+                )
+                if threshold
+                else None
+            )
+            metric_satisfied = metric["state"] == "satisfied" if metric else None
             details_candidates.append(
                 {
                     "capability_id": candidate.capability_id,
                     "score": candidate.score,
-                    "lexical_match": lexical,
-                    "threshold_satisfied": numeric,
+                    "direct_support": direct,
+                    "direct_gaps": direct_reasons[:8],
+                    "metric": metric,
                     "channels": sorted({item["kind"] for item in candidate.evidence.values()}),
                 }
             )
-            mechanism_required_flag, _ = mechanism_required(text)
-            mechanism_blocked = (
-                mechanism_required_flag
-                and strong_lexical_match(text, candidate.text, ignore_numbers=bool(threshold))
-                and all(
-                    term not in candidate.text.casefold()
-                    for term in mechanism_required(text)[1][:3]
-                )
-            )
-            if lexical and numeric is False:
-                # 文档中出现较小数值不等于产品上限声明；只记录，不据此判为不支持。
-                numeric_contradiction = (
-                    f"候选能力中的数值未达到“{threshold}{requirement.get('unit') or ''}”"
-                )
-                citations.extend(_citations(candidate, "verified_context"))
-                continue
-            if lexical and numeric is not False and not mechanism_blocked:
+            if direct and (not threshold or metric_satisfied):
                 supported.append(candidate)
                 citations.extend(_citations(candidate, "verified_support"))
-            for claim, evidence_ids in negative_assertions(
+            elif metric and metric["state"] == "not_satisfied":
+                # 数值低于要求不等于产品不支持；只作为上下文，仍须有明确否定证据
+                # 才能输出不支持。
+                numeric_contradiction = metric["reason"]
+                citations.extend(_citations(candidate, "verified_context"))
+            for binding in negative_assertion_bindings(
                 {
                     "content": candidate.content,
                     "assertions": candidate.assertions,
                 }
             ):
-                overlap = scope_overlap(text, claim)
-                if overlap < 0.34:
+                claim = binding["claim"]
+                evidence_ids = binding["evidence_ids"]
+                if not negative_scope_matches(text, claim):
+                    base.details.setdefault("gaps", []).append(
+                        {
+                            "capability_id": candidate.capability_id,
+                            "reason": "negative_scope_mismatch",
+                        }
+                    )
                     continue
                 if not evidence_ids:
                     base.details.setdefault("gaps", []).append(
@@ -411,10 +421,11 @@ class AtomicEvaluator:
             required = int(str(requirement.get("threshold") or "").strip())
         except (TypeError, ValueError):
             required = None
-        if not options or not required:
+        scope = minimum_scope(requirement.get("original_text", ""), options, required)
+        if not options or not required or not scope["count_unit"]:
             base.verdict = UNKNOWN
-            base.reason = "至少 N 项要求未给出可枚举选项或 N，按无法确认处理。"
-            base.details = {"minimum_count": required, "options": options[:20]}
+            base.reason = "至少 N 项要求未给出可枚举选项、N 或数量单位，按无法确认处理。"
+            base.details = {"minimum_count": required, "options": options[:20], **scope}
             return Prepared(requirement, base.requirement_text, [], base, [])
         states = []
         citations = []
@@ -424,42 +435,70 @@ class AtomicEvaluator:
             all_candidates.extend(retrieval.candidates)
             verdict = UNKNOWN
             reason = "no_match"
+            has_negative = False
+            conflict = False
             for candidate in retrieval.candidates:
-                if strong_lexical_match(option, candidate.text):
+                direct, _ = direct_support(option, candidate.text)
+                negative = next(
+                    (
+                        binding
+                        for binding in negative_assertion_bindings(
+                            {"content": candidate.content, "assertions": candidate.assertions}
+                        )
+                        if binding["evidence_ids"]
+                        and negative_scope_matches(option, binding["claim"])
+                    ),
+                    None,
+                )
+                if direct and not negative:
                     verdict, reason = SUPPORTED, "supported"
                     citations.extend(_citations(candidate, "verified_support"))
                     break
-            if verdict == UNKNOWN:
-                for candidate in retrieval.candidates:
-                    for claim, _ in negative_assertions(
-                        {"content": candidate.content, "assertions": candidate.assertions}
-                    ):
-                        if scope_overlap(option, claim) >= 0.34:
-                            verdict, reason = UNSUPPORTED, "explicit_limitation"
-                            break
-                    if verdict == UNSUPPORTED:
-                        break
+                if direct and negative:
+                    conflict = True
+                elif negative:
+                    has_negative = True
+            if verdict == UNKNOWN and conflict:
+                reason = "conflicting_support_and_negative"
+            elif verdict == UNKNOWN and has_negative:
+                verdict, reason = UNSUPPORTED, "explicit_limitation"
             states.append({"option": option, "verdict": verdict, "reason": reason})
         supported = sum(1 for item in states if item["verdict"] == SUPPORTED)
         unsupported = sum(1 for item in states if item["verdict"] == UNSUPPORTED)
+        unknown = sum(1 for item in states if item["verdict"] == UNKNOWN)
+        max_possible = supported + unknown
         if supported >= required:
             base.verdict, base.reason = (
                 SUPPORTED,
                 f"至少 {required} 项：{supported} 项有已核验支持证据。",
             )
-        elif unsupported == len(states) and supported == 0:
+        elif scope["complete_set"] and max_possible < required:
             base.verdict, base.reason = (
                 UNSUPPORTED,
-                "所有已列举选项均存在明确否定证据，无法达到至少 N 项。",
+                "已确认完整候选集合中最多可能支持数量不足 N，无法达到要求。",
             )
         else:
             base.verdict = UNKNOWN
-            base.reason = (
-                f"至少 {required} 项：当前仅确认 {supported} 项支持，其余选项证据不足；"
-                "不把缺少证据当作不支持。"
-            )
+            if not scope["complete_set"]:
+                base.reason = (
+                    f"至少 {required} 项：候选全集或统计口径未确认，当前确认 {supported} 项支持；"
+                    "不把缺少证据或未找到的选项当作产品不支持。"
+                )
+            else:
+                base.reason = (
+                    f"至少 {required} 项：当前确认 {supported} 项支持、{unknown} 项证据不足；"
+                    "完整集合中仍可能达到 N，按无法确认处理。"
+                )
         base.citations = _merge_citations(citations)
-        base.details = {"minimum_count": required, "options": states[:20]}
+        base.details = {
+            "minimum_count": required,
+            "options": states[:20],
+            "supported": supported,
+            "unsupported": unsupported,
+            "unknown": unknown,
+            "max_possible_supported": max_possible,
+            **scope,
+        }
         return Prepared(requirement, base.requirement_text, all_candidates[:8], base, [])
 
     def _payload(self, prepared: list[Prepared]) -> tuple[str, dict[str, set[str]]]:
@@ -581,13 +620,63 @@ class AtomicEvaluator:
                 )
                 continue
             if judgment.relation == "contradicts":
-                quotes = [
-                    candidate.evidence[anchor.evidence_id]["quote"] for anchor in judgment.anchors
-                ]
-                if not any(_is_negative(quote) for quote in quotes):
+                if not judgment.rationale.strip():
                     gaps.append(
                         {
-                            "reason": "contradiction_not_explicit",
+                            "reason": "rationale_missing",
+                            "requirement_id": judgment.requirement_id,
+                        }
+                    )
+                    continue
+                if any(
+                    citation.get("verification_state") == "verified_support"
+                    for citation in item.result.citations
+                ):
+                    gaps.append(
+                        {
+                            "reason": "contradiction_conflicts_with_support",
+                            "requirement_id": judgment.requirement_id,
+                        }
+                    )
+                    continue
+                bindings = negative_assertion_bindings(
+                    {"content": candidate.content, "assertions": candidate.assertions}
+                )
+                audited_ids = {
+                    eid for binding in bindings for eid in binding.get("evidence_ids", [])
+                }
+                if not judgment.evidence_ids or not set(judgment.evidence_ids).issubset(
+                    audited_ids
+                ):
+                    gaps.append(
+                        {
+                            "reason": "contradiction_evidence_not_audited",
+                            "requirement_id": judgment.requirement_id,
+                        }
+                    )
+                    continue
+                matched = True
+                for anchor in judgment.anchors:
+                    quote = re.sub(r"\s+", "", candidate.evidence[anchor.evidence_id]["quote"])
+                    binding = next(
+                        (
+                            item
+                            for item in bindings
+                            if anchor.evidence_id in item.get("evidence_ids", [])
+                            and (
+                                re.sub(r"\s+", "", item["claim"]) in quote
+                                or quote in re.sub(r"\s+", "", item["claim"])
+                            )
+                        ),
+                        None,
+                    )
+                    if not binding or not negative_scope_matches(item.text, binding["claim"]):
+                        matched = False
+                        break
+                if not matched:
+                    gaps.append(
+                        {
+                            "reason": "contradiction_scope_or_binding_mismatch",
                             "requirement_id": judgment.requirement_id,
                         }
                     )

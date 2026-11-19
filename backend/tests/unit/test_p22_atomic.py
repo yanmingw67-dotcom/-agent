@@ -194,15 +194,15 @@ def test_blank_threshold_is_unknown_and_never_guessed():
 
 def test_threshold_satisfied_supports_but_lower_number_is_not_unsupported():
     supported = evaluate(
-        "最大并发连接数不低于 10000",
-        [candidate("cap-perf", "最大并发连接数 20000")],
+        "最大并发连接数不低于 10000 个",
+        [candidate("cap-perf", "最大并发连接数 20000 个")],
         threshold="10000",
         threshold_operator="不低于",
     )
     assert supported["verdict"] == "支持"
     lower = evaluate(
-        "最大并发连接数不低于 10000",
-        [candidate("cap-perf", "最大并发连接数 5000")],
+        "最大并发连接数不低于 10000 个",
+        [candidate("cap-perf", "最大并发连接数 5000 个")],
         threshold="10000",
         threshold_operator="不低于",
     )

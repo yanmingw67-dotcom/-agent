@@ -260,8 +260,10 @@ def test_single_parameter_failure_is_isolated_and_fail_closed(client, monkeypatc
     assert all(
         atom["assessment_method"] == "failed_closed" for atom in failed[0]["atomic_requirements"]
     )
+    # “多租户策略”缺少“隔离”技术动作，不能按词面相似判为支持；其余三条
+    # 未失败参数仍有直接支持证据。
     assert (
-        sum(item["verdict"] == "支持" for item in data["parameters"] if not item["error_code"]) == 4
+        sum(item["verdict"] == "支持" for item in data["parameters"] if not item["error_code"]) == 3
     )
 
 
