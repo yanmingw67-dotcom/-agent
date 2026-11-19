@@ -3,8 +3,8 @@
   "phase": "P3.1",
   "baseline_commit": "284ef175f74e9dfe6d99b9773d78299e215b7e1b",
   "code_commit": "fa0fc2dac3dd152f895db01e98582849391d34c8",
-  "head_commit": "fa0fc2dac3dd152f895db01e98582849391d34c8",
-  "head_commit_note": "Code and regression tests commit. Acceptance report/logs are committed immediately after this manifest.",
+  "head_commit": "1bc96639f42dfe72fcc2dd12be30cab3a765b030",
+  "head_commit_note": "Code commit fa0fc2d plus acceptance report/logs commit 1bc9663.",
   "overall_status": "BLOCKED",
   "overall_conclusion": "A1-A5 and D2-D4 passed on the real tender file; B/C/D1/D5-D10/E4b remain blocked; ENV-P1-01 is still open, so P3.1 is not declared passed.",
   "environment": {
