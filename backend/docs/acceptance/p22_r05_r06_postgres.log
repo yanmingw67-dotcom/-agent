@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 1 item
+
+tests/infrastructure/test_p22_postgres.py::P22PostgresTests::test_pinned_publication_five_and_word_fifteen_on_postgres P22_METRICS {"five": {"elapsed_ms": 71, "failed_parameters": null}, "word": {"elapsed_ms": 161, "failed_parameters": null}}
+PASSED
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 1 passed, 1 warning in 2.13s =========================

@@ -87,11 +87,17 @@ class FakeKnowledge:
 
 
 class LookupKnowledge:
-    def __init__(self, mapping):
+    def __init__(self, mapping, issues=None):
         self.mapping = mapping
+        self.issues = issues or {}
 
     def retrieve(self, requirement, parameter_name):
-        return RetrievalResult(candidates=self.mapping.get(requirement, []), gaps=[])
+        issue = self.issues.get(requirement, {})
+        return RetrievalResult(
+            candidates=self.mapping.get(requirement, []),
+            gaps=issue.get("gaps", []),
+            truncated=issue.get("truncated", False),
+        )
 
 
 def evaluate(text, candidates, **extra):
@@ -104,9 +110,9 @@ def evaluate(text, candidates, **extra):
     return evaluator.evaluate([requirement(text, **extra)], "示例参数")[0]
 
 
-def minimum(text, candidates_by_option, threshold="2"):
+def minimum(text, candidates_by_option, threshold="2", issues=None):
     evaluator = AtomicEvaluator(
-        LookupKnowledge(candidates_by_option),
+        LookupKnowledge(candidates_by_option, issues),
         job_id="job-1",
         principal_id="alice",
         model_mode="structural",
@@ -486,7 +492,7 @@ def test_model_contradiction_accepts_valid_reviewed_negative_assertion():
 
 def test_minimum_count_uses_confirmed_complete_set():
     result = minimum(
-        "支持至少 2 项功能：A 功能、B 功能、C 功能",
+        "支持至少 2 项功能，仅限以下选项：A 功能、B 功能、C 功能",
         {
             "A 功能": [make_candidate("cap-a", "支持 A 功能")],
             "B 功能": [make_candidate("cap-b", "支持 B 功能")],
@@ -494,19 +500,34 @@ def test_minimum_count_uses_confirmed_complete_set():
         },
     )
     assert result["verdict"] == "支持"
-    assert result["details_json"]["supported"] == 2
+    details = result["details_json"]
+    assert details["supported"] == 2
+    assert details["complete_set"] is True
+    assert details["complete_basis"] == "only_following"
+    assert details["complete_marker_start"] >= 0
+    assert details["complete_marker_end"] > details["complete_marker_start"]
+    assert details["uncertainty"] == []
 
 
 def test_minimum_count_unsupported_only_for_complete_set_with_insufficient_max():
     result = minimum(
-        "支持至少 2 项功能：A 功能、B 功能",
+        "支持至少 2 项功能，仅限以下选项：A 功能、B 功能",
         {
             "A 功能": [make_candidate("cap-a", "支持 A 功能")],
             "B 功能": [make_candidate("cap-b", "支持 A 功能", "不支持 B 功能")],
         },
     )
     assert result["verdict"] == "不支持"
-    assert result["details_json"]["complete_set"] is True
+    details = result["details_json"]
+    assert details["complete_set"] is True
+    assert details["max_possible_supported"] == 1
+    state = next(item for item in details["options"] if item["option"] == "B 功能")
+    assert state["verdict"] == "不支持"
+    assert state["negative_evidence_ids"] == ["ev-2"]
+    assert any(
+        item["evidence_id"] == "ev-2" and item["verification_state"] == "verified_contradiction"
+        for item in result["citations"]
+    )
 
 
 def test_minimum_count_with_unknown_member_is_not_unsupported():
@@ -559,6 +580,7 @@ def test_minimum_count_accepts_synonym_for_at_least():
     )
     assert result["verdict"] == "支持"
     assert result["details_json"]["count_unit"] == "项"
+    assert result["details_json"]["complete_set"] is False
 
 
 def test_open_enumeration_is_not_a_complete_set():
@@ -573,13 +595,181 @@ def test_open_enumeration_is_not_a_complete_set():
     assert result["details_json"]["complete_set"] is False
 
 
+def test_explicit_universe_with_open_marker_is_not_complete():
+    scope = minimum_scope(
+        "支持至少 2 项功能，以下为全部可选项，包括但不限于 A 功能、B 功能",
+        ["A 功能", "B 功能"],
+        2,
+    )
+    assert scope["complete_set"] is False
+    assert scope["complete_basis"] == "following_is_all"
+    assert "open_enumeration" in scope["uncertainty"]
+
+
 def test_classified_protection_is_not_an_open_enumeration():
     scope = minimum_scope(
-        "支持至少 2 项等保合规功能：A 功能、B 功能",
+        "支持至少 2 项等保合规功能，仅限以下选项：A 功能、B 功能",
         ["A 功能", "B 功能"],
         2,
     )
     assert scope["complete_set"] is True
+
+
+def test_minimum_count_without_explicit_universe_is_not_unsupported():
+    result = minimum(
+        "支持至少 2 项功能：A 功能、B 功能",
+        {
+            "A 功能": [make_candidate("cap-a", "支持 A 功能")],
+            "B 功能": [make_candidate("cap-b", "支持基础功能", "不支持 B 功能")],
+        },
+    )
+    assert result["verdict"] == "无法确认"
+    details = result["details_json"]
+    assert details["complete_set"] is False
+    assert details["complete_basis"] is None
+    assert details["complete_marker"] is None
+    assert "no_explicit_full_set_marker" in details["uncertainty"]
+    assert details["option_count"] == 2
+
+
+def test_minimum_count_explicit_three_choose_two_is_complete():
+    result = minimum(
+        "支持至少 2 项功能，以下三项中选两项：A 功能、B 功能、C 功能",
+        {
+            "A 功能": [make_candidate("cap-a", "支持 A 功能")],
+            "B 功能": [make_candidate("cap-b", "支持 B 功能")],
+            "C 功能": [make_candidate("cap-c", "支持基础功能", "不支持 C 功能")],
+        },
+    )
+    assert result["verdict"] == "支持"
+    details = result["details_json"]
+    assert details["complete_set"] is True
+    assert details["complete_basis"] == "choose_n_of_m"
+    assert details["declared_option_count"] == 3
+    assert details["declared_pick_count"] == 2
+    assert details["option_count_matches"] is True
+    assert details["pick_count_matches"] is True
+    assert details["uncertainty"] == []
+
+
+def test_minimum_count_from_following_universe_is_complete():
+    result = minimum(
+        "支持至少 2 项功能，从下列三项中选择：A 功能、B 功能、C 功能",
+        {
+            "A 功能": [make_candidate("cap-a", "支持 A 功能")],
+            "B 功能": [make_candidate("cap-b", "支持 B 功能")],
+            "C 功能": [make_candidate("cap-c", "支持基础功能", "不支持 C 功能")],
+        },
+    )
+    assert result["verdict"] == "支持"
+    details = result["details_json"]
+    assert details["complete_set"] is True
+    assert details["complete_basis"] == "from_following"
+    assert details["complete_marker"] == "从下列三项中"
+    assert details["declared_option_count"] == 3
+
+
+def test_minimum_count_declared_universe_must_match_parsed_options():
+    scope = minimum_scope(
+        "支持至少 2 项功能，从下列三项中：A 功能、B 功能",
+        ["A 功能", "B 功能"],
+        2,
+    )
+    assert scope["complete_set"] is False
+    assert scope["declared_option_count"] == 3
+    assert scope["option_count"] == 2
+    assert "declared_option_count_mismatch" in scope["uncertainty"]
+
+    scope = minimum_scope(
+        "支持至少 2 项功能，仅限以下三项：A 功能、B 功能",
+        ["A 功能", "B 功能"],
+        2,
+    )
+    assert scope["complete_set"] is False
+    assert scope["declared_option_count"] == 3
+    assert "declared_option_count_mismatch" in scope["uncertainty"]
+
+
+def test_minimum_scope_records_marker_position_in_original_text():
+    text = "1. 支持至少 2 项功能，仅限以下选项：A 功能、B 功能"
+    scope = minimum_scope(text, ["A 功能", "B 功能"], 2)
+    assert scope["complete_set"] is True
+    assert scope["complete_marker_start"] == text.index("仅限以下选项")
+    assert scope["complete_marker_end"] == text.index("仅限以下选项") + len("仅限以下选项")
+
+
+def test_minimum_count_complete_set_with_all_negative_is_unsupported():
+    result = minimum(
+        "支持至少 2 项功能，以下为全部可选项：A 功能、B 功能",
+        {
+            "A 功能": [make_candidate("cap-a", "支持基础功能", "不支持 A 功能")],
+            "B 功能": [make_candidate("cap-b", "支持基础功能", "不支持 B 功能")],
+        },
+    )
+    assert result["verdict"] == "不支持"
+    details = result["details_json"]
+    assert details["complete_set"] is True
+    assert details["complete_basis"] == "following_is_all"
+    assert details["supported"] == 0
+    assert details["unsupported"] == 2
+    for state in details["options"]:
+        assert state["negative_evidence_ids"] == ["ev-2"]
+        assert state["evidence_ids"] == ["ev-2"]
+    assert {item["verification_state"] for item in result["citations"]} == {
+        "verified_contradiction"
+    }
+
+
+def test_minimum_count_same_candidate_support_and_negative_is_unknown():
+    result = minimum(
+        "支持至少 1 项功能，仅限以下选项：A 功能",
+        {"A 功能": [make_candidate("cap-a", "支持 A 功能", "不支持 A 功能")]},
+        threshold="1",
+    )
+    assert result["verdict"] == "无法确认"
+    state = result["details_json"]["options"][0]
+    assert state["reason"] == "conflicting_support_and_negative"
+    assert state["support_evidence_ids"]
+    assert state["negative_evidence_ids"] == ["ev-2"]
+
+
+def test_minimum_count_different_candidates_conflict_and_order_is_irrelevant():
+    support = make_candidate("cap-support", "支持 A 功能")
+    negative = make_candidate("cap-negative", "支持基础功能", "不支持 A 功能")
+    verdicts = []
+    for candidates in ([support, negative], [negative, support]):
+        result = minimum(
+            "支持至少 1 项功能，仅限以下选项：A 功能",
+            {"A 功能": list(candidates)},
+            threshold="1",
+        )
+        verdicts.append(result["verdict"])
+        state = result["details_json"]["options"][0]
+        assert state["reason"] == "conflicting_support_and_negative"
+        assert state["support_evidence_ids"]
+        assert state["negative_evidence_ids"] == ["ev-2"]
+    assert verdicts == ["无法确认", "无法确认"]
+
+
+def test_minimum_count_retrieval_gaps_or_truncation_degrades_to_unknown():
+    text = "支持至少 2 项功能，仅限以下选项：A 功能、B 功能"
+    mapping = {
+        "A 功能": [make_candidate("cap-a", "支持 A 功能")],
+        "B 功能": [],
+    }
+    for issue in (
+        {"gaps": [{"reason": "evidence_read_failed"}]},
+        {"truncated": True},
+    ):
+        result = minimum(text, mapping, issues={"B 功能": issue})
+        assert result["verdict"] == "无法确认"
+        details = result["details_json"]
+        assert details["complete_set"] is True
+        assert details["retrieval_issues"]
+        state = next(item for item in details["options"] if item["option"] == "B 功能")
+        assert state["verdict"] == "无法确认"
+        assert state["reason"] == "retrieval_incomplete"
+        assert state["retrieval_gaps"] or state["retrieval_truncated"]
 
 
 def test_source_or_document_evidence_each_supports():

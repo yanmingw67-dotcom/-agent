@@ -430,39 +430,70 @@ class AtomicEvaluator:
         states = []
         citations = []
         all_candidates = []
+        retrieval_issues = []
         for option in options[:20]:
             retrieval = self.knowledge.retrieve(option, parameter_name)
             all_candidates.extend(retrieval.candidates)
-            verdict = UNKNOWN
-            reason = "no_match"
-            has_negative = False
-            conflict = False
-            for candidate in retrieval.candidates:
-                direct, _ = direct_support(option, candidate.text)
-                negative = next(
-                    (
-                        binding
-                        for binding in negative_assertion_bindings(
-                            {"content": candidate.content, "assertions": candidate.assertions}
-                        )
-                        if binding["evidence_ids"]
-                        and negative_scope_matches(option, binding["claim"])
-                    ),
-                    None,
+            complete_retrieval = not retrieval.gaps and not retrieval.truncated
+            if not complete_retrieval:
+                retrieval_issues.append(
+                    {
+                        "option": option,
+                        "gaps": retrieval.gaps[:5],
+                        "truncated": retrieval.truncated,
+                    }
                 )
-                if direct and not negative:
-                    verdict, reason = SUPPORTED, "supported"
-                    citations.extend(_citations(candidate, "verified_support"))
-                    break
-                if direct and negative:
-                    conflict = True
-                elif negative:
-                    has_negative = True
-            if verdict == UNKNOWN and conflict:
-                reason = "conflicting_support_and_negative"
-            elif verdict == UNKNOWN and has_negative:
+            supports = []
+            negatives = []
+            for candidate in retrieval.candidates:
+                if not candidate.verified:
+                    continue
+                direct, _ = direct_support(option, candidate.text)
+                if direct:
+                    supports.append(candidate)
+                for binding in negative_assertion_bindings(
+                    {"content": candidate.content, "assertions": candidate.assertions}
+                ):
+                    evidence_ids = [
+                        eid for eid in binding["evidence_ids"] if eid in candidate.evidence
+                    ]
+                    if evidence_ids and negative_scope_matches(option, binding["claim"]):
+                        negatives.append((candidate, {**binding, "evidence_ids": evidence_ids}))
+            support_ids = sorted({eid for item in supports for eid in item.evidence})
+            negative_ids = sorted(
+                {eid for _, binding in negatives for eid in binding["evidence_ids"]}
+            )
+            for candidate in supports:
+                citations.extend(_citations(candidate, "verified_support"))
+            for candidate, binding in negatives:
+                citations.extend(
+                    _citations(candidate, "verified_contradiction", binding["evidence_ids"])
+                )
+            if not complete_retrieval:
+                # 证据回读失败或候选被截断时，不能据不完整集合确认支持或否定。
+                verdict, reason = UNKNOWN, "retrieval_incomplete"
+            elif supports and negatives:
+                verdict, reason = UNKNOWN, "conflicting_support_and_negative"
+            elif supports:
+                verdict, reason = SUPPORTED, "supported"
+            elif negatives:
                 verdict, reason = UNSUPPORTED, "explicit_limitation"
-            states.append({"option": option, "verdict": verdict, "reason": reason})
+            else:
+                verdict, reason = UNKNOWN, "no_match"
+            states.append(
+                {
+                    "option": option,
+                    "verdict": verdict,
+                    "reason": reason,
+                    "support_candidate_ids": sorted({item.capability_id for item in supports}),
+                    "negative_candidate_ids": sorted({item.capability_id for item, _ in negatives}),
+                    "support_evidence_ids": support_ids,
+                    "negative_evidence_ids": negative_ids,
+                    "evidence_ids": sorted(set(support_ids + negative_ids)),
+                    "retrieval_truncated": retrieval.truncated,
+                    "retrieval_gaps": retrieval.gaps[:5],
+                }
+            )
         supported = sum(1 for item in states if item["verdict"] == SUPPORTED)
         unsupported = sum(1 for item in states if item["verdict"] == UNSUPPORTED)
         unknown = sum(1 for item in states if item["verdict"] == UNKNOWN)
@@ -497,6 +528,7 @@ class AtomicEvaluator:
             "unsupported": unsupported,
             "unknown": unknown,
             "max_possible_supported": max_possible,
+            "retrieval_issues": retrieval_issues,
             **scope,
         }
         return Prepared(requirement, base.requirement_text, all_candidates[:8], base, [])
@@ -716,7 +748,13 @@ class AtomicEvaluator:
         return accepted, gaps
 
     async def _assist(self, prepared: list[Prepared]) -> None:
-        unresolved = [item for item in prepared if item.result.verdict == UNKNOWN]
+        # 至少 N 项的全集和计数结论只能由确定性规则给出，模型不得补造全集。
+        unresolved = [
+            item
+            for item in prepared
+            if item.result.verdict == UNKNOWN
+            and item.requirement.get("requirement_type") != "minimum_count"
+        ]
         if not unresolved or self.mode == "structural" or self.model is None:
             return
         agent = Agent(

@@ -593,7 +593,7 @@ def quantitative_scope(text: str) -> str:
 
 
 _OPEN_SET = re.compile(
-    r"包括但不限于|不限于|例如|比如|如(?=[：:])|任意|任选|等(?![保级待于])|或更多|至少其中"
+    r"包括但不限于|不限于|例如|比如|如(?=[：:])|任意|等(?![保级待于])|或更多|至少其中"
 )
 _COUNT_UNIT = re.compile(r"(?:至少|最少|不少于|不低于|不小于|≥|>=)\s*\d+\s*(项|种|个|条|类|款)")
 _GENERIC_OPTIONS = {
@@ -608,6 +608,101 @@ _GENERIC_OPTIONS = {
     "功能项",
 }
 
+_CN_DIGITS = {
+    "〇": 0,
+    "零": 0,
+    "一": 1,
+    "二": 2,
+    "两": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
+}
+_CN_NUMBER = r"[〇零一二两三四五六七八九十\d]+"
+
+# 只有这些明确限定候选范围的原文表述，才能把文本中枚举的选项当作完整集合。
+# 单独的“有选项、有数量单位、没有开放词”不构成全集依据。
+_FULL_SET_MARKERS = (
+    (
+        "only_following",
+        re.compile(
+            rf"仅限(?:以下|下列|如下|这些)\s*"
+            rf"(?:(?P<total>{_CN_NUMBER})\s*(?:项|种|个|条|类|款))?"
+            r"\s*(?:选项|项目|功能|范围|项|种|个|类|款)?"
+        ),
+    ),
+    (
+        "from_following",
+        re.compile(
+            rf"(?:从|在)?(?:以下|下列|如下)\s*(?P<total>{_CN_NUMBER})"
+            r"\s*(?:项|种|个|条|类|款)\s*中"
+        ),
+    ),
+    (
+        "following_is_all",
+        re.compile(
+            r"(?:以下|下列|如下)\s*(?:为|是|均为)\s*全部(?:可)?"
+            r"\s*(?:选项|项目|功能|项|种|个|类|款)"
+        ),
+    ),
+    (
+        "all_options_follow",
+        re.compile(
+            r"全部(?:可)?\s*(?:选项|项目|功能|项|种|个|类|款)"
+            r"\s*(?:如下|为以下|包括以下)"
+        ),
+    ),
+    (
+        "choose_n_of_m",
+        re.compile(
+            rf"(?:以下|下列|如下)?\s*(?P<total>{_CN_NUMBER})"
+            rf"\s*(?:项|种|个|条|类|款)?\s*(?:中)?\s*(?:任选|选择|选)\s*"
+            rf"(?P<pick>{_CN_NUMBER})\s*(?:项|种|个|条|类|款)?"
+        ),
+    ),
+)
+
+
+def _number_value(value: str | None) -> int | None:
+    text = (value or "").strip()
+    if not text:
+        return None
+    if text.isdigit():
+        return int(text)
+    if text == "十":
+        return 10
+    if "十" in text:
+        left, _, right = text.partition("十")
+        tens = _CN_DIGITS.get(left, 1) if left else 1
+        ones = _CN_DIGITS.get(right, 0) if right else 0
+        return tens * 10 + ones
+    return _CN_DIGITS.get(text)
+
+
+def _full_set_marker(text: str) -> dict | None:
+    """返回最长的明确全集限定表述及其在清理后原文中的位置。"""
+    matches = []
+    for basis, pattern in _FULL_SET_MARKERS:
+        match = pattern.search(text)
+        if match:
+            matches.append((match.end() - match.start(), match.start(), basis, match))
+    if not matches:
+        return None
+    _, _, basis, match = max(matches, key=lambda item: (item[0], -item[1]))
+    groups = match.groupdict()
+    return {
+        "basis": basis,
+        "text": match.group(0)[:120],
+        "start": match.start(),
+        "end": match.end(),
+        "total": groups.get("total"),
+        "pick": groups.get("pick"),
+    }
+
 
 def minimum_options(requirement: str) -> list[str]:
     value = clean_requirement(requirement)
@@ -619,6 +714,16 @@ def minimum_options(requirement: str) -> list[str]:
     )
     value = re.sub(r"^(?:功能|能力|项目|参数|要求)?\s*[：:]?\s*", "", value)
     value = re.sub(r"^(?:支持|包括|包含|具备|提供)", "", value).strip("：: ")
+    marker = _full_set_marker(value)
+    if marker:
+        value = value[marker["end"] :]
+        value = re.sub(r"^[\s，,;；:：]+", "", value)
+        value = re.sub(
+            rf"^(?:中|选择|选|任选)\s*(?:{_CN_NUMBER}\s*(?:项|种|个|条|类|款))?"
+            r"\s*[：:]?\s*",
+            "",
+            value,
+        )
     parts = re.split(r"[、,，;；]|以及|或者|和|及|或", value)
     options = []
     for part in parts:
@@ -631,14 +736,57 @@ def minimum_options(requirement: str) -> list[str]:
 
 
 def minimum_scope(requirement: str, options: list[str], required: int | None) -> dict:
-    text = clean_requirement(requirement)
+    raw = str(requirement or "")
+    text = clean_requirement(raw)
     count_unit = _COUNT_UNIT.search(text)
+    # 位置按原始要求文本记录，便于复核；选项解析仍使用清理行号后的文本。
+    marker = _full_set_marker(raw) or _full_set_marker(text)
     open_markers = sorted(set(_OPEN_SET.findall(text)))
-    complete = bool(options) and len(options) <= 20 and not open_markers and bool(count_unit)
+    declared_total = _number_value(marker["total"]) if marker else None
+    declared_pick = _number_value(marker["pick"]) if marker else None
+    uncertainty = []
+    if not marker:
+        uncertainty.append("no_explicit_full_set_marker")
+    if open_markers:
+        uncertainty.append("open_enumeration")
+    if not options:
+        uncertainty.append("no_enumerable_options")
+    if not count_unit:
+        uncertainty.append("no_count_unit")
+    if len(options) > 20:
+        uncertainty.append("option_limit_exceeded")
+    if marker and declared_total is not None and declared_total != len(options):
+        uncertainty.append("declared_option_count_mismatch")
+    if marker and declared_pick is not None and required is not None and declared_pick != required:
+        uncertainty.append("declared_pick_count_mismatch")
+    complete = bool(
+        marker
+        and options
+        and len(options) <= 20
+        and not open_markers
+        and count_unit
+        and (declared_total is None or declared_total == len(options))
+        and (declared_pick is None or required is None or declared_pick == required)
+    )
     return {
         "count_unit": count_unit.group(1) if count_unit else None,
         "open_markers": open_markers,
         "complete_set": complete,
+        "complete_basis": marker["basis"] if marker else None,
+        "complete_marker": marker["text"] if marker else None,
+        "complete_marker_start": marker["start"] if marker else None,
+        "complete_marker_end": marker["end"] if marker else None,
+        "declared_option_count": declared_total,
+        "declared_pick_count": declared_pick,
+        "option_count_matches": (
+            declared_total == len(options) if declared_total is not None else None
+        ),
+        "pick_count_matches": (
+            declared_pick == required
+            if declared_pick is not None and required is not None
+            else None
+        ),
+        "uncertainty": uncertainty if not complete else [],
         "option_count": len(options),
         "required": required,
     }

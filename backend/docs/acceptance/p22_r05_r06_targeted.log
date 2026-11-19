@@ -1,0 +1,101 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 73 items
+
+tests/unit/test_p22_equivalence.py::test_direct_support_requires_the_same_technical_action PASSED
+tests/unit/test_p22_equivalence.py::test_direct_support_keeps_a_genuine_positive_path PASSED
+tests/unit/test_p22_equivalence.py::test_condition_must_be_covered_by_candidate PASSED
+tests/unit/test_p22_equivalence.py::test_candidate_conditions_can_cover_required_condition PASSED
+tests/unit/test_p22_equivalence.py::test_candidate_conditions_cannot_supply_a_missing_action PASSED
+tests/unit/test_p22_equivalence.py::test_metrics_are_bound_to_name_unit_and_conversion PASSED
+tests/unit/test_p22_equivalence.py::test_unrelated_numbers_are_not_compared_as_metric_values PASSED
+tests/unit/test_p22_equivalence.py::test_product_upper_bound_is_usable_but_default_config_is_not PASSED
+tests/unit/test_p22_equivalence.py::test_trailing_default_marker_is_not_a_product_upper_bound PASSED
+tests/unit/test_p22_equivalence.py::test_missing_unit_and_multiple_unbounded_values_are_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_multiple_bounded_values_are_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_count_units_must_match_exactly PASSED
+tests/unit/test_p22_equivalence.py::test_lower_metric_is_not_automatically_unsupported PASSED
+tests/unit/test_p22_equivalence.py::test_negative_scope_must_match_action_object_and_deployment PASSED
+tests/unit/test_p22_equivalence.py::test_negative_binding_comes_from_reviewed_limitations_only PASSED
+tests/unit/test_p22_equivalence.py::test_unable_to_provide_is_a_reviewed_negative_claim PASSED
+tests/unit/test_p22_equivalence.py::test_unverified_limitation_is_not_a_negative_binding PASSED
+tests/unit/test_p22_equivalence.py::test_negative_quote_with_different_object_is_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_model_contradiction_requires_audited_negative_evidence PASSED
+tests/unit/test_p22_equivalence.py::test_model_contradiction_rejects_scope_mismatch PASSED
+tests/unit/test_p22_equivalence.py::test_model_contradiction_cannot_override_verified_support PASSED
+tests/unit/test_p22_equivalence.py::test_model_contradiction_accepts_valid_reviewed_negative_assertion PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_uses_confirmed_complete_set PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_unsupported_only_for_complete_set_with_insufficient_max PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_with_unknown_member_is_not_unsupported PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_option_with_conflicting_support_and_negative_is_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_with_unknown_full_set_is_not_unsupported PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_without_count_unit_is_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_accepts_synonym_for_at_least PASSED
+tests/unit/test_p22_equivalence.py::test_open_enumeration_is_not_a_complete_set PASSED
+tests/unit/test_p22_equivalence.py::test_explicit_universe_with_open_marker_is_not_complete PASSED
+tests/unit/test_p22_equivalence.py::test_classified_protection_is_not_an_open_enumeration PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_without_explicit_universe_is_not_unsupported PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_explicit_three_choose_two_is_complete PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_from_following_universe_is_complete PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_declared_universe_must_match_parsed_options PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_scope_records_marker_position_in_original_text PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_complete_set_with_all_negative_is_unsupported PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_same_candidate_support_and_negative_is_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_different_candidates_conflict_and_order_is_irrelevant PASSED
+tests/unit/test_p22_equivalence.py::test_minimum_count_retrieval_gaps_or_truncation_degrades_to_unknown PASSED
+tests/unit/test_p22_equivalence.py::test_source_or_document_evidence_each_supports PASSED
+tests/unit/test_p22_equivalence.py::test_no_evidence_is_still_unknown PASSED
+tests/unit/test_p22_atomic.py::test_exact_published_evidence_supports PASSED
+tests/unit/test_p22_atomic.py::test_model_must_establish_equivalence PASSED
+tests/unit/test_p22_atomic.py::test_model_contract_accepts_published_evidence_and_capability_ids PASSED
+tests/unit/test_p22_atomic.py::test_pure_ascii_version_is_not_stripped_as_line_number PASSED
+tests/unit/test_p22_atomic.py::test_no_match_is_unknown_not_unsupported PASSED
+tests/unit/test_p22_atomic.py::test_explicit_limitation_is_unsupported_only_with_scoped_evidence PASSED
+tests/unit/test_p22_atomic.py::test_epistemic_disclaimer_is_not_negative_capability_evidence PASSED
+tests/unit/test_p22_atomic.py::test_blank_threshold_is_unknown_and_never_guessed PASSED
+tests/unit/test_p22_atomic.py::test_threshold_satisfied_supports_but_lower_number_is_not_unsupported PASSED
+tests/unit/test_p22_atomic.py::test_conflicting_support_and_limitation_is_unknown PASSED
+tests/unit/test_p22_atomic.py::test_optional_atomic_is_evaluated_but_not_necessary PASSED
+tests/unit/test_p22_atomic.py::test_uncertain_open_enumeration_is_unknown_without_retrieval PASSED
+tests/unit/test_p22_logic.py::test_and_true_unknown_false_table PASSED
+tests/unit/test_p22_logic.py::test_or_semantics_do_not_require_all PASSED
+tests/unit/test_p22_logic.py::test_at_least_counts_supported_and_unknown PASSED
+tests/unit/test_p22_logic.py::test_optional_is_excluded_not_treated_as_and PASSED
+tests/unit/test_p22_logic.py::test_unknown_relation_and_missing_tree_are_unknown PASSED
+tests/unit/test_p22_logic.py::test_missing_leaf_result_is_unknown_not_unsupported PASSED
+tests/unit/test_p22_logic.py::test_uncertain_requirement_forces_unknown PASSED
+tests/unit/test_p22_logic.py::test_blank_threshold_atom_result_flows_to_unknown PASSED
+tests/integration/test_p22_api.py::test_five_parameters_yield_exactly_five_verdicts_and_fixed_publication PASSED
+tests/integration/test_p22_api.py::test_document_evidence_is_verified_against_pinned_document PASSED
+tests/integration/test_p22_api.py::test_single_parameter_failure_is_isolated_and_fail_closed PASSED
+tests/integration/test_p22_api.py::test_word_fifteen_parameters_and_45_atoms_yield_15_verdicts PASSED
+tests/integration/test_p22_api.py::test_cross_user_and_admin_cannot_read_evaluation PASSED
+tests/integration/test_p22_api.py::test_tampered_pinned_publication_fails_closed_and_retry_resumes PASSED
+tests/integration/test_p22_model.py::test_function_model_can_resolve_unknown_only_with_verified_anchor PASSED
+tests/integration/test_p22_model.py::test_function_model_cannot_supply_or_forge_evidence PASSED
+tests/integration/test_p22_model.py::test_model_budget_exhaustion_degrades_without_fabricating_support PASSED
+tests/integration/test_p22_model.py::test_model_cannot_overturn_deterministic_contradiction PASSED
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+0.37s call     tests/integration/test_p22_api.py::test_five_parameters_yield_exactly_five_verdicts_and_fixed_publication
+0.37s call     tests/integration/test_p22_api.py::test_cross_user_and_admin_cannot_read_evaluation
+0.33s setup    tests/integration/test_p22_api.py::test_tampered_pinned_publication_fails_closed_and_retry_resumes
+0.31s call     tests/integration/test_p22_api.py::test_tampered_pinned_publication_fails_closed_and_retry_resumes
+0.30s call     tests/integration/test_p22_api.py::test_word_fifteen_parameters_and_45_atoms_yield_15_verdicts
+0.28s call     tests/integration/test_p22_api.py::test_document_evidence_is_verified_against_pinned_document
+0.20s setup    tests/integration/test_p22_api.py::test_single_parameter_failure_is_isolated_and_fail_closed
+0.17s call     tests/integration/test_p22_api.py::test_single_parameter_failure_is_isolated_and_fail_closed
+0.16s setup    tests/integration/test_p22_api.py::test_five_parameters_yield_exactly_five_verdicts_and_fixed_publication
+0.14s setup    tests/integration/test_p22_model.py::test_model_cannot_overturn_deterministic_contradiction
+======================== 73 passed, 1 warning in 3.69s =========================
