@@ -1,0 +1,22 @@
+# P3.1-B R01/R02 全量后端回归
+date=2026-11-20T01:48:02Z
+commit=d64d7db
+command=.venv/bin/python -m pytest -q
+ssssssssssssssssssssssssssssssss........................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 43%]
+........................................................................ [ 57%]
+........................................................................ [ 71%]
+........................................................................ [ 86%]
+......................................................................   [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/unit/test_archive_guard.py::test_collisions[names4]
+  /Users/wangyanming/.local/share/uv/python/cpython-3.12.14-macos-aarch64-none/lib/python3.12/zipfile/__init__.py:1625: UserWarning: Duplicate name: 'a.py'
+    return self._open_to_write(zinfo, force_zip64=force_zip64)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+470 passed, 32 skipped, 2 warnings in 79.52s (0:01:19)

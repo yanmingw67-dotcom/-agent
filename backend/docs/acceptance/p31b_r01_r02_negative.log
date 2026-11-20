@@ -1,0 +1,33 @@
+# P3.1-B R01/R02 受控负向测试
+date=2026-11-20T01:47:58Z
+commit=d64d7db
+command=.venv/bin/python -m pytest -v <negative cases>
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-8.3.5, pluggy-1.7.0 -- /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wangyanming/Desktop/coding/参数评估agent/backend
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.16.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 12 items
+
+tests/integration/test_p31b_r01_model_authorization.py::test_env_flags_alone_do_not_authorize_model_egress PASSED [  8%]
+tests/integration/test_p31b_r01_model_authorization.py::test_ops_entry_requires_separate_token_and_records_are_bound_to_current_endpoint PASSED [ 16%]
+tests/integration/test_p31b_r01_model_authorization.py::test_record_does_not_flip_runtime_switch_and_revoke_blocks_real_calls PASSED [ 25%]
+tests/integration/test_p31b_r01_model_authorization.py::test_expired_or_unconfigured_ops_entry_fails_closed PASSED [ 33%]
+tests/integration/test_p31b_r02_material_provenance.py::test_synthetic_derived_or_unparsed_materials_are_rejected PASSED [ 41%]
+tests/integration/test_p31b_r02_material_provenance.py::test_snapshot_and_document_must_belong_to_the_same_category PASSED [ 50%]
+tests/integration/test_p31b_r02_material_provenance.py::test_broken_or_cross_category_derivation_chain_is_invalid PASSED [ 58%]
+tests/integration/test_p31b_r02_material_provenance.py::test_confirmation_reference_and_scope_are_required PASSED [ 66%]
+tests/unit/test_p31b_gate2_verify.py::test_missing_provenance_is_blocked_not_passed PASSED [ 75%]
+tests/unit/test_p31b_gate2_verify.py::test_document_from_another_source_root_is_a_violation PASSED [ 83%]
+tests/unit/test_p31b_gate2_verify.py::test_confirmed_synthetic_hash_cannot_qualify PASSED [ 91%]
+tests/unit/test_p31b_gate2_verify.py::test_missing_model_authorization_record_blocks_even_with_materials PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/starlette/testclient.py:45
+  /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 12 passed, 1 warning in 1.79s =========================

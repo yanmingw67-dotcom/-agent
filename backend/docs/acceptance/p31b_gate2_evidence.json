@@ -1,20 +1,28 @@
 {
   "gate": "P3.1-B Gate 2",
-  "mode": "REAL_INPUT_AND_AUTHORIZATION_CHECK",
-  "build_commit": "6b8772b",
+  "mode": "PROVENANCE_AND_AUTHORIZATION_CHECK",
+  "build_commit": "d64d7db",
   "result": "BLOCKED",
   "checks": {
     "api_ready": {
       "result": "PASS",
       "detail": "200"
     },
+    "container_synthetic_egress_disabled": {
+      "result": "PASS",
+      "detail": "BUILDER_ALLOW_SYNTHETIC=false"
+    },
     "model_configured": {
       "result": "BLOCKED",
-      "detail": "model_configured=False"
+      "detail": "configured=False"
     },
-    "enterprise_authorization": {
+    "enterprise_authorization_record": {
       "result": "BLOCKED",
-      "detail": "model_configured=False allow_enterprise=False"
+      "detail": "status=UNAVAILABLE has_record=False"
+    },
+    "env_flags_are_not_approval": {
+      "result": "PASS",
+      "detail": "source=database_record"
     },
     "synthetic_egress_disabled": {
       "result": "PASS",
@@ -24,15 +32,11 @@
       "result": "PASS",
       "detail": "frontend_can_override=False"
     },
-    "container_synthetic_egress_disabled": {
-      "result": "PASS",
-      "detail": "BUILDER_ALLOW_SYNTHETIC=false"
-    },
-    "real_source_indexed": {
+    "source_provenance_confirmed": {
       "result": "BLOCKED",
       "detail": "count=0"
     },
-    "real_document_parsed": {
+    "document_provenance_confirmed": {
       "result": "BLOCKED",
       "detail": "count=0"
     },
@@ -40,74 +44,372 @@
       "result": "BLOCKED",
       "detail": "count=0"
     },
-    "real_publication_present": {
+    "reviewed_publication_scope_valid": {
       "result": "BLOCKED",
       "detail": "count=0"
     },
+    "confirmed_materials_not_synthetic": {
+      "result": "PASS",
+      "detail": "confirmed_synthetic_count=0"
+    },
+    "same_category_and_derivation_chain": {
+      "result": "BLOCKED",
+      "detail": "qualifying_categories=0 violations=0"
+    },
     "gate2_overall": {
       "result": "BLOCKED",
-      "detail": "真实输入、模型授权、审核发布必须全部就绪"
+      "detail": "真实来源、授权、审核发布与派生链必须全部闭合"
     }
   },
   "missing_inputs": [
-    "未由管理员上传真实 WAF 源码 ZIP 并完成索引",
-    "未由管理员上传正式技术文档并完成解析",
-    "服务器侧模型未配置",
-    "尚无包含能力的真实知识发布物"
+    "没有管理员确认且可核验的真实源码来源",
+    "没有管理员确认且可核验的真实技术文档",
+    "没有与当前模型端点匹配的有效企业外发授权记录",
+    "没有可核验的非结构文档发现运行",
+    "没有审核范围可核验的真实知识发布物"
   ],
+  "violations": [],
   "blockers": [
-    "真实知识构建需要真实源码与正式文档，不能以合成样例替代。",
-    "模型未配置或企业外发授权未完成时，模型步骤必须保持 BLOCKED。",
+    "真实知识构建需要管理员确认来源与适用范围，不能以合成样例或哈希推断替代。",
+    "源码、技术文档、文档发现运行与发布物必须属于同一品类和合法快照派生链。",
+    "模型未配置或没有有效数据库授权记录时，模型步骤必须保持 BLOCKED。",
     "没有真实发布物时不能进入审核发布验收，也不能宣称知识库已就绪。"
   ],
   "observed": {
-    "categories": 7,
-    "real_source_snapshots": [],
-    "real_documents": [],
-    "publications": [],
-    "semantic_discoveries": [],
+    "categories": [
+      {
+        "id": "762b1192-33b2-4603-9d64-433b0e181b59",
+        "code": "gate1-fail-80986e80ba",
+        "snapshots": [
+          {
+            "id": "fa15649a-ffa2-4bb7-8a98-3f609acde06f",
+            "category_id": "762b1192-33b2-4603-9d64-433b0e181b59",
+            "status": "failed",
+            "index_status": "not_indexed",
+            "source_sha256": "8ff53960bc114e13a54c4f8140ce846c210133b2e5779c5126b4d3f9a9bc44f1",
+            "derived_from_snapshot_id": null,
+            "derivation_type": null,
+            "data_classification": "enterprise"
+          }
+        ],
+        "provenance": [],
+        "documents": [],
+        "discoveries": [],
+        "publication": null,
+        "chains": {
+          "fa15649a-ffa2-4bb7-8a98-3f609acde06f": {
+            "snapshot_id": "fa15649a-ffa2-4bb7-8a98-3f609acde06f",
+            "category_id": "762b1192-33b2-4603-9d64-433b0e181b59",
+            "root_snapshot_id": "fa15649a-ffa2-4bb7-8a98-3f609acde06f",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "fa15649a-ffa2-4bb7-8a98-3f609acde06f",
+                "category_id": "762b1192-33b2-4603-9d64-433b0e181b59",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "failed",
+                "index_status": "not_indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "8ff53960bc114e13a54c4f8140ce846c210133b2e5779c5126b4d3f9a9bc44f1"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e98b1e74-b58f-4c2b-9c3c-fb76424b6e75",
+        "code": "gate1-fail-f555ed03a8",
+        "snapshots": [
+          {
+            "id": "dff4594d-6b5b-404f-aaf7-7f3e37b08113",
+            "category_id": "e98b1e74-b58f-4c2b-9c3c-fb76424b6e75",
+            "status": "failed",
+            "index_status": "not_indexed",
+            "source_sha256": "3e30bbcd2c6c79d83df8e7372fcb600d47fd95d23049781b3d4703cb31cfc4b9",
+            "derived_from_snapshot_id": null,
+            "derivation_type": null,
+            "data_classification": "enterprise"
+          }
+        ],
+        "provenance": [],
+        "documents": [],
+        "discoveries": [],
+        "publication": null,
+        "chains": {
+          "dff4594d-6b5b-404f-aaf7-7f3e37b08113": {
+            "snapshot_id": "dff4594d-6b5b-404f-aaf7-7f3e37b08113",
+            "category_id": "e98b1e74-b58f-4c2b-9c3c-fb76424b6e75",
+            "root_snapshot_id": "dff4594d-6b5b-404f-aaf7-7f3e37b08113",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "dff4594d-6b5b-404f-aaf7-7f3e37b08113",
+                "category_id": "e98b1e74-b58f-4c2b-9c3c-fb76424b6e75",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "failed",
+                "index_status": "not_indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "3e30bbcd2c6c79d83df8e7372fcb600d47fd95d23049781b3d4703cb31cfc4b9"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+        "code": "gate1-main-556d7b1332",
+        "snapshots": [
+          {
+            "id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+            "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e",
+            "derived_from_snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+            "derivation_type": "document_update",
+            "data_classification": "enterprise"
+          },
+          {
+            "id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+            "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e",
+            "derived_from_snapshot_id": null,
+            "derivation_type": null,
+            "data_classification": "enterprise"
+          }
+        ],
+        "provenance": [],
+        "documents": [
+          {
+            "id": "a2b7132a-ce55-4994-8314-7609629a6267",
+            "snapshot_id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+            "sha256": "fda28d7f561e47ff1aa9d7584d0b6322f520bc87cab06257901c6dd06f076d39",
+            "parse_status": "parsed",
+            "segment_count": 6,
+            "data_classification": "enterprise"
+          }
+        ],
+        "discoveries": [
+          {
+            "run_id": "9c65c3d9-4f4e-4cb3-b71c-db31d6808e1a",
+            "snapshot_id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+            "status": "succeeded",
+            "mode": "structural",
+            "error_code": null
+          }
+        ],
+        "publication": null,
+        "chains": {
+          "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0": {
+            "snapshot_id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+            "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+            "root_snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+                "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              },
+              {
+                "id": "e8f6d2c1-dd53-4450-83b0-8f82dd5ee7e0",
+                "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+                "derived_from_snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+                "derivation_type": "document_update",
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              }
+            ]
+          },
+          "9e3937ad-9d44-4fe0-8537-cd865561dd0a": {
+            "snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+            "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+            "root_snapshot_id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "9e3937ad-9d44-4fe0-8537-cd865561dd0a",
+                "category_id": "a97a0ecc-246d-4135-9638-e2725bbcc99e",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+        "code": "gate1-main-cc43d1f956",
+        "snapshots": [
+          {
+            "id": "deb1b117-953d-4dd3-9f78-0654ae44d966",
+            "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e",
+            "derived_from_snapshot_id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+            "derivation_type": "document_update",
+            "data_classification": "enterprise"
+          },
+          {
+            "id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+            "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e",
+            "derived_from_snapshot_id": null,
+            "derivation_type": null,
+            "data_classification": "enterprise"
+          }
+        ],
+        "provenance": [],
+        "documents": [
+          {
+            "id": "85654fdb-6594-4836-9bfe-39bb293459c0",
+            "snapshot_id": "deb1b117-953d-4dd3-9f78-0654ae44d966",
+            "sha256": "fda28d7f561e47ff1aa9d7584d0b6322f520bc87cab06257901c6dd06f076d39",
+            "parse_status": "parsed",
+            "segment_count": 6,
+            "data_classification": "enterprise"
+          }
+        ],
+        "discoveries": [
+          {
+            "run_id": "a8241690-fe65-4565-b9a3-91f27c19b853",
+            "snapshot_id": "deb1b117-953d-4dd3-9f78-0654ae44d966",
+            "status": "succeeded",
+            "mode": "structural",
+            "error_code": null
+          }
+        ],
+        "publication": null,
+        "chains": {
+          "deb1b117-953d-4dd3-9f78-0654ae44d966": {
+            "snapshot_id": "deb1b117-953d-4dd3-9f78-0654ae44d966",
+            "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+            "root_snapshot_id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+                "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              },
+              {
+                "id": "deb1b117-953d-4dd3-9f78-0654ae44d966",
+                "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+                "derived_from_snapshot_id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+                "derivation_type": "document_update",
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              }
+            ]
+          },
+          "fe89e8f5-1915-453a-83de-c7db1ef2478e": {
+            "snapshot_id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+            "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+            "root_snapshot_id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+            "valid": true,
+            "error_code": null,
+            "chain": [
+              {
+                "id": "fe89e8f5-1915-453a-83de-c7db1ef2478e",
+                "category_id": "5abb2062-5d26-49ad-8383-77316ba46ce9",
+                "derived_from_snapshot_id": null,
+                "derivation_type": null,
+                "status": "extracted",
+                "index_status": "indexed",
+                "data_classification": "enterprise",
+                "source_sha256": "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "99b0a5d6-9b6f-47a9-9894-f6ee1e8119ef",
+        "code": "gate3-waf-2ba8511930",
+        "snapshots": [],
+        "provenance": [],
+        "documents": [],
+        "discoveries": [],
+        "publication": null,
+        "chains": {}
+      },
+      {
+        "id": "7f2b0fd0-5253-40fd-8ce9-f15a9c7b953a",
+        "code": "gate3-waf-b374c284fe",
+        "snapshots": [],
+        "provenance": [],
+        "documents": [],
+        "discoveries": [],
+        "publication": null,
+        "chains": {}
+      },
+      {
+        "id": "792123b3-8396-4e7a-ad08-4db39a091313",
+        "code": "gate3-waf-eb4a763525",
+        "snapshots": [],
+        "provenance": [],
+        "documents": [],
+        "discoveries": [],
+        "publication": null,
+        "chains": {}
+      }
+    ],
     "model_authorization": {
       "server_side_authorization_required": true,
       "frontend_can_override": false,
+      "authorization_source": "database_record",
+      "env_flags_are_approval": false,
       "builder": {
         "model_configured": false,
         "allow_synthetic": false,
         "allow_enterprise": false,
-        "document_discovery_mode": "structural",
-        "status": "UNAVAILABLE"
-      },
-      "tender": {
-        "model_mode": "structural",
-        "queue_enabled": true
-      },
-      "evaluation": {
-        "model_mode": "structural",
-        "queue_enabled": true
+        "status": "UNAVAILABLE",
+        "reason_code": "MODEL_NOT_CONFIGURED",
+        "active_authorization": null
       }
-    }
-  },
-  "model_authorization": {
-    "server_side_authorization_required": true,
-    "frontend_can_override": false,
-    "builder": {
-      "model_configured": false,
-      "allow_synthetic": false,
-      "allow_enterprise": false,
-      "document_discovery_mode": "structural",
-      "status": "UNAVAILABLE"
-    },
-    "tender": {
-      "model_mode": "structural",
-      "queue_enabled": true
-    },
-    "evaluation": {
-      "model_mode": "structural",
-      "queue_enabled": true
     }
   },
   "container_environment": {
     "BUILDER_ALLOW_ENTERPRISE": "false",
     "BUILDER_ALLOW_SYNTHETIC": "false",
     "BUILDER_MODEL_SET": false
+  },
+  "qualifying_categories": [],
+  "counts": {
+    "valid_sources": 0,
+    "valid_documents": 0,
+    "valid_discoveries": 0,
+    "valid_publications": 0,
+    "confirmed_synthetic": 0
   }
 }

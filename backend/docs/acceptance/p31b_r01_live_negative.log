@@ -1,0 +1,14 @@
+# P3.1-B R01 实环境失败关闭探针
+date=2026-11-20T01:52:46Z
+command=model-authorizations GET/POST without X-Model-Ops-Token
+
+== GET /api/v1/admin/model-authorizations ==
+http_status=200
+items=0
+current_status=UNAVAILABLE
+current_reason=MODEL_NOT_CONFIGURED
+
+== POST /api/v1/admin/model-authorizations without ops token ==
+http_status=503
+error_code=MODEL_OPS_NOT_CONFIGURED
+message=未配置模型授权运维令牌

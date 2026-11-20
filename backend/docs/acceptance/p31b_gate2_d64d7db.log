@@ -1,0 +1,20 @@
+PASS api_ready 200
+PASS container_synthetic_egress_disabled BUILDER_ALLOW_SYNTHETIC=false
+BLOCKED model_configured configured=False
+BLOCKED enterprise_authorization_record status=UNAVAILABLE has_record=False
+PASS env_flags_are_not_approval source=database_record
+PASS synthetic_egress_disabled allow_synthetic=False
+PASS frontend_cannot_override_authorization frontend_can_override=False
+BLOCKED source_provenance_confirmed count=0
+BLOCKED document_provenance_confirmed count=0
+BLOCKED semantic_discovery_succeeded count=0
+BLOCKED reviewed_publication_scope_valid count=0
+PASS confirmed_materials_not_synthetic confirmed_synthetic_count=0
+BLOCKED same_category_and_derivation_chain qualifying_categories=0 violations=0
+BLOCKED gate2_overall 真实来源、授权、审核发布与派生链必须全部闭合
+BLOCKED missing_input 没有管理员确认且可核验的真实源码来源
+BLOCKED missing_input 没有管理员确认且可核验的真实技术文档
+BLOCKED missing_input 没有与当前模型端点匹配的有效企业外发授权记录
+BLOCKED missing_input 没有可核验的非结构文档发现运行
+BLOCKED missing_input 没有审核范围可核验的真实知识发布物
+P31B_GATE2=BLOCKED evidence=/Users/wangyanming/Desktop/coding/参数评估agent/backend/docs/acceptance/p31b_gate2_evidence.json
