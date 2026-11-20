@@ -165,6 +165,69 @@ def test_document_from_another_source_root_is_a_violation():
     assert any("同一派生链" in item for item in result["violations"])
 
 
+def test_document_on_same_root_sibling_branch_is_a_violation():
+    cat = category()
+    cat["snapshots"].append(
+        {
+            "id": "s3",
+            "category_id": "c1",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "e" * 64,
+            "derived_from_snapshot_id": "s1",
+            "derivation_type": "document_update",
+            "data_classification": "enterprise",
+        }
+    )
+    cat["provenance"][1]["snapshot_id"] = "s3"
+    cat["documents"][0]["snapshot_id"] = "s3"
+    cat["chains"]["s3"] = chain("s1", ["s1", "s3"])
+    result = evaluate(observed(cat))
+    assert result["result"] == "FAIL"
+    assert any("技术文档快照不在发布链" in item for item in result["violations"])
+
+
+def test_discovery_on_same_root_sibling_branch_is_a_violation():
+    cat = category()
+    cat["snapshots"].append(
+        {
+            "id": "s3",
+            "category_id": "c1",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "e" * 64,
+            "derived_from_snapshot_id": "s1",
+            "derivation_type": "document_update",
+            "data_classification": "enterprise",
+        }
+    )
+    cat["discoveries"][0]["snapshot_id"] = "s3"
+    cat["chains"]["s3"] = chain("s1", ["s1", "s3"])
+    result = evaluate(observed(cat))
+    assert result["result"] == "FAIL"
+    assert any("文档发现快照不在发布链" in item for item in result["violations"])
+
+
+def test_publication_descendant_can_include_document_and_discovery_ancestors():
+    cat = category()
+    cat["snapshots"].append(
+        {
+            "id": "s3",
+            "category_id": "c1",
+            "status": "extracted",
+            "index_status": "indexed",
+            "source_sha256": "e" * 64,
+            "derived_from_snapshot_id": "s2",
+            "derivation_type": "capability_update",
+            "data_classification": "enterprise",
+        }
+    )
+    cat["publication"]["snapshot_id"] = "s3"
+    cat["chains"]["s3"] = chain("s1", ["s1", "s2", "s3"])
+    result = evaluate(observed(cat))
+    assert result["result"] == "PASS", result
+
+
 def test_confirmed_synthetic_hash_cannot_qualify():
     cat = category()
     synthetic = sorted(SYNTHETIC_SHA256)[0]

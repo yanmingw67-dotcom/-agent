@@ -5,15 +5,22 @@ from uuid import uuid4
 
 import pytest
 from pydantic import SecretStr
+from pydantic_ai.messages import ModelRequest, ModelResponse, TextPart, UserPromptPart
+from pydantic_ai.models import ModelRequestParameters
+from pydantic_ai.models.function import FunctionModel
+from pydantic_ai.usage import RequestUsage
 from sqlalchemy import select
 
-from app.agents.runtime import configured_model
+from app.agents.runtime import AuditedModel, BuilderDeps, configured_model
 from app.core.security import AppError
 from app.db.governance_models import ModelAuthorization
-from app.db.models import AuditEvent
+from app.db.knowledge_models import Investigation, InvestigationTrace
+from app.db.models import AuditEvent, KnowledgeJob
 from app.db.session import session_factory
-from app.knowledge.model_authorization import authorization_state
+from app.knowledge.model_authorization import authorization_state, revoke_authorization
 from tests.conftest import ADMIN, READ
+from tests.integration.test_p12_index_retrieval import indexed
+from tests.integration.test_p13_builder import context, setup_job
 
 
 def configure(environment, *, allow_enterprise=True, allow_synthetic=False):
@@ -37,6 +44,34 @@ def payload(**overrides):
     }
     body.update(overrides)
     return body
+
+
+def running_deps(client):
+    cid, sid = indexed(client)
+    jid, rid, _ = setup_job(client, cid, sid)
+    with session_factory().begin() as db:
+        db.get(KnowledgeJob, jid).status = "running"
+    return BuilderDeps(
+        rid,
+        "p13-test",
+        context(cid, sid, jid),
+        data_classification="enterprise",
+    )
+
+
+def recording_model(calls):
+    def respond(messages, info):
+        calls.append(len(messages))
+        return ModelResponse(
+            parts=[TextPart("ok")],
+            usage=RequestUsage(input_tokens=3, output_tokens=2),
+        )
+
+    return FunctionModel(respond)
+
+
+def request_messages(text="runtime authorization test"):
+    return [ModelRequest(parts=[UserPromptPart(content=text)])]
 
 
 def test_env_flags_alone_do_not_authorize_model_egress(client, environment):
@@ -179,3 +214,131 @@ def test_duplicate_active_authorization_is_rejected(client, environment):
     )
     assert second.status_code == 409
     assert second.json()["error_code"] == "MODEL_AUTHORIZATION_EXISTS"
+
+
+def _created_authorization(client, environment, **overrides):
+    configure(environment)
+    created = client.post(
+        "/api/v1/admin/model-authorizations",
+        headers=ops_headers(),
+        json=payload(**overrides),
+    )
+    assert created.status_code == 201, created.text
+    return created.json()["id"]
+
+
+def _authorization_trace(jid):
+    with session_factory()() as db:
+        return db.scalar(
+            select(InvestigationTrace)
+            .join(Investigation, Investigation.id == InvestigationTrace.investigation_id)
+            .where(
+                Investigation.job_id == jid,
+                InvestigationTrace.kind == "model_authorization_denied",
+            )
+        )
+
+
+def _run_metrics(run_id):
+    with session_factory()() as db:
+        return dict(db.get(Investigation, run_id).metrics_json)
+
+
+@pytest.mark.asyncio
+async def test_runtime_revocation_blocks_next_request_without_egress(client, environment):
+    auth_id = _created_authorization(client, environment)
+    deps = running_deps(client)
+    calls = []
+    model = AuditedModel(recording_model(calls), deps)
+
+    await model.request(request_messages(), None, ModelRequestParameters())
+    assert len(calls) == 1
+
+    with session_factory().begin() as db:
+        revoke_authorization(db, auth_id, "admin")
+    with pytest.raises(AppError) as exc:
+        await model.request(
+            request_messages("SECRET-PROMPT-SENTINEL"), None, ModelRequestParameters()
+        )
+
+    assert exc.value.error_code == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+    assert len(calls) == 1
+    metrics = _run_metrics(deps.run_id)
+    assert metrics["model_requests"] == 1
+    trace = _authorization_trace(deps.context.job_id)
+    assert trace is not None
+    assert trace.details_json == {
+        "stage": "pre_request",
+        "error_code": "MODEL_AUTHORIZATION_RECORD_REQUIRED",
+        "data_classification": "enterprise",
+    }
+    assert "SECRET-PROMPT-SENTINEL" not in str(trace.details_json)
+
+
+@pytest.mark.asyncio
+async def test_runtime_expiry_blocks_next_request_without_egress(client, environment):
+    auth_id = _created_authorization(client, environment)
+    deps = running_deps(client)
+    calls = []
+    model = AuditedModel(recording_model(calls), deps)
+
+    await model.request(request_messages(), None, ModelRequestParameters())
+    assert len(calls) == 1
+    with session_factory().begin() as db:
+        row = db.get(ModelAuthorization, auth_id)
+        row.expires_at = datetime.now(UTC) - timedelta(seconds=1)
+    with pytest.raises(AppError) as exc:
+        await model.request(request_messages(), None, ModelRequestParameters())
+
+    assert exc.value.error_code == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+    assert len(calls) == 1
+    assert _run_metrics(deps.run_id)["model_requests"] == 1
+    trace = _authorization_trace(deps.context.job_id)
+    assert trace is not None
+    assert trace.details_json["error_code"] == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_runtime_endpoint_change_blocks_next_request_without_egress(client, environment):
+    _created_authorization(client, environment)
+    deps = running_deps(client)
+    calls = []
+    model = AuditedModel(recording_model(calls), deps)
+
+    await model.request(request_messages(), None, ModelRequestParameters())
+    assert len(calls) == 1
+    object.__setattr__(environment, "builder_base_url", "https://other.example.test/v1")
+    with pytest.raises(AppError) as exc:
+        await model.request(request_messages(), None, ModelRequestParameters())
+
+    assert exc.value.error_code == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+    assert len(calls) == 1
+    assert _run_metrics(deps.run_id)["model_requests"] == 1
+    trace = _authorization_trace(deps.context.job_id)
+    assert trace is not None
+    assert trace.details_json["error_code"] == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+
+
+@pytest.mark.asyncio
+async def test_unauthorized_runtime_request_never_reaches_model(client, environment):
+    configure(environment)
+    deps = running_deps(client)
+    calls = []
+    model = AuditedModel(recording_model(calls), deps)
+
+    with pytest.raises(AppError) as exc:
+        await model.request(
+            request_messages("SECRET-UNAUTHORIZED-PROMPT"), None, ModelRequestParameters()
+        )
+
+    assert exc.value.error_code == "MODEL_AUTHORIZATION_RECORD_REQUIRED"
+    assert calls == []
+    assert _run_metrics(deps.run_id).get("model_requests", 0) == 0
+    trace = _authorization_trace(deps.context.job_id)
+    assert trace is not None
+    assert trace.details_json == {
+        "stage": "pre_request",
+        "error_code": "MODEL_AUTHORIZATION_RECORD_REQUIRED",
+        "data_classification": "enterprise",
+    }
+    assert "SECRET-UNAUTHORIZED-PROMPT" not in str(trace.details_json)

@@ -192,17 +192,20 @@ def evaluate(observed):
         if source is None:
             missing.append(f"{category.get('code')}:发布快照根没有已确认真实源码")
             continue
-        root_chain = set(_chain_ids(chain))
+        # 发布快照自身的祖先链才是合法来源路径；同根兄弟分支不能拼接。
+        publication_chain = set(_chain_ids(chain))
         for row in documents:
             doc_chain = _chain(category, row.get("snapshot_id"))
             if not doc_chain.get("valid") or doc_chain.get("root_snapshot_id") != root:
                 violations.append(f"{category.get('code')}:技术文档与源码不在同一派生链")
-            elif row.get("snapshot_id") not in root_chain:
+            elif row.get("snapshot_id") not in publication_chain:
                 violations.append(f"{category.get('code')}:技术文档快照不在发布链")
         for run in discoveries:
             run_chain = _chain(category, run.get("snapshot_id"))
             if not run_chain.get("valid") or run_chain.get("root_snapshot_id") != root:
                 violations.append(f"{category.get('code')}:文档发现运行与源码不在同一派生链")
+            elif run.get("snapshot_id") not in publication_chain:
+                violations.append(f"{category.get('code')}:文档发现快照不在发布链")
         if not documents:
             missing.append(f"{category.get('code')}:缺少已确认的真实技术文档")
         if not discoveries:

@@ -2,9 +2,11 @@
 
 import asyncio
 import time
+from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
+from pydantic_ai.models.function import FunctionModel
 from pydantic_ai.models.wrapper import WrapperModel
 from pydantic_ai.usage import UsageLimits
 from sqlalchemy import select
@@ -19,7 +21,7 @@ from app.ingestion.resources import ResourceSampler
 from app.ingestion.text import digest
 from app.knowledge.classification import classification as trusted_classification
 from app.knowledge.evidence_registry import canonical, register
-from app.knowledge.model_authorization import require_model_authorization
+from app.knowledge.model_authorization import CLASSIFICATIONS, require_model_authorization
 from app.knowledge.schemas import EvidenceRequest
 from app.knowledge.service import fence, save_output, validate_output
 from app.retrieval.schemas import RunContext, ToolRequest
@@ -57,6 +59,9 @@ class BuilderDeps:
     context: RunContext
     reads: set = field(default_factory=set)
     gaps: set = field(default_factory=set)
+    data_classification: str = "enterprise"
+    # 测试注入模型不访问外部端点；生产 configured_model 必须逐请求复核授权。
+    enforce_model_authorization: bool = True
 
     def update(self, kind, details, **increments):
         with session_factory().begin() as db:
@@ -215,7 +220,33 @@ class AuditedModel(WrapperModel):
         super().__init__(model)
         self.deps = deps
 
+    def _record_authorization_denied(self, error_code):
+        try:
+            self.deps.update(
+                "model_authorization_denied",
+                {
+                    "stage": "pre_request",
+                    "error_code": error_code,
+                    "data_classification": self.deps.data_classification,
+                },
+            )
+        except Exception:
+            # 审计写入失败不能把已拒绝的请求放行；保留原始授权错误。
+            pass
+
+    def _require_live_authorization(self):
+        if not self.deps.enforce_model_authorization:
+            return
+        try:
+            with session_factory()() as db:
+                require_model_authorization(db, self.deps.data_classification)
+        except AppError as exc:
+            self._record_authorization_denied(exc.error_code)
+            raise
+
     async def request(self, messages, model_settings, model_request_parameters):
+        # 授权可能在任务启动后被撤销、到期或端点变更；每次外发前都重新读取数据库事实。
+        self._require_live_authorization()
         if len(str(messages)) > get_settings().builder_max_context_chars + 20000:
             raise AppError(429, "BUILDER_CONTEXT_LIMIT", "模型上下文大小超限")
         self.deps.update(
@@ -270,8 +301,17 @@ class AuditedModel(WrapperModel):
         )
         return response
 
+    @asynccontextmanager
+    async def request_stream(self, *args, **kwargs):
+        # 流式调用同样属于外发路径，不能绕过逐请求授权复核。
+        self._require_live_authorization()
+        async with super().request_stream(*args, **kwargs) as response:
+            yield response
 
-async def investigate_module(run_id, token, model):
+
+async def investigate_module(
+    run_id, token, model, data_classification=None, enforce_authorization=True
+):
     from app.agents.knowledge_builder import AgentToolEnvelope, make_agent
 
     s = get_settings()
@@ -289,7 +329,18 @@ async def investigate_module(run_id, token, model):
         )
         module_id = row.module_id
         mode = job.metrics_json.get("investigation_mode", "explore")
-    deps = BuilderDeps(run_id, token, ctx)
+        snapshot_id = job.snapshot_id
+        classification = data_classification or job.metrics_json.get("data_classification")
+    if classification not in CLASSIFICATIONS:
+        with session_factory()() as db:
+            classification = trusted_classification(db, snapshot_id)
+    deps = BuilderDeps(
+        run_id,
+        token,
+        ctx,
+        data_classification=classification,
+        enforce_model_authorization=enforce_authorization,
+    )
     if mode == "bounded":
         from app.agents.bounded_builder import investigate_bounded
 
@@ -387,7 +438,14 @@ def run_builder(job_id, token, model=None):
             try:
                 runner.run(
                     asyncio.wait_for(
-                        investigate_module(rid, token, actual_model),
+                        investigate_module(
+                            rid,
+                            token,
+                            actual_model,
+                            classification,
+                            # 仅本地 FunctionModel 不访问外部端点；其他任何模型都必须复核授权。
+                            enforce_authorization=not isinstance(actual_model, FunctionModel),
+                        ),
                         timeout=s.builder_module_timeout_seconds,
                     )
                 )
