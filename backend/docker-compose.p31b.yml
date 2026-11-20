@@ -14,6 +14,7 @@ x-app: &app
     REDIS_URL: redis://redis:6379/6
     ADMIN_TOKEN: ${ADMIN_TOKEN:?请先由 scripts/p31b_env.sh init 生成 .env.p31b}
     READ_TOKEN: ${READ_TOKEN:?请先由 scripts/p31b_env.sh init 生成 .env.p31b}
+    MODEL_OPS_TOKEN: ${MODEL_OPS_TOKEN:-}
     CORS_ORIGINS: http://127.0.0.1:${P31B_UI_PORT:-18180},http://localhost:${P31B_UI_PORT:-18180}
     ARCHIVE_ROOT: /data/archives
     INGESTION_ROOT: /data/ingestion

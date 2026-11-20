@@ -4,7 +4,6 @@ import asyncio
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from urllib.parse import urlparse
 
 from pydantic_ai.models.wrapper import WrapperModel
 from pydantic_ai.usage import UsageLimits
@@ -20,6 +19,7 @@ from app.ingestion.resources import ResourceSampler
 from app.ingestion.text import digest
 from app.knowledge.classification import classification as trusted_classification
 from app.knowledge.evidence_registry import canonical, register
+from app.knowledge.model_authorization import require_model_authorization
 from app.knowledge.schemas import EvidenceRequest
 from app.knowledge.service import fence, save_output, validate_output
 from app.retrieval.schemas import RunContext, ToolRequest
@@ -30,22 +30,9 @@ def configured_model(classification):
     s = get_settings()
     if not s.builder_model or not s.builder_base_url or not s.builder_api_key.get_secret_value():
         raise AppError(503, "MODEL_NOT_CONFIGURED", "未配置企业批准模型")
-    allowed = (
-        s.builder_allow_synthetic
-        if classification == "synthetic_public"
-        else s.builder_allow_enterprise
-    )
-    if not allowed:
-        raise AppError(403, "MODEL_DATA_NOT_AUTHORIZED", "此类数据尚未批准发往配置模型端点")
-    parsed = urlparse(s.builder_base_url)
-    if (
-        parsed.scheme not in {"http", "https"}
-        or not parsed.hostname
-        or parsed.username
-        or parsed.password
-        or parsed.query
-    ):
-        raise AppError(422, "MODEL_ENDPOINT_INVALID", "模型端点必须为无凭据的HTTP(S)地址")
+    # 环境变量只是运行时开关；真实外发前必须命中数据库中的正式授权记录。
+    with session_factory()() as db:
+        require_model_authorization(db, classification)
     from openai import AsyncOpenAI
     from pydantic_ai.models.openai import OpenAIChatModel
     from pydantic_ai.providers.openai import OpenAIProvider

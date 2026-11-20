@@ -339,4 +339,3 @@ def test_derive_skips_excluded_source_files_without_physical_copy(client):
     result = derive(client, cid)
     assert result["derived_from_snapshot_id"] == sid
     assert result["derivation_type"] == "document_update"
-

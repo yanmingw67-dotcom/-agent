@@ -61,6 +61,8 @@ class Settings(BaseSettings):
     builder_api_key: SecretStr = SecretStr("")
     builder_allow_synthetic: bool = False
     builder_allow_enterprise: bool = False
+    # 仅用于授权运维登记模型外发审批；未配置时相关登记入口失败关闭。
+    model_ops_token: SecretStr = SecretStr("")
     builder_input_usd_per_million: float | None = None
     builder_output_usd_per_million: float | None = None
     document_discovery_mode: Literal["structural", "model", "hybrid"] = "structural"

@@ -71,6 +71,7 @@ def create_app():
                 "Content-Type",
                 "Idempotency-Key",
                 "X-Export-Token",
+                "X-Model-Ops-Token",
             ],
             expose_headers=["Content-Disposition", "X-Correlation-ID"],
         )

@@ -15,6 +15,7 @@ def main():
         "POSTGRES_PASSWORD": secrets.token_urlsafe(36),
         "ADMIN_TOKEN": secrets.token_urlsafe(48),
         "READ_TOKEN": secrets.token_urlsafe(48),
+        "MODEL_OPS_TOKEN": secrets.token_urlsafe(48),
         "P31B_UI_PORT": "18180",
         "P31B_API_PORT": "18190",
         "P31B_RETRIEVAL_PORT": "18191",

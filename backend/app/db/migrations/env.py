@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, pool
 from app.core.config import get_settings
 from app.db import (  # noqa: F401
     evaluation_models,
+    governance_models,
     index_models,
     knowledge_models,
     review_models,

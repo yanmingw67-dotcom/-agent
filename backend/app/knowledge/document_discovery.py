@@ -33,6 +33,7 @@ from app.knowledge.document_semantics import (
 )
 from app.knowledge.document_structure import ALLOWED, build_units, load_documents
 from app.knowledge.evidence_registry import register
+from app.knowledge.model_authorization import authorization_state, env_allowed
 from app.knowledge.schemas import EvidenceRequest
 from app.retrieval.schemas import RunContext
 
@@ -229,27 +230,21 @@ class Prepared:
 
 
 def model_state(run, snapshot, mode, classification, model=None):
-    settings = get_settings()
     if mode == "structural":
         return "NOT_USED", None
-    allowed = (classification == "synthetic_public" and settings.builder_allow_synthetic) or (
-        classification != "synthetic_public" and settings.builder_allow_enterprise
-    )
-    if not allowed:
-        return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_AUTHORIZED"
     if model is not None:
+        # 注入模型只存在于测试进程，不产生外部请求；仍要求运行时开关允许该分类。
+        if not env_allowed(classification):
+            return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_AUTHORIZED"
         label = (
             "TEST_FUNCTION_MODEL" if type(model).__name__ == "FunctionModel" else "INJECTED_MODEL"
         )
         return label, None
-    configured = bool(
-        settings.builder_model
-        and settings.builder_base_url
-        and settings.builder_api_key.get_secret_value()
-    )
-    if not configured:
-        return "UNAVAILABLE", "DOCUMENT_DISCOVERY_MODEL_NOT_CONFIGURED"
-    # 真实端点只有在校验分类与显式授权后才会被 configured_model 构造并调用。
+    with session_factory()() as db:
+        state = authorization_state(db, classification)
+    if state["status"] != "AUTHORIZED":
+        return "UNAVAILABLE", "DOCUMENT_DISCOVERY_" + state["reason_code"]
+    # 真实端点只有在校验数据库授权记录后才会被 configured_model 构造并调用。
     return "NOT_INVOKED", "DOCUMENT_DISCOVERY_MODEL_NOT_INVOKED"
 
 

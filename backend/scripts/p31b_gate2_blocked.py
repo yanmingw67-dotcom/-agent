@@ -1,7 +1,8 @@
-"""P3.1-B Gate 2：真实知识构建、审核、发布所需输入与授权核查。
+"""P3.1-B Gate 2：真实资料来源、模型授权、审核发布与派生链核验。
 
-只读管理员 API 与环境变量，不上传任何资料、不调用模型。真实源码/文档按
-“非合成样例哈希且已完成索引/解析”判定；没有真实发布物时 Gate 2 必须 BLOCKED。
+只读管理员 API 与容器环境，不上传资料、不调用模型。是否属于真实资料不再由
+“哈希不在合成集合”单独判定，而必须同时具备管理员来源确认、适用范围、当前
+模型端点授权记录，以及源码/文档/发现/发布物的同品类合法派生链。
 """
 
 import json
@@ -12,18 +13,15 @@ from pathlib import Path
 
 import httpx
 
+try:
+    from scripts.p31b_gate2_verify import evaluate
+except ImportError:  # 直接执行 scripts/p31b_gate2_blocked.py 时的导入路径
+    from p31b_gate2_verify import evaluate
+
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FILE = ROOT / ".env.p31b"
 EVIDENCE = ROOT / "docs" / "acceptance" / "p31b_gate2_evidence.json"
 PROJECT = "product-knowledge-p31b"
-
-# 验收夹具的固定哈希；只用于排除合成样例，不代表任何真实产品资料。
-SYNTHETIC_SOURCE_SHA256 = {
-    "d082d172f6a6e7d39d36809625a94ef278a6de7d65df718bc247d0c1bc55c65e",
-}
-SYNTHETIC_DOCUMENT_SHA256 = {
-    "fda28d7f561e47ff1aa9d7584d0b6322f520bc87cab06257901c6dd06f076d39",
-}
 
 
 def env_values():
@@ -70,90 +68,144 @@ def compose(*args):
     return result.stdout.strip()
 
 
-def collect_real_inputs(client, admin):
-    """遍历品类与快照，区分合成样例和真实资料，不输出文件名。"""
-    categories = client.get("/api/v1/admin/categories", headers=admin)
-    categories.raise_for_status()
-    items = categories.json()["items"]
-    observed = {
-        "categories": len(items),
-        "real_source_snapshots": [],
-        "real_documents": [],
-        "publications": [],
-        "semantic_discoveries": [],
-        "model_authorization": None,
+def sanitize_auth(auth):
+    builder = auth.get("builder") or {}
+    active = builder.get("active_authorization") or {}
+    return {
+        "server_side_authorization_required": auth.get("server_side_authorization_required"),
+        "frontend_can_override": auth.get("frontend_can_override"),
+        "authorization_source": auth.get("authorization_source"),
+        "env_flags_are_approval": auth.get("env_flags_are_approval"),
+        "builder": {
+            "model_configured": builder.get("model_configured"),
+            "allow_synthetic": builder.get("allow_synthetic"),
+            "allow_enterprise": builder.get("allow_enterprise"),
+            "status": builder.get("status"),
+            "reason_code": builder.get("reason_code"),
+            "active_authorization": {
+                "id": active.get("id"),
+                "data_classification": active.get("data_classification"),
+                "status": active.get("status"),
+                "active": active.get("active"),
+                "expires_at": active.get("expires_at"),
+                "approval_reference_present": bool(active.get("approval_reference")),
+            }
+            if active
+            else None,
+        },
     }
-    seen_documents = set()
-    seen_discoveries = set()
+
+
+def sanitize_provenance(row):
+    return {
+        "id": row.get("id"),
+        "snapshot_id": row.get("snapshot_id"),
+        "document_id": row.get("document_id"),
+        "material_type": row.get("material_type"),
+        "content_sha256": row.get("content_sha256"),
+        "data_classification": row.get("data_classification"),
+        "status": row.get("status"),
+        "has_declared_origin": bool(row.get("declared_origin")),
+        "has_usage_scope": bool(row.get("usage_scope")),
+        "has_confirmation_reference": bool(row.get("confirmation_reference")),
+        "confirmed_by": row.get("confirmed_by"),
+    }
+
+
+def snapshot_row(row):
+    return {
+        "id": row.get("id"),
+        "category_id": row.get("category_id"),
+        "status": row.get("status"),
+        "index_status": row.get("index_status"),
+        "source_sha256": row.get("source_sha256"),
+        "derived_from_snapshot_id": row.get("derived_from_snapshot_id"),
+        "derivation_type": row.get("derivation_type"),
+        "data_classification": row.get("data_classification"),
+    }
+
+
+def collect_real_inputs(client, admin):
+    response = client.get("/api/v1/admin/categories", headers=admin)
+    response.raise_for_status()
+    items = response.json()["items"]
+    observed = {"categories": [], "model_authorization": None}
     for item in items:
         workspace = client.get(f"/api/v1/admin/categories/{item['id']}", headers=admin)
         workspace.raise_for_status()
-        detail = workspace.json()
-        observed["model_authorization"] = detail["model_authorization"]
-        for snapshot in detail["snapshots"]:
-            if (
-                snapshot["derivation_type"] is None
-                and snapshot["index_status"] == "indexed"
-                and snapshot["source_sha256"] not in SYNTHETIC_SOURCE_SHA256
-            ):
-                observed["real_source_snapshots"].append(
-                    {
-                        "category_code": item["code"],
-                        "snapshot_id": snapshot["id"],
-                        "sha256": snapshot["source_sha256"],
-                    }
-                )
-        for snapshot in detail["snapshots"]:
-            if snapshot["status"] not in {"extracted", "published"}:
-                continue
-            snapshot_detail = client.get(
+        base = workspace.json()
+        observed["model_authorization"] = sanitize_auth(base["model_authorization"])
+        provenance = client.get(
+            f"/api/v1/admin/categories/{item['id']}/material-provenance", headers=admin
+        )
+        provenance.raise_for_status()
+        snapshots = {row["id"]: snapshot_row(row) for row in base["snapshots"]}
+        publication = base.get("active_publication")
+        if publication and publication["snapshot_id"] not in snapshots:
+            detail = client.get(
                 f"/api/v1/admin/categories/{item['id']}",
                 headers=admin,
-                params={"snapshot_id": snapshot["id"]},
+                params={"snapshot_id": publication["snapshot_id"]},
             )
-            snapshot_detail.raise_for_status()
-            row = snapshot_detail.json()
-            for document in row["documents"]:
-                digest = document["sha256"]
-                if (
-                    document["parse_status"] == "parsed"
-                    and digest not in SYNTHETIC_DOCUMENT_SHA256
-                    and digest not in seen_documents
-                ):
-                    seen_documents.add(digest)
-                    observed["real_documents"].append(
-                        {
-                            "category_code": item["code"],
-                            "snapshot_id": snapshot["id"],
-                            "sha256": digest,
-                            "segments": document["segment_count"],
-                        }
-                    )
-            discovery = row.get("document_discovery")
-            if (
-                discovery
-                and discovery.get("status") == "succeeded"
-                and discovery.get("mode") != "structural"
-                and discovery.get("run_id") not in seen_discoveries
-            ):
-                seen_discoveries.add(discovery["run_id"])
-                observed["semantic_discoveries"].append(
+            detail.raise_for_status()
+            working = detail.json().get("working_snapshot")
+            if working:
+                snapshots[working["id"]] = snapshot_row(working)
+        documents = {}
+        discoveries = []
+        chains = {}
+        for snapshot_id in list(snapshots):
+            detail = client.get(
+                f"/api/v1/admin/categories/{item['id']}",
+                headers=admin,
+                params={"snapshot_id": snapshot_id},
+            )
+            detail.raise_for_status()
+            body = detail.json()
+            for document in body["documents"]:
+                documents[document["id"]] = {
+                    "id": document["id"],
+                    "snapshot_id": document["snapshot_id"],
+                    "sha256": document["sha256"],
+                    "parse_status": document["parse_status"],
+                    "segment_count": document["segment_count"],
+                    "data_classification": document.get("data_classification"),
+                }
+            discovery = body.get("document_discovery")
+            if discovery:
+                discoveries.append(
                     {
-                        "category_code": item["code"],
-                        "snapshot_id": snapshot["id"],
-                        "run_id": discovery["run_id"],
-                        "mode": discovery["mode"],
+                        "run_id": discovery.get("run_id"),
+                        "snapshot_id": snapshot_id,
+                        "status": discovery.get("status"),
+                        "mode": discovery.get("mode"),
+                        "error_code": discovery.get("error_code"),
                     }
                 )
-        publication = detail.get("active_publication")
-        if publication and publication.get("capability_count", 0) > 0:
-            observed["publications"].append(
-                {
-                    "category_code": item["code"],
-                    "publication_id": publication["publication_id"],
-                    "capability_count": publication["capability_count"],
-                }
+            chain = client.get(
+                f"/api/v1/admin/snapshots/{snapshot_id}/derivation-chain", headers=admin
             )
+            chain.raise_for_status()
+            chains[snapshot_id] = chain.json()
+        if publication and publication["snapshot_id"] not in chains:
+            chain = client.get(
+                f"/api/v1/admin/snapshots/{publication['snapshot_id']}/derivation-chain",
+                headers=admin,
+            )
+            chain.raise_for_status()
+            chains[publication["snapshot_id"]] = chain.json()
+        observed["categories"].append(
+            {
+                "id": item["id"],
+                "code": item["code"],
+                "snapshots": list(snapshots.values()),
+                "provenance": [sanitize_provenance(row) for row in provenance.json()["items"]],
+                "documents": list(documents.values()),
+                "discoveries": discoveries,
+                "publication": publication,
+                "chains": chains,
+            }
+        )
     return observed
 
 
@@ -163,50 +215,25 @@ def main():
     port = env.get("P31B_API_PORT", "18190")
     evidence = {
         "gate": "P3.1-B Gate 2",
-        "mode": "REAL_INPUT_AND_AUTHORIZATION_CHECK",
+        "mode": "PROVENANCE_AND_AUTHORIZATION_CHECK",
         "build_commit": tag(),
         "result": "BLOCKED",
         "checks": {},
         "missing_inputs": [],
+        "violations": [],
         "blockers": [],
         "observed": {},
     }
 
-    def record(name, status, detail):
-        evidence["checks"][name] = {"result": status, "detail": detail}
-        print(f"{status} {name} {detail}")
-
     with httpx.Client(base_url=f"http://127.0.0.1:{port}", timeout=60) as client:
         ready = client.get("/health/ready")
-        record("api_ready", "PASS" if ready.status_code == 200 else "FAIL", str(ready.status_code))
+        evidence["checks"]["api_ready"] = {
+            "result": "PASS" if ready.status_code == 200 else "FAIL",
+            "detail": str(ready.status_code),
+        }
+        print(f"{evidence['checks']['api_ready']['result']} api_ready {ready.status_code}")
         observed = collect_real_inputs(client, admin)
         evidence["observed"] = observed
-        auth = observed["model_authorization"] or {}
-        builder = auth.get("builder", {})
-        evidence["model_authorization"] = auth
-        configured = bool(builder.get("model_configured"))
-        allow_enterprise = bool(builder.get("allow_enterprise"))
-        allow_synthetic = bool(builder.get("allow_synthetic"))
-        record(
-            "model_configured",
-            "PASS" if configured else "BLOCKED",
-            f"model_configured={configured}",
-        )
-        record(
-            "enterprise_authorization",
-            "PASS" if configured and allow_enterprise else "BLOCKED",
-            f"model_configured={configured} allow_enterprise={allow_enterprise}",
-        )
-        record(
-            "synthetic_egress_disabled",
-            "PASS" if not allow_synthetic else "FAIL",
-            f"allow_synthetic={allow_synthetic}",
-        )
-        record(
-            "frontend_cannot_override_authorization",
-            "PASS" if not auth.get("frontend_can_override") else "FAIL",
-            f"frontend_can_override={auth.get('frontend_can_override')}",
-        )
 
     values = compose(
         "exec",
@@ -222,63 +249,36 @@ def main():
         "BUILDER_ALLOW_SYNTHETIC": values[1] if len(values) > 1 else "",
         "BUILDER_MODEL_SET": bool(values[2]) if len(values) > 2 else False,
     }
-    record(
-        "container_synthetic_egress_disabled",
-        "PASS" if len(values) > 1 and values[1] == "false" else "FAIL",
-        f"BUILDER_ALLOW_SYNTHETIC={values[1] if len(values) > 1 else ''}",
+    synthetic_ok = len(values) > 1 and values[1] == "false"
+    evidence["checks"]["container_synthetic_egress_disabled"] = {
+        "result": "PASS" if synthetic_ok else "FAIL",
+        "detail": f"BUILDER_ALLOW_SYNTHETIC={values[1] if len(values) > 1 else ''}",
+    }
+    print(
+        f"{evidence['checks']['container_synthetic_egress_disabled']['result']} "
+        f"container_synthetic_egress_disabled "
+        f"{evidence['checks']['container_synthetic_egress_disabled']['detail']}"
     )
 
-    sources = observed["real_source_snapshots"]
-    documents = observed["real_documents"]
-    discoveries = observed["semantic_discoveries"]
-    publications = observed["publications"]
-    record(
-        "real_source_indexed",
-        "PASS" if sources else "BLOCKED",
-        f"count={len(sources)}",
-    )
-    record(
-        "real_document_parsed",
-        "PASS" if documents else "BLOCKED",
-        f"count={len(documents)}",
-    )
-    record(
-        "semantic_discovery_succeeded",
-        "PASS" if discoveries else "BLOCKED",
-        f"count={len(discoveries)}",
-    )
-    record(
-        "real_publication_present",
-        "PASS" if publications else "BLOCKED",
-        f"count={len(publications)}",
-    )
-
-    if not sources:
-        evidence["missing_inputs"].append("未由管理员上传真实 WAF 源码 ZIP 并完成索引")
-    if not documents:
-        evidence["missing_inputs"].append("未由管理员上传正式技术文档并完成解析")
-    if not configured:
-        evidence["missing_inputs"].append("服务器侧模型未配置")
-    elif not allow_enterprise:
-        evidence["missing_inputs"].append("企业数据模型外发授权未开启")
-    elif not discoveries:
-        evidence["missing_inputs"].append("模型授权已就绪但尚未完成非 structural 文档发现")
-    if not publications:
-        evidence["missing_inputs"].append("尚无包含能力的真实知识发布物")
+    result = evaluate(observed)
+    evidence["checks"].update(result["checks"])
+    evidence["missing_inputs"] = result["missing_inputs"]
+    evidence["violations"] = result["violations"]
+    evidence["result"] = result["result"]
+    evidence["qualifying_categories"] = result["qualifying_categories"]
+    evidence["counts"] = result["counts"]
+    for name, row in evidence["checks"].items():
+        if name in {"api_ready", "container_synthetic_egress_disabled"}:
+            continue
+        print(f"{row['result']} {name} {row['detail']}")
     for item in evidence["missing_inputs"]:
         print("BLOCKED missing_input " + item)
-
-    results = [row["result"] for row in evidence["checks"].values()]
-    if "FAIL" in results:
-        evidence["result"] = "FAIL"
-    elif all(result == "PASS" for result in results):
-        evidence["result"] = "PASS"
-    else:
-        evidence["result"] = "BLOCKED"
-    record("gate2_overall", evidence["result"], "真实输入、模型授权、审核发布必须全部就绪")
+    for item in evidence["violations"]:
+        print("FAIL provenance_violation " + item)
     evidence["blockers"] = [
-        "真实知识构建需要真实源码与正式文档，不能以合成样例替代。",
-        "模型未配置或企业外发授权未完成时，模型步骤必须保持 BLOCKED。",
+        "真实知识构建需要管理员确认来源与适用范围，不能以合成样例或哈希推断替代。",
+        "源码、技术文档、文档发现运行与发布物必须属于同一品类和合法快照派生链。",
+        "模型未配置或没有有效数据库授权记录时，模型步骤必须保持 BLOCKED。",
         "没有真实发布物时不能进入审核发布验收，也不能宣称知识库已就绪。",
     ]
     EVIDENCE.parent.mkdir(parents=True, exist_ok=True)

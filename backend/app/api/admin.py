@@ -4,22 +4,57 @@
 品类生效指针，不修改发布清单，也不提供任何前端可绕过的模型授权开关。
 """
 
-from fastapi import APIRouter, Depends, Query
+from datetime import datetime
+from typing import Literal
+
+from fastapi import APIRouter, Depends, Query, Request
+from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 
-from app.core.auth import admin, current_identity
+from app.core.auth import admin, current_identity, model_ops
 from app.core.config import get_settings
 from app.core.security import AppError
+from app.db.governance_models import ModelAuthorization
 from app.db.index_models import Document, DocumentSegment
 from app.db.knowledge_models import CapabilityClaim, DocumentDiscoveryRun
 from app.db.models import AuditEvent, Category, KnowledgeJob, Snapshot
 from app.db.review_models import ClaimRevision, ConflictFinding, Publication
 from app.db.session import get_db
 from app.knowledge.coverage import coverage
+from app.knowledge.model_authorization import (
+    authorization_state,
+    authorization_view,
+    create_authorization,
+    revoke_authorization,
+)
+from app.knowledge.provenance import (
+    category_provenance,
+    confirm_material,
+    derivation_chain,
+    revoke_material,
+)
 from app.knowledge.quality import gate
 
 router = APIRouter(prefix="/api/v1", tags=["P3.1-A 管理员工作台"])
+
+
+class ModelAuthorizationCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    data_classification: Literal["enterprise", "synthetic_public"] = "enterprise"
+    approval_reference: str = Field(min_length=3, max_length=200)
+    approved_scope: str = Field(min_length=8, max_length=1000)
+    expires_at: datetime | None = None
+
+
+class MaterialProvenanceCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    snapshot_id: str
+    material_type: Literal["source_code", "technical_document"]
+    document_id: str | None = None
+    declared_origin: str = Field(min_length=3, max_length=500)
+    usage_scope: str = Field(min_length=8, max_length=1000)
+    confirmation_reference: str = Field(min_length=3, max_length=200)
 
 
 def _dt(value):
@@ -66,6 +101,7 @@ def document_view(db, doc):
         "filename": doc.filename,
         "sha256": doc.sha256,
         "size": doc.size,
+        "data_classification": doc.data_classification,
         "parse_status": doc.parse_status,
         "error_code": doc.error_code,
         "parser_version": doc.parser_version,
@@ -79,27 +115,22 @@ def document_view(db, doc):
     }
 
 
-def _model_authorization():
+def _model_authorization(db):
     settings = get_settings()
-    configured = bool(
-        settings.builder_model
-        and settings.builder_base_url
-        and settings.builder_api_key.get_secret_value()
-    )
+    state = authorization_state(db, "enterprise")
     return {
         "server_side_authorization_required": True,
         "frontend_can_override": False,
+        "authorization_source": "database_record",
+        "env_flags_are_approval": False,
         "builder": {
-            "model_configured": configured,
+            "model_configured": state["configured"],
             "allow_synthetic": settings.builder_allow_synthetic,
             "allow_enterprise": settings.builder_allow_enterprise,
             "document_discovery_mode": settings.document_discovery_mode,
-            "status": (
-                "NOT_INVOKED"
-                if configured
-                and (settings.builder_allow_synthetic or settings.builder_allow_enterprise)
-                else "UNAVAILABLE"
-            ),
+            "status": state["status"],
+            "reason_code": state["reason_code"],
+            "active_authorization": state["active_authorization"],
         },
         "tender": {
             "model_mode": settings.tender_model_mode,
@@ -134,6 +165,35 @@ def _latest_revision_map(db, claim_ids):
         )
     ).scalars()
     return {row.claim_id: row for row in rows}
+
+
+def _publication_scope(db, publication):
+    capabilities = publication.payload_json.get("capabilities") or []
+    revision_ids = [item.get("revision_id") for item in capabilities]
+    revisions = (
+        list(db.scalars(select(ClaimRevision).where(ClaimRevision.id.in_(revision_ids))))
+        if revision_ids and all(revision_ids)
+        else []
+    )
+    by_id = {row.id: row for row in revisions}
+    latest = _latest_revision_map(db, [row.claim_id for row in revisions])
+    valid = bool(capabilities) and len(revisions) == len(capabilities) == len(set(revision_ids))
+    for item, revision_id in zip(capabilities, revision_ids, strict=False):
+        revision = by_id.get(revision_id)
+        if (
+            revision is None
+            or revision.snapshot_id != publication.snapshot_id
+            or revision.decision != "accept"
+            or latest.get(revision.claim_id) is None
+            or latest[revision.claim_id].id != revision.id
+            or item.get("review_status") != "human_accepted"
+        ):
+            valid = False
+            break
+    return {
+        "reviewed_capability_count": len(capabilities),
+        "review_scope_valid": valid,
+    }
 
 
 def _review_summary(db, claims, revisions):
@@ -258,6 +318,158 @@ def me(identity=Depends(current_identity)):
     }
 
 
+@router.get("/admin/model-authorizations")
+def model_authorizations(role=Depends(admin), db: Session = Depends(get_db)):
+    rows = list(
+        db.scalars(
+            select(ModelAuthorization).order_by(
+                ModelAuthorization.created_at.desc(), ModelAuthorization.id.desc()
+            )
+        )
+    )
+    return {
+        "items": [authorization_view(row) for row in rows],
+        "current": _model_authorization(db),
+    }
+
+
+@router.post("/admin/model-authorizations", status_code=201)
+def register_model_authorization(
+    body: ModelAuthorizationCreate,
+    request: Request,
+    identity=Depends(model_ops),
+    db: Session = Depends(get_db),
+):
+    row = create_authorization(
+        db,
+        classification=body.data_classification,
+        approval_reference=body.approval_reference,
+        approved_scope=body.approved_scope,
+        approved_by=identity.user_id,
+        expires_at=body.expires_at,
+    )
+    db.add(
+        AuditEvent(
+            principal_id=identity.user_id[:32],
+            action="model_authorization.create",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={
+                "data_classification": row.data_classification,
+                "approval_reference": row.approval_reference,
+            },
+        )
+    )
+    db.commit()
+    return authorization_view(row)
+
+
+@router.post("/admin/model-authorizations/{record_id}/revoke")
+def revoke_model_authorization(
+    record_id: str,
+    request: Request,
+    identity=Depends(model_ops),
+    db: Session = Depends(get_db),
+):
+    row = revoke_authorization(db, record_id, identity.user_id)
+    db.add(
+        AuditEvent(
+            principal_id=identity.user_id[:32],
+            action="model_authorization.revoke",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={"data_classification": row.data_classification},
+        )
+    )
+    db.commit()
+    return authorization_view(row)
+
+
+@router.get("/admin/categories/{category_id}/material-provenance")
+def material_provenance(category_id: str, role=Depends(admin), db: Session = Depends(get_db)):
+    return {"items": category_provenance(db, category_id)}
+
+
+@router.post("/admin/categories/{category_id}/material-provenance", status_code=201)
+def confirm_material_provenance(
+    category_id: str,
+    body: MaterialProvenanceCreate,
+    request: Request,
+    identity=Depends(current_identity),
+    db: Session = Depends(get_db),
+):
+    if identity.role != "admin":
+        raise AppError(403, "FORBIDDEN", "仅管理员可确认资料来源")
+    row = confirm_material(
+        db,
+        category_id=category_id,
+        snapshot_id=body.snapshot_id,
+        material_type=body.material_type,
+        document_id=body.document_id,
+        declared_origin=body.declared_origin,
+        usage_scope=body.usage_scope,
+        confirmation_reference=body.confirmation_reference,
+        confirmed_by=identity.user_id,
+    )
+    db.add(
+        AuditEvent(
+            principal_id=identity.user_id[:32],
+            action="material_provenance.confirm",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={
+                "category_id": category_id,
+                "snapshot_id": row.snapshot_id,
+                "material_type": row.material_type,
+                "content_sha256": row.content_sha256,
+            },
+        )
+    )
+    db.commit()
+    return {
+        "id": row.id,
+        "category_id": row.category_id,
+        "snapshot_id": row.snapshot_id,
+        "document_id": row.document_id,
+        "material_type": row.material_type,
+        "content_sha256": row.content_sha256,
+        "status": row.status,
+        "confirmed_by": row.confirmed_by,
+    }
+
+
+@router.post("/admin/material-provenance/{record_id}/revoke")
+def revoke_material_provenance(
+    record_id: str,
+    request: Request,
+    identity=Depends(current_identity),
+    db: Session = Depends(get_db),
+):
+    if identity.role != "admin":
+        raise AppError(403, "FORBIDDEN", "仅管理员可撤销来源确认")
+    row = revoke_material(db, record_id, identity.user_id)
+    db.add(
+        AuditEvent(
+            principal_id=identity.user_id[:32],
+            action="material_provenance.revoke",
+            resource_id=row.id,
+            correlation_id=request.state.correlation_id,
+            details_json={
+                "category_id": row.category_id,
+                "snapshot_id": row.snapshot_id,
+                "material_type": row.material_type,
+            },
+        )
+    )
+    db.commit()
+    return {"id": row.id, "status": row.status, "revoked_by": row.revoked_by}
+
+
+@router.get("/admin/snapshots/{snapshot_id}/derivation-chain")
+def snapshot_derivation_chain(snapshot_id: str, role=Depends(admin), db: Session = Depends(get_db)):
+    return derivation_chain(db, snapshot_id)
+
+
 @router.get("/admin/overview")
 def overview(role=Depends(admin), db: Session = Depends(get_db)):
     rows = _category_overviews(db)
@@ -307,7 +519,7 @@ def overview(role=Depends(admin), db: Session = Depends(get_db)):
         "categories": rows,
         "recent_jobs": [job_view(job, names.get(job.category_id)) for job in recent_jobs],
         "recent_publications": recent_publications,
-        "model_authorization": _model_authorization(),
+        "model_authorization": _model_authorization(db),
         "limits": {
             "document_types": [".docx", ".pdf", ".xlsx"],
             "document_only_build_supported": False,
@@ -492,6 +704,7 @@ def workspace(
             "capability_count": len(active_publication.payload_json.get("capabilities", [])),
             "published_at": _dt(active_publication.created_at),
             "published_by": active_publication.published_by,
+            **_publication_scope(db, active_publication),
         }
         if active_publication
         else None,
@@ -505,7 +718,7 @@ def workspace(
         }
         if discovery
         else None,
-        "model_authorization": _model_authorization(),
+        "model_authorization": _model_authorization(db),
         "capabilities": {
             "can_derive_documents": has_indexed_source,
             "source_required": True,

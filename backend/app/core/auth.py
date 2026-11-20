@@ -3,7 +3,7 @@ import secrets
 from dataclasses import dataclass
 from typing import Literal
 
-from fastapi import Depends
+from fastapi import Depends, Header
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.core.config import get_settings
@@ -68,3 +68,18 @@ def admin(role: str = Depends(principal)):
     if role != "admin":
         raise AppError(403, "FORBIDDEN", "仅管理员可执行此操作")
     return role
+
+
+def model_ops(
+    identity: Identity = Depends(current_identity),
+    token: str | None = Header(default=None, alias="X-Model-Ops-Token"),
+):
+    """模型外发授权登记需要独立运维令牌，管理员令牌本身不能完成审批。"""
+    if identity.role != "admin":
+        raise AppError(403, "FORBIDDEN", "仅管理员可执行此操作")
+    expected = get_settings().model_ops_token.get_secret_value()
+    if not expected:
+        raise AppError(503, "MODEL_OPS_NOT_CONFIGURED", "未配置模型授权运维令牌")
+    if not token or not secrets.compare_digest(token.encode(), expected.encode()):
+        raise AppError(403, "MODEL_OPS_FORBIDDEN", "模型授权运维令牌无效")
+    return identity
