@@ -1,12 +1,12 @@
 # P3.1-B R01/R02 定向回归
-date=2026-11-20T01:47:52Z
-commit=d64d7db
+date=2026-11-20T02:04:34Z
+commit=e0648a1
 command=.venv/bin/python -m pytest tests/integration/test_p31b_r01_model_authorization.py tests/integration/test_p31b_r02_material_provenance.py tests/unit/test_p31b_gate2_verify.py -q
-...................                                                      [100%]
+..........................                                               [100%]
 =============================== warnings summary ===============================
 .venv/lib/python3.12/site-packages/starlette/testclient.py:45
   /Users/wangyanming/Desktop/coding/参数评估agent/backend/.venv/lib/python3.12/site-packages/starlette/testclient.py:45: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
     _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-19 passed, 1 warning in 2.17s
+26 passed, 1 warning in 3.34s

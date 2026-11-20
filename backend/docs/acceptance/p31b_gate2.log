@@ -1,3 +1,6 @@
+# P3.1-B Gate 2 核验
+date=2026-11-20T02:07:29Z
+commit=e0648a1
 PASS api_ready 200
 PASS container_synthetic_egress_disabled BUILDER_ALLOW_SYNTHETIC=false
 BLOCKED model_configured configured=False

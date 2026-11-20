@@ -1,7 +1,7 @@
 {
   "gate": "P3.1-B Gate 2",
   "mode": "PROVENANCE_AND_AUTHORIZATION_CHECK",
-  "build_commit": "d64d7db",
+  "build_commit": "e0648a1",
   "result": "BLOCKED",
   "checks": {
     "api_ready": {

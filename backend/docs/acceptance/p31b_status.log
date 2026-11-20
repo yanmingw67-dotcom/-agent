@@ -1,3 +1,8 @@
+# P3.1-B 验收环境状态
+date=2026-11-20T02:07:20Z
+commit=e0648a1
+image=product-knowledge:p31b-e0648a1
+已存在 .env.p31b，未覆盖
 == Compose 服务 ==
 api          state=running    health=healthy
 builder      state=running    health=healthy
@@ -23,10 +28,10 @@ builder      {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'docu
 retrieval    {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
 taskworker   {'ingestion': '/data/ingestion', 'source': '/data/ingestion', 'documents': '/data/documents', 'archive': '/data/archives', 'control': '/data/control', 'same': True, 'symlink': False, 'source_dir': True}
 == worker 心跳 ==
-worker       age_seconds=0.4
-indexer      age_seconds=1.9
-builder      age_seconds=1.6
-taskworker   age_seconds=4.4
+worker       age_seconds=0.6
+indexer      age_seconds=0.1
+builder      age_seconds=1.4
+taskworker   age_seconds=4.2
 == 汇总 ==
 checks=17 failed=0
 P31B_ENV_STATUS=PASS
