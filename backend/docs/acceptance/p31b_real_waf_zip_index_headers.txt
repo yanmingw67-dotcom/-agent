@@ -1,0 +1,11 @@
+HTTP/1.1 202 Accepted
+Server: nginx/1.27.5
+Date: Mon, 23 Nov 2026 14:04:08 GMT
+Content-Type: application/json
+Content-Length: 102
+Connection: keep-alive
+x-correlation-id: 39fd15ff-8a68-422b-8adb-3c351fe0f25c
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Referrer-Policy: no-referrer
+

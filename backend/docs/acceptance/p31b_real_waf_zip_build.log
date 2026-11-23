@@ -1,0 +1,154 @@
+已存在 .env.p31b，未覆盖
+[p31b] 构建后端镜像 product-knowledge:p31b-ecf38e4
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 787B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 124B done
+#3 DONE 0.0s
+
+#4 [1/9] FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a
+#4 resolve ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm-slim@sha256:a071e4d58c7697cda6f8a8c3e64c2ffdf2b9246c6991dbd92d3c3b5ae61b5d9a 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 2.61MB 0.1s done
+#5 DONE 0.1s
+
+#6 [4/9] WORKDIR /app
+#6 CACHED
+
+#7 [2/9] RUN apt-get update && apt-get install -y --no-install-recommends ripgrep && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [5/9] COPY pyproject.toml uv.lock ./
+#8 CACHED
+
+#9 [3/9] RUN groupadd -g 10001 app && useradd -u 10001 -g app -m app
+#9 CACHED
+
+#10 [6/9] RUN uv sync --frozen --no-dev
+#10 CACHED
+
+#11 [7/9] COPY --chown=app:app app ./app
+#11 DONE 0.1s
+
+#12 [8/9] COPY --chown=app:app alembic.ini ./
+#12 DONE 0.0s
+
+#13 [9/9] RUN mkdir -p /data/archives /data/ingestion /data/sources /data/documents /data/control /data/tender /data/exports /data/tmp && chown -R app:app /data
+#13 DONE 0.1s
+
+#14 exporting to image
+#14 exporting layers 0.1s done
+#14 exporting manifest sha256:80206c85ddc95e55f08f559ac876e283a6622ebf7defa8f0060aacf847522627 done
+#14 exporting config sha256:a11aa63935d98c6db2ae6308e103312969ca19c64c55e54c680357cafb868d6a done
+#14 exporting attestation manifest sha256:5d113399ad6a6c3ecb1f572960af0810d7628650a5e9c0971bca610e96f763d8 0.0s done
+#14 exporting manifest list sha256:b72252a100b73375abc078625425f56c049dba92f2fd148607b05e67b1b9ebf1 done
+#14 naming to docker.io/library/product-knowledge:p31b-ecf38e4 done
+#14 unpacking to docker.io/library/product-knowledge:p31b-ecf38e4 0.0s done
+#14 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/kuu49pbmst6m1u2nk8qz1nvcy
+[p31b] 构建前端镜像 product-knowledge-p31b-frontend:ecf38e4
+ Image product-knowledge-p31b-frontend:ecf38e4 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.18kB done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 342B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/node:24-alpine
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/nginx:1.27-alpine
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 77B done
+#5 DONE 0.0s
+
+#6 [build 1/6] FROM docker.io/library/node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8
+#6 resolve docker.io/library/node:24-alpine@sha256:a34ab6d7f6f4813f4d0c5469d74685604b962fbdbf5793a7bc7b4998ecb867c8 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 391.86kB 0.0s done
+#7 DONE 0.0s
+
+#8 [build 2/6] WORKDIR /app
+#8 DONE 0.0s
+
+#9 [stage-1 1/3] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+#9 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 0.0s done
+#9 DONE 0.1s
+
+#10 [stage-1 2/3] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#10 DONE 0.0s
+
+#11 [build 3/6] COPY package.json package-lock.json ./
+#11 DONE 0.0s
+
+#12 [build 4/6] RUN npm ci
+#12 4.715 
+#12 4.715 added 69 packages, and audited 70 packages in 4s
+#12 4.715 
+#12 4.715 9 packages are looking for funding
+#12 4.715   run `npm fund` for details
+#12 4.716 
+#12 4.716 found 0 vulnerabilities
+#12 4.716 npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+#12 4.716 npm warn install-scripts   esbuild@0.25.12 (postinstall: node install.js)
+#12 4.716 npm warn install-scripts
+#12 4.716 npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+#12 4.718 npm notice
+#12 4.718 npm notice New major version of npm available! 11.19.1 -> 12.2.3
+#12 4.718 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#12 4.718 npm notice To update run: npm install -g npm@12.2.3
+#12 4.718 npm notice
+#12 DONE 4.8s
+
+#13 [build 5/6] COPY . .
+#13 DONE 0.0s
+
+#14 [build 6/6] RUN npm run build
+#14 0.208 
+#14 0.208 > tender-parameter-workbench@0.1.0 build
+#14 0.208 > tsc -b && vite build
+#14 0.208 
+#14 3.864 vite v6.4.6 building for production...
+#14 3.917 transforming...
+#14 4.746 ✓ 46 modules transformed.
+#14 4.890 rendering chunks...
+#14 4.897 computing gzip size...
+#14 4.909 dist/index.html                   0.47 kB │ gzip:   0.33 kB
+#14 4.909 dist/assets/index-DrwT7RPH.css   48.16 kB │ gzip:   9.21 kB
+#14 4.909 dist/assets/index-JiddgIYp.js   375.77 kB │ gzip: 109.70 kB
+#14 4.909 ✓ built in 1.02s
+#14 DONE 4.9s
+
+#15 [stage-1 3/3] COPY --from=build /app/dist /usr/share/nginx/html
+#15 DONE 0.0s
+
+#16 exporting to image
+#16 exporting layers 0.0s done
+#16 exporting manifest sha256:5f47986ccd0f80cd89d99be4d099dd73d9d2f5fbda377145e81e12c54814a314 done
+#16 exporting config sha256:c73e52b165f0e1d0edb1ef13b020b8e25b0adc3b7a036fdd4f1fc0abe28afcb0 done
+#16 exporting attestation manifest sha256:5e6be814b6df682b8d13796a642318c93eef7a48c900d40ffbb52aa8391cefa1 done
+#16 exporting manifest list sha256:2fb4c4e8d56b66ede996bc5a677b777f106453852ddd0d9e251ac01f78cd9ad3 done
+#16 naming to docker.io/library/product-knowledge-p31b-frontend:ecf38e4 done
+#16 unpacking to docker.io/library/product-knowledge-p31b-frontend:ecf38e4 0.0s done
+#16 DONE 0.1s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ Image product-knowledge-p31b-frontend:ecf38e4 Built 

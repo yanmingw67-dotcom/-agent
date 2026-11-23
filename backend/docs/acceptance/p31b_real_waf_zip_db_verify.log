@@ -1,0 +1,45 @@
+                  id                  |  status   | index_status |                          source_sha256                           |               archive_key                
+--------------------------------------+-----------+--------------+------------------------------------------------------------------+------------------------------------------
+ 31675257-2c36-46cf-986f-da166ee2381d | extracted | indexed      | cf3c8c88fb4f48ce5219cd0d0a0ae4841638acec75a5a69d429129565a67fcbf | b0e41631-20d0-494a-bde8-7cc2a5ad415a.zip
+(1 row)
+
+                  id                  |   job_type    |  status   |   stage   | attempt | error_code | file_count | excluded_count | total_bytes | sensitive_files | model_requests 
+--------------------------------------+---------------+-----------+-----------+---------+------------+------------+----------------+-------------+-----------------+----------------
+ 0324f27e-cd22-4a1a-aeec-323283a3effa | source_import | succeeded | extracted |       2 |            | 4743       | 146            | 65727825    | 141             | 0
+ 0bdba68d-72eb-4a70-9008-7c74bdbff9d9 | source_index  | succeeded | indexed   |       1 |            |            |                |             |                 | 0
+(2 rows)
+
+ parse_status | count | sensitive 
+--------------+-------+-----------
+ excluded     |   146 |         0
+ parsed       |  2405 |        70
+ unsupported  |  2338 |        71
+(3 rows)
+
+  language  | count 
+------------+-------
+ unknown    |  1458
+ go         |  1310
+ python     |  1095
+ typescript |   654
+ yaml       |   118
+ markdown   |   117
+ javascript |    70
+ json       |    61
+ text       |     6
+(9 rows)
+
+ parse_status |         error_code         | count 
+--------------+----------------------------+-------
+ excluded     | binary_or_unknown_encoding |    53
+ excluded     | dependency_or_generated    |    87
+ excluded     | LINK_OR_SPECIAL_FILE       |     6
+ parsed       |                            |  2405
+ unsupported  |                            |  2338
+(5 rows)
+
+ total | sensitive | parsed | unsupported | excluded | other_unreadable 
+-------+-----------+--------+-------------+----------+------------------
+  4889 |       141 |   2405 |        2338 |      146 |                0
+(1 row)
+
