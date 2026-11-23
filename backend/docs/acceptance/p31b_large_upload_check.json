@@ -1,0 +1,14 @@
+{
+  "checked": {
+    "path": "/data/ingestion/waf-747m.zip",
+    "archive_bytes": 783287355,
+    "sha256": "b3511299acd5a9ae9f78392993b3f27a86a0c04fea7c922d3fbb552244da5b04",
+    "entry_count": 9,
+    "file_count": 1,
+    "excluded_count": 8,
+    "total_bytes": 783286323,
+    "sensitive_files": 0,
+    "duration_seconds": 67.71,
+    "temp_cleaned": true
+  }
+}

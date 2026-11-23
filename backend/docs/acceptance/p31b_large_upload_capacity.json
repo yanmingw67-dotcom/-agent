@@ -1,0 +1,100 @@
+{
+  "capacity": {
+    "limits": {
+      "max_upload_bytes": 1073741824,
+      "max_total_bytes": 4294967296,
+      "max_file_bytes": 134217728,
+      "max_entries": 20000,
+      "max_compression_ratio": 100.0,
+      "max_depth": 20,
+      "storage_quota_bytes": 17179869184,
+      "storage_min_free_bytes": 2147483648,
+      "request_max_body_bytes": 104857600,
+      "multipart_overhead_bytes": 8388608,
+      "job_timeout_seconds": 3600
+    },
+    "disk": {
+      "archive_root": {
+        "path": "/data/archives",
+        "exists": true,
+        "probe": "/data/archives",
+        "total_bytes": 485473984512,
+        "used_bytes": 61926690816,
+        "free_bytes": 398811336704
+      },
+      "ingestion_root": {
+        "path": "/data/ingestion",
+        "exists": true,
+        "probe": "/data/ingestion",
+        "total_bytes": 485473984512,
+        "used_bytes": 61926690816,
+        "free_bytes": 398811336704
+      },
+      "source_root": {
+        "path": "/data/ingestion",
+        "exists": true,
+        "probe": "/data/ingestion",
+        "total_bytes": 485473984512,
+        "used_bytes": 61926690816,
+        "free_bytes": 398811336704
+      },
+      "document_store": {
+        "path": "/data/documents",
+        "exists": true,
+        "probe": "/data/documents",
+        "total_bytes": 485473984512,
+        "used_bytes": 61926690816,
+        "free_bytes": 398811336704
+      },
+      "control_store": {
+        "path": "/data/control",
+        "exists": true,
+        "probe": "/data/control",
+        "total_bytes": 485473984512,
+        "used_bytes": 61926690816,
+        "free_bytes": 398811336704
+      }
+    },
+    "current_usage_bytes": 91276,
+    "reserved_bytes": 0,
+    "reservation_count": 0,
+    "projected_peak_bytes": 5409669120,
+    "checks": [
+      {
+        "name": "quota_covers_projected_peak",
+        "ok": true,
+        "detail": {
+          "projected_peak_bytes": 5409669120,
+          "quota_headroom_bytes": 17179777908,
+          "storage_quota_bytes": 17179869184
+        }
+      },
+      {
+        "name": "disk_free_covers_projected_peak_and_reserve",
+        "ok": true,
+        "detail": {
+          "minimum_free_bytes": 398811336704,
+          "projected_peak_bytes": 5409669120,
+          "storage_min_free_bytes": 2147483648
+        }
+      },
+      {
+        "name": "single_file_budget_is_bounded",
+        "ok": true,
+        "detail": {
+          "max_file_bytes": 134217728,
+          "max_total_bytes": 4294967296
+        }
+      },
+      {
+        "name": "entry_and_compression_limits_are_bounded",
+        "ok": true,
+        "detail": {
+          "max_entries": 20000,
+          "max_compression_ratio": 100.0
+        }
+      }
+    ],
+    "capacity_status": "PASS"
+  }
+}

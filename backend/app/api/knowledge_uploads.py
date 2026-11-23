@@ -30,6 +30,17 @@ async def upload_source(
         if db.get(Category, category_id) is None:
             raise AppError(404, "CATEGORY_NOT_FOUND", "产品品类不存在")
         db.rollback()
+        # 快路径：已有排队/运行中的导入任务时直接返回 409，避免为必然失败的
+        # 上传预留数 GiB 容量，也避免把业务冲突误报成存储配额不足。
+        active = db.scalar(
+            select(KnowledgeJob.id).where(
+                KnowledgeJob.category_id == category_id,
+                KnowledgeJob.status.in_(["queued", "running"]),
+            )
+        )
+        db.rollback()
+        if active:
+            raise AppError(409, "IMPORT_CONFLICT", "此品类已有导入任务，请等待完成或处理失败任务")
         key, sha256, size = await receive_archive(file, settings)
         with db.begin():
             db.scalar(select(Category).where(Category.id == category_id).with_for_update())

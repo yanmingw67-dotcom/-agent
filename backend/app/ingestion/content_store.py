@@ -1,3 +1,4 @@
+import errno
 import hashlib
 import json
 import os
@@ -51,9 +52,11 @@ async def receive_archive(upload: UploadFile, settings: Settings) -> tuple[str, 
             if count == 0:
                 raise AppError(422, "EMPTY_UPLOAD", "文件为空")
         path.chmod(0o440)
-    except BaseException:
+    except BaseException as exc:
         path.unlink(missing_ok=True)
         release(settings, key)
+        if isinstance(exc, OSError) and exc.errno in {errno.ENOSPC, errno.EDQUOT}:
+            raise AppError(507, "STORAGE_LOW_SPACE", "磁盘剩余空间不足") from exc
         raise
     return key, digest.hexdigest(), count
 

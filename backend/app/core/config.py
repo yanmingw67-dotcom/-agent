@@ -22,21 +22,29 @@ class Settings(BaseSettings):
     archive_root: Path = Path("/data/archives")
     ingestion_root: Path = Path("/data/ingestion")
     source_root: Path = Path("/data/sources")
-    max_upload_bytes: int = 100 * 1024 * 1024
+    # 管理员受控源码 ZIP 单次上传上限：1 GiB。普通售前文档不使用该额度，
+    # 仍由 request_max_body_bytes、document_max_bytes 与 tender_max_file_bytes 分别约束。
+    max_upload_bytes: int = 1024 * 1024 * 1024
+    # 非源码上传路径的请求体上限，保持 P3.1-B 之前的 100 MiB 业务边界。
+    request_max_body_bytes: int = 100 * 1024 * 1024
+    # multipart 边界、头部字段和表单开销；只加在源码上传路径上。
+    multipart_overhead_bytes: int = 8 * 1024 * 1024
     max_entries: int = 20000
-    max_file_bytes: int = 20 * 1024 * 1024
-    max_total_bytes: int = 500 * 1024 * 1024
+    max_file_bytes: int = 128 * 1024 * 1024
+    max_total_bytes: int = 4 * 1024 * 1024 * 1024
     max_compression_ratio: float = 100
     max_depth: int = 20
-    job_timeout_seconds: int = 300
+    # 源码解压任务的有界超时；大文件解压不再受 300 秒预算限制，但仍有上限。
+    job_timeout_seconds: int = 3600
     queue_name: str = "knowledge-ingestion"
     index_queue_name: str = "knowledge-index"
     worker_kind: str = "ingestion"
     service_mode: str = "api"
     documents_root: Path | None = None
     storage_control_root: Path | None = None
-    storage_quota_bytes: int = 10 * 1024**3
-    storage_min_free_bytes: int = 1024**3
+    # 验收与默认容量需同时容纳 1 GiB 原始 ZIP、4 GiB 解压源码和索引临时文件。
+    storage_quota_bytes: int = 16 * 1024**3
+    storage_min_free_bytes: int = 2 * 1024**3
     index_max_file_bytes: int = 2 * 1024**2
     document_max_bytes: int = 20 * 1024**2
     document_max_segments: int = 20000
@@ -185,6 +193,8 @@ class Settings(BaseSettings):
 
     @field_validator(
         "max_upload_bytes",
+        "request_max_body_bytes",
+        "multipart_overhead_bytes",
         "max_entries",
         "max_file_bytes",
         "max_total_bytes",

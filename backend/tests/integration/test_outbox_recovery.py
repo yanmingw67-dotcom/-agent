@@ -2,6 +2,7 @@ from datetime import timedelta
 
 import pytest
 
+from app.core.config import get_settings
 from app.db.models import KnowledgeJob, now
 from app.db.session import session_factory
 from app.jobs import queue
@@ -17,7 +18,8 @@ def get_job(jid):
 
 def expire_lease(jid):
     with session_factory().begin() as db:
-        db.get(KnowledgeJob, jid).dispatched_at = now() - timedelta(seconds=1000)
+        stale_seconds = get_settings().job_timeout_seconds + 61
+        db.get(KnowledgeJob, jid).dispatched_at = now() - timedelta(seconds=stale_seconds)
 
 
 def test_worker_consumes_inside_enqueue_before_return(client, monkeypatch, environment):
@@ -143,7 +145,8 @@ def test_extracted_before_database_commit_crash_recovers_same_snapshot(
         import_source(jid, "first-attempt")
     assert get_job(jid).status == "running"
     with session_factory().begin() as db:
-        db.get(KnowledgeJob, jid).started_at = now() - timedelta(seconds=1000)
+        stale_seconds = get_settings().job_timeout_seconds + 61
+        db.get(KnowledgeJob, jid).started_at = now() - timedelta(seconds=stale_seconds)
     queue.claim_pending()
     assert get_job(jid).error_code == "WORKER_LOST"
     assert client.post(f"/api/v1/jobs/{jid}/retry", headers=ADMIN).status_code == 202

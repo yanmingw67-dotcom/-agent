@@ -13,6 +13,10 @@ from app.core.security import AppError
 
 logger = logging.getLogger("knowledge.audit")
 
+# 只有管理员源码 ZIP 上传使用 1 GiB 额度；其余路径（含售前文档、招标文件）
+# 继续使用 100 MiB 请求体上限，避免把大文件额度扩散到普通业务。
+SOURCE_UPLOAD_PATH = re.compile(r"^/api/v1/categories/[^/]+/source/?$")
+
 
 def database_diagnostic(exc, correlation_id):
     """只保留诊断标识，不记录SQL、参数、异常正文或驱动DETAIL。"""
@@ -47,9 +51,19 @@ def log_database_error(exc, correlation_id):
 
 
 class RequestGuard:
-    def __init__(self, app, max_body_bytes: int):
+    def __init__(self, app, max_body_bytes: int, source_max_body_bytes: int | None = None):
         self.app = app
         self.max_body_bytes = max_body_bytes
+        self.source_max_body_bytes = source_max_body_bytes
+
+    def _limit_for(self, scope) -> int:
+        if (
+            self.source_max_body_bytes is not None
+            and scope.get("method") == "POST"
+            and SOURCE_UPLOAD_PATH.fullmatch(scope.get("path", ""))
+        ):
+            return self.source_max_body_bytes
+        return self.max_body_bytes
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -59,12 +73,13 @@ class RequestGuard:
         started = time.monotonic()
         consumed = 0
         status = 500
+        body_limit = self._limit_for(scope)
 
         async def bounded_receive():
             nonlocal consumed
             message = await receive()
             consumed += len(message.get("body", b""))
-            if consumed > self.max_body_bytes:
+            if consumed > body_limit:
                 raise HTTPException(413, "REQUEST_TOO_LARGE")
             return message
 
@@ -76,6 +91,24 @@ class RequestGuard:
             await send(message)
 
         try:
+            # 先按 Content-Length 快速失败，避免为超限请求体分配磁盘和内存。
+            for name, value in scope.get("headers", []):
+                if name.lower() != b"content-length":
+                    continue
+                try:
+                    declared = int(value)
+                except ValueError:
+                    break
+                if declared > body_limit:
+                    response = JSONResponse(
+                        status_code=413,
+                        content={
+                            "error_code": "REQUEST_TOO_LARGE",
+                            "message": "请求超过限额",
+                            "correlation_id": correlation_id,
+                        },
+                    )
+                    return await response(scope, receive, tracked_send)
             if (
                 scope["method"] == "POST"
                 and scope["path"].startswith("/api/v1/categories/")

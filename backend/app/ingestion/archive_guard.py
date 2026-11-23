@@ -1,4 +1,5 @@
 import codecs
+import errno
 import hashlib
 import re
 import stat
@@ -17,32 +18,112 @@ SECRET = re.compile(
     rb"|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
 )
 
+EOCD_SIGNATURE = b"PK\x05\x06"
+ZIP64_LOCATOR_SIGNATURE = b"PK\x06\x07"
+ZIP64_EOCD_SIGNATURE = b"PK\x06\x06"
+EOCD_SIZE = 22
+ZIP64_LOCATOR_SIZE = 20
+# ZIP64 EOCD 固定部分：签名(4) + 记录长度(8) + 44 字节记录体。
+ZIP64_EOCD_MIN_SIZE = 56
+MAX_CENTRAL_DIRECTORY_NAME_BYTES = 1000
+
+
+def _classic_end_record(tail: bytes, index: int) -> tuple[int, int, int, int, int, int]:
+    """解析经典 EOCD，同时做注释长度与整包边界校验。"""
+    (
+        _,
+        disk,
+        cd_disk,
+        disk_count,
+        count,
+        cd_size,
+        cd_offset,
+        comment_size,
+    ) = struct.unpack_from("<4s4H2LH", tail, index)
+    if index + EOCD_SIZE + comment_size != len(tail):
+        raise ArchiveRejected("INVALID_ZIP")
+    return disk, cd_disk, disk_count, count, cd_size, cd_offset
+
+
+def _zip64_end_record(source, locator_position: int) -> tuple[int, int, int, int, int]:
+    """读取并校验 ZIP64 EOCD 定位器与记录，拒绝越界、多卷和伪造偏移。"""
+    if locator_position < 0:
+        raise ArchiveRejected("ZIP64_UNSUPPORTED")
+    source.seek(locator_position)
+    locator = source.read(ZIP64_LOCATOR_SIZE)
+    if len(locator) != ZIP64_LOCATOR_SIZE or locator[:4] != ZIP64_LOCATOR_SIGNATURE:
+        raise ArchiveRejected("ZIP64_UNSUPPORTED")
+    _, locator_disk, zip64_offset, total_disks = struct.unpack("<4sIQI", locator)
+    if locator_disk != 0 or total_disks != 1:
+        # 多卷 ZIP64 无法在单文件校验模型中安全处理。
+        raise ArchiveRejected("MULTIDISK_UNSUPPORTED")
+    if zip64_offset < 0 or zip64_offset + ZIP64_EOCD_MIN_SIZE > locator_position:
+        raise ArchiveRejected("INVALID_ZIP")
+    source.seek(zip64_offset)
+    record = source.read(ZIP64_EOCD_MIN_SIZE)
+    if len(record) != ZIP64_EOCD_MIN_SIZE or record[:4] != ZIP64_EOCD_SIGNATURE:
+        raise ArchiveRejected("ZIP64_UNSUPPORTED")
+    (record_size,) = struct.unpack_from("<Q", record, 4)
+    # 记录体至少 44 字节；扩展数据段必须完整落在定位器之前。
+    if record_size < 44 or zip64_offset + 12 + record_size > locator_position:
+        raise ArchiveRejected("INVALID_ZIP")
+    (
+        _version_made,
+        _version_needed,
+        disk,
+        cd_disk,
+        disk_count,
+        count,
+        cd_size,
+        cd_offset,
+    ) = struct.unpack_from("<HHIIQQQQ", record, 12)
+    if disk != 0 or cd_disk != 0 or disk_count != count:
+        raise ArchiveRejected("MULTIDISK_UNSUPPORTED")
+    return count, cd_size, cd_offset, zip64_offset
+
 
 def preflight_directory(path: Path, settings: Settings):
     # 在 zipfile 分配 ZipInfo 对象前流式检查中央目录，防止海量空条目耗尽内存。
     size = path.stat().st_size
     if size > settings.max_upload_bytes:
         raise ArchiveRejected("UPLOAD_SIZE_EXCEEDED")
+    if size < EOCD_SIZE:
+        raise ArchiveRejected("INVALID_ZIP")
     with path.open("rb") as source:
         source.seek(max(0, size - 65557))
         tail = source.read()
-        index = tail.rfind(b"PK\x05\x06")
-        if index < 0 or len(tail) - index < 22:
+        index = tail.rfind(EOCD_SIGNATURE)
+        if index < 0 or len(tail) - index < EOCD_SIZE:
             raise ArchiveRejected("INVALID_ZIP")
-        fields = struct.unpack_from("<4s4H2LH", tail, index)
-        _, disk, cd_disk, disk_count, count, cd_size, cd_offset, comment_size = fields
-        if disk or cd_disk or disk_count != count:
-            raise ArchiveRejected("MULTIDISK_UNSUPPORTED")
-        if count == 65535 or cd_size == 0xFFFFFFFF or cd_offset == 0xFFFFFFFF:
+        eocd_position = size - len(tail) + index
+        disk, cd_disk, disk_count, count, cd_size, cd_offset = _classic_end_record(tail, index)
+        zip64_marked = count == 0xFFFF or cd_size == 0xFFFFFFFF or cd_offset == 0xFFFFFFFF
+        locator_position = eocd_position - ZIP64_LOCATOR_SIZE
+        locator_present = False
+        if locator_position >= 0:
+            source.seek(locator_position)
+            locator_present = source.read(4) == ZIP64_LOCATOR_SIGNATURE
+        if zip64_marked and not locator_present:
+            # EOCD 字段已饱和却没有合法 ZIP64 定位器，说明归档标记为 ZIP64 但结构不可信。
             raise ArchiveRejected("ZIP64_UNSUPPORTED")
+        if locator_present:
+            count, cd_size, cd_offset, central_directory_end = _zip64_end_record(
+                source, locator_position
+            )
+        else:
+            if disk or cd_disk or disk_count != count:
+                raise ArchiveRejected("MULTIDISK_UNSUPPORTED")
+            central_directory_end = eocd_position
         if count > settings.max_entries:
             raise ArchiveRejected("ENTRY_LIMIT_EXCEEDED")
-        eocd_position = size - len(tail) + index
-        if index + 22 + comment_size != len(tail) or cd_offset + cd_size != eocd_position:
+        # 中央目录必须完整落在文件内，并且恰好结束于 EOCD（或 ZIP64 EOCD）之前。
+        if cd_offset < 0 or cd_size < 0 or cd_offset + cd_size != central_directory_end:
+            raise ArchiveRejected("INVALID_ZIP")
+        if cd_offset + cd_size > size:
             raise ArchiveRejected("INVALID_ZIP")
         source.seek(cd_offset)
         seen = 0
-        while source.tell() < eocd_position:
+        while source.tell() < central_directory_end:
             header = source.read(46)
             if len(header) != 46 or header[:4] != b"PK\x01\x02":
                 raise ArchiveRejected("INVALID_ZIP")
@@ -50,10 +131,12 @@ def preflight_directory(path: Path, settings: Settings):
             if seen > settings.max_entries:
                 raise ArchiveRejected("ENTRY_LIMIT_EXCEEDED")
             name_length, extra_length, comment_length = struct.unpack_from("<3H", header, 28)
-            if name_length > 1000:
+            if name_length > MAX_CENTRAL_DIRECTORY_NAME_BYTES:
                 raise ArchiveRejected("PATH_LIMIT_EXCEEDED")
+            if source.tell() + name_length + extra_length + comment_length > central_directory_end:
+                raise ArchiveRejected("INVALID_ZIP")
             source.seek(name_length + extra_length + comment_length, 1)
-        if seen != count or source.tell() != eocd_position:
+        if seen != count or source.tell() != central_directory_end:
             raise ArchiveRejected("INVALID_ZIP")
 
 
@@ -230,6 +313,10 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                     target.chmod(0o440)
                     files.append(record)
                 sensitive_files += int(detected_secret)
+    except OSError as exc:
+        if exc.errno in {errno.ENOSPC, errno.EDQUOT}:
+            raise ArchiveRejected("STORAGE_LOW_SPACE") from exc
+        raise
     except (zipfile.BadZipFile, EOFError, RuntimeError, NotImplementedError, ValueError) as exc:
         raise ArchiveRejected("INVALID_ZIP") from exc
     return {

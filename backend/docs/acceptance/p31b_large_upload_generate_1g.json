@@ -1,0 +1,9 @@
+{
+  "generated": {
+    "path": "/data/ingestion/waf-1g.zip",
+    "bytes": 1073742907,
+    "files": 8,
+    "uncompressed_bytes": 1073741875,
+    "duration_seconds": 10.79
+  }
+}

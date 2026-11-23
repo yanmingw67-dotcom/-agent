@@ -137,6 +137,54 @@ export class ApiClient {
     return this.request(`/api/v1/categories/${categoryId}/source`, { method: 'POST', form })
   }
 
+  uploadSourceWithProgress(
+    categoryId: string,
+    file: File,
+    onProgress: (percent: number) => void,
+  ): Promise<{ snapshot_id: string; job_id: string }> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', `${API_BASE}/api/v1/categories/${categoryId}/source`)
+      xhr.setRequestHeader('Authorization', `Bearer ${this.token}`)
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable && event.total > 0) {
+          onProgress(Math.min(100, Math.round((event.loaded / event.total) * 100)))
+        }
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            resolve(JSON.parse(xhr.responseText) as { snapshot_id: string; job_id: string })
+          } catch {
+            reject(new ApiError(xhr.status, 'INVALID_RESPONSE', '服务端响应无法解析'))
+          }
+          return
+        }
+        let code = `HTTP_${xhr.status}`
+        let message = `请求失败（HTTP ${xhr.status}）`
+        try {
+          const data = JSON.parse(xhr.responseText) as {
+            error_code?: string
+            message?: string
+          }
+          if (data.error_code) code = data.error_code
+          if (data.message) message = data.message
+        } catch {
+          // Nginx 413 等非 JSON 响应保留 HTTP 状态，由前端映射为可读说明。
+        }
+        if (xhr.status === 401) this.onUnauthorized?.()
+        reject(new ApiError(xhr.status, code, message))
+      }
+      xhr.onerror = () =>
+        reject(new ApiError(0, 'NETWORK_ERROR', '上传网络中断，请检查连接后重试'))
+      xhr.onabort = () =>
+        reject(new ApiError(0, 'UPLOAD_ABORTED', '上传已取消'))
+      const form = new FormData()
+      form.set('file', file)
+      xhr.send(form)
+    })
+  }
+
   buildSnapshot(snapshotId: string): Promise<{ snapshot_id: string; job_id: string }> {
     return this.request(`/api/v1/snapshots/${snapshotId}/build`, { method: 'POST' })
   }

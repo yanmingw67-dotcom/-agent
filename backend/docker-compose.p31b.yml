@@ -23,12 +23,25 @@ x-app: &app
     STORAGE_CONTROL_ROOT: /data/control
     TENDER_ROOT: /data/tender
     EXPORT_ROOT: /data/exports
-    STORAGE_QUOTA_BYTES: "10737418240"
-    STORAGE_MIN_FREE_BYTES: "1073741824"
-    MAX_UPLOAD_BYTES: "104857600"
-    MAX_FILE_BYTES: "20971520"
-    MAX_TOTAL_BYTES: "524288000"
+    # Starlette 的 UploadFile 超过 1 MiB 会落到临时文件；/tmp 仅 128 MiB tmpfs，
+    # 大源码 ZIP 会在这里被截断。改用磁盘卷承载上传/解压临时文件。
+    TMPDIR: /data/tmp
+    # 16 GiB 受控配额 + 2 GiB 最低剩余空间：容纳 1 GiB 原始 ZIP 与 4 GiB 解压源码
+    # 同时存在，并为索引/导出临时文件保留余量。验收机需先执行容量预检。
+    STORAGE_QUOTA_BYTES: "17179869184"
+    STORAGE_MIN_FREE_BYTES: "2147483648"
+    # 管理员受控源码 ZIP：单文件 1 GiB、单个解压文件 128 MiB、解压总量 4 GiB。
+    # 条目数、压缩比、路径与符号链接等安全校验保持开启。
+    MAX_UPLOAD_BYTES: "1073741824"
+    MAX_FILE_BYTES: "134217728"
+    MAX_TOTAL_BYTES: "4294967296"
+    MAX_ENTRIES: "20000"
+    MAX_COMPRESSION_RATIO: "100"
+    # 非源码路径仍维持 100 MiB 请求体边界；multipart 开销只加在源码上传路径。
+    REQUEST_MAX_BODY_BYTES: "104857600"
+    MULTIPART_OVERHEAD_BYTES: "8388608"
     DOCUMENT_MAX_BYTES: "20971520"
+    TENDER_MAX_FILE_BYTES: "20971520"
     DOCUMENT_DISCOVERY_MODE: structural
     TENDER_MODEL_MODE: structural
     TENDER_QUEUE_ENABLED: "true"
@@ -67,6 +80,7 @@ services:
       - control:/data/control
       - tender:/data/tender
       - exports:/data/exports
+      - tmp:/data/tmp
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
       interval: 5s
@@ -80,11 +94,15 @@ services:
     environment:
       <<: *app-env
       WORKER_KIND: ingestion
-    cpus: 0.25
+      # 大文件解压有界超时；不设置无限制，同时避免 300 秒预算误杀正常任务。
+      JOB_TIMEOUT_SECONDS: "3600"
+    cpus: 1.0
+    mem_limit: 1536m
     volumes:
       - archives:/data/archives:ro
       - ingestion:/data/ingestion
       - control:/data/control
+      - tmp:/data/tmp
     depends_on:
       api:
         condition: service_healthy
@@ -107,6 +125,7 @@ services:
     volumes:
       - ingestion:/data/ingestion:ro
       - documents:/data/documents:ro
+      - tmp:/data/tmp
     depends_on:
       api:
         condition: service_healthy
@@ -128,6 +147,7 @@ services:
     volumes:
       - ingestion:/data/ingestion:ro
       - documents:/data/documents:ro
+      - tmp:/data/tmp
     depends_on:
       api:
         condition: service_healthy
@@ -148,6 +168,7 @@ services:
       - documents:/data/documents:ro
       - tender:/data/tender
       - exports:/data/exports
+      - tmp:/data/tmp
     depends_on:
       api:
         condition: service_healthy
@@ -170,6 +191,7 @@ services:
     volumes:
       - ingestion:/data/ingestion:ro
       - documents:/data/documents:ro
+      - tmp:/data/tmp
     depends_on:
       api:
         condition: service_healthy
@@ -236,3 +258,4 @@ volumes:
   exports:
   postgres_data:
   redis_data:
+  tmp:

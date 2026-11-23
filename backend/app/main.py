@@ -59,7 +59,13 @@ def create_app():
         yield
 
     app = FastAPI(title="产品知识索引与检索 API", version="0.2.0", lifespan=lifespan)
-    app.add_middleware(RequestGuard, max_body_bytes=settings.max_upload_bytes + 1024 * 1024)
+    app.add_middleware(
+        RequestGuard,
+        # 普通路径保持 100 MiB + 1 MiB 业务边界；只有管理员源码 ZIP 上传使用 1 GiB
+        # + multipart 开销。源码解压后的 4 GiB 上限仍由 archive_guard 独立校验。
+        max_body_bytes=settings.request_max_body_bytes + 1024 * 1024,
+        source_max_body_bytes=settings.max_upload_bytes + settings.multipart_overhead_bytes,
+    )
     if settings.cors_origin_list:
         app.add_middleware(
             CORSMiddleware,

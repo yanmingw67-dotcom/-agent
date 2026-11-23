@@ -2,7 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ApiClient } from '../api'
 import { ApiError } from '../api'
 import { Alert, Badge, Icon, Modal, Spinner } from '../components/ui'
-import { formatBytes, formatDate, shortHash, statusLabel, statusTone } from '../format'
+import {
+  formatBytes,
+  formatDate,
+  shortHash,
+  statusLabel,
+  statusTone,
+  uploadErrorMessage,
+} from '../format'
 import { navigate, useDocumentTitle, usePolling } from '../hooks'
 import type {
   AdminDocument,
@@ -20,6 +27,16 @@ const TABS = [
   { key: 'publish', label: '发布与回滚' },
   { key: 'audit', label: '审计日志' },
 ]
+
+type SourceStage =
+  | 'idle'
+  | 'uploading'
+  | 'uploaded'
+  | 'extracting'
+  | 'extracted'
+  | 'indexing'
+  | 'indexed'
+  | 'failed'
 
 export function AdminWorkspace({
   api,
@@ -40,6 +57,10 @@ export function AdminWorkspace({
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState('')
   const [investigateOpen, setInvestigateOpen] = useState(false)
+  const [sourceStage, setSourceStage] = useState<SourceStage>('idle')
+  const [sourceProgress, setSourceProgress] = useState(0)
+  const [sourceSnapshotId, setSourceSnapshotId] = useState('')
+  const [sourceFileInfo, setSourceFileInfo] = useState<{ name: string; size: number } | null>(null)
 
   useDocumentTitle(workspace ? `${workspace.category.name} · 管理员` : '产品知识工作区')
 
@@ -90,6 +111,25 @@ export function AdminWorkspace({
     working?.status === 'extracted' &&
     working?.derivation_type === 'document_update'
 
+  useEffect(() => {
+    if (!sourceSnapshotId || !working || working.id !== sourceSnapshotId) return
+    if (working.status === 'failed') {
+      setSourceStage('failed')
+    } else if (working.index_status === 'indexed') {
+      setSourceStage('indexed')
+    } else if (working.index_status === 'queued' || working.index_status === 'running') {
+      setSourceStage('indexing')
+    } else if (working.status === 'extracted') {
+      setSourceStage('extracted')
+    } else if (
+      working.status === 'running' ||
+      working.status === 'validating' ||
+      working.status === 'uploaded'
+    ) {
+      setSourceStage('extracting')
+    }
+  }, [sourceSnapshotId, working])
+
   async function buildIndex() {
     if (!working) return
     setBusy('build')
@@ -128,13 +168,27 @@ export function AdminWorkspace({
     setBusy('source')
     setError('')
     setNotice('')
+    setSourceStage('uploading')
+    setSourceProgress(0)
+    setSourceFileInfo({ name: file.name, size: file.size })
     try {
-      const result = await api.uploadSource(id, file)
-      setNotice(`源码包已入库，快照 ${shortHash(result.snapshot_id, 10)} 等待解压。任务完成后请构建索引。`)
+      const result = await api.uploadSourceWithProgress(id, file, setSourceProgress)
+      setSourceProgress(100)
+      setSourceStage('uploaded')
+      setSourceSnapshotId(result.snapshot_id)
+      setNotice(
+        `上传成功：源码包已入库，快照 ${shortHash(result.snapshot_id, 10)} 正在等待后台解压。` +
+          '解压完成后状态会变为“解压成功”，再构建索引。',
+      )
       setSelectedSnapshotId(result.snapshot_id)
       await load(result.snapshot_id)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : '源码上传失败')
+      setSourceStage('failed')
+      setError(
+        err instanceof ApiError
+          ? uploadErrorMessage(err.code, err.status, err.message)
+          : '源码上传失败',
+      )
     } finally {
       setBusy('')
     }
@@ -229,6 +283,9 @@ export function AdminWorkspace({
           busy={busy}
           derivedEditable={derivedEditable}
           onOpenDocuments={() => setTab('documents')}
+          sourceStage={sourceStage}
+          sourceProgress={sourceProgress}
+          sourceFileInfo={sourceFileInfo}
         />
       )}
 
@@ -295,6 +352,9 @@ function OverviewTab({
   busy,
   derivedEditable,
   onOpenDocuments,
+  sourceStage,
+  sourceProgress,
+  sourceFileInfo,
 }: {
   workspace: Workspace
   working: AdminSnapshot | null
@@ -307,6 +367,9 @@ function OverviewTab({
   busy: string
   derivedEditable: boolean
   onOpenDocuments: () => void
+  sourceStage: SourceStage
+  sourceProgress: number
+  sourceFileInfo: { name: string; size: number } | null
 }) {
   const [sourceFile, setSourceFile] = useState<File | null>(null)
   const [showAllSnapshots, setShowAllSnapshots] = useState(false)
@@ -419,7 +482,10 @@ function OverviewTab({
             <div className="panel-head">
               <div>
                 <h2>源码包</h2>
-                <p>上传受控源码 ZIP 只创建待解压快照，不会自动调用外部模型。</p>
+                <p>
+                  上传受控源码 ZIP 只创建待解压快照，不会自动调用外部模型。单次上限 1 GiB，
+                  解压总量上限 4 GiB，单文件上限 128 MiB。
+                </p>
               </div>
             </div>
             <label className="field">
@@ -443,8 +509,13 @@ function OverviewTab({
               <Icon name="upload" size={16} />
               {busy === 'source' ? '上传中…' : '上传为新快照'}
             </button>
+            <SourceUploadPipeline
+              stage={sourceStage}
+              progress={sourceProgress}
+              fileInfo={sourceFileInfo}
+            />
             <p className="admin-fineprint">
-              上传会增加一个待构建快照；只有构建索引并人工审核后，发布才会影响售前自动评估。
+              上传成功、解压成功与索引成功是不同状态；只有构建索引并人工审核后，发布才会影响售前自动评估。
             </p>
           </section>
 
@@ -618,6 +689,86 @@ function OverviewTab({
           </section>
         </div>
       </div>
+    </div>
+  )
+}
+
+const SOURCE_STAGE_RANK: Record<SourceStage, number> = {
+  idle: 0,
+  uploading: 1,
+  uploaded: 2,
+  extracting: 3,
+  extracted: 4,
+  indexing: 5,
+  indexed: 6,
+  failed: -1,
+}
+
+function SourceUploadPipeline({
+  stage,
+  progress,
+  fileInfo,
+}: {
+  stage: SourceStage
+  progress: number
+  fileInfo: { name: string; size: number } | null
+}) {
+  if (stage === 'idle') return null
+  const rank = SOURCE_STAGE_RANK[stage]
+  const failed = stage === 'failed'
+  const steps = [
+    { key: 'upload', label: '上传', current: rank === 1, done: rank > 1 },
+    { key: 'uploaded', label: '上传成功', current: rank === 2, done: rank > 2 },
+    {
+      key: 'extract',
+      label: rank === 3 ? '后台解压中…' : '解压成功',
+      current: rank === 3,
+      done: rank > 3,
+    },
+    {
+      key: 'index',
+      label: rank === 5 ? '索引中…' : '索引成功',
+      current: rank === 5,
+      done: rank === 6,
+    },
+  ]
+  return (
+    <div className="upload-pipeline" role="status" aria-live="polite">
+      {fileInfo && (
+        <div className="upload-pipeline-file">
+          <span className="mono-wrap">{fileInfo.name}</span>
+          <span>{formatBytes(fileInfo.size)}</span>
+          {failed ? <Badge tone="danger">失败</Badge> : null}
+        </div>
+      )}
+      {rank === 1 && (
+        <div className="progress" aria-label="上传进度">
+          <div className="progress-value" style={{ width: `${progress}%` }} />
+        </div>
+      )}
+      <ol className="upload-steps">
+        {steps.map((step, index) => (
+          <li
+            key={step.key}
+            className={
+              step.done
+                ? 'upload-step done'
+                : step.current
+                  ? 'upload-step current'
+                  : 'upload-step'
+            }
+          >
+            <span className="upload-step-index">{index + 1}</span>
+            {step.label}
+            {step.key === 'upload' && rank === 1 ? ` ${progress}%` : ''}
+          </li>
+        ))}
+      </ol>
+      {failed && (
+        <p className="admin-fineprint">
+          上传或解压失败；请根据上方错误说明修正后重新打包，已拒绝的文件不会进入索引。
+        </p>
+      )}
     </div>
   )
 }
