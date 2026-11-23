@@ -1,0 +1,81 @@
+{
+  "eligible_text": {
+    "config": 35,
+    "dockerfile": 24,
+    "go": 1293,
+    "javascript": 62,
+    "json": 59,
+    "lua": 22,
+    "makefile": 5,
+    "markdown": 114,
+    "protobuf": 63,
+    "python": 1042,
+    "shell": 102,
+    "text": 6,
+    "toml": 9,
+    "tsx": 691,
+    "typescript": 645,
+    "unknown": 317,
+    "yaml": 111
+  },
+  "keyword_hits": {
+    "audit": 5,
+    "config": 5,
+    "policy": 5,
+    "route": 5,
+    "rule": 5,
+    "threshold": 5
+  },
+  "keyword_readback": {
+    "audit": 1,
+    "config": 1,
+    "policy": 1,
+    "route": 1,
+    "rule": 1,
+    "threshold": 1
+  },
+  "module_context": {
+    "go": 1,
+    "javascript": 1,
+    "json": 1,
+    "markdown": 1,
+    "python": 1,
+    "shell": 1,
+    "tsx": 1,
+    "typescript": 1,
+    "yaml": 1
+  },
+  "protected": {
+    "SENSITIVE_SOURCE_RESTRICTED": 141,
+    "STAGING_FORBIDDEN": 1
+  },
+  "status": {
+    "ast_output_limit": 1,
+    "excluded": 146,
+    "parsed": 3946,
+    "syntax_error": 27,
+    "text_chunked": 380,
+    "unsupported": 388,
+    "unsupported_structure": 1
+  },
+  "structured_languages": {
+    "go": 1310,
+    "javascript": 62,
+    "json": 58,
+    "python": 1095,
+    "tsx": 691,
+    "typescript": 645,
+    "yaml": 85
+  },
+  "symbol_readback": {
+    "go": 1,
+    "javascript": 1,
+    "json": 1,
+    "markdown": 1,
+    "python": 1,
+    "shell": 1,
+    "tsx": 1,
+    "typescript": 1,
+    "yaml": 1
+  }
+}

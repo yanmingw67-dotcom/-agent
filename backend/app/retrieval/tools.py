@@ -108,6 +108,10 @@ class ReadOnlyTools:
         )
 
     def execute(self, request: ToolRequest):
+        if request.tool == "search_source":
+            result = self.execute(request.model_copy(update={"tool": "search_code_batch"}))
+            result.tool = "search_source"
+            return result
         begin = time.monotonic()
         sid, db, s = self.context.snapshot_id, self.db, self.settings
         limit = min(request.limit, 30 if request.tool == "search_code_batch" else 100)
@@ -433,9 +437,9 @@ class ReadOnlyTools:
             "get_module_context",
             "list_entrypoints",
         }:
-            unreadable = ["oversized", "excluded", "invalid_encoding"]
+            unreadable = ["oversized", "excluded", "invalid_encoding", "ast_output_limit", "unsupported_structure"]
             if tool != "search_code_batch":
-                unreadable += ["unsupported", "syntax_error"]
+                unreadable += ["unsupported", "syntax_error", "text_chunked"]
             skipped = db.execute(
                 files.with_only_columns(SourceFile.parse_status, func.count())
                 .where(SourceFile.parse_status.in_(unreadable))
@@ -491,7 +495,7 @@ class ReadOnlyTools:
             raise AppError(422, "INVALID_SEARCH", "查询不能为空且每条不超过 200 字符")
         s = self.settings
         query = file_query.where(
-            SourceFile.parse_status.in_(["parsed", "unsupported", "syntax_error"]),
+            SourceFile.parse_status.in_(["parsed", "unsupported", "syntax_error", "text_chunked"]),
             SourceFile.encoding == "utf-8-sig",
         ).order_by(SourceFile.path)
         items, seen = [], set()
@@ -591,7 +595,7 @@ class ReadOnlyTools:
     def search_encoded(self, request, file_query, begin, items, seen):
         query = file_query.where(
             SourceFile.encoding.in_(["utf-16", "utf-32"]),
-            SourceFile.parse_status.in_(["parsed", "unsupported", "syntax_error"]),
+            SourceFile.parse_status.in_(["parsed", "unsupported", "syntax_error", "text_chunked"]),
         )
         offset = 0
         while True:

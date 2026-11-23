@@ -2,18 +2,50 @@ from functools import lru_cache
 from pathlib import PurePosixPath
 
 import tree_sitter_go
+import tree_sitter_javascript
 import tree_sitter_python
+import tree_sitter_typescript
 from tree_sitter import Language, Parser
+
+from app.ingestion.structured_source import structured_analysis
 
 
 @lru_cache
 def parser(language):
-    grammar = {"python": tree_sitter_python, "go": tree_sitter_go}[language]
-    return Parser(Language(grammar.language()))
+    grammar = {
+        "python": tree_sitter_python.language,
+        "go": tree_sitter_go.language,
+        "javascript": tree_sitter_javascript.language,
+        "typescript": tree_sitter_typescript.language_typescript,
+        "tsx": tree_sitter_typescript.language_tsx,
+    }[language]
+    return Parser(Language(grammar()))
 
 
-def language_for(path):
+def language_for(path, text=""):
+    p = PurePosixPath(path)
+    if p.name.lower() in {"dockerfile", "makefile"}:
+        return p.name.lower()
+    if not p.suffix and text.startswith("#!"):
+        words = text[:200].splitlines()[0][2:].strip().split()
+        if words and (
+            words[0] in {"/bin/sh", "/bin/bash"}
+            or words[:2] in (["/usr/bin/env", "sh"], ["/usr/bin/env", "bash"])
+        ):
+            return "shell"
     return {
+        ".jsx": "javascript",
+        ".mjs": "javascript",
+        ".cjs": "javascript",
+        ".tsx": "tsx",
+        ".sh": "shell",
+        ".sql": "sql",
+        ".lua": "lua",
+        ".proto": "protobuf",
+        ".toml": "toml",
+        ".ini": "ini",
+        ".conf": "config",
+        ".xml": "xml",
         ".py": "python",
         ".go": "go",
         ".js": "javascript",
@@ -25,12 +57,12 @@ def language_for(path):
         ".yaml": "yaml",
         ".yml": "yaml",
         ".json": "json",
-    }.get(PurePosixPath(path).suffix, "unknown")
+    }.get(p.suffix.lower(), "unknown")
 
 
 def analyze(text: str, language: str):
-    if language not in {"python", "go"}:
-        return "unsupported", [], [], []
+    if language not in {"python", "go", "javascript", "typescript", "tsx"}:
+        return structured_analysis(text, language)
     data = text.encode("utf-8")
     tree = parser(language).parse(data)
     symbols, calls, entries = [], [], []
@@ -48,9 +80,34 @@ def analyze(text: str, language: str):
             "method_elem",
         }
         next_prefix, next_owner = prefix, owner
+        kinds = {
+            "class_declaration": "class",
+            "interface_declaration": "interface",
+            "type_alias_declaration": "type",
+            "method_definition": "method",
+            "pair": "config_key",
+            "variable_declarator": "binding",
+        }
+        js_kind = kinds.get(node.type) if language in {"typescript", "javascript", "tsx"} else None
+        if js_kind:
+            definition = True
+            name_node = name_node or node.child_by_field_name("key")
+            value = node.child_by_field_name("value")
+            if value and value.type in {"arrow_function", "function_expression"}:
+                js_kind = "function"
+        if node.type in {"import_statement", "export_statement"}:
+            source = node.child_by_field_name("source")
+            label = source.text.decode()[:240] if source else "local"
+            entries.append(
+                dict(
+                    type=node.type.split("_")[0],
+                    line=node.start_point.row + 1,
+                    basis="AST module declaration: " + label,
+                )
+            )
         if definition and name_node:
             name = data[name_node.start_byte : name_node.end_byte].decode()
-            kind = "function"
+            kind = js_kind or "function"
             if node.type == "class_definition":
                 kind = "class"
             elif node.type in {"method_declaration", "method_elem"} or (

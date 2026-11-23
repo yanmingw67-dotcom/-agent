@@ -1,6 +1,7 @@
 import json
 import resource
 import time
+from contextlib import nullcontext
 from pathlib import Path
 
 from sqlalchemy import delete, select
@@ -23,14 +24,21 @@ from app.ingestion.resources import ResourceSampler
 from app.ingestion.text import decode_source, digest, sensitive_text, source_path
 
 
-def index_file(snapshot_id, record, settings):
+def index_file(snapshot_id, record, settings, transaction=None):
     path = record["path"]
-    version = settings.index_parser_version
-    with session_factory().begin() as db:
+    version = settings.index_parser_version + "-s1"
+    with nullcontext(transaction) if transaction is not None else session_factory().begin() as db:
         file = db.scalar(
             select(SourceFile).where(SourceFile.snapshot_id == snapshot_id, SourceFile.path == path)
         )
-        if file and file.sha256 == record["sha256"] and file.parser_version == version:
+        if (
+            file
+            and file.sha256 == record["sha256"]
+            and (
+                file.parser_version == version
+                or (transaction is None and file.parser_version == settings.index_parser_version)
+            )
+        ):
             return "reused"
     language = language_for(path)
     text = ""
@@ -51,11 +59,17 @@ def index_file(snapshot_id, record, settings):
         try:
             text, encoding = decode_source(data)
             restricted |= sensitive_text(text)
-            status, symbols, calls, entries = analyze(text, language)
+            language = language_for(path, text)
+            if restricted:
+                status = "restricted"
+            elif chr(0) in text:
+                status, error = "invalid_encoding", "BINARY_CONTENT"
+            else:
+                status, symbols, calls, entries = analyze(text, language)
         except UnicodeError:
             status, error = "invalid_encoding", "INVALID_ENCODING"
     module_name = path.split("/")[0] if "/" in path else "__root__"
-    with session_factory().begin() as db:
+    with nullcontext(transaction) if transaction is not None else session_factory().begin() as db:
         module = db.scalar(
             select(Module).where(Module.snapshot_id == snapshot_id, Module.name == module_name)
         )
@@ -72,11 +86,11 @@ def index_file(snapshot_id, record, settings):
         file = db.scalar(
             select(SourceFile).where(SourceFile.snapshot_id == snapshot_id, SourceFile.path == path)
         )
-        if file:
+        if file and transaction is None:
             db.execute(delete(CodeEdge).where(CodeEdge.file_id == file.id))
             db.execute(delete(Entrypoint).where(Entrypoint.file_id == file.id))
             db.execute(delete(CodeSymbol).where(CodeSymbol.file_id == file.id))
-        else:
+        elif not file:
             file = SourceFile(snapshot_id=snapshot_id, path=path)
             db.add(file)
         file.sha256, file.size, file.language = record["sha256"], record["size"], language
@@ -88,6 +102,24 @@ def index_file(snapshot_id, record, settings):
             else "source"
         )
         file.encoding, file.line_count = encoding, len(text.splitlines())
+        if language in {"markdown", "text", "yaml", "json"}:
+            parts = {p.lower() for p in Path(path).parts}
+            stem = Path(path).stem.lower()
+            file.role = (
+                "third_party"
+                if parts & {"vendor", "third_party", "node_modules"}
+                else "example"
+                if parts & {"example", "examples", "samples"} or "example" in stem
+                else "planned"
+                if stem in {"roadmap", "todo"}
+                else "history"
+                if stem in {"changelog", "history"}
+                else "development"
+                if stem in {"contributing", "development"}
+                else "config_candidate"
+                if language in {"yaml", "json"}
+                else "document_unverified"
+            )
         file.parse_status, file.error_code, file.parser_version = status, error, version
         file.sensitive, file.module_id = restricted, module.id
         db.flush()
@@ -111,7 +143,7 @@ def index_file(snapshot_id, record, settings):
                     resolution_status="unresolved_syntactic",
                 )
             )
-        if language in {"yaml", "json"}:
+        if language in {"yaml", "json"} and not restricted and transaction is None:
             entries.append(dict(type="config", line=1, basis="configuration filename heuristic"))
         for entry in entries:
             db.add(

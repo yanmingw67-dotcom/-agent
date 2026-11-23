@@ -1,0 +1,5 @@
+pytest_all: 500 passed, 32 skipped, 2 warnings in 136.87s (0:02:16)
+postgres_isolated: 32 passed, 1 warning in 16.17s
+parser_and_atomic: 11 passed, 1 warning in 0.44s
+All checks passed!
+compose_config: passed

@@ -62,6 +62,7 @@ class ToolRequest(BaseModel):
         "get_module_context",
         "list_entrypoints",
         "search_code_batch",
+        "search_source",
         "search_symbols",
         "search_paths",
         "read_source",
