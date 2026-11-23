@@ -25,6 +25,7 @@ def run_archive(tmp_path, data, settings):
         "/etc/passwd",
         "a/../../outside",
         "C:/boot",
+        "a/C:/boot",
         "a\\..\\evil",
         "a//b",
         "./evil",
@@ -47,8 +48,44 @@ def test_links_and_special_files(tmp_path, environment, kind):
     info = zipfile.ZipInfo("special")
     info.create_system = 3
     info.external_attr = (kind | 0o777) << 16
-    with pytest.raises(ArchiveRejected, match="LINK_OR_SPECIAL_FILE"):
-        run_archive(tmp_path, make_zip([(info, "target")]), environment)
+    manifest = run_archive(tmp_path, make_zip([(info, "target")]), environment)
+    assert manifest["files"] == []
+    assert manifest["excluded"][0]["reason"] == "LINK_OR_SPECIAL_FILE"
+    assert not (tmp_path / "output/special").exists()
+
+
+def test_colon_in_non_drive_path_is_allowed(tmp_path, environment):
+    manifest = run_archive(
+        tmp_path,
+        make_zip([("frontend/scripts/ci:publish", "echo safe")]),
+        environment,
+    )
+    assert manifest["files"][0]["path"] == "frontend/scripts/ci:publish"
+    assert (tmp_path / "output/frontend/scripts/ci:publish").read_text() == "echo safe"
+
+
+def test_cache_entry_is_excluded_before_size_budget(tmp_path, environment):
+    settings = environment.model_copy(update={"max_file_bytes": 5})
+    manifest = run_archive(
+        tmp_path,
+        make_zip([(".git/objects/pack/big.pack", b"x" * 10), ("main.py", "ok")]),
+        settings,
+    )
+    assert [item["path"] for item in manifest["files"]] == ["main.py"]
+    assert manifest["excluded"][0]["path"] == ".git/objects/pack/big.pack"
+    assert manifest["excluded"][0]["reason"] == "dependency_or_generated"
+    assert not (tmp_path / "output/.git/objects/pack/big.pack").exists()
+
+
+def test_utf8_names_without_flag_are_recovered(tmp_path, environment):
+    data = bytearray(make_zip([("雷池/main.py", "print('ok')")]))
+    # 去掉本地头和中央目录的 UTF-8 标志，模拟 macOS 生成的 ZIP。
+    data[6] &= ~0x08
+    central = data.index(b"PK\x01\x02")
+    data[central + 8] &= ~0x08
+    manifest = run_archive(tmp_path, bytes(data), environment)
+    assert manifest["files"][0]["path"] == "雷池/main.py"
+    assert (tmp_path / "output/雷池/main.py").exists()
 
 
 @pytest.mark.parametrize(

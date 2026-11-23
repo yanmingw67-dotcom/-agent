@@ -12,7 +12,19 @@ from pathlib import Path
 from app.core.config import Settings
 from app.core.security import ArchiveRejected
 
-CACHE_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", "vendor", "dist", "build"}
+CACHE_DIRS = {
+    ".git",
+    "node_modules",
+    "__pycache__",
+    "__MACOSX",
+    ".venv",
+    "venv",
+    "vendor",
+    "dist",
+    "build",
+}
+EXCLUDED_FILENAMES = {".DS_Store", "Thumbs.db"}
+DRIVE_PREFIX = re.compile(r"^[A-Za-z]:")
 SECRET = re.compile(
     rb"(?i)(?:password|passwd|api[_-]?key|secret|access[_-]?token)\s*[:=]\s*['\"]?[^\s'\";]{8,}"
     rb"|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
@@ -145,17 +157,38 @@ class Entry:
     info: zipfile.ZipInfo
     path: str
     directory: bool
+    reason: str | None = None
+
+
+def decoded_name(info: zipfile.ZipInfo) -> str:
+    """兼容未设置 UTF-8 标志的 UTF-8 文件名。
+
+    macOS 等工具生成的 ZIP 常把 UTF-8 文件名按 CP437 写入中央目录，且不设置
+    0x800 标志。优先尝试 CP437 -> UTF-8；失败时保留 ZIP 原始解码结果。
+    """
+    raw = info.orig_filename
+    if info.flag_bits & 0x800:
+        return raw
+    try:
+        recovered = raw.encode("cp437").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return raw
+    return recovered or raw
 
 
 def normalized_path(info: zipfile.ZipInfo, settings: Settings) -> str:
-    raw = info.orig_filename
-    if raw != info.filename or "\x00" in raw or "\\" in raw or raw.startswith("/"):
+    raw = decoded_name(info)
+    if "\x00" in raw or "\\" in raw or raw.startswith("/"):
         raise ArchiveRejected("UNSAFE_PATH")
     path = unicodedata.normalize("NFC", raw)
     parts = path.rstrip("/").split("/")
     if not parts or any(p in {"", ".", ".."} for p in parts):
         raise ArchiveRejected("UNSAFE_PATH")
-    if any(":" in p or p != p.rstrip(" .") or any(ord(c) < 32 for c in p) for p in parts):
+    # 冒号在 Linux 文件名中合法（真实源码含 ci:publish 等）；仍拒绝 Windows
+    # 盘符/备用数据流形式，以及尾随点、尾随空格和控制字符。
+    if any(
+        DRIVE_PREFIX.match(p) or p != p.rstrip(" .") or any(ord(c) < 32 for c in p) for p in parts
+    ):
         raise ArchiveRejected("UNSAFE_PATH")
     if (
         len(parts) > settings.max_depth
@@ -180,22 +213,28 @@ def inspect_entries(archive: zipfile.ZipFile, settings: Settings) -> list[Entry]
         path = normalized_path(info, settings)
         kind = stat.S_IFMT(info.external_attr >> 16)
         directory = info.is_dir()
+        parts = path.split("/")
+        reason = None
         if kind not in {0, stat.S_IFDIR if directory else stat.S_IFREG}:
-            raise ArchiveRejected("LINK_OR_SPECIAL_FILE")
+            # 符号链接和特殊文件不落盘，只记录为排除项；不跟随、不创建链接。
+            reason = "LINK_OR_SPECIAL_FILE"
+        elif set(parts[:-1]) & CACHE_DIRS or parts[-1] in EXCLUDED_FILENAMES:
+            # 依赖、VCS、构建产物和系统元数据不进入解压预算，也不读取内容。
+            reason = "dependency_or_generated"
         if info.flag_bits & 1:
             raise ArchiveRejected("ENCRYPTED_ARCHIVE")
         if info.compress_type not in {zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED}:
             raise ArchiveRejected("UNSUPPORTED_COMPRESSION")
-        if info.file_size > settings.max_file_bytes:
-            raise ArchiveRejected("FILE_SIZE_EXCEEDED")
-        total += info.file_size
-        if total > settings.max_total_bytes:
-            raise ArchiveRejected("TOTAL_SIZE_EXCEEDED")
-        if info.file_size / max(info.compress_size, 1) > settings.max_compression_ratio:
-            raise ArchiveRejected("COMPRESSION_RATIO_EXCEEDED")
         if directory and info.file_size:
             raise ArchiveRejected("INVALID_DIRECTORY")
-        parts = path.split("/")
+        if reason is None:
+            if info.file_size > settings.max_file_bytes:
+                raise ArchiveRejected("FILE_SIZE_EXCEEDED")
+            total += info.file_size
+            if total > settings.max_total_bytes:
+                raise ArchiveRejected("TOTAL_SIZE_EXCEEDED")
+            if info.file_size / max(info.compress_size, 1) > settings.max_compression_ratio:
+                raise ArchiveRejected("COMPRESSION_RATIO_EXCEEDED")
         for i in range(1, len(parts) + 1):
             spelling = "/".join(parts[:i])
             key = spelling.casefold()
@@ -208,7 +247,7 @@ def inspect_entries(archive: zipfile.ZipFile, settings: Settings) -> list[Entry]
         if key in explicit:
             raise ArchiveRejected("PATH_COLLISION")
         explicit.add(key)
-        entries.append(Entry(info, path, directory))
+        entries.append(Entry(info, path, directory, reason))
     if not any(not entry.directory for entry in entries):
         raise ArchiveRejected("EMPTY_ARCHIVE")
     return entries
@@ -227,14 +266,26 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
             for entry in entries:
                 if entry.directory:
                     continue
+                if entry.reason:
+                    excluded.append(
+                        {
+                            "path": entry.path,
+                            # 排除项不读取、不落盘；空内容哈希只满足 SourceFile 的
+                            # 非空字段约束，检索层会按 parse_status=excluded 跳过。
+                            "sha256": hashlib.sha256(b"").hexdigest(),
+                            "size": entry.info.file_size,
+                            "sensitive_detected": False,
+                            "binary_detection_status": "not_read_excluded",
+                            "content_kind": "excluded",
+                            "encoding": None,
+                            "reason": entry.reason,
+                        }
+                    )
+                    continue
                 target = destination.joinpath(*entry.path.split("/"))
                 if not target.resolve().is_relative_to(destination.resolve()):
                     raise ArchiveRejected("UNSAFE_PATH")
-                reason = (
-                    "dependency_or_generated"
-                    if CACHE_DIRS.intersection(entry.path.split("/")[:-1])
-                    else None
-                )
+                reason = None
                 digest = hashlib.sha256()
                 size = 0
                 detected_secret = False
@@ -264,9 +315,8 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                                     decoder = codecs.getincrementaldecoder(encoding)(
                                         errors="strict"
                                     )
-                                if reason is None:
-                                    target.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
-                                    output = target.open("xb")
+                                target.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
+                                output = target.open("xb")
                             if decoder and not invalid_encoding:
                                 try:
                                     decoder.decode(block, final=False)
@@ -284,7 +334,7 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                             invalid_encoding = True
                     if size != entry.info.file_size:
                         raise ArchiveRejected("SIZE_MISMATCH")
-                    if size == 0 and reason is None:
+                    if size == 0:
                         target.parent.mkdir(parents=True, exist_ok=True, mode=0o750)
                         output = target.open("xb")
                 finally:
@@ -295,9 +345,8 @@ def extract_checked(archive_path: Path, destination: Path, settings: Settings) -
                     content_kind = "encoded_text_pending"
                 elif has_nul or invalid_encoding:
                     content_kind = "binary_or_unknown_encoding"
-                    if reason is None:
-                        reason = "binary_or_unknown_encoding"
-                        target.unlink()
+                    reason = "binary_or_unknown_encoding"
+                    target.unlink()
                 record = {
                     "path": entry.path,
                     "sha256": digest.hexdigest(),
