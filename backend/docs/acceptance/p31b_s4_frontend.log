@@ -1,0 +1,27 @@
+
+> tender-parameter-workbench@0.1.0 test
+> vitest run --environment jsdom
+
+
+ RUN  v4.1.12 /Users/wangyanming/Desktop/coding/参数评估agent/backend/frontend
+
+ ✓ src/pages/MaterialProvenance.test.tsx (21 tests) 1405ms
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  23:53:22
+   Duration  2.82s (transform 122ms, setup 0ms, import 419ms, tests 1.41s, environment 843ms)
+
+
+> tender-parameter-workbench@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.6 building for production...
+transforming...
+✓ 48 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:   0.33 kB
+dist/assets/index-DrwT7RPH.css   48.16 kB │ gzip:   9.21 kB
+dist/assets/index-DIl99e3t.js   387.47 kB │ gzip: 113.50 kB
+✓ built in 757ms

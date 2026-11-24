@@ -1,0 +1,16 @@
+28905d23-b1fc-4b1c-a1ef-8e48598b1349|extracted|indexed|enterprise
+31675257-2c36-46cf-986f-da166ee2381d|extracted|indexed|enterprise
+28905d23-b1fc-4b1c-a1ef-8e48598b1349|141
+31675257-2c36-46cf-986f-da166ee2381d|141
+source_code|confirmed|1
+technical_document|confirmed|2
+source_snapshots|16|1b6f9f7831d109d60fcb569eb1939573
+source_files|9822|1e6eae2c23681937a115f2e4d3d28a2c
+code_symbols|415315|5e9fa3abbdfb4c76923dd394936da88a
+evidence|2|0612b8999d47f286078ffd0f29fdb10a
+documents|4|fd72d246420f3c2af1efec02da5a6b23
+document_segments|474|2fdf719907f08172dcf34a7f069916d2
+material_provenance|3|cbb4ae3894a55cdc9bf086c60c9be462
+knowledge_jobs|28|051b4fffe529b43f177087bde4e72828
+knowledge_publications|0|
+model_authorizations|0|

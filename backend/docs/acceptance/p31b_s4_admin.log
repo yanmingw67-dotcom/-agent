@@ -1,0 +1,2 @@
+{'model_configured': False, 'model_name': None, 'data_classification': 'enterprise', 'allow_enterprise': False, 'allow_synthetic': False, 'active_authorization': None, 'reason_code': 'MODEL_NOT_CONFIGURED', 'document_discovery_mode': 'structural'}
+tender: structural evaluation: structural

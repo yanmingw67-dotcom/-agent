@@ -1,0 +1,5 @@
+All checks passed!
+Would reformat: app/retrieval/tools.py
+Would reformat: tests/integration/test_p31b_s3_provenance_ui.py
+2 files would be reformatted, 228 files already formatted
+Compose 配置校验通过
