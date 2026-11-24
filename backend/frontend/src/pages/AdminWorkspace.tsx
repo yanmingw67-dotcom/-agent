@@ -19,10 +19,12 @@ import type {
   RetrievalItem,
 } from '../types'
 import { AdminReviewPanel } from './AdminReviewPanel'
+import { MaterialConfirmation, ProvenanceOverview, ProvenanceProvider, ProvenanceRecords } from './MaterialProvenance'
 
 const TABS = [
   { key: 'overview', label: '概览与构建' },
   { key: 'documents', label: '技术文档' },
+  { key: 'provenance', label: '资料来源确认' },
   { key: 'review', label: '能力审核' },
   { key: 'publish', label: '发布与回滚' },
   { key: 'audit', label: '审计日志' },
@@ -252,6 +254,8 @@ export function AdminWorkspace({
       )}
       {notice && <Alert tone="success">{notice}</Alert>}
 
+      <ProvenanceProvider key={workspace.category.id + ':' + (working?.id || '')}
+        api={api} categoryId={workspace.category.id} categoryName={workspace.category.name + '（' + workspace.category.code + '）'} snapshot={working}>
       <div className="admin-tabs" role="tablist" aria-label="管理员工作区">
         {TABS.map((item) => (
           <button
@@ -270,6 +274,8 @@ export function AdminWorkspace({
         ))}
       </div>
 
+      {tab === 'overview' && <ProvenanceOverview />}
+      {tab === 'provenance' && <><ProvenanceOverview /><ProvenanceRecords /></>}
       {tab === 'overview' && (
         <OverviewTab
           workspace={workspace}
@@ -322,6 +328,7 @@ export function AdminWorkspace({
       )}
 
       {tab === 'audit' && <AuditTab api={api} categoryId={workspace.category.id} />}
+      </ProvenanceProvider>
 
       {investigateOpen && working && (
         <InvestigateModal
@@ -996,6 +1003,7 @@ function DocumentsTab({
                   {document.error_code}；可检查文件后替换或重解析，已发布知识不会因此改变。
                 </Alert>
               )}
+              <MaterialConfirmation document={document} />
               {editable && (
                 <div className="admin-document-actions">
                   <label className="button button-ghost button-small file-button">

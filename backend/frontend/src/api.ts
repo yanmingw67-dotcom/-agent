@@ -1,4 +1,7 @@
 import type {
+  DerivationChain,
+  MaterialProvenance,
+  ProvenanceCreate,
   AdminCategoryOverview,
   AdminJob,
   AdminOverview,
@@ -105,6 +108,22 @@ export class ApiClient {
 
   adminOverview(): Promise<AdminOverview> {
     return this.request<AdminOverview>('/api/v1/admin/overview')
+  }
+
+  materialProvenance(categoryId: string): Promise<{ items: MaterialProvenance[] }> {
+    return this.request(`/api/v1/admin/categories/${encodeURIComponent(categoryId)}/material-provenance`)
+  }
+
+  confirmMaterial(categoryId: string, body: ProvenanceCreate): Promise<Pick<MaterialProvenance, 'id' | 'status'>> {
+    return this.request(`/api/v1/admin/categories/${encodeURIComponent(categoryId)}/material-provenance`, { method: 'POST', body })
+  }
+
+  revokeMaterial(recordId: string): Promise<{ id: string; status: string }> {
+    return this.request(`/api/v1/admin/material-provenance/${encodeURIComponent(recordId)}/revoke`, { method: 'POST' })
+  }
+
+  derivationChain(snapshotId: string): Promise<DerivationChain> {
+    return this.request(`/api/v1/admin/snapshots/${encodeURIComponent(snapshotId)}/derivation-chain`)
   }
 
   adminCategories(): Promise<{ items: AdminCategoryOverview[] }> {

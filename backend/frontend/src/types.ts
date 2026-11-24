@@ -363,6 +363,43 @@ export interface AdminDocument {
   parse_details: Record<string, unknown>
   origin: Record<string, unknown>
   segment_count: number
+  data_classification: string
+}
+
+export interface MaterialProvenance {
+  id: string
+  category_id: string
+  snapshot_id: string
+  document_id: string | null
+  material_type: 'source_code' | 'technical_document'
+  content_sha256: string
+  data_classification: string
+  declared_origin: string
+  usage_scope: string
+  confirmation_reference: string
+  confirmed_by: string
+  status: string
+  created_at: string | null
+  revoked_at: string | null
+  revoked_by: string | null
+}
+
+export interface ProvenanceCreate {
+  snapshot_id: string
+  material_type: 'source_code' | 'technical_document'
+  document_id?: string
+  declared_origin: string
+  usage_scope: string
+  confirmation_reference: string
+}
+
+export interface DerivationChain {
+  snapshot_id: string
+  category_id: string
+  root_snapshot_id: string | null
+  valid: boolean
+  error_code: string | null
+  chain: Omit<AdminSnapshot, 'created_at'>[]
 }
 
 export interface AdminReviewSummary {
