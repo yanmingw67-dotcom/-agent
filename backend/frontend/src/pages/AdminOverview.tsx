@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { ApiClient } from '../api'
+import { ModelGateFacts } from './ModelGateFacts'
 import { ApiError } from '../api'
 import { Alert, Badge, Icon, Modal, Spinner } from '../components/ui'
 import { formatDate, shortHash, statusLabel, statusTone } from '../format'
@@ -169,8 +170,9 @@ export function AdminOverview({ api }: { api: ApiClient }) {
                       {data.model_authorization.builder.status}
                     </dd>
                   </div>
+                  <ModelGateFacts builder={data.model_authorization.builder} />
                   <div>
-                    <dt>允许数据分类</dt>
+                    <dt>已开启的运行时分类（不等于审批）</dt>
                     <dd>
                       {data.model_authorization.builder.allow_synthetic ? '合成公开' : '—'}
                       {' / '}

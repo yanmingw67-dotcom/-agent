@@ -462,6 +462,10 @@ export interface ModelAuthorization {
   frontend_can_override: boolean
   builder: {
     model_configured: boolean
+    model_name: string | null
+    data_classification: string
+    reason_code: string | null
+    active_authorization: { expires_at: string | null } | null
     allow_synthetic: boolean
     allow_enterprise: boolean
     document_discovery_mode: string

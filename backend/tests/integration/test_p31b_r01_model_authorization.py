@@ -39,6 +39,7 @@ def ops_headers():
 def payload(**overrides):
     body = {
         "data_classification": "enterprise",
+        "expires_at": (datetime.now(UTC) + timedelta(hours=1)).isoformat(),
         "approval_reference": "APPROVAL-2026-" + uuid4().hex[:8],
         "approved_scope": "仅用于 P3.1-B 真实产品知识构建，不用于对外服务",
     }

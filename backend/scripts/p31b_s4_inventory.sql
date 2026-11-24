@@ -1,0 +1,15 @@
+begin isolation level repeatable read read only;
+select id,status,index_status,data_classification from source_snapshots where id in ('31675257-2c36-46cf-986f-da166ee2381d','28905d23-b1fc-4b1c-a1ef-8e48598b1349') order by id;
+select snapshot_id,count(*) filter(where sensitive) from source_files where snapshot_id in ('31675257-2c36-46cf-986f-da166ee2381d','28905d23-b1fc-4b1c-a1ef-8e48598b1349') group by 1 order by 1;
+select material_type,status,count(*) from material_provenance group by 1,2 order by 1,2;
+select 'source_snapshots', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from source_snapshots r;
+select 'source_files', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from source_files r;
+select 'code_symbols', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from code_symbols r;
+select 'evidence', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from evidence r;
+select 'documents', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from documents r;
+select 'document_segments', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from document_segments r;
+select 'material_provenance', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from material_provenance r;
+select 'knowledge_jobs', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from knowledge_jobs r;
+select 'knowledge_publications', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from knowledge_publications r;
+select 'model_authorizations', count(*),md5(string_agg(md5(row_to_json(r)::text),'' order by id)) from model_authorizations r;
+commit;

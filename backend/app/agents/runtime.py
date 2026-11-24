@@ -35,7 +35,7 @@ def configured_model(classification):
     # 环境变量只是运行时开关；真实外发前必须命中数据库中的正式授权记录。
     with session_factory()() as db:
         require_model_authorization(db, classification)
-    from openai import AsyncOpenAI
+    from openai import AsyncOpenAI, DefaultAsyncHttpxClient
     from pydantic_ai.models.openai import OpenAIChatModel
     from pydantic_ai.providers.openai import OpenAIProvider
 
@@ -46,6 +46,7 @@ def configured_model(classification):
                 base_url=s.builder_base_url,
                 api_key=s.builder_api_key.get_secret_value(),
                 max_retries=0,
+                http_client=DefaultAsyncHttpxClient(follow_redirects=False),
                 timeout=60,
             )
         ),

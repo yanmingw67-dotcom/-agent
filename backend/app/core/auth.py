@@ -78,7 +78,11 @@ def model_ops(
     if identity.role != "admin":
         raise AppError(403, "FORBIDDEN", "仅管理员可执行此操作")
     expected = get_settings().model_ops_token.get_secret_value()
-    if not expected:
+    settings = get_settings()
+    if not expected or expected in {
+        settings.admin_token.get_secret_value(),
+        settings.read_token.get_secret_value(),
+    }:
         raise AppError(503, "MODEL_OPS_NOT_CONFIGURED", "未配置模型授权运维令牌")
     if not token or not secrets.compare_digest(token.encode(), expected.encode()):
         raise AppError(403, "MODEL_OPS_FORBIDDEN", "模型授权运维令牌无效")

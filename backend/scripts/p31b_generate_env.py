@@ -1,5 +1,6 @@
 """生成 P3.1-B 验收环境变量；不覆盖已有文件，不把令牌写入仓库。"""
 
+import os
 import secrets
 from pathlib import Path
 
@@ -28,10 +29,15 @@ def main():
             "# BUILDER_MODEL=",
             "# BUILDER_BASE_URL=",
             "# BUILDER_API_KEY=",
+            "BUILDER_ALLOW_SYNTHETIC=false",
+            "BUILDER_ALLOW_ENTERPRISE=false",
+            "DOCUMENT_DISCOVERY_MODE=structural",
+            "TENDER_MODEL_MODE=structural",
+            "EVALUATION_MODEL_MODE=structural",
         ]
     )
-    TARGET.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    TARGET.chmod(0o600)
+    with os.fdopen(os.open(TARGET, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w") as file:
+        file.write("\n".join(lines) + "\n")
     print(f"已生成 {TARGET.name}（权限 600，未输出令牌）")
 
 

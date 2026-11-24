@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ApiClient } from '../api'
+import { ModelGateFacts } from './ModelGateFacts'
 import { ApiError } from '../api'
 import { Alert, Badge, Icon, Modal, Spinner } from '../components/ui'
 import {
@@ -685,8 +686,9 @@ function OverviewTab({
                 <dt>文档发现</dt>
                 <dd>{workspace.model_authorization.builder.document_discovery_mode}</dd>
               </div>
+              <ModelGateFacts builder={workspace.model_authorization.builder} />
               <div>
-                <dt>数据分类</dt>
+                <dt>已开启的运行时分类（不等于审批）</dt>
                 <dd>
                   {workspace.model_authorization.builder.allow_synthetic ? '合成公开' : '—'} /{' '}
                   {workspace.model_authorization.builder.allow_enterprise ? '企业' : '—'}

@@ -125,6 +125,8 @@ def _model_authorization(db):
         "env_flags_are_approval": False,
         "builder": {
             "model_configured": state["configured"],
+            "model_name": settings.builder_model or None,
+            "data_classification": "enterprise",
             "allow_synthetic": settings.builder_allow_synthetic,
             "allow_enterprise": settings.builder_allow_enterprise,
             "document_discovery_mode": settings.document_discovery_mode,

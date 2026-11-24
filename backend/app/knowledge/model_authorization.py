@@ -68,6 +68,8 @@ def _active(record, at=None):
     if record is None or record.status != "active":
         return False
     expires = _utc(record.expires_at)
+    if record.data_classification == "enterprise" and expires is None:
+        return False
     return expires is None or expires > (at or now())
 
 
@@ -115,7 +117,7 @@ def authorization_state(db: Session, classification="enterprise"):
         and settings.builder_api_key.get_secret_value()
     )
     allowed = env_allowed(classification)
-    record = active_authorization(db, classification) if configured and allowed else None
+    record = active_authorization(db, classification) if configured else None
     if not configured:
         status, reason = "UNAVAILABLE", "MODEL_NOT_CONFIGURED"
     elif not allowed:
@@ -185,6 +187,10 @@ def create_authorization(
     endpoint = normalize_endpoint(settings.builder_base_url)
     expiry = _utc(expires_at)
     current = now()
+    if classification == "enterprise" and expiry is None:
+        raise AppError(422, "MODEL_AUTHORIZATION_EXPIRY_INVALID", "企业授权必须指定到期时间")
+    if len(approval_reference.strip()) < 3 or len(approved_scope.strip()) < 8:
+        raise AppError(422, "MODEL_AUTHORIZATION_SCOPE_INVALID", "请提供明确的审批依据与范围")
     if expiry is not None and expiry <= current:
         raise AppError(422, "MODEL_AUTHORIZATION_EXPIRY_INVALID", "授权到期时间必须晚于当前时间")
     for row in _candidates(db, classification, settings.builder_model, endpoint):
