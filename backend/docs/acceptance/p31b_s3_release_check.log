@@ -1,0 +1,19 @@
+COMPOSE_CONFIG=PASS
+product-knowledge-p31b-frontend-1 product-knowledge-p31b-frontend:43392bd Up 9 hours (healthy)
+product-knowledge-p31b-api-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-retrieval-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-taskworker-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-builder-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-worker-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-indexer-1 product-knowledge:p31b-a27f86b Up 21 hours (healthy)
+product-knowledge-p31b-postgres-1 postgres:16.9-bookworm Up 34 hours (healthy)
+product-knowledge-p31b-redis-1 redis:7.4.4-bookworm Up 34 hours (healthy)
+SNAPSHOT_FINGERPRINT_COMPARISON=PASS
+FRONTEND_HTTP=200
+浏览器只读核验：资料来源确认标签可见；派生链已通过服务端核验。
+根快照：31675257-2c36-46cf-986f-da166ee2381d；状态 extracted/indexed。
+完整 SHA-256：cf3c8c88fb4f48ce5219cd0d0a0ae4841638acec75a5a69d429129565a67fcbf。
+来源状态：未确认；确认源码来源入口、复制完整哈希按钮可见。
+正式文档数：0；品类尚无生效发布；构建模型未配置。
+仅读取页面；未点击确认、上传、派生、调查或发布。
+交付材料敏感信息检查：13 个文件未匹配环境凭据或常见令牌、私钥格式。

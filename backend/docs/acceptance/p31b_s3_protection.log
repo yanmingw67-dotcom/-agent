@@ -1,0 +1,4 @@
+PASS: environment credential file unchanged
+PASS: eight non-frontend containers and images unchanged
+PASS: all service mount mappings unchanged
+PASS: nine services healthy

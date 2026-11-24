@@ -1,0 +1,10 @@
+snapshot 31675257-2c36-46cf-986f-da166ee2381d extracted/indexed archive_sha256 cf3c8c88fb4f48ce5219cd0d0a0ae4841638acec75a5a69d429129565a67fcbf hashes_verified 4743 sensitive 141 states {"ast_output_limit": 1, "excluded": 146, "parsed": 3946, "syntax_error": 27, "text_chunked": 380, "unsupported": 388, "unsupported_structure": 1}
+source_files 4933 cebd1bd42715e4de3711c502e133ce3a6e340d114efabee5f5b22278b8200f11
+code_symbols 208688 0a5b4c9f437bda02cf93daec24a8f1bd2cf9066b6bd1dc32995d2174a882b548
+evidence 2 d12c33d03701d461dcd4d1c88c376c266999c6eb5350ae48017be1f99af03a7b
+source_snapshots 15 ebc1e47f9689122ee72b39d84e1fcb620ee1c7b20b21f84e18dfeb1aed667ef1
+knowledge_jobs 25 24a1f0d6577f06f6539dd3a876456e78825fb85a62c68d61d7ba54d5814deed1
+audit_events 47 e2f110443d2a7dc64761a684dd939535a6e5fd766b041c39dcc0a7d941f59356
+model_authorizations 0 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+model_requests 0
+model_flags_disabled True
