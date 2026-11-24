@@ -3,7 +3,7 @@
 import json
 import sys
 
-import httpx
+import httpx2 as httpx
 
 from app.core.config import get_settings
 from app.core.security import AppError
